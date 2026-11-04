@@ -1,0 +1,22 @@
+{
+    "name": "Farmverse.Infrastructure.Unity",
+    "rootNamespace": "Farmverse.Infrastructure.Unity",
+    "references": [
+        "Farmverse.Contracts",
+        "Farmverse.Core",
+        "Farmverse.Application",
+        "Unity.InputSystem",
+        "UnityEngine.UI",
+        "Unity.Purchasing",
+        "Unity.Notifications.Unified"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

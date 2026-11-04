@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc364015947b1545a9659d96b539a3d, type: 3}
+  m_Name: CharacterCatalog
+  m_EditorClassIdentifier: Farmverse.Presentation.World::Farmverse.Presentation.World.CharacterCatalog
+  costumes:
+  - id: santa
+    label: Santa
+    pack: Christmas
+    prefab: {fileID: 7391134073599691810, guid: 5d247a0ba9529a640babfe2fc6d58095, type: 3}
+  - id: builder
+    label: Builder
+    pack: Zombies
+    prefab: {fileID: 7961438182520405484, guid: ac354d7b3ed89054e966c47bfbd4328a, type: 3}
+  - id: clerk
+    label: Clerk
+    pack: Zombies
+    prefab: {fileID: 1599130107608781006, guid: 4c7c0daadd92fbb44bce5c6be90f04e9, type: 3}
+  - id: footballer
+    label: Footballer
+    pack: Zombies
+    prefab: {fileID: 8272537023137091855, guid: 3da693401e1364c449d0336c72a49129, type: 3}
+  - id: policeman
+    label: Policeman
+    pack: Zombies
+    prefab: {fileID: 5371711079661095655, guid: 3b83843e3d94b9b4b8d829a48fb0331e, type: 3}
+  - id: mime
+    label: Mime
+    pack: Zombies
+    prefab: {fileID: 5342905871494455679, guid: 89d5d40f1d569f444aa7ec8d6f2fd6a0, type: 3}
+  - id: tourist
+    label: Tourist
+    pack: Zombies
+    prefab: {fileID: 7465698638629396562, guid: 7db0347aad39f1e42a10fad39ecfcc2a, type: 3}
+  - id: wanderer
+    label: Wanderer
+    pack: Zombies
+    prefab: {fileID: 7656464327958315963, guid: 0ef0f5cc95d99e3499bdc1b14f9b78c1, type: 3}
+  - id: drifter
+    label: Drifter
+    pack: Zombies
+    prefab: {fileID: 3173473682272659008, guid: 0609f19b184374c449204feb25ddac08, type: 3}
+  - id: rambler
+    label: Rambler
+    pack: Zombies
+    prefab: {fileID: 8662526929086010973, guid: e5b66cf7d1a7d2d47b1f7157080bca12, type: 3}
+  - id: roamer
+    label: Roamer
+    pack: Zombies
+    prefab: {fileID: 855403161407034779, guid: 01bd4dbadec3f1c468c3b8ff0a890d4c, type: 3}
+  parts: {fileID: 11400000, guid: 1f59c8f39a6aba24da429dd2070083d3, type: 2}
+  animator: {fileID: 9100000, guid: ea907f4e06a53bd41ac9602fd24cdcd2, type: 2}
+  people:
+  - role: player
+    label: Farmer
+    tab: player
+    prefab: {fileID: 85049059777804283, guid: 498f44b86efa0d344843a16f9d3bd73e, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_happy_002;Hairstyle=Hairstyle_Male_001;Hat=Hat_010;Glasses=;Mustache=Mustache_003;Accessories=;Outerwear=Outwear_004;T_Shirt=;Pants=Pants_009;Shoes=Shoe_Sneakers_009;Gloves=;Full_body=
+  - role: army
+    label: Soldier
+    tab: army
+    prefab: {fileID: 4080261659169205657, guid: dd9a33a1e8888184fa9c1fbefbd02d0e, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_angry_003;Hairstyle=;Hat=Hat_Single_013;Glasses=;Mustache=;Accessories=;Outerwear=Outwear_050;T_Shirt=;Pants=Pants_010;Shoes=Shoe_Sneakers_009;Gloves=Gloves_014;Full_body=
+  - role: labourer
+    label: Labourer
+    tab: labourer
+    prefab: {fileID: 3631603404234921583, guid: 8f56b0552a74d304883768c3f1a0845e, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_usual_001;Hairstyle=Hairstyle_Male_005;Hat=;Glasses=;Mustache=;Accessories=;Outerwear=Outwear_043;T_Shirt=;Pants=Pants_010;Shoes=Shoe_Sneakers_009;Gloves=Gloves_006;Full_body=
+  - role: builder
+    label: Builder
+    tab: builder
+    prefab: {fileID: 6740118055364228021, guid: b8c93790f1e5c7042b2675f604dc7187, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_usual_001;Hairstyle=;Hat=Hat_Single_008;Glasses=;Mustache=;Accessories=;Outerwear=Outwear_004;T_Shirt=;Pants=Pants_010;Shoes=Shoe_Sneakers_009;Gloves=Gloves_006;Full_body=
+  - role: folk_baker
+    label: Baker
+    tab: townsfolk
+    prefab: {fileID: 7405413156001306009, guid: 7600cbd920a85184f820e3eaacc67163, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_happy_002;Hairstyle=Hairstyle_Male_005;Hat=;Glasses=Glasses_004;Mustache=;Accessories=;Outerwear=Outwear_043;T_Shirt=;Pants=Shorts_003;Shoes=Shoe_Slippers_005;Gloves=;Full_body=
+  - role: folk_a
+    label: Grocer
+    tab: townsfolk
+    prefab: {fileID: 483607616902666728, guid: 29f385e2693e9544c9e8f5736e232eea, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_usual_001;Hairstyle=Hairstyle_Male_Single_006;Hat=;Glasses=Glasses_006;Mustache=;Accessories=;Outerwear=Outfit_010;T_Shirt=;Pants=Pants_009;Shoes=Shoe_Sneakers_009;Gloves=;Full_body=
+  - role: folk_b
+    label: Mascot
+    tab: townsfolk
+    prefab: {fileID: 2809587681635905114, guid: dcd7f431d4a733a46be7a2384e6b905a, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_usual_001;Hairstyle=;Hat=;Glasses=;Mustache=;Accessories=;Outerwear=Mascot_002;T_Shirt=;Pants=Pants_009;Shoes=Shoe_Slippers_002;Gloves=;Full_body=
+  - role: folk_c
+    label: Jester
+    tab: townsfolk
+    prefab: {fileID: 6562598720558085525, guid: 7a51e475d3c13a545a38883148fe3c30, type: 3}
+    defaultLook: Body=Body_011;Faces=Male_emotion_usual_001;Hairstyle=;Hat=Hat_Single_016;Glasses=;Mustache=;Accessories=Clown_nose_001;Outerwear=Outwear_050;T_Shirt=;Pants=Shorts_003;Shoes=Shoe_Sneakers_009;Gloves=;Full_body=

@@ -1,0 +1,6436 @@
+{
+ "entries": [
+  {
+   "k": " (faster with flowers nearby)",
+   "v": " (plus rapide avec des fleurs à côté)"
+  },
+  {
+   "k": " (feed the animals grain)",
+   "v": " (nourris les animaux avec du grain)"
+  },
+  {
+   "k": " (must stand by the sea)",
+   "v": " (doit être au bord de la mer)"
+  },
+  {
+   "k": "+1 builder forever",
+   "v": "+1 bâtisseur pour toujours"
+  },
+  {
+   "k": "+{0} basket room",
+   "v": "+{0} places dans le panier"
+  },
+  {
+   "k": "+{0} coins  +{1} gems",
+   "v": "+{0} pièces  +{1} gemmes"
+  },
+  {
+   "k": "+{0} food in every workers' house",
+   "v": "+{0} nourriture dans chaque maison des ouvriers"
+  },
+  {
+   "k": "+{0} gems for reaching island level {1}",
+   "v": "+{0} gemmes pour le niveau {1} de l'île"
+  },
+  {
+   "k": "+{0}%",
+   "v": "+{0}%"
+  },
+  {
+   "k": ", {0}s away, {1} ms",
+   "v": ", à {0} s, {1} ms"
+  },
+  {
+   "k": "1,200 gems",
+   "v": "1 200 gemmes"
+  },
+  {
+   "k": "110 gems across the season",
+   "v": "110 gemmes sur la saison"
+  },
+  {
+   "k": "13,000 coins across the season",
+   "v": "13 000 pièces sur la saison"
+  },
+  {
+   "k": "2,500 gems",
+   "v": "2 500 gemmes"
+  },
+  {
+   "k": "2x Value",
+   "v": "Valeur x2"
+  },
+  {
+   "k": "500 gems",
+   "v": "500 gemmes"
+  },
+  {
+   "k": "5x Value",
+   "v": "Valeur x5"
+  },
+  {
+   "k": "6,500 gems",
+   "v": "6 500 gemmes"
+  },
+  {
+   "k": "80 gems",
+   "v": "80 gemmes"
+  },
+  {
+   "k": "</b> coins each.</color>",
+   "v": "</b> pièces chacun.</color>"
+  },
+  {
+   "k": "<b>{0}</b> reached Level {1} on your invite!<br>Here's your thank-you.",
+   "v": "<b>{0}</b> a atteint le niveau {1} grâce à ton invitation !<br>Voici ton cadeau de remerciement."
+  },
+  {
+   "k": "<br><br><b>Raiders are on the island!</b>",
+   "v": "<br><br><b>Des pillards sont sur l'île !</b>"
+  },
+  {
+   "k": "<br><br>Next raid in about <b>{0}</b><br>Defence {1} vs threat {2}",
+   "v": "<br><br>Prochain raid dans environ <b>{0}</b><br>Défense {1} contre menace {2}"
+  },
+  {
+   "k": "<color=#ffd23a>Shops pay <b>",
+   "v": "<color=#ffd23a>Les boutiques paient <b>"
+  },
+  {
+   "k": "<size={0}%>One time only!</size> <color=#ff5a6e>",
+   "v": "<size={0}%>Une seule fois !</size> <color=#ff5a6e>"
+  },
+  {
+   "k": "<size={0}%>Resets in:</size> <color=#ff5a6e>",
+   "v": "<size={0}%>Se termine dans :</size> <color=#ff5a6e>"
+  },
+  {
+   "k": "<size={0}%>Resets in:</size> <color=#ff5a6e>{1}h {2}m</color>",
+   "v": "<size={0}%>Réinitialisation :</size> <color=#ff5a6e>{1} h {2} min</color>"
+  },
+  {
+   "k": "A <b>Raid Shield</b> protects your island for {0} hours.",
+   "v": "Un <b>Bouclier anti-raid</b> protège ton île pendant {0} heures."
+  },
+  {
+   "k": "A <b>Well</b> keeps fields within {0} m safe from drought.",
+   "v": "Un <b>Puits</b> protège de la sécheresse les champs à moins de {0} m."
+  },
+  {
+   "k": "A <color=#ffd23a>Raid Shield</color> protects your island for {0} hours.",
+   "v": "Un <color=#ffd23a>bouclier anti-raid</color> protège ton île pendant {0} heures."
+  },
+  {
+   "k": "A <color=#ffd23a>Well</color> keeps fields within {0} m safe from drought.",
+   "v": "Un <color=#ffd23a>puits</color> protège les champs à moins de {0} m de la sécheresse."
+  },
+  {
+   "k": "A bakery turns flour and eggs into bread",
+   "v": "La boulangerie transforme farine et œufs en pain"
+  },
+  {
+   "k": "A bigger workers' house works longer offline: {0} hours at level {1}, {2} at level {3}. The Farm Pass makes it {4}.",
+   "v": "Une maison des ouvriers plus grande travaille plus longtemps hors ligne : {0} heures au niveau {1}, {2} au niveau {3}. Le Pass Ferme monte à {4}."
+  },
+  {
+   "k": "A code is {0} letters and numbers, like ABCD {1}",
+   "v": "Un code fait {0} lettres et chiffres, comme ABCD {1}"
+  },
+  {
+   "k": "A crop rotted in the field — harvest sooner, or get farm workers",
+   "v": "Une récolte a pourri au champ : récolte plus tôt ou prends des ouvriers"
+  },
+  {
+   "k": "A dairy turns milk into cheese",
+   "v": "Une laiterie transforme le lait en fromage"
+  },
+  {
+   "k": "A fence to lay out your farm",
+   "v": "Une clôture pour aménager ta ferme"
+  },
+  {
+   "k": "A fountain: people nearby settle in faster",
+   "v": "Une fontaine : les gens à côté s'installent plus vite"
+  },
+  {
+   "k": "A friend joined",
+   "v": "Un ami t'a rejoint"
+  },
+  {
+   "k": "A full meal for every workers' house, so they keep working.",
+   "v": "Un repas complet pour chaque maison des ouvriers, pour qu'ils continuent à travailler."
+  },
+  {
+   "k": "A guard has fallen",
+   "v": "Un garde est tombé"
+  },
+  {
+   "k": "A path to lay out your farm",
+   "v": "Un chemin pour aménager ta ferme"
+  },
+  {
+   "k": "A premium reward on every tier",
+   "v": "Une récompense premium à chaque palier"
+  },
+  {
+   "k": "A press this many rims from the centre still grabs the stick (a little forgiving for thumbs).",
+   "v": "Un appui à ce nombre de rayons du centre attrape encore le stick (un peu de marge pour les pouces)."
+  },
+  {
+   "k": "A purchase is already on its way",
+   "v": "Un achat est déjà en route"
+  },
+  {
+   "k": "A raider knocked you down — {0} goods spilled!",
+   "v": "Un pillard t'a renversé : {0} marchandises perdues !"
+  },
+  {
+   "k": "A raider knocked you down!",
+   "v": "Un pillard t'a renversé !"
+  },
+  {
+   "k": "A small farm island to make your own",
+   "v": "Une petite île agricole à faire vôtre"
+  },
+  {
+   "k": "A stone crusher turns stone into bricks",
+   "v": "Un concasseur transforme la pierre en briques"
+  },
+  {
+   "k": "A storm damaged the {0} — builders will mend it",
+   "v": "Une tempête a abîmé : {0}. Les bâtisseurs vont réparer"
+  },
+  {
+   "k": "A tap on open ground farther than this (m) from the farmer rides the horse there.",
+   "v": "Un appui sur le sol libre plus loin que ça (m) du fermier l'y emmène à cheval."
+  },
+  {
+   "k": "A warrior has fallen",
+   "v": "Un guerrier est tombé"
+  },
+  {
+   "k": "A well keeps nearby fields growing in a drought",
+   "v": "Un puits garde les champs proches en pousse pendant la sécheresse"
+  },
+  {
+   "k": "A workers' house would give you hands to farm while you're away.",
+   "v": "Une maison d'ouvriers te donnerait des bras pour cultiver en ton absence."
+  },
+  {
+   "k": "ALL",
+   "v": "TOUT"
+  },
+  {
+   "k": "Achievements",
+   "v": "Succès"
+  },
+  {
+   "k": "Activate",
+   "v": "Activer"
+  },
+  {
+   "k": "Ad rewards without the ads",
+   "v": "Les récompenses de pub sans les pubs"
+  },
+  {
+   "k": "Add",
+   "v": "Ajouter"
+  },
+  {
+   "k": "Add friend",
+   "v": "Ajouter un ami"
+  },
+  {
+   "k": "Add friends to visit their farms.",
+   "v": "Ajoute des amis pour visiter leurs fermes."
+  },
+  {
+   "k": "Ah, hello dear. Lovely island you're making.",
+   "v": "Ah, bonjour mon petit. Jolie île que tu bâtis là."
+  },
+  {
+   "k": "All",
+   "v": "Tout"
+  },
+  {
+   "k": "All animals: feed",
+   "v": "Tous les animaux : nourrir"
+  },
+  {
+   "k": "All fields: harvest",
+   "v": "Tous les champs : récolter"
+  },
+  {
+   "k": "All fields: replant",
+   "v": "Tous les champs : replanter"
+  },
+  {
+   "k": "All goals done!",
+   "v": "Objectifs remplis !"
+  },
+  {
+   "k": "All machines: refill",
+   "v": "Toutes les machines : remplir"
+  },
+  {
+   "k": "All workers",
+   "v": "Tous les ouvriers"
+  },
+  {
+   "k": "All's well! Another field or a new building would grow the island.",
+   "v": "Tout va bien ! Un nouveau champ ou bâtiment ferait grandir l'île."
+  },
+  {
+   "k": "Already collected",
+   "v": "Déjà récupéré"
+  },
+  {
+   "k": "Also {0}: {1}/{2}",
+   "v": "Aussi {0} : {1}/{2}"
+  },
+  {
+   "k": "An animal pen: people nearby settle in faster",
+   "v": "Un enclos : les gens à côté s'installent plus vite"
+  },
+  {
+   "k": "And:",
+   "v": "Et :"
+  },
+  {
+   "k": "Animal goods",
+   "v": "Produits animaux"
+  },
+  {
+   "k": "Animal pen",
+   "v": "Enclos"
+  },
+  {
+   "k": "Animals",
+   "v": "Animaux"
+  },
+  {
+   "k": "Any moment now. Get ready!",
+   "v": "D'un instant à l'autre. Prépare-toi !"
+  },
+  {
+   "k": "Any tips?",
+   "v": "Des conseils ?"
+  },
+  {
+   "k": "Anything damaged?",
+   "v": "Quelque chose d'abîmé ?"
+  },
+  {
+   "k": "Are we ready for raiders?",
+   "v": "Sommes-nous prêts pour les pillards ?"
+  },
+  {
+   "k": "Are you sure?",
+   "v": "Tu es sûr ?"
+  },
+  {
+   "k": "Army house",
+   "v": "Caserne"
+  },
+  {
+   "k": "Arriving…",
+   "v": "Arrive…"
+  },
+  {
+   "k": "Autumn",
+   "v": "Automne"
+  },
+  {
+   "k": "Autumn crops give <b>{0}</b> yield — plant before it ends!",
+   "v": "Les récoltes d'automne donnent <b>{0}</b> de rendement : plante avant la fin !"
+  },
+  {
+   "k": "Autumn crops give <color=#ffd23a>{0}</color> yield — plant before it ends!",
+   "v": "Les récoltes d'automne donnent <color=#ffd23a>{0}</color> — plante avant la fin !"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins",
+   "v": "Absent {0} h {1} min · {2} ouvriers ont porté {3} charges · graines : {4} pièces"
+  },
+  {
+   "k": "Away, workers keep going for {0} hours (Night Shift: normal food price)",
+   "v": "En ton absence, les ouvriers continuent {0} heures (Équipe de nuit : prix normal)"
+  },
+  {
+   "k": "Away, workers keep going for {0} hours at {1}% more food",
+   "v": "En ton absence, les ouvriers continuent {0} heures pour {1}% de nourriture en plus"
+  },
+  {
+   "k": "B3TR arrives in your wallet.",
+   "v": "Les B3TR arrivent dans ton portefeuille."
+  },
+  {
+   "k": "BOOSTS",
+   "v": "BOOSTS"
+  },
+  {
+   "k": "BUILD",
+   "v": "CONSTRUIRE"
+  },
+  {
+   "k": "BUILDING",
+   "v": "BÂTIMENT"
+  },
+  {
+   "k": "BUILDINGS",
+   "v": "BÂTIMENTS"
+  },
+  {
+   "k": "Back to visit",
+   "v": "Retour à la visite"
+  },
+  {
+   "k": "Bake {0} bread",
+   "v": "Cuire {0} pains"
+  },
+  {
+   "k": "Baked in the bakery.",
+   "v": "Cuit à la boulangerie."
+  },
+  {
+   "k": "Bakery",
+   "v": "Boulangerie"
+  },
+  {
+   "k": "Bakery shop",
+   "v": "Dépôt de pain"
+  },
+  {
+   "k": "Bank",
+   "v": "Banque"
+  },
+  {
+   "k": "Barn",
+   "v": "Grange"
+  },
+  {
+   "k": "Basket full",
+   "v": "Panier plein"
+  },
+  {
+   "k": "Basket full — store some at the farmhouse",
+   "v": "Panier plein : stocke-en à la ferme"
+  },
+  {
+   "k": "Basket full — walk into the farmhouse to store it",
+   "v": "Panier plein : entre dans la ferme pour le stocker"
+  },
+  {
+   "k": "Basket full — walk into the farmhouse to store it first",
+   "v": "Panier plein : entre d'abord dans la ferme pour le stocker"
+  },
+  {
+   "k": "Basket full! Take it to the farmhouse.",
+   "v": "Panier plein ! Apporte-le à la ferme."
+  },
+  {
+   "k": "Beans",
+   "v": "Haricots"
+  },
+  {
+   "k": "Beat a raid",
+   "v": "Repousser un raid"
+  },
+  {
+   "k": "Beat {0} raids",
+   "v": "Repousser {0} raids"
+  },
+  {
+   "k": "Beat {0} raids.",
+   "v": "Repousse {0} raids."
+  },
+  {
+   "k": "Bee hives",
+   "v": "Ruches"
+  },
+  {
+   "k": "Bee hives and the warehouse open at {0}: chapter {1} done",
+   "v": "Ruches et entrepôt au niveau {0} : chapitre {1} terminé"
+  },
+  {
+   "k": "Beehive box",
+   "v": "Boîte à ruche"
+  },
+  {
+   "k": "Before you start",
+   "v": "Avant de commencer"
+  },
+  {
+   "k": "Bench",
+   "v": "Banc"
+  },
+  {
+   "k": "Berries",
+   "v": "Baies"
+  },
+  {
+   "k": "Best Value",
+   "v": "Meilleure offre"
+  },
+  {
+   "k": "Big chest",
+   "v": "Grand coffre"
+  },
+  {
+   "k": "Big updates and events on Farmverse",
+   "v": "Grandes mises à jour et événements de Farmverse"
+  },
+  {
+   "k": "Bigger Basket",
+   "v": "Panier plus grand"
+  },
+  {
+   "k": "Bigger islands get bigger orders",
+   "v": "Grandes îles, grandes commandes"
+  },
+  {
+   "k": "Bigger islands get more orders at once",
+   "v": "Les grandes îles reçoivent plus de commandes à la fois"
+  },
+  {
+   "k": "Boost. Use it on your island.",
+   "v": "Boost. Utilise-le sur ton île."
+  },
+  {
+   "k": "Boosts",
+   "v": "Boosts"
+  },
+  {
+   "k": "Boosts and the Season chest",
+   "v": "Boosts et coffre de saison"
+  },
+  {
+   "k": "Bought",
+   "v": "Acheté"
+  },
+  {
+   "k": "Bought before on this Apple ID",
+   "v": "Déjà acheté avec cet identifiant Apple"
+  },
+  {
+   "k": "Bread",
+   "v": "Pain"
+  },
+  {
+   "k": "Bread sells well and fills orders",
+   "v": "Le pain se vend bien et remplit les commandes"
+  },
+  {
+   "k": "Bricks",
+   "v": "Briques"
+  },
+  {
+   "k": "Bring grain to feed them",
+   "v": "Apporte du grain pour les nourrir"
+  },
+  {
+   "k": "Bring its ingredients from the farmhouse",
+   "v": "Apporter ses ingrédients depuis la ferme"
+  },
+  {
+   "k": "Bringing in the {0} crop.",
+   "v": "Je rentre la récolte de {0}."
+  },
+  {
+   "k": "Broken from rocks or the quarry.",
+   "v": "Extraite des rochers ou de la carrière."
+  },
+  {
+   "k": "Build",
+   "v": "Construire"
+  },
+  {
+   "k": "Build a Post Office: the townsfolk send delivery orders there.",
+   "v": "Construis un Bureau de poste : les habitants y envoient des commandes."
+  },
+  {
+   "k": "Build a bakery",
+   "v": "Construire une boulangerie"
+  },
+  {
+   "k": "Build a bank",
+   "v": "Construire une banque"
+  },
+  {
+   "k": "Build a barn",
+   "v": "Construire une étable"
+  },
+  {
+   "k": "Build a chicken coop",
+   "v": "Construire un poulailler"
+  },
+  {
+   "k": "Build a clinic",
+   "v": "Construire une clinique"
+  },
+  {
+   "k": "Build a fishing shed",
+   "v": "Construire une cabane de pêche"
+  },
+  {
+   "k": "Build a lumber yard",
+   "v": "Construire une scierie"
+  },
+  {
+   "k": "Build a mine",
+   "v": "Construire une mine"
+  },
+  {
+   "k": "Build a post office",
+   "v": "Construire une poste"
+  },
+  {
+   "k": "Build a school",
+   "v": "Construire une école"
+  },
+  {
+   "k": "Build a sheep shed",
+   "v": "Construire une bergerie"
+  },
+  {
+   "k": "Build a stable to keep a horse",
+   "v": "Construis une écurie pour avoir un cheval"
+  },
+  {
+   "k": "Build a well",
+   "v": "Construire un puits"
+  },
+  {
+   "k": "Build a windmill",
+   "v": "Construire un moulin"
+  },
+  {
+   "k": "Build a workers' house",
+   "v": "Construire une maison d'ouvriers"
+  },
+  {
+   "k": "Build a workers' house first",
+   "v": "Construis d'abord une maison des ouvriers"
+  },
+  {
+   "k": "Build a workers' house: its people run the farm for you.",
+   "v": "Construis une maison des ouvriers : ses habitants font tourner la ferme pour toi."
+  },
+  {
+   "k": "Build an army house",
+   "v": "Construire une caserne"
+  },
+  {
+   "k": "Build an army house and keep it fed to stop the next one.",
+   "v": "Construis une caserne et nourris-la pour arrêter le prochain."
+  },
+  {
+   "k": "Build bee hives",
+   "v": "Construire des ruches"
+  },
+  {
+   "k": "Build one too",
+   "v": "En construire un aussi"
+  },
+  {
+   "k": "Build the town hall",
+   "v": "Construire la mairie"
+  },
+  {
+   "k": "Builder's Pass",
+   "v": "Pass Bâtisseur"
+  },
+  {
+   "k": "Builder's Pass — thank you!",
+   "v": "Pass Bâtisseur — merci !"
+  },
+  {
+   "k": "Builders at work",
+   "v": "Bâtisseurs au travail"
+  },
+  {
+   "k": "Builders mend it after damage",
+   "v": "Les bâtisseurs le réparent après des dégâts"
+  },
+  {
+   "k": "Builders take ",
+   "v": "Les bâtisseurs prennent "
+  },
+  {
+   "k": "Builders walk over with what it needs",
+   "v": "Les bâtisseurs apportent ce qu'il faut"
+  },
+  {
+   "k": "Builders' hut",
+   "v": "Cabane des bâtisseurs"
+  },
+  {
+   "k": "Building",
+   "v": "Construction"
+  },
+  {
+   "k": "Building the {0}.",
+   "v": "Construction : {0}."
+  },
+  {
+   "k": "Buildings",
+   "v": "Bâtiments"
+  },
+  {
+   "k": "Buildings, goods & upgrades",
+   "v": "Bâtiments, biens et améliorations"
+  },
+  {
+   "k": "Buy a field in the shop and walk into it to plant",
+   "v": "Achète un champ à la boutique et marche dessus pour planter"
+  },
+  {
+   "k": "Bye",
+   "v": "Salut"
+  },
+  {
+   "k": "CLAIMED",
+   "v": "RÉCUPÉRÉ"
+  },
+  {
+   "k": "COIN PACK",
+   "v": "PACK DE PIÈCES"
+  },
+  {
+   "k": "COINS",
+   "v": "PIÈCES"
+  },
+  {
+   "k": "COUPON CODE",
+   "v": "CODE COUPON"
+  },
+  {
+   "k": "COUPONS",
+   "v": "COUPONS"
+  },
+  {
+   "k": "CRATES",
+   "v": "CAISSES"
+  },
+  {
+   "k": "Can't go here · drag it somewhere else",
+   "v": "Impossible ici · déplace-le ailleurs"
+  },
+  {
+   "k": "Can't go here: ",
+   "v": "Impossible ici : "
+  },
+  {
+   "k": "Cancel",
+   "v": "Annuler"
+  },
+  {
+   "k": "Carrot",
+   "v": "Carotte"
+  },
+  {
+   "k": "Carry feed from the farmhouse to the trough",
+   "v": "Apporter la nourriture de la ferme à l'auge"
+  },
+  {
+   "k": "Carry the goods into the Post Office to deliver",
+   "v": "Porte les biens au Bureau de poste pour livrer"
+  },
+  {
+   "k": "Carry what the order asks for into the post office",
+   "v": "Apporte à la poste ce que demande la commande"
+  },
+  {
+   "k": "Carrying {0} {1} to the farmhouse.",
+   "v": "Je porte {0} {1} à la ferme."
+  },
+  {
+   "k": "Catching my breath. That was a lot of loads!",
+   "v": "Je souffle un peu. Ça faisait beaucoup de charges !"
+  },
+  {
+   "k": "Caught at the fishing hut.",
+   "v": "Pêché à la cabane de pêche."
+  },
+  {
+   "k": "Change Name",
+   "v": "Changer de nom"
+  },
+  {
+   "k": "Chapel",
+   "v": "Chapelle"
+  },
+  {
+   "k": "Chapter 2: the island grows a river valley, a lake and hills",
+   "v": "Chapitre 2 : l'île s'agrandit d'une vallée, d'un lac et de collines"
+  },
+  {
+   "k": "Chapter 3: mountains, a waterfall and a town rise from the sea",
+   "v": "Chapitre 3 : montagnes, cascade et ville sortent de la mer"
+  },
+  {
+   "k": "Chapter complete: {x}",
+   "v": "Chapitre terminé : {x}"
+  },
+  {
+   "k": "Chapter {0} done: every level from here keeps paying",
+   "v": "Chapitre {0} terminé : chaque niveau continue de rapporter"
+  },
+  {
+   "k": "Chapter {0}: Homestead complete!",
+   "v": "Chapitre {0} : La Ferme terminé !"
+  },
+  {
+   "k": "Chapter {0}: Town",
+   "v": "Chapitre {0} : La Ville"
+  },
+  {
+   "k": "Chapter {0}: Village",
+   "v": "Chapitre {0} : Le Village"
+  },
+  {
+   "k": "Chapter {0}: Village complete!",
+   "v": "Chapitre {0} : Le Village terminé !"
+  },
+  {
+   "k": "Check your Wi-Fi or mobile data. Your farm is safe — we'll sync when you're back.",
+   "v": "Vérifie ton Wi-Fi ou tes données mobiles. Ta ferme est en sécurité : on synchronise à ton retour."
+  },
+  {
+   "k": "Cheese",
+   "v": "Fromage"
+  },
+  {
+   "k": "Chest opened!",
+   "v": "Coffre ouvert !"
+  },
+  {
+   "k": "Chicken coop",
+   "v": "Poulailler"
+  },
+  {
+   "k": "Chickens lay eggs if you keep their trough fed",
+   "v": "Les poules pondent si leur mangeoire est pleine"
+  },
+  {
+   "k": "Chinese",
+   "v": "Chinois"
+  },
+  {
+   "k": "Choose avatar",
+   "v": "Choisir un avatar"
+  },
+  {
+   "k": "Chop 5 trees",
+   "v": "Couper 5 arbres"
+  },
+  {
+   "k": "Chop {0} trees or rocks",
+   "v": "Couper {0} arbres ou rochers"
+  },
+  {
+   "k": "Chopped from trees. Builds and repairs.",
+   "v": "Coupé des arbres. Sert à construire et réparer."
+  },
+  {
+   "k": "Cider press",
+   "v": "Pressoir à cidre"
+  },
+  {
+   "k": "Claim",
+   "v": "Récupérer"
+  },
+  {
+   "k": "Claim All",
+   "v": "Tout récupérer"
+  },
+  {
+   "k": "Claim ×{0}",
+   "v": "Récupérer ×{0}"
+  },
+  {
+   "k": "Claimed",
+   "v": "Récupéré"
+  },
+  {
+   "k": "Classic look",
+   "v": "Look classique"
+  },
+  {
+   "k": "Clear ",
+   "v": "Dégager "
+  },
+  {
+   "k": "Clear skies",
+   "v": "Ciel dégagé"
+  },
+  {
+   "k": "Clear {0}",
+   "v": "Dégager {0}"
+  },
+  {
+   "k": "Clinic",
+   "v": "Clinique"
+  },
+  {
+   "k": "Cloth opens at {0}",
+   "v": "Le tissu s'ouvre au niveau {0}"
+  },
+  {
+   "k": "Coins",
+   "v": "Pièces"
+  },
+  {
+   "k": "Coins a new island starts with: enough for a few first buildings, so choices matter.",
+   "v": "Pièces de départ d'une nouvelle île : assez pour quelques bâtiments, donc les choix comptent."
+  },
+  {
+   "k": "Collect",
+   "v": "Ramasser"
+  },
+  {
+   "k": "Collect {0} eggs",
+   "v": "Ramasser {0} œufs"
+  },
+  {
+   "k": "Collect {0} honey",
+   "v": "Récolter {0} miels"
+  },
+  {
+   "k": "Collect {0} milk",
+   "v": "Récolter {0} laits"
+  },
+  {
+   "k": "Collecting from the {0}.",
+   "v": "Je collecte : {0}."
+  },
+  {
+   "k": "Come back tomorrow",
+   "v": "Reviens demain"
+  },
+  {
+   "k": "Community hall",
+   "v": "Salle des fêtes"
+  },
+  {
+   "k": "Connect to the internet to buy",
+   "v": "Connecte-toi à Internet pour acheter"
+  },
+  {
+   "k": "Connect to the internet to buy with gems",
+   "v": "Connecte-toi à Internet pour acheter avec des gemmes"
+  },
+  {
+   "k": "Connect to the internet to change your name",
+   "v": "Connecte-toi à Internet pour changer de nom"
+  },
+  {
+   "k": "Connect to the internet to collect it",
+   "v": "Connecte-toi à Internet pour le récupérer"
+  },
+  {
+   "k": "Connect to the internet to collect the gift",
+   "v": "Connecte-toi à Internet pour récupérer le cadeau"
+  },
+  {
+   "k": "Connect to the internet to delete your account",
+   "v": "Connecte-toi à Internet pour supprimer ton compte"
+  },
+  {
+   "k": "Connect to the internet to get your code",
+   "v": "Connecte-toi à Internet pour obtenir ton code"
+  },
+  {
+   "k": "Connect to the internet to open the chest",
+   "v": "Connecte-toi à Internet pour ouvrir le coffre"
+  },
+  {
+   "k": "Connect to the internet to save your farm.",
+   "v": "Connecte-toi à Internet pour sauvegarder ta ferme."
+  },
+  {
+   "k": "Connect to the internet to spin",
+   "v": "Connecte-toi à Internet pour tourner la roue"
+  },
+  {
+   "k": "Connect to the internet to use boosts",
+   "v": "Connecte-toi à Internet pour utiliser des boosts"
+  },
+  {
+   "k": "Connect to the internet to visit farms",
+   "v": "Connecte-toi à Internet pour visiter des fermes"
+  },
+  {
+   "k": "Connect to the internet to watch ads",
+   "v": "Connecte-toi à Internet pour regarder des pubs"
+  },
+  {
+   "k": "Connecting to the farm network…<br>Friends appear once you're online.",
+   "v": "Connexion au réseau des fermes…<br>Tes amis apparaissent une fois en ligne."
+  },
+  {
+   "k": "Connecting...",
+   "v": "Connexion..."
+  },
+  {
+   "k": "Connection lost",
+   "v": "Connexion perdue"
+  },
+  {
+   "k": "Continue",
+   "v": "Continuer"
+  },
+  {
+   "k": "Copied!",
+   "v": "Copié !"
+  },
+  {
+   "k": "Copy",
+   "v": "Copier"
+  },
+  {
+   "k": "Copy code",
+   "v": "Copier le code"
+  },
+  {
+   "k": "Copy link",
+   "v": "Copier le lien"
+  },
+  {
+   "k": "Corn",
+   "v": "Maïs"
+  },
+  {
+   "k": "Couldn't buy it — check your connection and try again",
+   "v": "Achat impossible : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't change it — check your connection",
+   "v": "Modification impossible : vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't change your name — check your connection",
+   "v": "Impossible de changer ton nom : vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't collect it — check your connection and try again",
+   "v": "Récupération impossible : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't collect the reward — check your connection",
+   "v": "Impossible de récupérer la récompense : vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't delete the account — check your connection and try again",
+   "v": "Impossible de supprimer le compte : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't delete — check your connection",
+   "v": "Suppression impossible : vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't get a code — check your connection and try again",
+   "v": "Impossible d'obtenir un code : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't link the account — check your connection and try again",
+   "v": "Impossible de lier le compte : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't open it — check your connection and try again",
+   "v": "Ouverture impossible : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't reach that farm — check your connection",
+   "v": "Impossible de joindre cette ferme : vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't restore purchases — try again",
+   "v": "Impossible de restaurer les achats : réessaie"
+  },
+  {
+   "k": "Couldn't save it — check your connection",
+   "v": "Impossible d'enregistrer — vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't send the like — check your connection",
+   "v": "Impossible d'envoyer le j'aime : vérifie ta connexion"
+  },
+  {
+   "k": "Couldn't sign in — try again",
+   "v": "Connexion impossible : réessaie"
+  },
+  {
+   "k": "Couldn't spin — check your connection and try again",
+   "v": "Impossible de tourner : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Couldn't use it — check your connection and try again",
+   "v": "Utilisation impossible : vérifie ta connexion et réessaie"
+  },
+  {
+   "k": "Country",
+   "v": "Pays"
+  },
+  {
+   "k": "Coupons",
+   "v": "Coupons"
+  },
+  {
+   "k": "Cows give milk if you keep their trough fed",
+   "v": "Les vaches donnent du lait si leur mangeoire est pleine"
+  },
+  {
+   "k": "Crops",
+   "v": "Cultures"
+  },
+  {
+   "k": "Crops Grown",
+   "v": "Cultures récoltées"
+  },
+  {
+   "k": "Crops grow a little faster",
+   "v": "Les cultures poussent un peu plus vite"
+  },
+  {
+   "k": "Crops grow a little faster.\n\nRain: crops sown now grow faster.\n\nNext raid in about <color=#ffd23a>{0}m</color>\nDefence {1} vs threat {2}",
+   "v": "Les cultures poussent un peu plus vite.\n\nPluie : les semis poussent plus vite.\n\nProchain raid dans environ <color=#ffd23a>{0} min</color>\nDéfense {1} contre menace {2}"
+  },
+  {
+   "k": "Crops grow slowly and everyone eats more: stock up",
+   "v": "Les cultures poussent lentement et on mange plus : fais des réserves"
+  },
+  {
+   "k": "Crops grow {0}× for {1} min.",
+   "v": "Cultures {0}× pendant {1} min."
+  },
+  {
+   "k": "Crops grown",
+   "v": "Cultures récoltées"
+  },
+  {
+   "k": "Crops {0}× · {1} min",
+   "v": "Cultures {0}× · {1} min"
+  },
+  {
+   "k": "DAILY DEAL",
+   "v": "OFFRE DU JOUR"
+  },
+  {
+   "k": "DAILY TASK CHEST",
+   "v": "COFFRE DU JOUR"
+  },
+  {
+   "k": "DAMAGED",
+   "v": "ABÎMÉ"
+  },
+  {
+   "k": "DAY ",
+   "v": "JOUR "
+  },
+  {
+   "k": "DAY {0}",
+   "v": "JOUR {0}"
+  },
+  {
+   "k": "Daily",
+   "v": "Quotidien"
+  },
+  {
+   "k": "Daily Bonus",
+   "v": "Bonus quotidien"
+  },
+  {
+   "k": "Daily gifts, free coins and welcome-back gifts",
+   "v": "Cadeaux du jour, pièces gratuites et cadeaux de retour"
+  },
+  {
+   "k": "Daily tasks",
+   "v": "Tâches du jour"
+  },
+  {
+   "k": "Daily · ",
+   "v": "Quotidien · "
+  },
+  {
+   "k": "Dairy",
+   "v": "Laiterie"
+  },
+  {
+   "k": "Damaged · needs {0}",
+   "v": "Abîmé · il faut {0}"
+  },
+  {
+   "k": "Days Played",
+   "v": "Jours joués"
+  },
+  {
+   "k": "Decor",
+   "v": "Déco"
+  },
+  {
+   "k": "Decoration",
+   "v": "Décoration"
+  },
+  {
+   "k": "Decoration: people nearby settle in faster",
+   "v": "Décoration : les gens à côté s'installent plus vite"
+  },
+  {
+   "k": "Defence",
+   "v": "Défense"
+  },
+  {
+   "k": "Delete",
+   "v": "Supprimer"
+  },
+  {
+   "k": "Delete Account",
+   "v": "Supprimer le compte"
+  },
+  {
+   "k": "Delete account?",
+   "v": "Supprimer le compte ?"
+  },
+  {
+   "k": "Delete forever",
+   "v": "Supprimer définitivement"
+  },
+  {
+   "k": "Deliver",
+   "v": "Livrer"
+  },
+  {
+   "k": "Deliver a post office order",
+   "v": "Livrer une commande du bureau de poste"
+  },
+  {
+   "k": "Deliver an order",
+   "v": "Livrer une commande"
+  },
+  {
+   "k": "Deliver {0} orders",
+   "v": "Livrer {0} commandes"
+  },
+  {
+   "k": "Deliver {0} post office orders",
+   "v": "Livrer {0} commandes du bureau de poste"
+  },
+  {
+   "k": "Deliver {0} post office orders.",
+   "v": "Livre {0} commandes à la poste."
+  },
+  {
+   "k": "Delivery orders",
+   "v": "Commandes de livraison"
+  },
+  {
+   "k": "Delivery orders open at island level {0}, with the post office.",
+   "v": "Les commandes s'ouvrent au niveau {0}, avec la poste."
+  },
+  {
+   "k": "Delivery orders that pay double",
+   "v": "Commandes de livraison payées double"
+  },
+  {
+   "k": "Did you hear?",
+   "v": "Tu sais quoi ?"
+  },
+  {
+   "k": "Did you hear? ",
+   "v": "Tu sais quoi ? "
+  },
+  {
+   "k": "Dirt path",
+   "v": "Chemin de terre"
+  },
+  {
+   "k": "Drag to move · it fits here",
+   "v": "Glisse pour déplacer · ça rentre ici"
+  },
+  {
+   "k": "Drought",
+   "v": "Sécheresse"
+  },
+  {
+   "k": "Drought: crops sown now grow slowly",
+   "v": "Sécheresse : les semis poussent lentement"
+  },
+  {
+   "k": "Dug from the mine.",
+   "v": "Extrait de la mine."
+  },
+  {
+   "k": "Dutch",
+   "v": "Néerlandais"
+  },
+  {
+   "k": "Earn pass XP from orders and daily tasks.",
+   "v": "Gagne de l'XP de pass avec les commandes et tâches du jour."
+  },
+  {
+   "k": "Earned for: ",
+   "v": "Gagné pour : "
+  },
+  {
+   "k": "Edit",
+   "v": "Modifier"
+  },
+  {
+   "k": "Egg",
+   "v": "Œuf"
+  },
+  {
+   "k": "Egg every {0}s",
+   "v": "Un œuf toutes les {0} s"
+  },
+  {
+   "k": "Egg goes off if left too long",
+   "v": "L'œuf se gâte s'il reste trop longtemps"
+  },
+  {
+   "k": "Eggs or milk went off in a full house — collect more often",
+   "v": "Des œufs ou du lait se sont gâtés, bâtiment plein : collecte plus souvent"
+  },
+  {
+   "k": "Empty field",
+   "v": "Champ vide"
+  },
+  {
+   "k": "Empty: bring your harvest in",
+   "v": "Vide : rapporte ta récolte"
+  },
+  {
+   "k": "Empty: walk your harvest into the farmhouse.",
+   "v": "Vide : apporte ta récolte à la ferme."
+  },
+  {
+   "k": "English",
+   "v": "Anglais"
+  },
+  {
+   "k": "Enjoying Farmverse?",
+   "v": "Tu aimes Farmverse ?"
+  },
+  {
+   "k": "Enter your wallet address.",
+   "v": "Entre l'adresse de ton portefeuille."
+  },
+  {
+   "k": "Every ad reward — the Lucky Wheel, Free Coins, the ×{0} daily bonus —\npays straight away, with no video to watch.",
+   "v": "Chaque récompense pub — la Roue, les pièces gratuites, le bonus ×{0} —\nest versée tout de suite, sans vidéo."
+  },
+  {
+   "k": "Every ad reward — the Lucky Wheel, Free Coins, the ×{0} daily bonus —<br>pays straight away, with no video to watch.",
+   "v": "Chaque récompense de pub (Roue de la chance, Pièces gratuites, bonus quotidien ×{0})<br>est versée tout de suite, sans vidéo à regarder."
+  },
+  {
+   "k": "Every level from here is the same climb",
+   "v": "Chaque niveau désormais demande le même effort"
+  },
+  {
+   "k": "Every level pays gems and coins",
+   "v": "Chaque niveau rapporte des gemmes et des pièces"
+  },
+  {
+   "k": "Every story goal done!",
+   "v": "Histoire terminée !"
+  },
+  {
+   "k": "Everything you built stays where it is: the new land rises around it.",
+   "v": "Tout ce que vous avez construit reste en place : les nouvelles terres s'élèvent autour."
+  },
+  {
+   "k": "Everything you do earns island XP",
+   "v": "Tout ce que tu fais rapporte de l'XP"
+  },
+  {
+   "k": "Everything's here — builders will put up the {0}",
+   "v": "Tout est là : les bâtisseurs vont construire : {0}"
+  },
+  {
+   "k": "Everything's here — builders will repair the army house",
+   "v": "Tout est là — les bâtisseurs vont réparer la caserne"
+  },
+  {
+   "k": "Everything's here — builders will repair the {0}",
+   "v": "Tout est là : les bâtisseurs vont réparer : {0}"
+  },
+  {
+   "k": "Expires in ",
+   "v": "Expire dans "
+  },
+  {
+   "k": "Explore your new land!",
+   "v": "Explorez vos nouvelles terres !"
+  },
+  {
+   "k": "FARM\nPASS",
+   "v": "PASS\nFERME"
+  },
+  {
+   "k": "FARM PASS",
+   "v": "PASS FERME"
+  },
+  {
+   "k": "FARM STATS",
+   "v": "STATS DE LA FERME"
+  },
+  {
+   "k": "FARM TITLE",
+   "v": "TITRE DE LA FERME"
+  },
+  {
+   "k": "FIELD",
+   "v": "CHAMP"
+  },
+  {
+   "k": "FREE",
+   "v": "GRATUIT"
+  },
+  {
+   "k": "FREE\nPASS",
+   "v": "PASS\nGRATUIT"
+  },
+  {
+   "k": "Factories",
+   "v": "Usines"
+  },
+  {
+   "k": "Farm",
+   "v": "Ferme"
+  },
+  {
+   "k": "Farm Pass",
+   "v": "Pass Ferme"
+  },
+  {
+   "k": "Farm Pass active",
+   "v": "Pass Ferme actif"
+  },
+  {
+   "k": "Farm Pass — thank you!",
+   "v": "Pass Ferme — merci !"
+  },
+  {
+   "k": "Farm found",
+   "v": "Ferme trouvée"
+  },
+  {
+   "k": "Farm saved!",
+   "v": "Ferme sauvegardée !"
+  },
+  {
+   "k": "Farm saved! +{0} gems",
+   "v": "Ferme sauvegardée ! +{0} gemmes"
+  },
+  {
+   "k": "Farm worker",
+   "v": "Ouvrier agricole"
+  },
+  {
+   "k": "Farm workers are hungry — feed the workers' house",
+   "v": "Les ouvriers ont faim : nourris la maison d'ouvriers"
+  },
+  {
+   "k": "Farm workers carry more",
+   "v": "Les ouvriers portent plus"
+  },
+  {
+   "k": "Farm workers carry {0} more a trip",
+   "v": "Les ouvriers portent {0} de plus par trajet"
+  },
+  {
+   "k": "Farm workers harvest, carry and chop for you",
+   "v": "Les ouvriers récoltent, portent et coupent pour toi"
+  },
+  {
+   "k": "Farm workers will bring food from the farmhouse",
+   "v": "Les ouvriers apporteront de la nourriture de la ferme"
+  },
+  {
+   "k": "Farm workers: harvest, carry, feed animals, chop wood",
+   "v": "Ouvriers : récoltent, portent, nourrissent les bêtes, coupent du bois"
+  },
+  {
+   "k": "Farmer",
+   "v": "Fermier"
+  },
+  {
+   "k": "Farmhouse",
+   "v": "Ferme"
+  },
+  {
+   "k": "Farmhouse rooms",
+   "v": "Pièces de la ferme"
+  },
+  {
+   "k": "Farmverse",
+   "v": "Farmverse"
+  },
+  {
+   "k": "Farmverse support",
+   "v": "Assistance Farmverse"
+  },
+  {
+   "k": "Farmverse/Building Catalogue",
+   "v": "Farmverse/Building Catalogue"
+  },
+  {
+   "k": "Farmverse/Island Data",
+   "v": "Farmverse/Island Data"
+  },
+  {
+   "k": "Farmverse/Island Pictures",
+   "v": "Farmverse/Island Pictures"
+  },
+  {
+   "k": "Faster and roomier: needs planks and stone",
+   "v": "Plus rapide et plus grand : il faut des planches et de la pierre"
+  },
+  {
+   "k": "Faster and roomier: needs planks, iron, oil or cloth",
+   "v": "Plus rapide et plus spacieux : il faut planches, fer, huile ou tissu"
+  },
+  {
+   "k": "Feed",
+   "v": "Nourrir"
+  },
+  {
+   "k": "Feed animals {0} times",
+   "v": "Nourrir les animaux {0} fois"
+  },
+  {
+   "k": "Feed mill",
+   "v": "Moulin à grain"
+  },
+  {
+   "k": "Feed the windmill wheat (workers do it from the farmhouse)",
+   "v": "Donne du blé au moulin (les ouvriers le font depuis la ferme)"
+  },
+  {
+   "k": "Feeds every workers' house",
+   "v": "Nourrit chaque maison des ouvriers"
+  },
+  {
+   "k": "Fertilizer",
+   "v": "Engrais"
+  },
+  {
+   "k": "Fertilizer · crops grow 2×",
+   "v": "Engrais · cultures 2× plus rapides"
+  },
+  {
+   "k": "Fertilizer · crops grow {0}×",
+   "v": "Engrais · cultures {0}× plus rapides"
+  },
+  {
+   "k": "Fetching supplies for the {0}.",
+   "v": "Je cherche des fournitures : {0}."
+  },
+  {
+   "k": "Fetching the latest news…",
+   "v": "Chargement des nouvelles…"
+  },
+  {
+   "k": "Field",
+   "v": "Champ"
+  },
+  {
+   "k": "Fields nearby don't suffer drought",
+   "v": "Champs proches protégés de la sécheresse"
+  },
+  {
+   "k": "Fields nearby grow {0}% faster",
+   "v": "Les champs proches poussent {0}% plus vite"
+  },
+  {
+   "k": "Fields yield one more",
+   "v": "Les champs donnent un de plus"
+  },
+  {
+   "k": "Fields: {0}/{1}, the most an island can have",
+   "v": "Champs : {0}/{1}, le maximum pour une île"
+  },
+  {
+   "k": "Fields: {0}/{1}. One more at island level {2}",
+   "v": "Champs : {0}/{1}. Un de plus au niveau {2}"
+  },
+  {
+   "k": "Fill ",
+   "v": "Remplir "
+  },
+  {
+   "k": "Fill 3 orders",
+   "v": "Remplir 3 commandes"
+  },
+  {
+   "k": "Fill 50 orders",
+   "v": "Remplir 50 commandes"
+  },
+  {
+   "k": "Fill all three for a bonus crate of materials",
+   "v": "Remplis les trois pour une caisse bonus de matériaux"
+  },
+  {
+   "k": "Fill an order that gives wood",
+   "v": "Remplis une commande qui donne du bois"
+  },
+  {
+   "k": "Fill an order that gives {0}",
+   "v": "Remplir une commande qui donne {0}"
+  },
+  {
+   "k": "Fill townsfolk orders for coins",
+   "v": "Remplis les commandes contre des pièces"
+  },
+  {
+   "k": "Finish 3 goals",
+   "v": "Terminer 3 objectifs"
+  },
+  {
+   "k": "Finish <color=#7dff6a>daily tasks</color> and <color=#7dff6a>goals</color> to earn coupons. Each coupon shows its value and how to redeem it.",
+   "v": "Termine les <color=#7dff6a>tâches du jour</color> et les <color=#7dff6a>objectifs</color> pour gagner des coupons. Chaque coupon indique sa valeur et comment l'utiliser."
+  },
+  {
+   "k": "Finish all of today's tasks to open the chest.",
+   "v": "Termine toutes les tâches du jour pour ouvrir le coffre."
+  },
+  {
+   "k": "Finish one build now",
+   "v": "Finir un chantier"
+  },
+  {
+   "k": "Finishes one building now.",
+   "v": "Termine un bâtiment tout de suite."
+  },
+  {
+   "k": "Fire station",
+   "v": "Caserne des pompiers"
+  },
+  {
+   "k": "Fired from stone.",
+   "v": "Cuite à partir de pierre."
+  },
+  {
+   "k": "First things first — let's build a field. Tap <color=#e08c00>BUILD</color>!",
+   "v": "Commençons par le début : construisons un champ. Touche <color=#e08c00>CONSTRUIRE</color> !"
+  },
+  {
+   "k": "Fish market",
+   "v": "Poissonnerie"
+  },
+  {
+   "k": "Fishing shed",
+   "v": "Cabane de pêche"
+  },
+  {
+   "k": "Flour",
+   "v": "Farine"
+  },
+  {
+   "k": "Flour and eggs in, bread out",
+   "v": "Farine et œufs entrent, le pain sort"
+  },
+  {
+   "k": "Flower bed",
+   "v": "Parterre"
+  },
+  {
+   "k": "Flower beds near hives make honey up to <b>{0}×</b> faster.",
+   "v": "Les parterres près des ruches font du miel jusqu'à <b>{0}×</b> plus vite."
+  },
+  {
+   "k": "Flower beds near hives make honey up to <color=#ffd23a>{0}×</color> faster.",
+   "v": "Les parterres près des ruches font du miel jusqu'à <color=#ffd23a>{0}×</color> plus vite."
+  },
+  {
+   "k": "Food's running low.",
+   "v": "On manque de nourriture."
+  },
+  {
+   "k": "Food: {0} · enough for the whole offline shift",
+   "v": "Nourriture : {0} · assez pour toute l'absence"
+  },
+  {
+   "k": "Food: {0} · runs out after about {1} h of offline work",
+   "v": "Nourriture : {0} · épuisée après environ {1} h de travail hors ligne"
+  },
+  {
+   "k": "Food: {0} · runs out after about {1} min of offline work",
+   "v": "Nourriture : {0} · épuisée après environ {1} min de travail hors ligne"
+  },
+  {
+   "k": "Fountain",
+   "v": "Fontaine"
+  },
+  {
+   "k": "Free Coins",
+   "v": "Pièces gratuites"
+  },
+  {
+   "k": "Free Gift",
+   "v": "Cadeau gratuit"
+  },
+  {
+   "k": "Free gift ready",
+   "v": "Cadeau gratuit prêt"
+  },
+  {
+   "k": "Freight Train",
+   "v": "Train de marchandises"
+  },
+  {
+   "k": "French",
+   "v": "Français"
+  },
+  {
+   "k": "Fresh goods are waiting to be collected and sold.",
+   "v": "Des produits frais attendent d'être ramassés et vendus."
+  },
+  {
+   "k": "Friend's code",
+   "v": "Code de l'ami"
+  },
+  {
+   "k": "Friends",
+   "v": "Amis"
+  },
+  {
+   "k": "Friends need the full game.<br>Start from the <b>Boot</b> scene to sign in.",
+   "v": "Les amis nécessitent le jeu complet.<br>Lance depuis la scène <b>Boot</b> pour te connecter."
+  },
+  {
+   "k": "From here every level is the same climb, and keeps paying",
+   "v": "Désormais chaque niveau demande le même effort, et rapporte toujours"
+  },
+  {
+   "k": "From the beehives. Flowers nearby make more.",
+   "v": "Des ruches. Les fleurs proches en donnent plus."
+  },
+  {
+   "k": "From the cows. The dairy makes cheese from it.",
+   "v": "Des vaches. La laiterie en fait du fromage."
+  },
+  {
+   "k": "From the pig pen. Feeds your townsfolk.",
+   "v": "De la porcherie. Nourrit tes habitants."
+  },
+  {
+   "k": "From the sheep.",
+   "v": "Des moutons."
+  },
+  {
+   "k": "Full storage, likes, crops and workshops done",
+   "v": "Entrepôt plein, j'aime, récoltes et ateliers terminés"
+  },
+  {
+   "k": "Full train: one more crate of materials!",
+   "v": "Train plein : une caisse de matériaux en plus !"
+  },
+  {
+   "k": "GEM PACK",
+   "v": "PACK DE GEMMES"
+  },
+  {
+   "k": "GEMS",
+   "v": "GEMMES"
+  },
+  {
+   "k": "GIVES",
+   "v": "DONNE"
+  },
+  {
+   "k": "GOAL",
+   "v": "OBJECTIF"
+  },
+  {
+   "k": "GRANDPA JOE",
+   "v": "PAPI JOE"
+  },
+  {
+   "k": "Garden ornament",
+   "v": "Ornement de jardin"
+  },
+  {
+   "k": "German",
+   "v": "Allemand"
+  },
+  {
+   "k": "Get code",
+   "v": "Avoir un code"
+  },
+  {
+   "k": "Get coins in the shop",
+   "v": "Obtiens des pièces à la boutique"
+  },
+  {
+   "k": "Get my code",
+   "v": "Obtenir mon code"
+  },
+  {
+   "k": "Getting wood and stone for the farmhouse. The builders need it.",
+   "v": "Je récupère du bois et de la pierre pour la ferme. Les bâtisseurs en ont besoin."
+  },
+  {
+   "k": "Go",
+   "v": "Go"
+  },
+  {
+   "k": "Go inside",
+   "v": "Entrer"
+  },
+  {
+   "k": "Go outside",
+   "v": "Sortir"
+  },
+  {
+   "k": "Goal complete! +{0} coins",
+   "v": "Objectif rempli ! +{0} pièces"
+  },
+  {
+   "k": "Goal complete! {0} coins",
+   "v": "Objectif atteint ! {0} pièces"
+  },
+  {
+   "k": "Goal done! Tap to claim",
+   "v": "Objectif fini ! Récupère-le"
+  },
+  {
+   "k": "Goal · ",
+   "v": "Objectif · "
+  },
+  {
+   "k": "Goals",
+   "v": "Objectifs"
+  },
+  {
+   "k": "Goals Done",
+   "v": "Objectifs remplis"
+  },
+  {
+   "k": "Golden Barn",
+   "v": "Grange dorée"
+  },
+  {
+   "k": "Good day to you!",
+   "v": "Bien le bonjour !"
+  },
+  {
+   "k": "Goods Sold",
+   "v": "Biens vendus"
+  },
+  {
+   "k": "Google and Apple sign-in work in the phone builds.",
+   "v": "La connexion Google et Apple marche dans les versions mobiles."
+  },
+  {
+   "k": "Grain silos",
+   "v": "Silos à grain"
+  },
+  {
+   "k": "Greek",
+   "v": "Grec"
+  },
+  {
+   "k": "Green",
+   "v": "Vert"
+  },
+  {
+   "k": "Green thumb",
+   "v": "Main verte"
+  },
+  {
+   "k": "Greenhouse",
+   "v": "Serre"
+  },
+  {
+   "k": "Grocer",
+   "v": "Épicier"
+  },
+  {
+   "k": "Ground below this height is water: the farmer stops at the shore.",
+   "v": "Le sol sous cette hauteur est de l'eau : le fermier s'arrête au rivage."
+  },
+  {
+   "k": "Grow 500 crops",
+   "v": "Faire pousser 500 cultures"
+  },
+  {
+   "k": "Grow crops: plant, wait, harvest",
+   "v": "Cultive : plante, attends, récolte"
+  },
+  {
+   "k": "Grow it: plant {0} on a field",
+   "v": "Fais-le pousser : plante {0} dans un champ"
+  },
+  {
+   "k": "Grow or make more ",
+   "v": "Produis ou cultive plus de "
+  },
+  {
+   "k": "Grow or make more {x} and store it in the farmhouse",
+   "v": "Produis plus de {x} et stocke-le dans la ferme"
+  },
+  {
+   "k": "Growing: walk in when it's ripe",
+   "v": "En croissance : entre quand c'est mûr"
+  },
+  {
+   "k": "Grown in fields.",
+   "v": "Cultivé dans les champs."
+  },
+  {
+   "k": "Grown in fields. Animal feed is made from it.",
+   "v": "Cultivé dans les champs. Sert à faire l'aliment pour animaux."
+  },
+  {
+   "k": "Grown in fields. The windmill turns it into flour.",
+   "v": "Cultivé dans les champs. Le moulin en fait de la farine."
+  },
+  {
+   "k": "Grown on your island.",
+   "v": "Cultivé sur ton île."
+  },
+  {
+   "k": "Guards, and a longer raid warning",
+   "v": "Des gardes, et une alerte de raid plus tôt"
+  },
+  {
+   "k": "HOW NET WORTH IS COUNTED",
+   "v": "CALCUL DE LA VALEUR NETTE"
+  },
+  {
+   "k": "HUNGRY",
+   "v": "AFFAMÉ"
+  },
+  {
+   "k": "Halfway to the top of the island",
+   "v": "À mi-chemin du sommet de l'île"
+  },
+  {
+   "k": "Hard hat",
+   "v": "Casque"
+  },
+  {
+   "k": "Harvest",
+   "v": "Récolter"
+  },
+  {
+   "k": "Harvest 20 crops",
+   "v": "Récolter 20 cultures"
+  },
+  {
+   "k": "Harvest time: fields yield two more",
+   "v": "Temps des récoltes : les champs donnent deux de plus"
+  },
+  {
+   "k": "Harvest {0} crops",
+   "v": "Récolter {0} cultures"
+  },
+  {
+   "k": "Harvest, make, sell and build to level up",
+   "v": "Récolte, fabrique, vends et construis pour monter de niveau"
+  },
+  {
+   "k": "Hay bales",
+   "v": "Bottes de foin"
+  },
+  {
+   "k": "Hello, boss! Ask me about the stores or the fields.",
+   "v": "Bonjour, chef ! Demande-moi pour les réserves ou les champs."
+  },
+  {
+   "k": "Here",
+   "v": "Ici"
+  },
+  {
+   "k": "Hi there! Want to know how the building's going?",
+   "v": "Salut ! Tu veux savoir où en est la construction ?"
+  },
+  {
+   "k": "Hi! Hi! Did you see the chickens?",
+   "v": "Coucou ! Coucou ! T'as vu les poules ?"
+  },
+  {
+   "k": "Holds",
+   "v": "Contient"
+  },
+  {
+   "k": "Home",
+   "v": "Accueil"
+  },
+  {
+   "k": "Homestead",
+   "v": "Ferme familiale"
+  },
+  {
+   "k": "Homesteader",
+   "v": "Colon"
+  },
+  {
+   "k": "Honey",
+   "v": "Miel"
+  },
+  {
+   "k": "Honey, and fields nearby yield one more",
+   "v": "Du miel, et les champs proches donnent un de plus"
+  },
+  {
+   "k": "Houses",
+   "v": "Maisons"
+  },
+  {
+   "k": "Houses can reach level {0}",
+   "v": "Les maisons peuvent atteindre le niveau {0}"
+  },
+  {
+   "k": "How close to a pad's centre the farmer must stand to unload.",
+   "v": "À quelle distance du centre d'une zone le fermier doit être pour décharger."
+  },
+  {
+   "k": "How did the last raid go?",
+   "v": "Comment s'est passé le dernier raid ?"
+  },
+  {
+   "k": "How far a press must move before it becomes a drag, in UI units.",
+   "v": "Distance qu'un appui doit parcourir pour devenir un glissement, en unités UI."
+  },
+  {
+   "k": "How far from the middle of the view (m) a sound can still be heard.",
+   "v": "Distance du centre de la vue (m) à laquelle un son s'entend encore."
+  },
+  {
+   "k": "How far from their house (m) farm workers will go for work.",
+   "v": "Distance de leur maison (m) jusqu'où les ouvriers vont travailler."
+  },
+  {
+   "k": "How far from their house (m) warriors will run to meet raiders.",
+   "v": "Distance de leur maison (m) jusqu'où les guerriers courent affronter les pillards."
+  },
+  {
+   "k": "How far outside a field or animal house the farmer can still work it.",
+   "v": "Distance hors d'un champ ou d'un abri à laquelle le fermier peut encore travailler."
+  },
+  {
+   "k": "How is our house?",
+   "v": "Comment va notre maison ?"
+  },
+  {
+   "k": "How is the army?",
+   "v": "Comment va l'armée ?"
+  },
+  {
+   "k": "How much food is in the store?",
+   "v": "Combien de nourriture en réserve ?"
+  },
+  {
+   "k": "How to get it",
+   "v": "Comment l'obtenir"
+  },
+  {
+   "k": "How to redeem",
+   "v": "Comment l'utiliser"
+  },
+  {
+   "k": "How's the island?",
+   "v": "Comment va l'île ?"
+  },
+  {
+   "k": "Hunger takes people half as fast",
+   "v": "La faim frappe deux fois moins vite"
+  },
+  {
+   "k": "Hungry · bring grain",
+   "v": "Affamé · apporte du grain"
+  },
+  {
+   "k": "I've no home to speak of.",
+   "v": "Je n'ai pas vraiment de maison."
+  },
+  {
+   "k": "ID {0} · friends since {1}",
+   "v": "ID {0} · amis depuis le {1}"
+  },
+  {
+   "k": "IN STORE",
+   "v": "EN STOCK"
+  },
+  {
+   "k": "In about {0} minutes. They come once a day.",
+   "v": "Dans environ {0} minutes. Ils viennent une fois par jour."
+  },
+  {
+   "k": "In about {0} minutes.{1}",
+   "v": "Dans environ {0} minutes.{1}"
+  },
+  {
+   "k": "Inbox",
+   "v": "Boîte de réception"
+  },
+  {
+   "k": "Indonesian",
+   "v": "Indonésien"
+  },
+  {
+   "k": "Instant Build",
+   "v": "Chantier éclair"
+  },
+  {
+   "k": "Interest, and coins raiders can't take",
+   "v": "Des intérêts, et des pièces que les pillards ne peuvent pas prendre"
+  },
+  {
+   "k": "Interest, and safe coins",
+   "v": "Intérêts, et pièces à l'abri"
+  },
+  {
+   "k": "Invite friends",
+   "v": "Inviter des amis"
+  },
+  {
+   "k": "Invite friends, earn rewards",
+   "v": "Invite des amis, gagne des récompenses"
+  },
+  {
+   "k": "Invite link copied — send it to a friend",
+   "v": "Lien d'invitation copié : envoie-le à un ami"
+  },
+  {
+   "k": "Iron",
+   "v": "Fer"
+  },
+  {
+   "k": "Iron and the police station open at {0}",
+   "v": "Le fer et le commissariat ouvrent dès {0}"
+  },
+  {
+   "k": "Iron opens at {0}",
+   "v": "Le fer s'ouvre au niveau {0}"
+  },
+  {
+   "k": "Is anything missing?",
+   "v": "Il manque quelque chose ?"
+  },
+  {
+   "k": "Island",
+   "v": "Île"
+  },
+  {
+   "k": "Island Lv ",
+   "v": "Île Niv. "
+  },
+  {
+   "k": "Island Lv {0} · {1} net worth",
+   "v": "Île Niv. {0} · valeur nette {1}"
+  },
+  {
+   "k": "Island level 10",
+   "v": "Île niveau 10"
+  },
+  {
+   "k": "Island level {0}!",
+   "v": "Île niveau {0} !"
+  },
+  {
+   "k": "Island level {0}! New in the shop",
+   "v": "Île niveau {0} ! Nouveau à la boutique"
+  },
+  {
+   "k": "It comes down for half what it cost. What's stored in it is lost.",
+   "v": "Il est démoli pour la moitié de son prix. Son contenu est perdu."
+  },
+  {
+   "k": "It must stand by the sea",
+   "v": "Il doit être au bord de la mer"
+  },
+  {
+   "k": "It'll be a fair fight.",
+   "v": "Ce sera un combat équitable."
+  },
+  {
+   "k": "It's {0}: {1}. {2}.",
+   "v": "C'est {0} : {1}. {2}."
+  },
+  {
+   "k": "Italian",
+   "v": "Italien"
+  },
+  {
+   "k": "Japanese",
+   "v": "Japonais"
+  },
+  {
+   "k": "Keep growing: daily tasks still pay.",
+   "v": "Continue : les tâches du jour rapportent."
+  },
+  {
+   "k": "Keep it",
+   "v": "Le garder"
+  },
+  {
+   "k": "Keep the army fed: hungry warriors fight at half strength",
+   "v": "Nourris l'armée : affamés, les guerriers se battent à moitié"
+  },
+  {
+   "k": "Keep this house fed from the farmhouse",
+   "v": "Garder cette maison nourrie depuis la ferme"
+  },
+  {
+   "k": "Keeps a horse to ride (feed it)",
+   "v": "Abrite un cheval à monter (nourris-le)"
+  },
+  {
+   "k": "Kitchen",
+   "v": "Cuisine"
+  },
+  {
+   "k": "Korean",
+   "v": "Coréen"
+  },
+  {
+   "k": "LANGUAGE",
+   "v": "LANGUE"
+  },
+  {
+   "k": "LEVEL UP!",
+   "v": "NIVEAU +1 !"
+  },
+  {
+   "k": "Laid in the chicken coop.",
+   "v": "Pondu au poulailler."
+  },
+  {
+   "k": "Lamp post",
+   "v": "Réverbère"
+  },
+  {
+   "k": "Landholder",
+   "v": "Propriétaire"
+  },
+  {
+   "k": "Later",
+   "v": "Plus tard"
+  },
+  {
+   "k": "Leaderboard",
+   "v": "Classement"
+  },
+  {
+   "k": "Leave {0} stars in the store!",
+   "v": "Laisse {0} étoiles sur le store !"
+  },
+  {
+   "k": "Leaves in {0}h {1}m",
+   "v": "Part dans {0} h {1} min"
+  },
+  {
+   "k": "Leaves in {0}m {1}s",
+   "v": "Part dans {0} min {1} s"
+  },
+  {
+   "k": "Level {0} is the most at island level {1}: level up the island for more",
+   "v": "Niveau {0} max à l'île niveau {1} : monte l'île de niveau pour plus"
+  },
+  {
+   "k": "Level {0} opens at island level {1}",
+   "v": "Le niveau {0} s'ouvre au niveau {1} de l'île"
+  },
+  {
+   "k": "Level {0}!",
+   "v": "Niveau {0} !"
+  },
+  {
+   "k": "Levelled up: faster, and holds more",
+   "v": "Niveau supérieur : plus rapide et plus de place"
+  },
+  {
+   "k": "Library",
+   "v": "Bibliothèque"
+  },
+  {
+   "k": "Like",
+   "v": "J'aime"
+  },
+  {
+   "k": "Liked!",
+   "v": "Aimé !"
+  },
+  {
+   "k": "Likes",
+   "v": "J'aime"
+  },
+  {
+   "k": "Linked accounts get a {0} thank-you.",
+   "v": "Les comptes liés reçoivent {0} en remerciement."
+  },
+  {
+   "k": "Living room",
+   "v": "Salon"
+  },
+  {
+   "k": "Load",
+   "v": "Charger"
+  },
+  {
+   "k": "Load at least one crate first",
+   "v": "Charge d'abord au moins une caisse"
+  },
+  {
+   "k": "Load crates from your stores: the train pays in building materials",
+   "v": "Remplis les caisses depuis tes réserves : le train paie en matériaux"
+  },
+  {
+   "k": "Load its crates from your stores: it brings back wood and stone",
+   "v": "Remplis ses caisses depuis tes réserves : il rapporte du bois et de la pierre"
+  },
+  {
+   "k": "Loaded",
+   "v": "Chargé"
+  },
+  {
+   "k": "Loading ad…",
+   "v": "Chargement pub…"
+  },
+  {
+   "k": "Loading...",
+   "v": "Chargement..."
+  },
+  {
+   "k": "Loading...{0}%",
+   "v": "Chargement...{0}%"
+  },
+  {
+   "k": "Look",
+   "v": "Look"
+  },
+  {
+   "k": "Looking around.",
+   "v": "Je regarde autour."
+  },
+  {
+   "k": "Loop ",
+   "v": "Boucle "
+  },
+  {
+   "k": "Lost people come back twice as fast",
+   "v": "Les habitants perdus reviennent deux fois plus vite"
+  },
+  {
+   "k": "Lucky Wheel",
+   "v": "Roue de la chance"
+  },
+  {
+   "k": "Lumber yard",
+   "v": "Scierie"
+  },
+  {
+   "k": "Lunch Basket",
+   "v": "Panier repas"
+  },
+  {
+   "k": "Lunch Basket (use · {0} left)",
+   "v": "Panier repas (utiliser · {0} restant)"
+  },
+  {
+   "k": "Lunch Basket · {0} gems",
+   "v": "Panier repas · {0} gemmes"
+  },
+  {
+   "k": "Lv ",
+   "v": "Niv. "
+  },
+  {
+   "k": "Lv {0}",
+   "v": "Niv. {0}"
+  },
+  {
+   "k": "MAKES",
+   "v": "PRODUIT"
+  },
+  {
+   "k": "MAKING",
+   "v": "EN COURS"
+  },
+  {
+   "k": "MISMATCH ",
+   "v": "INCOHÉRENCE "
+  },
+  {
+   "k": "MY FARM",
+   "v": "MA FERME"
+  },
+  {
+   "k": "Machines",
+   "v": "Machines"
+  },
+  {
+   "k": "Machines and animal houses can grow to level {0} from {1}",
+   "v": "Machines et abris d'animaux peuvent atteindre le niveau {0} dès {1}"
+  },
+  {
+   "k": "Machines and animal houses can reach level {0}",
+   "v": "Machines et abris animaux peuvent atteindre le niveau {0}"
+  },
+  {
+   "k": "Machines work {0}% faster",
+   "v": "Les machines tournent {0}% plus vite"
+  },
+  {
+   "k": "Made in the windmill. The bakery needs it.",
+   "v": "Fait au moulin. La boulangerie en a besoin."
+  },
+  {
+   "k": "Made on your island.",
+   "v": "Fait sur ton île."
+  },
+  {
+   "k": "Mailbox",
+   "v": "Boîte aux lettres"
+  },
+  {
+   "k": "Maize",
+   "v": "Maïs"
+  },
+  {
+   "k": "Make a code and send it to a friend.",
+   "v": "Crée un code et envoie-le à un ami."
+  },
+  {
+   "k": "Make or gather wood on your island",
+   "v": "Fabrique ou récolte du bois sur ton île"
+  },
+  {
+   "k": "Make or gather {0} on your island",
+   "v": "Produis ou récolte {0} sur ton île"
+  },
+  {
+   "k": "Make {0} bricks",
+   "v": "Fabriquer {0} briques"
+  },
+  {
+   "k": "Make {0} cheese",
+   "v": "Fabriquer {0} fromages"
+  },
+  {
+   "k": "Make {0} cloth",
+   "v": "Fabriquer {0} tissus"
+  },
+  {
+   "k": "Make {0} flour",
+   "v": "Fabriquer {0} farines"
+  },
+  {
+   "k": "Make {0} iron",
+   "v": "Fabriquer {0} fers"
+  },
+  {
+   "k": "Make {0} juice",
+   "v": "Fabriquer {0} jus"
+  },
+  {
+   "k": "Make {0} oil",
+   "v": "Fabriquer {0} huiles"
+  },
+  {
+   "k": "Make {0} planks",
+   "v": "Fabriquer {0} planches"
+  },
+  {
+   "k": "Makes {0} · +{1}% speed",
+   "v": "Produit {0} · +{1}% vitesse"
+  },
+  {
+   "k": "Manor Lord",
+   "v": "Châtelain"
+  },
+  {
+   "k": "Market stall",
+   "v": "Étal de marché"
+  },
+  {
+   "k": "Market · sell here",
+   "v": "Marché · vends ici"
+  },
+  {
+   "k": "Master builder",
+   "v": "Maître bâtisseur"
+  },
+  {
+   "k": "Master farmer I",
+   "v": "Maître fermier I"
+  },
+  {
+   "k": "Master farmer II",
+   "v": "Maître fermier II"
+  },
+  {
+   "k": "Mastery",
+   "v": "Maîtrise"
+  },
+  {
+   "k": "Materials",
+   "v": "Matériaux"
+  },
+  {
+   "k": "Max level",
+   "v": "Niveau max"
+  },
+  {
+   "k": "Maybe later",
+   "v": "Peut-être plus tard"
+  },
+  {
+   "k": "Meadow",
+   "v": "Prairie"
+  },
+  {
+   "k": "Mends damaged buildings nearby for free",
+   "v": "Répare gratuitement les bâtiments abîmés proches"
+  },
+  {
+   "k": "Milk",
+   "v": "Lait"
+  },
+  {
+   "k": "Mill {0} flour",
+   "v": "Moudre {0} farines"
+  },
+  {
+   "k": "Mine",
+   "v": "Mine"
+  },
+  {
+   "k": "Missing a day pauses your streak — it never resets.",
+   "v": "Rater un jour met ta série en pause, elle ne repart jamais à zéro."
+  },
+  {
+   "k": "Mix",
+   "v": "Mixte"
+  },
+  {
+   "k": "More builders: build and repair faster",
+   "v": "Plus de bâtisseurs : construis et répare plus vite"
+  },
+  {
+   "k": "Morning! Bread's better with flour from your own mill.",
+   "v": "Bonjour ! Le pain est meilleur avec la farine de ton moulin."
+  },
+  {
+   "k": "Move",
+   "v": "Déplacer"
+  },
+  {
+   "k": "Move your {0}",
+   "v": "Déplace : {0}"
+  },
+  {
+   "k": "Move your {x}",
+   "v": "Déplacer : {x}"
+  },
+  {
+   "k": "Music",
+   "v": "Musique"
+  },
+  {
+   "k": "My codes",
+   "v": "Mes codes"
+  },
+  {
+   "k": "My island",
+   "v": "Mon île"
+  },
+  {
+   "k": "NEEDS",
+   "v": "BESOINS"
+  },
+  {
+   "k": "NET WORTH",
+   "v": "VALEUR NETTE"
+  },
+  {
+   "k": "NEW",
+   "v": "NOUVEAU"
+  },
+  {
+   "k": "NEW IN THE SHOP",
+   "v": "NOUVEAU À LA BOUTIQUE"
+  },
+  {
+   "k": "NEW!",
+   "v": "NOUVEAU !"
+  },
+  {
+   "k": "Name changed!",
+   "v": "Nom changé !"
+  },
+  {
+   "k": "Need more",
+   "v": "Il en faut plus"
+  },
+  {
+   "k": "Need {0} more Wood — make or gather it, or fill orders that give it.",
+   "v": "Il manque {0} bois — fabrique-le, récolte-le ou remplis des commandes qui en donnent."
+  },
+  {
+   "k": "Need {0} more coins.",
+   "v": "Il te faut {0} pièces de plus."
+  },
+  {
+   "k": "Need {0} more {1} — make or gather it, or fill orders that give it.",
+   "v": "Il te faut {0} {1} de plus : produis-en, récolte-en ou remplis des commandes qui en donnent."
+  },
+  {
+   "k": "Needs ",
+   "v": "Il faut "
+  },
+  {
+   "k": "Needs a builders' hut",
+   "v": "Il faut une cabane de bâtisseurs"
+  },
+  {
+   "k": "Needs a workers' house",
+   "v": "Il faut une maison des ouvriers"
+  },
+  {
+   "k": "Needs the Farm Pass",
+   "v": "Nécessite le Pass Ferme"
+  },
+  {
+   "k": "Needs {0}",
+   "v": "Il faut {0}"
+  },
+  {
+   "k": "Needs {0} wood",
+   "v": "Il faut {0} bois"
+  },
+  {
+   "k": "Needs {0} wood in the farmhouse (has {1}) — chop trees",
+   "v": "Il faut {0} bois dans la ferme (il y en a {1}) — coupe des arbres"
+  },
+  {
+   "k": "Needs {0} wood, {1} stone",
+   "v": "Il faut {0} bois, {1} pierre"
+  },
+  {
+   "k": "Needs {0} {1} in the farmhouse (has {2}) — {3}",
+   "v": "Il faut {0} {1} dans la ferme (il y en a {2}) : {3}"
+  },
+  {
+   "k": "Net Worth",
+   "v": "Valeur nette"
+  },
+  {
+   "k": "Net worth",
+   "v": "Valeur nette"
+  },
+  {
+   "k": "Never miss a raid",
+   "v": "Ne rate aucun raid"
+  },
+  {
+   "k": "Never while you're playing, never at night, a few a day at most.",
+   "v": "Jamais pendant que tu joues, jamais la nuit, quelques-unes par jour au plus."
+  },
+  {
+   "k": "New crop: {x}",
+   "v": "Nouvelle culture : {x}"
+  },
+  {
+   "k": "New look",
+   "v": "Nouveau look"
+  },
+  {
+   "k": "New order soon",
+   "v": "Commande bientôt"
+  },
+  {
+   "k": "News",
+   "v": "Actualités"
+  },
+  {
+   "k": "News needs the full game.<br>Start from the <b>Boot</b> scene to sign in.",
+   "v": "Les actus nécessitent le jeu complet.<br>Lance depuis la scène <b>Boot</b> pour te connecter."
+  },
+  {
+   "k": "Next absence: normal food price, up to {0} h",
+   "v": "Prochaine absence : nourriture au prix normal, jusqu'à {0} h"
+  },
+  {
+   "k": "Next farm",
+   "v": "Ferme suivante"
+  },
+  {
+   "k": "Next in ",
+   "v": "Prochain dans "
+  },
+  {
+   "k": "Next in {0}h {1}m",
+   "v": "Prochain dans {0} h {1} min"
+  },
+  {
+   "k": "Next train in {0}h {1}m",
+   "v": "Prochain train dans {0} h {1} min"
+  },
+  {
+   "k": "Next train in {0}m {1}s",
+   "v": "Prochain train dans {0} min {1} s"
+  },
+  {
+   "k": "Night Shift",
+   "v": "Équipe de nuit"
+  },
+  {
+   "k": "Night Shift (use · {0} left)",
+   "v": "Équipe de nuit (utiliser · {0} restant)"
+  },
+  {
+   "k": "Night Shift on",
+   "v": "Équipe de nuit prévue"
+  },
+  {
+   "k": "Night Shift on (use · {0} left)",
+   "v": "Équipe de nuit prévue (utiliser · {0} restant)"
+  },
+  {
+   "k": "Night Shift on · {0} gems",
+   "v": "Équipe de nuit prévue · {0} gemmes"
+  },
+  {
+   "k": "Night Shift · {0} gems",
+   "v": "Équipe de nuit · {0} gemmes"
+  },
+  {
+   "k": "Night Shift: watch an ad",
+   "v": "Équipe de nuit : regarder une pub"
+  },
+  {
+   "k": "No ",
+   "v": "Pas de "
+  },
+  {
+   "k": "No Ads",
+   "v": "Sans pubs"
+  },
+  {
+   "k": "No Ads — thank you!",
+   "v": "Sans pub — merci !"
+  },
+  {
+   "k": "No ad right now — try again in a moment",
+   "v": "Pas de pub pour l'instant : réessaie dans un moment"
+  },
+  {
+   "k": "No boosts yet: get them in the Shop.",
+   "v": "Pas encore de boosts : achète-les à la Boutique."
+  },
+  {
+   "k": "No codes yet. Finish a daily task or a goal to earn one.",
+   "v": "Pas encore de codes. Termine une tâche du jour ou un objectif pour en gagner."
+  },
+  {
+   "k": "No connection. Try again in a moment.",
+   "v": "Pas de connexion. Réessaie dans un moment."
+  },
+  {
+   "k": "No farm workers yet",
+   "v": "Pas encore d'ouvriers agricoles"
+  },
+  {
+   "k": "No farms on this week's board yet.",
+   "v": "Aucune ferme au classement de la semaine."
+  },
+  {
+   "k": "No friends yet. Share your code, or add a friend's.",
+   "v": "Pas encore d'amis. Partage ton code, ou ajoute celui d'un ami."
+  },
+  {
+   "k": "No island in this scene",
+   "v": "Aucune île dans cette scène"
+  },
+  {
+   "k": "No news right now.<br>Check back soon!",
+   "v": "Pas de nouvelles pour l'instant.<br>Repasse bientôt !"
+  },
+  {
+   "k": "No one on this week's board yet — play to get on it.",
+   "v": "Personne au classement de la semaine : joue pour y entrer."
+  },
+  {
+   "k": "No other farms on this week's board yet",
+   "v": "Aucune autre ferme au classement de la semaine"
+  },
+  {
+   "k": "No post office yet",
+   "v": "Pas encore de bureau de poste"
+  },
+  {
+   "k": "No prizes this week.",
+   "v": "Pas de prix cette semaine."
+  },
+  {
+   "k": "No raid since I got here. Long may it last.",
+   "v": "Aucun raid depuis mon arrivée. Pourvu que ça dure."
+  },
+  {
+   "k": "No spins left today — come back tomorrow",
+   "v": "Plus de tours aujourd'hui : reviens demain"
+  },
+  {
+   "k": "Not a scratch on anything.",
+   "v": "Pas une égratignure nulle part."
+  },
+  {
+   "k": "Not again today. They come once a day — be ready tomorrow.",
+   "v": "Plus aujourd'hui. Ils viennent une fois par jour — sois prêt demain."
+  },
+  {
+   "k": "Not enough ",
+   "v": "Pas assez de "
+  },
+  {
+   "k": "Not enough Wood",
+   "v": "Pas assez de bois"
+  },
+  {
+   "k": "Not enough coins",
+   "v": "Pas assez de pièces"
+  },
+  {
+   "k": "Not enough gems",
+   "v": "Pas assez de gemmes"
+  },
+  {
+   "k": "Not finished yet",
+   "v": "Pas encore fini"
+  },
+  {
+   "k": "Not now",
+   "v": "Plus tard"
+  },
+  {
+   "k": "Not reached yet",
+   "v": "Pas encore atteint"
+  },
+  {
+   "k": "Note",
+   "v": "Note"
+  },
+  {
+   "k": "Nothing for workers to do here.",
+   "v": "Rien à faire ici pour les ouvriers."
+  },
+  {
+   "k": "Nothing here yet.",
+   "v": "Rien ici pour l'instant."
+  },
+  {
+   "k": "Nothing is being built right now",
+   "v": "Rien en construction pour l'instant"
+  },
+  {
+   "k": "Nothing on the go. Buy something and I'll build it!",
+   "v": "Rien en cours. Achète quelque chose et je le construis !"
+  },
+  {
+   "k": "Nothing to build here yet.",
+   "v": "Rien à construire ici pour l'instant."
+  },
+  {
+   "k": "Nothing to collect.",
+   "v": "Rien à collecter."
+  },
+  {
+   "k": "Nothing to do right now. More fields or animals would keep me busy.",
+   "v": "Rien à faire pour l'instant. Plus de champs ou d'animaux m'occuperaient."
+  },
+  {
+   "k": "Nothing you carry sells here.",
+   "v": "Rien de ce que tu portes ne se vend ici."
+  },
+  {
+   "k": "Nothing's waiting on anything.",
+   "v": "Rien n'attend quoi que ce soit."
+  },
+  {
+   "k": "Notifications",
+   "v": "Notifications"
+  },
+  {
+   "k": "Notifications are off for Farmverse in your phone's settings",
+   "v": "Les notifications de Farmverse sont désactivées dans les réglages du téléphone"
+  },
+  {
+   "k": "Notifications on: we'll warn you before raids",
+   "v": "Notifications activées : on te prévient avant les raids"
+  },
+  {
+   "k": "OFFERS",
+   "v": "OFFRES"
+  },
+  {
+   "k": "OK",
+   "v": "OK"
+  },
+  {
+   "k": "ORDER CHEST",
+   "v": "COFFRE COMMANDES"
+  },
+  {
+   "k": "ORDERS",
+   "v": "COMMANDES"
+  },
+  {
+   "k": "Oak tree",
+   "v": "Chêne"
+  },
+  {
+   "k": "Off",
+   "v": "Non"
+  },
+  {
+   "k": "Off to the farmhouse.",
+   "v": "Direction la ferme."
+  },
+  {
+   "k": "Offers",
+   "v": "Offres"
+  },
+  {
+   "k": "Oil opens at {0}; machines can reach level {1}",
+   "v": "L'huile s'ouvre au niveau {0} ; les machines montent au niveau {1}"
+  },
+  {
+   "k": "On",
+   "v": "Oui"
+  },
+  {
+   "k": "On a large screen (tablet, desktop) the stick sits in a corner instead, this far in from the side and up from the bottom (pixels at {0} short side).",
+   "v": "Sur grand écran (tablette, ordi), le stick est dans un coin, à cette distance du bord et du bas (pixels pour {0} de petit côté)."
+  },
+  {
+   "k": "On guard! Ask me about the raiders.",
+   "v": "En garde ! Demande-moi pour les pillards."
+  },
+  {
+   "k": "One raid a day: they'll be back tomorrow.",
+   "v": "Un raid par jour : ils reviendront demain."
+  },
+  {
+   "k": "One-shot ",
+   "v": "Unique "
+  },
+  {
+   "k": "Onion",
+   "v": "Oignon"
+  },
+  {
+   "k": "Only a few a day, never at night. Change it any time in Settings.",
+   "v": "Quelques-unes par jour, jamais la nuit. Modifiable à tout moment dans les Réglages."
+  },
+  {
+   "k": "Open redeem page",
+   "v": "Ouvrir la page d'échange"
+  },
+  {
+   "k": "Opens at island level {0}",
+   "v": "S'ouvre au niveau {0} de l'île"
+  },
+  {
+   "k": "Opens at level {0}",
+   "v": "S'ouvre au niveau {0}"
+  },
+  {
+   "k": "Or pay to clear the land at once.",
+   "v": "Ou paie pour dégager le terrain tout de suite."
+  },
+  {
+   "k": "Orange",
+   "v": "Orange"
+  },
+  {
+   "k": "Orchard",
+   "v": "Verger"
+  },
+  {
+   "k": "Order delivered: +{0} coins",
+   "v": "Commande livrée : +{0} pièces"
+  },
+  {
+   "k": "Order ends in ",
+   "v": "Fin de la commande dans "
+  },
+  {
+   "k": "Orders",
+   "v": "Commandes"
+  },
+  {
+   "k": "Orders Filled",
+   "v": "Commandes remplies"
+  },
+  {
+   "k": "Orders pay double",
+   "v": "Commandes payées double"
+  },
+  {
+   "k": "Orders pay more than the market",
+   "v": "Les commandes paient plus que le marché"
+  },
+  {
+   "k": "Ore shed",
+   "v": "Fonderie"
+  },
+  {
+   "k": "Outline (runtime)",
+   "v": "Contour (runtime)"
+  },
+  {
+   "k": "Output room",
+   "v": "Pièce de sortie"
+  },
+  {
+   "k": "PLAYER ID",
+   "v": "ID JOUEUR"
+  },
+  {
+   "k": "Packing shed",
+   "v": "Hangar d'emballage"
+  },
+  {
+   "k": "Pad ",
+   "v": "Zone "
+  },
+  {
+   "k": "Paid to your mailbox when the week closes.",
+   "v": "Versé dans ta boîte aux lettres à la fin de la semaine."
+  },
+  {
+   "k": "Paste your code and confirm.",
+   "v": "Colle ton code et confirme."
+  },
+  {
+   "k": "Paste your code and tap <b>Redeem</b>.",
+   "v": "Colle ton code et touche <b>Échanger</b>."
+  },
+  {
+   "k": "Payment pending — your items arrive once it goes through",
+   "v": "Paiement en attente : tes objets arrivent dès qu'il est validé"
+  },
+  {
+   "k": "Pays {0}% more for bread, flour, cheese, eggs and milk",
+   "v": "Paie {0}% de plus pour pain, farine, fromage, œufs et lait"
+  },
+  {
+   "k": "Pays {0}% more for crops, fruit, juice and honey",
+   "v": "Paie {0}% de plus pour cultures, fruits, jus et miel"
+  },
+  {
+   "k": "Pays {0}% more for fish and smoked goods",
+   "v": "Paie {0}% de plus pour poisson et produits fumés"
+  },
+  {
+   "k": "People",
+   "v": "Habitants"
+  },
+  {
+   "k": "Pick a seed to sow this field.",
+   "v": "Choisis une graine pour ce champ."
+  },
+  {
+   "k": "Pick ripe crops and store them",
+   "v": "Cueillir les récoltes mûres et les ranger"
+  },
+  {
+   "k": "Pigsty",
+   "v": "Porcherie"
+  },
+  {
+   "k": "Place your {0}",
+   "v": "Place : {0}"
+  },
+  {
+   "k": "Place your {x}",
+   "v": "Placer : {x}"
+  },
+  {
+   "k": "Planks",
+   "v": "Planches"
+  },
+  {
+   "k": "Plant",
+   "v": "Planter"
+  },
+  {
+   "k": "Plant 10 crops",
+   "v": "Planter 10 cultures"
+  },
+  {
+   "k": "Plant a field",
+   "v": "Planter un champ"
+  },
+  {
+   "k": "Plant {0} fields",
+   "v": "Planter {0} champs"
+  },
+  {
+   "k": "Play offline",
+   "v": "Jouer hors ligne"
+  },
+  {
+   "k": "Please enter a name to change.",
+   "v": "Entre un nom pour le changer."
+  },
+  {
+   "k": "Please wait…",
+   "v": "Patiente…"
+  },
+  {
+   "k": "Plenty to eat, too.",
+   "v": "Et de quoi manger, aussi."
+  },
+  {
+   "k": "Police station",
+   "v": "Commissariat"
+  },
+  {
+   "k": "Polish",
+   "v": "Polonais"
+  },
+  {
+   "k": "Portuguese",
+   "v": "Portugais"
+  },
+  {
+   "k": "Post Office",
+   "v": "Bureau de poste"
+  },
+  {
+   "k": "Post office",
+   "v": "Bureau de poste"
+  },
+  {
+   "k": "Postman",
+   "v": "Facteur"
+  },
+  {
+   "k": "Potato",
+   "v": "Pomme de terre"
+  },
+  {
+   "k": "Potting shed",
+   "v": "Cabane de jardin"
+  },
+  {
+   "k": "Premium is yours this season!",
+   "v": "Le premium est à toi cette saison !"
+  },
+  {
+   "k": "Premium rewards on every tier!",
+   "v": "Récompenses premium à chaque palier !"
+  },
+  {
+   "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts.",
+   "v": "Toucher <color=#ffd23a>Tout récupérer</color> récupère tout sauf les cadeaux pub."
+  },
+  {
+   "k": "Price from the store · rewards already earned this season unlock at once.",
+   "v": "Prix du store · les récompenses déjà gagnées cette saison se débloquent aussitôt."
+  },
+  {
+   "k": "Privacy",
+   "v": "Confidentialité"
+  },
+  {
+   "k": "Profile",
+   "v": "Profil"
+  },
+  {
+   "k": "Pumpkin",
+   "v": "Citrouille"
+  },
+  {
+   "k": "Purchases restored",
+   "v": "Achats restaurés"
+  },
+  {
+   "k": "Purple",
+   "v": "Violet"
+  },
+  {
+   "k": "Push Alarm",
+   "v": "Alerte push"
+  },
+  {
+   "k": "Quiet as a mouse round here.",
+   "v": "Calme plat par ici."
+  },
+  {
+   "k": "RAID!",
+   "v": "RAID !"
+  },
+  {
+   "k": "READY",
+   "v": "PRÊT"
+  },
+  {
+   "k": "REWARDS",
+   "v": "RÉCOMPENSES"
+  },
+  {
+   "k": "REWARDS ×{0}",
+   "v": "RÉCOMPENSES ×{0}"
+  },
+  {
+   "k": "RUINED",
+   "v": "EN RUINE"
+  },
+  {
+   "k": "Raid Shield",
+   "v": "Bouclier anti-raid"
+  },
+  {
+   "k": "Raid Shield ends soon",
+   "v": "Le bouclier se termine bientôt"
+  },
+  {
+   "k": "Raid driven off!",
+   "v": "Raid repoussé !"
+  },
+  {
+   "k": "Raided while away",
+   "v": "Pillé en ton absence"
+  },
+  {
+   "k": "Raider beaten — pick up what they dropped",
+   "v": "Pillard vaincu : ramasse son butin"
+  },
+  {
+   "k": "Raiders are coming soon, and we're too few to stop them. Feed the army or build up the guard.",
+   "v": "Les pillards arrivent bientôt et on est trop peu pour les arrêter. Nourris l'armée ou renforce la garde."
+  },
+  {
+   "k": "Raiders are smashing the {0}!",
+   "v": "Les pillards cassent : {0} !"
+  },
+  {
+   "k": "Raiders are stealing from the farmhouse!",
+   "v": "Les pillards volent la ferme !"
+  },
+  {
+   "k": "Raiders are stealing from the {0}!",
+   "v": "Les pillards pillent : {0} !"
+  },
+  {
+   "k": "Raiders came while you were away. Be here next time to fight them!",
+   "v": "Des pillards sont venus en ton absence. Sois là la prochaine fois pour les combattre !"
+  },
+  {
+   "k": "Raiders came while you were away. Your warriors held them off.",
+   "v": "Des pillards sont venus en ton absence. Tes guerriers les ont repoussés."
+  },
+  {
+   "k": "Raiders come for rich islands: warriors stop them",
+   "v": "Les pillards visent les îles riches : les guerriers les arrêtent"
+  },
+  {
+   "k": "Raiders come from level {0}: warriors stop them",
+   "v": "Les pillards viennent dès le niveau {0} : les guerriers les arrêtent"
+  },
+  {
+   "k": "Raiders driven off!",
+   "v": "Pillards repoussés !"
+  },
+  {
+   "k": "Raiders from the {0} · landing in {1}s",
+   "v": "Pillards venus de {0} · arrivée dans {1} s"
+  },
+  {
+   "k": "Raiders killed a builder!",
+   "v": "Les pillards ont tué un bâtisseur !"
+  },
+  {
+   "k": "Raiders killed a farm worker!",
+   "v": "Les pillards ont tué un ouvrier !"
+  },
+  {
+   "k": "Raiders sighted {x}!",
+   "v": "Pillards en vue {x} !"
+  },
+  {
+   "k": "Raiders stay away for {0} hours.",
+   "v": "Les pillards restent à l'écart {0} heures."
+  },
+  {
+   "k": "Raiders take notice: one raid a day",
+   "v": "Les pillards te remarquent : un raid par jour"
+  },
+  {
+   "k": "Raiders took {0} coins! (a bank keeps coins safe)",
+   "v": "Les pillards ont pris {0} pièces ! (une banque protège les pièces)"
+  },
+  {
+   "k": "Raiders {x} · landing in {0}s",
+   "v": "Pillards {x} · débarquement dans {0} s"
+  },
+  {
+   "k": "Raids",
+   "v": "Raids"
+  },
+  {
+   "k": "Raids Beaten",
+   "v": "Raids repoussés"
+  },
+  {
+   "k": "Raids beaten",
+   "v": "Raids repoussés"
+  },
+  {
+   "k": "Rain",
+   "v": "Pluie"
+  },
+  {
+   "k": "Rain: crops sown now grow faster",
+   "v": "Pluie : les semis poussent plus vite"
+  },
+  {
+   "k": "Random",
+   "v": "Aléatoire"
+  },
+  {
+   "k": "Rank {0}",
+   "v": "Rang {0}"
+  },
+  {
+   "k": "Rate",
+   "v": "Noter"
+  },
+  {
+   "k": "Reach island level {0}",
+   "v": "Atteindre le niveau {0} de l'île"
+  },
+  {
+   "k": "Read",
+   "v": "Lire"
+  },
+  {
+   "k": "Read more",
+   "v": "Lire la suite"
+  },
+  {
+   "k": "Read terms",
+   "v": "Conditions"
+  },
+  {
+   "k": "Ready ×{0}",
+   "v": "Prêt ×{0}"
+  },
+  {
+   "k": "Ready ×{0} · workers off",
+   "v": "Prêt ×{0} · ouvriers arrêtés"
+  },
+  {
+   "k": "Referral reward!",
+   "v": "Prime de parrainage !"
+  },
+  {
+   "k": "Refill",
+   "v": "Remplir"
+  },
+  {
+   "k": "Repair",
+   "v": "Réparer"
+  },
+  {
+   "k": "Repairing",
+   "v": "Réparation"
+  },
+  {
+   "k": "Replant",
+   "v": "Replanter"
+  },
+  {
+   "k": "Required Level ",
+   "v": "Niveau requis "
+  },
+  {
+   "k": "Resets In",
+   "v": "Fin dans"
+  },
+  {
+   "k": "Resets in <b><color=#ff7a8c>",
+   "v": "Fin dans <b><color=#ff7a8c>"
+  },
+  {
+   "k": "Resets in <b><color=#ff7a8c>{0}h {1}m</color></b>",
+   "v": "Réinitialisation dans <b><color=#ff7a8c>{0} h {1} min</color></b>"
+  },
+  {
+   "k": "Restock food",
+   "v": "Réapprovisionner"
+  },
+  {
+   "k": "Restore purchases",
+   "v": "Restaurer les achats"
+  },
+  {
+   "k": "Retry",
+   "v": "Réessayer"
+  },
+  {
+   "k": "Reward",
+   "v": "Récompense"
+  },
+  {
+   "k": "Rewards",
+   "v": "Récompenses"
+  },
+  {
+   "k": "Ride",
+   "v": "Monter"
+  },
+  {
+   "k": "Ride there",
+   "v": "Y aller à cheval"
+  },
+  {
+   "k": "Riding · farm work paused",
+   "v": "À cheval · travail en pause"
+  },
+  {
+   "k": "Rim radius in UI units ({0} = the short side of the screen).",
+   "v": "Rayon en unités UI ({0} = le petit côté de l'écran)."
+  },
+  {
+   "k": "Romanian",
+   "v": "Roumain"
+  },
+  {
+   "k": "Room camera",
+   "v": "Caméra de pièce"
+  },
+  {
+   "k": "Rotting ×{0}",
+   "v": "Pourrit ×{0}"
+  },
+  {
+   "k": "Ruin smoke",
+   "v": "Fumée de ruine"
+  },
+  {
+   "k": "Ruined · bring {0}",
+   "v": "En ruine · apporte {0}"
+  },
+  {
+   "k": "Ruined · bring {0} wood",
+   "v": "En ruine · apporte {0} bois"
+  },
+  {
+   "k": "Ruined · waiting for a builder",
+   "v": "En ruine · attend un bâtisseur"
+  },
+  {
+   "k": "Ruined: builders will repair it",
+   "v": "En ruine : les bâtisseurs vont réparer"
+  },
+  {
+   "k": "Russian",
+   "v": "Russe"
+  },
+  {
+   "k": "SELLS FOR",
+   "v": "PRIX DE VENTE"
+  },
+  {
+   "k": "SHOP",
+   "v": "BOUTIQUE"
+  },
+  {
+   "k": "SKIP",
+   "v": "PASSER"
+  },
+  {
+   "k": "SPECIAL OFFERS",
+   "v": "OFFRES SPÉCIALES"
+  },
+  {
+   "k": "SPIN!",
+   "v": "TOURNE !"
+  },
+  {
+   "k": "STOP",
+   "v": "STOP"
+  },
+  {
+   "k": "STORAGE",
+   "v": "ENTREPÔT"
+  },
+  {
+   "k": "STORED",
+   "v": "STOCKÉ"
+  },
+  {
+   "k": "Sailing to {0}'s island…",
+   "v": "Cap sur l'île de {0}…"
+  },
+  {
+   "k": "Same again",
+   "v": "Comme avant"
+  },
+  {
+   "k": "Save",
+   "v": "Sauvegarder"
+  },
+  {
+   "k": "Save Farm",
+   "v": "Sauvegarder"
+  },
+  {
+   "k": "Save your farm",
+   "v": "Sauvegarde ta ferme"
+  },
+  {
+   "k": "Save your farm with Google or Apple to get coupons",
+   "v": "Sauvegarde ta ferme avec Google ou Apple pour avoir des coupons"
+  },
+  {
+   "k": "Sawn from wood.",
+   "v": "Scié dans le bois."
+  },
+  {
+   "k": "School",
+   "v": "École"
+  },
+  {
+   "k": "Sea",
+   "v": "Mer"
+  },
+  {
+   "k": "Season chest",
+   "v": "Coffre de saison"
+  },
+  {
+   "k": "Season ends in",
+   "v": "Fin de saison dans"
+  },
+  {
+   "k": "Season {0} · {1} days",
+   "v": "Saison {0} · {1} jours"
+  },
+  {
+   "k": "Seasonal display",
+   "v": "Présentoir saisonnier"
+  },
+  {
+   "k": "Seconds at full stick before the horse comes.",
+   "v": "Secondes à fond sur le stick avant que le cheval arrive."
+  },
+  {
+   "k": "Seconds of play before the first raid.",
+   "v": "Secondes de jeu avant le premier raid."
+  },
+  {
+   "k": "See it grow",
+   "v": "Voir l'île grandir"
+  },
+  {
+   "k": "Sell",
+   "v": "Vendre"
+  },
+  {
+   "k": "Sell ",
+   "v": "Vendre "
+  },
+  {
+   "k": "Sell 30 goods",
+   "v": "Vendre 30 biens"
+  },
+  {
+   "k": "Sell goods at a market stall",
+   "v": "Vends tes biens à un étal de marché"
+  },
+  {
+   "k": "Sell surplus",
+   "v": "Vendre le surplus"
+  },
+  {
+   "k": "Sell what the farmhouse has spare",
+   "v": "Vendre ce que la ferme a en trop"
+  },
+  {
+   "k": "Sell {0}",
+   "v": "Vendre {0}"
+  },
+  {
+   "k": "Sell {0} goods",
+   "v": "Vendre {0} produits"
+  },
+  {
+   "k": "Sell {0} goods at the market",
+   "v": "Vendre {0} produits au marché"
+  },
+  {
+   "k": "Sell {x}?",
+   "v": "Vendre : {x} ?"
+  },
+  {
+   "k": "Selling too much of one crop lowers the price <b>shops</b> pay.",
+   "v": "Trop vendre d'une culture fait baisser le prix payé par les <b>boutiques</b>."
+  },
+  {
+   "k": "Selling too much of one crop lowers the price <color=#ffd23a>shops</color> pay.",
+   "v": "Vendre trop d'une même culture fait baisser le prix payé par les <color=#ffd23a>boutiques</color>."
+  },
+  {
+   "k": "Sells anything at the normal price",
+   "v": "Vends-y de tout au prix normal"
+  },
+  {
+   "k": "Send food",
+   "v": "Ravitailler"
+  },
+  {
+   "k": "Send the freight train",
+   "v": "Envoyer le train de marchandises"
+  },
+  {
+   "k": "Send train",
+   "v": "Envoyer le train"
+  },
+  {
+   "k": "Settings",
+   "v": "Réglages"
+  },
+  {
+   "k": "Settler",
+   "v": "Colon"
+  },
+  {
+   "k": "Shear {0} wool",
+   "v": "Tondre {0} laines"
+  },
+  {
+   "k": "Sheep arrive at level {0}",
+   "v": "Les moutons arrivent au niveau {0}"
+  },
+  {
+   "k": "Sheep give wool for cloth later on",
+   "v": "Les moutons donnent de la laine pour le tissu plus tard"
+  },
+  {
+   "k": "Sheep shed",
+   "v": "Bergerie"
+  },
+  {
+   "k": "Shop",
+   "v": "Boutique"
+  },
+  {
+   "k": "Shop deals about to end",
+   "v": "Offres de la boutique bientôt terminées"
+  },
+  {
+   "k": "Short screen side, in pixels, from which a screen counts as large.",
+   "v": "Petit côté de l'écran, en pixels, à partir duquel l'écran compte comme grand."
+  },
+  {
+   "k": "Show code",
+   "v": "Voir le code"
+  },
+  {
+   "k": "Sign in with your <b>VeWorld</b> wallet.",
+   "v": "Connecte-toi avec ton portefeuille <b>VeWorld</b>."
+  },
+  {
+   "k": "Signpost",
+   "v": "Panneau"
+  },
+  {
+   "k": "Site ring",
+   "v": "Zone chantier"
+  },
+  {
+   "k": "Skip the ads for good?",
+   "v": "Fini les pubs pour de bon ?"
+  },
+  {
+   "k": "Smelted from ore. Needed to upgrade machines.",
+   "v": "Fondu à partir de minerai. Sert à améliorer les machines."
+  },
+  {
+   "k": "Smokehouse",
+   "v": "Fumoir"
+  },
+  {
+   "k": "Sold out for today — come back tomorrow",
+   "v": "Épuisé pour aujourd'hui : reviens demain"
+  },
+  {
+   "k": "Sold to the shop · +",
+   "v": "Vendu à la boutique · +"
+  },
+  {
+   "k": "Something went wrong. Try again.",
+   "v": "Un problème est survenu. Réessaie."
+  },
+  {
+   "k": "Sound Fx",
+   "v": "Bruitages"
+  },
+  {
+   "k": "Sow the field again (pays the seed)",
+   "v": "Ressemer le champ (paie les graines)"
+  },
+  {
+   "k": "Sow:",
+   "v": "Semer :"
+  },
+  {
+   "k": "Sowing a bare field.",
+   "v": "Je sème un champ nu."
+  },
+  {
+   "k": "Spanish",
+   "v": "Espagnol"
+  },
+  {
+   "k": "Speed",
+   "v": "Vitesse"
+  },
+  {
+   "k": "Spins today",
+   "v": "Tours du jour"
+  },
+  {
+   "k": "Spring",
+   "v": "Printemps"
+  },
+  {
+   "k": "Spring: Crops grow a little faster",
+   "v": "Printemps : les cultures poussent un peu plus vite"
+  },
+  {
+   "k": "Stable",
+   "v": "Écurie"
+  },
+  {
+   "k": "Stand in the farmhouse: upgrading takes stock, wood and stone",
+   "v": "Entre dans la ferme : l'amélioration demande du stock, du bois et de la pierre"
+  },
+  {
+   "k": "Starter Pack",
+   "v": "Pack de départ"
+  },
+  {
+   "k": "Stick deflection at which walking becomes running.",
+   "v": "Inclinaison du stick à laquelle la marche devient course."
+  },
+  {
+   "k": "Still offline",
+   "v": "Toujours hors ligne"
+  },
+  {
+   "k": "Stock the workers' house before you go.",
+   "v": "Remplis la maison des ouvriers avant de partir."
+  },
+  {
+   "k": "Stone",
+   "v": "Pierre"
+  },
+  {
+   "k": "Stone crusher",
+   "v": "Concasseur"
+  },
+  {
+   "k": "Stone path",
+   "v": "Chemin de pierre"
+  },
+  {
+   "k": "Stone, and ore underneath",
+   "v": "De la pierre, et du minerai dessous"
+  },
+  {
+   "k": "Stop all feeding",
+   "v": "Arrêter de nourrir"
+  },
+  {
+   "k": "Stop at a tree or rock to chop it: wood and stone build things",
+   "v": "Arrête-toi près d'un arbre ou d'un rocher pour le couper : bois et pierre servent à construire"
+  },
+  {
+   "k": "Stop beside it to chop it for wood, free.",
+   "v": "Arrête-toi à côté pour le couper : du bois gratuit."
+  },
+  {
+   "k": "Stop beside it to chop it for {0}, free.",
+   "v": "Arrête-toi à côté pour le couper : {0}, gratuit."
+  },
+  {
+   "k": "Stop food",
+   "v": "Stop vivres"
+  },
+  {
+   "k": "Storage",
+   "v": "Entrepôt"
+  },
+  {
+   "k": "Store {0} goods",
+   "v": "Stocker {0} produits"
+  },
+  {
+   "k": "Store {0} goods in the farmhouse",
+   "v": "Stocker {0} produits dans la ferme"
+  },
+  {
+   "k": "Stored {0}/{1}",
+   "v": "Stocké {0}/{1}"
+  },
+  {
+   "k": "Stores your goods; upgrade for more room",
+   "v": "Stocke tes biens ; améliore-le pour plus de place"
+  },
+  {
+   "k": "Stores {0} of any goods ({1} upgraded)",
+   "v": "Stocke {0} biens au choix ({1} amélioré)"
+  },
+  {
+   "k": "Stores {0} raw crops",
+   "v": "Stocke {0} récoltes brutes"
+  },
+  {
+   "k": "Storm",
+   "v": "Tempête"
+  },
+  {
+   "k": "Storm: buildings may be damaged",
+   "v": "Tempête : les bâtiments peuvent être abîmés"
+  },
+  {
+   "k": "Story goals",
+   "v": "Objectifs d'histoire"
+  },
+  {
+   "k": "Sugar mill",
+   "v": "Sucrerie"
+  },
+  {
+   "k": "Summer",
+   "v": "Été"
+  },
+  {
+   "k": "Sunflower",
+   "v": "Tournesol"
+  },
+  {
+   "k": "Sunny",
+   "v": "Ensoleillé"
+  },
+  {
+   "k": "Sunny Acres",
+   "v": "Sunny Acres"
+  },
+  {
+   "k": "Supplies cancelled",
+   "v": "Livraisons annulées"
+  },
+  {
+   "k": "Support",
+   "v": "Assistance"
+  },
+  {
+   "k": "Survive a raid",
+   "v": "Survivre à un raid"
+  },
+  {
+   "k": "Survivor",
+   "v": "Survivant"
+  },
+  {
+   "k": "Swedish",
+   "v": "Suédois"
+  },
+  {
+   "k": "Switch",
+   "v": "Changer"
+  },
+  {
+   "k": "Switched-on jobs run while you play and while you're away. Away, work costs {0}% more food.",
+   "v": "Les tâches activées tournent pendant que tu joues et pendant ton absence. En ton absence, le travail coûte {0}% de nourriture en plus."
+  },
+  {
+   "k": "TAKE OUT",
+   "v": "SORTIR"
+  },
+  {
+   "k": "TAKE OUT · your basket stays on your back here",
+   "v": "SORTIR · ton panier reste sur ton dos ici"
+  },
+  {
+   "k": "TAP TO START",
+   "v": "TOUCHE POUR JOUER"
+  },
+  {
+   "k": "TODAY'S ORDERS",
+   "v": "COMMANDES DU JOUR"
+  },
+  {
+   "k": "TROUGH",
+   "v": "MANGEOIRE"
+  },
+  {
+   "k": "Taiwanese",
+   "v": "Taïwanais"
+  },
+  {
+   "k": "Take",
+   "v": "Prendre"
+  },
+  {
+   "k": "Take ",
+   "v": "Prendre "
+  },
+  {
+   "k": "Take what it made to the farmhouse",
+   "v": "Porter ce qu'il produit à la ferme"
+  },
+  {
+   "k": "Take {0}",
+   "v": "Prendre {0}"
+  },
+  {
+   "k": "Taking feed to the {0}.",
+   "v": "J'apporte à manger : {0}."
+  },
+  {
+   "k": "Taking this load to the {0}.",
+   "v": "J'apporte cette charge : {0}."
+  },
+  {
+   "k": "Tap <b>OK</b> to agree to our <u>Terms of Service</u><br>and <u>Privacy Policy</u>.",
+   "v": "Touche <b>OK</b> pour accepter nos <u>Conditions d'utilisation</u><br>et notre <u>Politique de confidentialité</u>."
+  },
+  {
+   "k": "Tap <b>Open redeem page</b>.",
+   "v": "Touche <b>Ouvrir la page d'échange</b>."
+  },
+  {
+   "k": "Tap anywhere to continue",
+   "v": "Touche n'importe où pour continuer"
+  },
+  {
+   "k": "Tap to skip",
+   "v": "Touchez pour passer"
+  },
+  {
+   "k": "Textile mill",
+   "v": "Filature"
+  },
+  {
+   "k": "Thai",
+   "v": "Thaï"
+  },
+  {
+   "k": "That code doesn't work — it may have expired or been used up.",
+   "v": "Ce code ne marche pas : il a peut-être expiré ou été épuisé."
+  },
+  {
+   "k": "That name is taken — try another",
+   "v": "Ce nom est pris : essaie-en un autre"
+  },
+  {
+   "k": "That's all the ads for today — come back tomorrow",
+   "v": "Plus de pubs pour aujourd'hui : reviens demain"
+  },
+  {
+   "k": "That's all {0} spins for today.\nCome back tomorrow!",
+   "v": "C'est tout pour tes {0} tours du jour.\nReviens demain !"
+  },
+  {
+   "k": "The ad is still being checked — try again in a minute",
+   "v": "La pub est encore en vérification : réessaie dans une minute"
+  },
+  {
+   "k": "The background music clip (Content/Audio/Music), looped under everything.",
+   "v": "La musique de fond (Content/Audio/Music), en boucle sous tout le reste."
+  },
+  {
+   "k": "The bakery opens at level {0}",
+   "v": "La boulangerie s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The bank opens at {0}",
+   "v": "La banque s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The barn opens at level {0} and raiders take notice",
+   "v": "L'étable s'ouvre au niveau {0}, et les pillards s'intéressent à toi"
+  },
+  {
+   "k": "The base screen shown first.",
+   "v": "L'écran de base affiché en premier."
+  },
+  {
+   "k": "The cider press opens at {0}",
+   "v": "Le pressoir s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The cider press turns tomatoes into juice",
+   "v": "Le pressoir transforme les tomates en jus"
+  },
+  {
+   "k": "The clinic opens at {0}",
+   "v": "La clinique s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The cove",
+   "v": "La crique"
+  },
+  {
+   "k": "The dairy opens at level {0}",
+   "v": "La laiterie s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The dairy opens at level {0}: milk in, cheese out",
+   "v": "La laiterie ouvre au niveau {0} : du lait, du fromage"
+  },
+  {
+   "k": "The farmhouse is full — sell at a market, upgrade it, or build grain silos",
+   "v": "La ferme est pleine : vends au marché, améliore-la ou construis des silos à grain"
+  },
+  {
+   "k": "The farmhouse is full — workers are waiting with their loads",
+   "v": "La ferme est pleine : les ouvriers attendent avec leurs charges"
+  },
+  {
+   "k": "The farmhouse is nearly full. Sell at the market or upgrade it.",
+   "v": "La ferme est presque pleine. Vends au marché ou améliore-la."
+  },
+  {
+   "k": "The fields are ripe. Harvest them before they spoil!",
+   "v": "Les champs sont mûrs. Récolte-les avant qu'ils ne pourrissent !"
+  },
+  {
+   "k": "The freight train starts stopping at your station at island level {0}.",
+   "v": "Le train de marchandises s'arrête à ta gare dès le niveau {0}."
+  },
+  {
+   "k": "The freight train stops at your station: load crates for building materials",
+   "v": "Le train de marchandises s'arrête à ta gare : remplis des caisses contre des matériaux"
+  },
+  {
+   "k": "The harbour",
+   "v": "Le port"
+  },
+  {
+   "k": "The horse is hungry — walk some grain or food into the stable",
+   "v": "Le cheval a faim : apporte du grain ou à manger à l'écurie"
+  },
+  {
+   "k": "The island being played (its economy and life feed every screen).",
+   "v": "L'île en jeu (son économie et sa vie alimentent chaque écran)."
+  },
+  {
+   "k": "The island grows: a river with a lake and bridges, orchard and quarry hills, and a cove for fishing boats",
+   "v": "L'île s'agrandit : une rivière avec un lac et des ponts, des collines de vergers et de carrières, et une crique pour les bateaux de pêche"
+  },
+  {
+   "k": "The island grows: mountains with a waterfall, a town plateau, and a harbour with a lighthouse",
+   "v": "L'île s'agrandit : des montagnes et une cascade, un plateau pour la ville et un port avec son phare"
+  },
+  {
+   "k": "The island's crown",
+   "v": "Le joyau de l'île"
+  },
+  {
+   "k": "The island's crown, at level {0}",
+   "v": "Le joyau de l'île, au niveau {0}"
+  },
+  {
+   "k": "The lake",
+   "v": "Le lac"
+  },
+  {
+   "k": "The lumber yard opens at level {0}",
+   "v": "La scierie s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The mine opens at level {0}: stone, and ore underneath",
+   "v": "La mine ouvre au niveau {0} : de la pierre, et du minerai dessous"
+  },
+  {
+   "k": "The mine opens at {0}",
+   "v": "La mine s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The mountains",
+   "v": "Les montagnes"
+  },
+  {
+   "k": "The next gift is on its way",
+   "v": "Le prochain cadeau arrive"
+  },
+  {
+   "k": "The orchard hills",
+   "v": "Les collines des vergers"
+  },
+  {
+   "k": "The ore shed smelts ore into iron",
+   "v": "La fonderie transforme le minerai en fer"
+  },
+  {
+   "k": "The police station opens at {0}: chapter {1} done",
+   "v": "Le commissariat s'ouvre au niveau {0} : chapitre {1} terminé"
+  },
+  {
+   "k": "The post office opens at level {0}",
+   "v": "La poste s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The post office wants {0} more {1}: double pay.",
+   "v": "Le bureau de poste veut {0} {1} de plus : paie double."
+  },
+  {
+   "k": "The quarry hills",
+   "v": "Les collines de la carrière"
+  },
+  {
+   "k": "The raid is over",
+   "v": "Le raid est fini"
+  },
+  {
+   "k": "The raid is over — ",
+   "v": "Le raid est fini : "
+  },
+  {
+   "k": "The raiders got away — ",
+   "v": "Les pillards se sont enfuis : "
+  },
+  {
+   "k": "The raiders got away — {0} goods stolen, {1} coins taken",
+   "v": "Les pillards ont filé — {0} biens volés, {1} pièces prises"
+  },
+  {
+   "k": "The raiders got what they came for — they're running back to their boats!",
+   "v": "Les pillards ont eu ce qu'ils voulaient : ils filent vers leurs bateaux !"
+  },
+  {
+   "k": "The river and its bridges",
+   "v": "La rivière et ses ponts"
+  },
+  {
+   "k": "The sea opens at {0}: fishing",
+   "v": "La mer s'ouvre au niveau {0} : la pêche"
+  },
+  {
+   "k": "The stable has no horse yet — feed it so one moves in",
+   "v": "L'écurie n'a pas encore de cheval : nourris-la pour qu'il s'installe"
+  },
+  {
+   "k": "The stable isn't ready yet",
+   "v": "L'écurie n'est pas encore prête"
+  },
+  {
+   "k": "The stable was wrecked — builders are fixing it",
+   "v": "L'écurie a été détruite : les bâtisseurs la réparent"
+  },
+  {
+   "k": "The stone crusher opens at {0}",
+   "v": "Le concasseur s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The store didn't confirm this purchase",
+   "v": "Le store n'a pas confirmé cet achat"
+  },
+  {
+   "k": "The store has no food at all! Bring in a harvest, or eggs from the coop.",
+   "v": "Plus aucune nourriture en réserve ! Rapporte une récolte, ou des œufs du poulailler."
+  },
+  {
+   "k": "The store isn't ready yet — try again in a moment",
+   "v": "Le store n'est pas encore prêt : réessaie dans un moment"
+  },
+  {
+   "k": "The stores are empty: bring your harvest in.",
+   "v": "Les réserves sont vides : rapporte ta récolte."
+  },
+  {
+   "k": "The sugar mill presses sunflowers into oil",
+   "v": "Le moulin presse les tournesols pour en faire de l'huile"
+  },
+  {
+   "k": "The textile mill weaves wool into cloth",
+   "v": "La filature tisse la laine en tissu"
+  },
+  {
+   "k": "The town hall opens at {0}",
+   "v": "La mairie s'ouvre au niveau {0}"
+  },
+  {
+   "k": "The town plateau",
+   "v": "Le plateau de la ville"
+  },
+  {
+   "k": "The townsfolk are writing their next order…",
+   "v": "Les habitants écrivent leur prochaine commande…"
+  },
+  {
+   "k": "The train is out on the line. It'll be back with new crates soon.",
+   "v": "Le train est en route. Il reviendra bientôt avec de nouvelles caisses."
+  },
+  {
+   "k": "The train paid {0} coins",
+   "v": "Le train a payé {0} pièces"
+  },
+  {
+   "k": "The walking economy: carrying, pads, energy (added at runtime if missing).",
+   "v": "L'économie à pied : transport, zones, énergie (ajoutée au runtime si absente)."
+  },
+  {
+   "k": "The waterfall",
+   "v": "La cascade"
+  },
+  {
+   "k": "The {0} animals are hungry. Bring them grain.",
+   "v": "Les animaux ({0}) ont faim. Apporte-leur du grain."
+  },
+  {
+   "k": "The {0} is starving. Walk food into it, or order supplies from the farmhouse.",
+   "v": "{0} : famine ! Apporte-y à manger, ou commande des vivres à la ferme."
+  },
+  {
+   "k": "The {0} was ruined{1}!",
+   "v": "{0} a été détruit{1} !"
+  },
+  {
+   "k": "Theme",
+   "v": "Thème"
+  },
+  {
+   "k": "There's no one to fight them! Build an army house.",
+   "v": "Personne pour les combattre ! Construis une caserne."
+  },
+  {
+   "k": "They dropped loot — walk over it to pick it up.",
+   "v": "Ils ont lâché du butin : marche dessus pour le ramasser."
+  },
+  {
+   "k": "They ran out of food after",
+   "v": "Ils ont manqué de nourriture après"
+  },
+  {
+   "k": "They stopped when the farmhouse filled up: sell, or upgrade it",
+   "v": "Ils se sont arrêtés quand la ferme était pleine : vends, ou agrandis-la"
+  },
+  {
+   "k": "They worked their {0}-hour shift, then rested",
+   "v": "Ils ont fait leurs {0} heures, puis se sont reposés"
+  },
+  {
+   "k": "They'd beat us. We need more warriors, food and iron.",
+   "v": "Ils nous battraient. Il faut plus de guerriers, de vivres et de fer."
+  },
+  {
+   "k": "They're here!",
+   "v": "Ils sont là !"
+  },
+  {
+   "k": "This can't be undone.",
+   "v": "C'est irréversible."
+  },
+  {
+   "k": "This little island is all yours. Let's turn it into the best farm in the sea!",
+   "v": "Cette petite île est toute à toi. Faisons-en la plus belle ferme de la mer !"
+  },
+  {
+   "k": "This offer has ended",
+   "v": "Cette offre est terminée"
+  },
+  {
+   "k": "This version is too old to connect.<br>Please update from the store.",
+   "v": "Cette version est trop ancienne pour se connecter.<br>Mets à jour depuis le store."
+  },
+  {
+   "k": "This week's board · net worth updates whenever your island syncs.",
+   "v": "Classement de la semaine · la valeur nette se met à jour à chaque synchro de ton île."
+  },
+  {
+   "k": "This {0} account already has a farm.<br>Switch to it? <b>The farm on this phone will be replaced.</b>",
+   "v": "Ce compte {0} a déjà une ferme.<br>Y basculer ? <b>La ferme de ce téléphone sera remplacée.</b>"
+  },
+  {
+   "k": "Though we eat more than we grow, mind.",
+   "v": "Mais on mange plus qu'on ne produit, attention."
+  },
+  {
+   "k": "Today",
+   "v": "Aujourd'hui"
+  },
+  {
+   "k": "Tomato",
+   "v": "Tomate"
+  },
+  {
+   "k": "Tomorrow",
+   "v": "Demain"
+  },
+  {
+   "k": "Took {0} {1} — carry it where it's needed",
+   "v": "{0} {1} pris : porte-le là où il faut"
+  },
+  {
+   "k": "Took {0} {x} — carry it where it's needed",
+   "v": "{0} {x} pris — porte-le là où il faut"
+  },
+  {
+   "k": "Top ",
+   "v": "Top "
+  },
+  {
+   "k": "Top farms",
+   "v": "Top fermes"
+  },
+  {
+   "k": "Top level",
+   "v": "Niveau max"
+  },
+  {
+   "k": "Top level: as fast and roomy as it gets",
+   "v": "Niveau max : vitesse et place au maximum"
+  },
+  {
+   "k": "Town",
+   "v": "Ville"
+  },
+  {
+   "k": "Town hall",
+   "v": "Mairie"
+  },
+  {
+   "k": "Townsfolk send delivery orders there: they pay well",
+   "v": "Les habitants y envoient des commandes : elles paient bien"
+  },
+  {
+   "k": "Townsfolk who move in as the town grows (grandma, the kid, the baker, villagers).",
+   "v": "Habitants qui s'installent quand la ville grandit (mamie, le gamin, le boulanger, les villageois)."
+  },
+  {
+   "k": "Trader I",
+   "v": "Marchand I"
+  },
+  {
+   "k": "Trader II",
+   "v": "Marchand II"
+  },
+  {
+   "k": "Train",
+   "v": "Train"
+  },
+  {
+   "k": "Train crates: off",
+   "v": "Caisses du train : non"
+  },
+  {
+   "k": "Train crates: on",
+   "v": "Caisses du train : oui"
+  },
+  {
+   "k": "Turkish",
+   "v": "Turc"
+  },
+  {
+   "k": "Turn (degrees) that makes the chicken model face where it walks.",
+   "v": "Rotation (degrés) pour que le modèle de poule regarde où elle marche."
+  },
+  {
+   "k": "Turn (degrees) that makes the cow model face where it walks.",
+   "v": "Rotation (degrés) pour que le modèle de vache regarde où elle marche."
+  },
+  {
+   "k": "Turn on",
+   "v": "Activer"
+  },
+  {
+   "k": "US$ ",
+   "v": "US$ "
+  },
+  {
+   "k": "US$ {0}",
+   "v": "{0} $ US"
+  },
+  {
+   "k": "Ukrainian",
+   "v": "Ukrainien"
+  },
+  {
+   "k": "Under maintenance",
+   "v": "En maintenance"
+  },
+  {
+   "k": "Unlocks at island level ",
+   "v": "Débloqué au niveau d'île "
+  },
+  {
+   "k": "Update",
+   "v": "Mettre à jour"
+  },
+  {
+   "k": "Update available",
+   "v": "Mise à jour disponible"
+  },
+  {
+   "k": "Update required",
+   "v": "Mise à jour requise"
+  },
+  {
+   "k": "Upgrade",
+   "v": "Améliorer"
+  },
+  {
+   "k": "Upgrade ",
+   "v": "Améliorer "
+  },
+  {
+   "k": "Upgrade 10 buildings",
+   "v": "Améliorer 10 bâtiments"
+  },
+  {
+   "k": "Upgrade a machine or animal house",
+   "v": "Améliorer une machine ou un abri animal"
+  },
+  {
+   "k": "Upgrade buildings {0} times.",
+   "v": "Améliore des bâtiments {0} fois."
+  },
+  {
+   "k": "Upgrade the army house to field more warriors",
+   "v": "Améliore la caserne pour plus de guerriers"
+  },
+  {
+   "k": "Upgrade the farmhouse",
+   "v": "Améliorer la ferme"
+  },
+  {
+   "k": "Upgrade {x}",
+   "v": "Améliorer : {x}"
+  },
+  {
+   "k": "Upgrades",
+   "v": "Améliorations"
+  },
+  {
+   "k": "Use",
+   "v": "Utiliser"
+  },
+  {
+   "k": "VISITING",
+   "v": "EN VISITE"
+  },
+  {
+   "k": "Vibration",
+   "v": "Vibration"
+  },
+  {
+   "k": "View",
+   "v": "Voir"
+  },
+  {
+   "k": "Village",
+   "v": "Village"
+  },
+  {
+   "k": "Villager",
+   "v": "Villageois"
+  },
+  {
+   "k": "Visit",
+   "v": "Visiter"
+  },
+  {
+   "k": "Visit a farm",
+   "v": "Visiter une ferme"
+  },
+  {
+   "k": "WEEKLY PRIZES",
+   "v": "PRIX DE LA SEMAINE"
+  },
+  {
+   "k": "Waiting for a builder",
+   "v": "En attente d'un bâtisseur"
+  },
+  {
+   "k": "Waiting. Our house has no food, and I can't work hungry.",
+   "v": "J'attends. Plus rien à manger chez nous, et j'ai trop faim pour bosser."
+  },
+  {
+   "k": "Walk in to collect",
+   "v": "Entre pour collecter"
+  },
+  {
+   "k": "Walk into a ripe field to harvest it",
+   "v": "Marche dans un champ mûr pour le récolter"
+  },
+  {
+   "k": "Walk into the Post Office with your basket",
+   "v": "Entre dans le Bureau de poste avec ton panier"
+  },
+  {
+   "k": "Walk into the coop to collect",
+   "v": "Entre dans le poulailler pour ramasser"
+  },
+  {
+   "k": "Walk into the farmhouse with a full basket",
+   "v": "Entre dans la ferme avec un panier plein"
+  },
+  {
+   "k": "Walk into the market stall to sell",
+   "v": "Entre dans l'étal pour vendre"
+  },
+  {
+   "k": "Walk onto it to plant",
+   "v": "Marche dessus pour planter"
+  },
+  {
+   "k": "Walk onto the stall to sell. Selling lots of one good lowers its price for a while.",
+   "v": "Monte sur l'étal pour vendre. Vendre beaucoup d'un bien baisse son prix un moment."
+  },
+  {
+   "k": "Walk to its door to upgrade it: it pays from what's stored there.",
+   "v": "Va à sa porte pour l'améliorer : ça se paie avec ce qui y est stocké."
+  },
+  {
+   "k": "Warehouse",
+   "v": "Entrepôt"
+  },
+  {
+   "k": "Warnings before raiders land, and how it went",
+   "v": "Alertes avant l'arrivée des pillards, et le résultat"
+  },
+  {
+   "k": "Warriors",
+   "v": "Guerriers"
+  },
+  {
+   "k": "Warriors who fight raiders (iron makes them stronger)",
+   "v": "Guerriers qui combattent les pillards (le fer les renforce)"
+  },
+  {
+   "k": "Warriors {0}/{1}",
+   "v": "Guerriers {0}/{1}"
+  },
+  {
+   "k": "Watch a short ad for each spin.\n{0} spins a day, reset at midnight (UTC).",
+   "v": "Regarde une courte pub pour chaque tour.\n{0} tours par jour, remis à zéro à minuit (UTC)."
+  },
+  {
+   "k": "Watch the ad to the end to get the reward",
+   "v": "Regarde la pub jusqu'au bout pour la récompense"
+  },
+  {
+   "k": "Watch the ad to the end to spin",
+   "v": "Regarde la pub jusqu'au bout pour tourner"
+  },
+  {
+   "k": "We'll see them off.",
+   "v": "On va les repousser."
+  },
+  {
+   "k": "We'll warn you before raiders land, and tell you when crops are ready or a gift is waiting.",
+   "v": "On te prévient avant que les pillards débarquent, et quand tes récoltes sont prêtes ou qu'un cadeau t'attend."
+  },
+  {
+   "k": "We're fed and fine.",
+   "v": "On est nourris, tout va bien."
+  },
+  {
+   "k": "We're improving the island.<br>Your farm is safe — please try again in a little while.",
+   "v": "On améliore l'île.<br>Ta ferme est en sécurité : réessaie d'ici peu."
+  },
+  {
+   "k": "We're starving! Bring food fast or people will leave.",
+   "v": "On meurt de faim ! Apporte vite à manger ou des gens partiront."
+  },
+  {
+   "k": "We're {0} of {1}, level {2}, with {3} energy (we eat {4} a minute). {5}{6}",
+   "v": "On est {0} sur {1}, niveau {2}, avec {3} d'énergie (on mange {4} par minute). {5}{6}"
+  },
+  {
+   "k": "We've got everything we need.",
+   "v": "On a tout ce qu'il faut."
+  },
+  {
+   "k": "We've no army. Raiders will come once the island's worth robbing.",
+   "v": "On n'a pas d'armée. Les pillards viendront dès que l'île vaudra le coup."
+  },
+  {
+   "k": "Weave {0} cloth",
+   "v": "Tisser {0} tissus"
+  },
+  {
+   "k": "Weekly results are in",
+   "v": "Résultats de la semaine"
+  },
+  {
+   "k": "Welcome back!",
+   "v": "Bon retour !"
+  },
+  {
+   "k": "Welcome back! Your farm is restored.",
+   "v": "Bon retour ! Ta ferme est restaurée."
+  },
+  {
+   "k": "Welcome to your island, farmer! I'm Grandpa Joe.",
+   "v": "Bienvenue sur ton île, fermier ! Moi, c'est Papi Joe."
+  },
+  {
+   "k": "Well",
+   "v": "Puits"
+  },
+  {
+   "k": "What are you building?",
+   "v": "Tu construis quoi ?"
+  },
+  {
+   "k": "What are you doing?",
+   "v": "Tu fais quoi ?"
+  },
+  {
+   "k": "What needs doing?",
+   "v": "On fait quoi ?"
+  },
+  {
+   "k": "What's new?",
+   "v": "Quoi de neuf ?"
+  },
+  {
+   "k": "What's that building?",
+   "v": "C'est quoi, ce bâtiment ?"
+  },
+  {
+   "k": "What's the weather?",
+   "v": "Quel temps fait-il ?"
+  },
+  {
+   "k": "Wheat",
+   "v": "Blé"
+  },
+  {
+   "k": "Wheat in, flour out",
+   "v": "Le blé entre, la farine sort"
+  },
+  {
+   "k": "Wheel",
+   "v": "Roue"
+  },
+  {
+   "k": "When a friend you invite reaches Level {0}, you both get {1} coins and {2} gems.",
+   "v": "Quand un ami invité atteint le niveau {0}, vous gagnez tous deux {1} pièces et {2} gemmes."
+  },
+  {
+   "k": "When will they come?",
+   "v": "Ils viennent quand ?"
+  },
+  {
+   "k": "Where the farmer sits, relative to the horse's feet (m, before the horse's scale).",
+   "v": "Position du fermier par rapport aux pieds du cheval (m, avant l'échelle du cheval)."
+  },
+  {
+   "k": "Where the stick sits on a phone, as fractions of the screen (x across, y up from the bottom).",
+   "v": "Position du stick sur téléphone, en fractions de l'écran (x horizontal, y depuis le bas)."
+  },
+  {
+   "k": "Which one? There's nothing here yet!",
+   "v": "Lequel ? Il n'y a encore rien ici !"
+  },
+  {
+   "k": "While you were away",
+   "v": "Pendant ton absence"
+  },
+  {
+   "k": "While you were away we drove off {n} raider.",
+   "v": "Pendant ton absence, on a repoussé {n} pillard."
+  },
+  {
+   "k": "While you were away we drove off {n} raiders.",
+   "v": "Pendant ton absence, on a repoussé {n} pillards."
+  },
+  {
+   "k": "While you were away {n} raiders came.",
+   "v": "Pendant ton absence, {n} pillards sont venus."
+  },
+  {
+   "k": "White fence",
+   "v": "Clôture blanche"
+  },
+  {
+   "k": "Windmill",
+   "v": "Moulin"
+  },
+  {
+   "k": "Winter",
+   "v": "Hiver"
+  },
+  {
+   "k": "Wood",
+   "v": "Bois"
+  },
+  {
+   "k": "Wood and stone?",
+   "v": "Du bois et de la pierre ?"
+  },
+  {
+   "k": "Wood fence",
+   "v": "Clôture en bois"
+  },
+  {
+   "k": "Wood in, planks out: big buildings need planks",
+   "v": "Le bois entre, les planches sortent : les grands bâtiments en ont besoin"
+  },
+  {
+   "k": "Wool",
+   "v": "Laine"
+  },
+  {
+   "k": "Worker Rush",
+   "v": "Rush ouvriers"
+  },
+  {
+   "k": "Workers",
+   "v": "Ouvriers"
+  },
+  {
+   "k": "Workers bring wood from the farmhouse",
+   "v": "Les ouvriers apportent le bois depuis la ferme"
+  },
+  {
+   "k": "Workers loaded a train crate",
+   "v": "Les ouvriers ont chargé une caisse du train"
+  },
+  {
+   "k": "Workers loaded {0} train crates",
+   "v": "Les ouvriers ont chargé {0} caisses du train"
+  },
+  {
+   "k": "Workers sold {0} surplus goods: +{1} coins",
+   "v": "Les ouvriers ont vendu {0} produits en trop : +{1} pièces"
+  },
+  {
+   "k": "Workers {0}× faster for {1} min.",
+   "v": "Ouvriers {0}× pendant {1} min."
+  },
+  {
+   "k": "Workers {0}× · {1} min",
+   "v": "Ouvriers {0}× · {1} min"
+  },
+  {
+   "k": "Workers' house",
+   "v": "Maison d'ouvriers"
+  },
+  {
+   "k": "Workers' houses and builders' huts take one more",
+   "v": "Maisons d'ouvriers et cabanes des bâtisseurs en accueillent un de plus"
+  },
+  {
+   "k": "Workers: {x}",
+   "v": "Ouvriers : {x}"
+  },
+  {
+   "k": "Working on {string.Join(",
+   "v": "En cours : {string.Join("
+  },
+  {
+   "k": "World",
+   "v": "Monde"
+  },
+  {
+   "k": "World ",
+   "v": "Monde "
+  },
+  {
+   "k": "World Rank",
+   "v": "Rang mondial"
+  },
+  {
+   "k": "World rank",
+   "v": "Rang mondial"
+  },
+  {
+   "k": "World rank: ",
+   "v": "Rang mondial : "
+  },
+  {
+   "k": "Yellow",
+   "v": "Jaune"
+  },
+  {
+   "k": "You already liked this farm today",
+   "v": "Tu as déjà aimé cette ferme aujourd'hui"
+  },
+  {
+   "k": "You and {0} are now friends!",
+   "v": "{0} et toi êtes maintenant amis !"
+  },
+  {
+   "k": "You can look, not touch",
+   "v": "Tu peux regarder, pas toucher"
+  },
+  {
+   "k": "You finished #{rank} this week!",
+   "v": "Tu as fini #{rank} cette semaine !"
+  },
+  {
+   "k": "You have ",
+   "v": "Tu as "
+  },
+  {
+   "k": "You liked {0}'s farm",
+   "v": "Tu as aimé la ferme de {0}"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Wood</color> to upgrade the army house.",
+   "v": "Il te faut <color=#ffd23a>{0} bois de plus</color> pour améliorer la caserne."
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Wood</color> to upgrade the farmhouse.",
+   "v": "Il te faut <color=#ffd23a>{0} bois de plus</color> pour améliorer la ferme."
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more {1}</color> to {2}.",
+   "v": "Il te faut <color=#ffd23a>{0} {1} de plus</color> pour {2}."
+  },
+  {
+   "k": "You reached Level {0}!<br>Thanks to <b>{1}</b>'s invite, you both get a gift.",
+   "v": "Tu as atteint le niveau {0} !<br>Grâce à l'invitation de <b>{1}</b>, vous recevez tous deux un cadeau."
+  },
+  {
+   "k": "You won {0}!",
+   "v": "Tu as gagné {0} !"
+  },
+  {
+   "k": "You're already friends.",
+   "v": "Vous êtes déjà amis."
+  },
+  {
+   "k": "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons.",
+   "v": "Tu joues en <b>invité</b>. Lie un compte pour garder ta ferme<br>si tu changes de téléphone, et pour recevoir des coupons."
+  },
+  {
+   "k": "Your Night Shift is already booked for your next absence",
+   "v": "Ton équipe de nuit est déjà prévue pour ta prochaine absence"
+  },
+  {
+   "k": "Your coupon",
+   "v": "Ton coupon"
+  },
+  {
+   "k": "Your crops are ready",
+   "v": "Tes récoltes sont prêtes"
+  },
+  {
+   "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.<br>Purchases can't be refunded.",
+   "v": "Ta ferme, tes gemmes, tes amis et ta progression seront <b>supprimés pour de bon</b>.<br>Les achats ne sont pas remboursables."
+  },
+  {
+   "k": "Your free coins are waiting in the shop.",
+   "v": "Tes pièces gratuites t'attendent dans la boutique."
+  },
+  {
+   "k": "Your friends",
+   "v": "Tes amis"
+  },
+  {
+   "k": "Your invite code",
+   "v": "Ton code d'invitation"
+  },
+  {
+   "k": "Your island reached a new level!",
+   "v": "Ton île a atteint un nouveau niveau !"
+  },
+  {
+   "k": "Your next absence: workers keep going for {0} hours at the normal food price.",
+   "v": "Prochaine absence : les ouvriers continuent {0} heures au prix normal de la nourriture."
+  },
+  {
+   "k": "Your purchase will arrive as soon as you're back online",
+   "v": "Ton achat arrivera dès que tu seras de nouveau en ligne"
+  },
+  {
+   "k": "Your reward is on its way — try again in a minute",
+   "v": "Ta récompense arrive : réessaie dans une minute"
+  },
+  {
+   "k": "Your shield ends in {n} minutes. Raiders are watching!",
+   "v": "Ton bouclier se termine dans {n} minutes. Les pillards guettent !"
+  },
+  {
+   "k": "Your stable is being built ({0}) — the horse comes when it's done",
+   "v": "Ton écurie est en construction ({0}) : le cheval arrive à la fin"
+  },
+  {
+   "k": "Your stable is waiting for materials: {0}",
+   "v": "Ton écurie attend des matériaux : {0}"
+  },
+  {
+   "k": "Your workers will run out of food in about {0} h — stock their house before you go",
+   "v": "Tes ouvriers n'auront plus à manger dans environ {0} h — remplis leur maison avant de partir"
+  },
+  {
+   "k": "Your workers will run out of food in about {0} min — stock their house before you go",
+   "v": "Tes ouvriers n'auront plus à manger dans environ {0} min — remplis leur maison avant de partir"
+  },
+  {
+   "k": "Your workshops are done",
+   "v": "Tes ateliers ont fini"
+  },
+  {
+   "k": "Yours already!",
+   "v": "Déjà à toi !"
+  },
+  {
+   "k": "a building",
+   "v": "un bâtiment"
+  },
+  {
+   "k": "a lumber yard makes them",
+   "v": "une scierie en fabrique"
+  },
+  {
+   "k": "army house",
+   "v": "caserne"
+  },
+  {
+   "k": "at {0}: game …{1}… server …{2}…",
+   "v": "à {0} : jeu …{1}… serveur …{2}…"
+  },
+  {
+   "k": "ate {0} food",
+   "v": "ont mangé {0} de nourriture"
+  },
+  {
+   "k": "break rocks",
+   "v": "casser des rochers"
+  },
+  {
+   "k": "bring some",
+   "v": "en apporter"
+  },
+  {
+   "k": "build the ",
+   "v": "construire : "
+  },
+  {
+   "k": "builders' hut",
+   "v": "cabane des bâtisseurs"
+  },
+  {
+   "k": "building ruined",
+   "v": "bâtiment en ruine"
+  },
+  {
+   "k": "buildings ruined",
+   "v": "bâtiments en ruine"
+  },
+  {
+   "k": "chop trees",
+   "v": "couper des arbres"
+  },
+  {
+   "k": "clear the ",
+   "v": "dégager : "
+  },
+  {
+   "k": "coins taken",
+   "v": "pièces prises"
+  },
+  {
+   "k": "collected {0}",
+   "v": "ont ramassé {0}"
+  },
+  {
+   "k": "d MMM",
+   "v": "d MMM"
+  },
+  {
+   "k": "d MMM yyyy",
+   "v": "d MMM yyyy"
+  },
+  {
+   "k": "device clock clamped",
+   "v": "horloge de l'appareil corrigée"
+  },
+  {
+   "k": "farm workers",
+   "v": "ouvriers"
+  },
+  {
+   "k": "fed the animals {0}",
+   "v": "ont donné {0} à manger aux animaux"
+  },
+  {
+   "k": "flooded {0}",
+   "v": "{0} inondé"
+  },
+  {
+   "k": "from the east",
+   "v": "de l'est"
+  },
+  {
+   "k": "from the north",
+   "v": "du nord"
+  },
+  {
+   "k": "from the north-east",
+   "v": "du nord-est"
+  },
+  {
+   "k": "from the north-west",
+   "v": "du nord-ouest"
+  },
+  {
+   "k": "from the south",
+   "v": "du sud"
+  },
+  {
+   "k": "from the south-east",
+   "v": "du sud-est"
+  },
+  {
+   "k": "from the south-west",
+   "v": "du sud-ouest"
+  },
+  {
+   "k": "from the west",
+   "v": "de l'ouest"
+  },
+  {
+   "k": "goods stolen",
+   "v": "biens volés"
+  },
+  {
+   "k": "harvested {0}",
+   "v": "ont récolté {0}"
+  },
+  {
+   "k": "in the east",
+   "v": "à l'est"
+  },
+  {
+   "k": "in the north",
+   "v": "au nord"
+  },
+  {
+   "k": "in the north-east",
+   "v": "au nord-est"
+  },
+  {
+   "k": "in the north-west",
+   "v": "au nord-ouest"
+  },
+  {
+   "k": "in the south",
+   "v": "au sud"
+  },
+  {
+   "k": "in the south-east",
+   "v": "au sud-est"
+  },
+  {
+   "k": "in the south-west",
+   "v": "au sud-ouest"
+  },
+  {
+   "k": "in the west",
+   "v": "à l'ouest"
+  },
+  {
+   "k": "loaded {0} train crates",
+   "v": "ont chargé {0} caisses du train"
+  },
+  {
+   "k": "must stand by the sea",
+   "v": "doit être au bord de la mer"
+  },
+  {
+   "k": "no save",
+   "v": "pas de sauvegarde"
+  },
+  {
+   "k": "people lost",
+   "v": "habitants perdus"
+  },
+  {
+   "k": "person lost",
+   "v": "habitant perdu"
+  },
+  {
+   "k": "plant ",
+   "v": "planter "
+  },
+  {
+   "k": "raiders beaten",
+   "v": "pillards vaincus"
+  },
+  {
+   "k": "raiders came",
+   "v": "pillards venus"
+  },
+  {
+   "k": "refilled machines with {0}",
+   "v": "ont rempli les machines de {0}"
+  },
+  {
+   "k": "resets ",
+   "v": "fin "
+  },
+  {
+   "k": "skipped ({0})",
+   "v": "ignoré ({0})"
+  },
+  {
+   "k": "sold {0} for {1} coins",
+   "v": "ont vendu {0} pour {1} pièces"
+  },
+  {
+   "k": "sowed {0} fields",
+   "v": "ont semé {0} champs"
+  },
+  {
+   "k": "to the east",
+   "v": "à l'est"
+  },
+  {
+   "k": "to the north",
+   "v": "au nord"
+  },
+  {
+   "k": "to the north-east",
+   "v": "au nord-est"
+  },
+  {
+   "k": "to the north-west",
+   "v": "au nord-ouest"
+  },
+  {
+   "k": "to the south",
+   "v": "au sud"
+  },
+  {
+   "k": "to the south-east",
+   "v": "au sud-est"
+  },
+  {
+   "k": "to the south-west",
+   "v": "au sud-ouest"
+  },
+  {
+   "k": "to the west",
+   "v": "à l'ouest"
+  },
+  {
+   "k": "upgrade the ",
+   "v": "améliorer : "
+  },
+  {
+   "k": "workers' house",
+   "v": "maison d'ouvriers"
+  },
+  {
+   "k": "{0}  {1}/{2}",
+   "v": "{0}  {1}/{2}"
+  },
+  {
+   "k": "{0} / {1} XP",
+   "v": "{0} / {1} XP"
+  },
+  {
+   "k": "{0} Fertilizer added to Storage",
+   "v": "{0} engrais ajouté au stockage"
+  },
+  {
+   "k": "{0} Lv{1}",
+   "v": "{0} Niv.{1}"
+  },
+  {
+   "k": "{0} basket room",
+   "v": "{0} places de panier"
+  },
+  {
+   "k": "{0} basket slots, for good.",
+   "v": "{0} places de panier, pour de bon."
+  },
+  {
+   "k": "{0} builder forever",
+   "v": "{0} bâtisseur pour toujours"
+  },
+  {
+   "k": "{0} coins",
+   "v": "{0} pièces"
+  },
+  {
+   "k": "{0} coins across the season",
+   "v": "{0} pièces sur la saison"
+  },
+  {
+   "k": "{0} coins · watch an ad",
+   "v": "{0} pièces · regarde une pub"
+  },
+  {
+   "k": "{0} crops rotted in the fields — harvest sooner, or get farm workers",
+   "v": "{0} récoltes ont pourri au champ : récolte plus tôt ou prends des ouvriers"
+  },
+  {
+   "k": "{0} every {1}s",
+   "v": "{0} toutes les {1} s"
+  },
+  {
+   "k": "{0} farm workers",
+   "v": "{0} ouvriers agricoles"
+  },
+  {
+   "k": "{0} fields",
+   "v": "{0} champs"
+  },
+  {
+   "k": "{0} fresh goods went off — collect more often",
+   "v": "{0} produits frais gâtés : collecte plus souvent"
+  },
+  {
+   "k": "{0} gems",
+   "v": "{0} gemmes"
+  },
+  {
+   "k": "{0} gems across the season",
+   "v": "{0} gemmes sur la saison"
+  },
+  {
+   "k": "{0} goes off if left too long",
+   "v": "{0} se gâte si on attend trop"
+  },
+  {
+   "k": "{0} h · normal food",
+   "v": "{0} h · nourriture normale"
+  },
+  {
+   "k": "{0} hours",
+   "v": "{0} heures"
+  },
+  {
+   "k": "{0} is ready!",
+   "v": "{0} est prêt !"
+  },
+  {
+   "k": "{0} is repaired",
+   "v": "{0} est réparé"
+  },
+  {
+   "k": "{0} orders at a time",
+   "v": "{0} commandes à la fois"
+  },
+  {
+   "k": "{0} raider {x}",
+   "v": "{0} pillard {x}"
+  },
+  {
+   "k": "{0} raiders landed {x}!",
+   "v": "{0} pillards ont débarqué {x} !"
+  },
+  {
+   "k": "{0} raiders {x}",
+   "v": "{0} pillards {x}"
+  },
+  {
+   "k": "{0} reached level {1}! (it eats a little more now)",
+   "v": "{0} a atteint le niveau {1} ! (il mange un peu plus maintenant)"
+  },
+  {
+   "k": "{0} room",
+   "v": "{0} de place"
+  },
+  {
+   "k": "{0} slots forever",
+   "v": "{0} places pour toujours"
+  },
+  {
+   "k": "{0} wood, {1} stone, {2} planks in the store.{3}",
+   "v": "{0} bois, {1} pierre, {2} planches en réserve.{3}"
+  },
+  {
+   "k": "{0} {1}",
+   "v": "{0} {1}"
+  },
+  {
+   "k": "{0} · Island Lv {1}",
+   "v": "{0} · Île Niv. {1}"
+  },
+  {
+   "k": "{0} · Island Lv {1} · {2}",
+   "v": "{0} · Île Niv. {1} · {2}"
+  },
+  {
+   "k": "{0} → <color=#7dff6a>{1}</color>",
+   "v": "{0} → <color=#7dff6a>{1}</color>"
+  },
+  {
+   "k": "{0}% interest every {1} min; raiders can't take coins",
+   "v": "{0}% d'intérêts toutes les {1} min ; pièces à l'abri des pillards"
+  },
+  {
+   "k": "{0}% more people everywhere",
+   "v": "{0}% d'habitants en plus partout"
+  },
+  {
+   "k": "{0}D RENDER",
+   "v": "RENDU {0}D"
+  },
+  {
+   "k": "{0}d {1}h",
+   "v": "{0}j {1}h"
+  },
+  {
+   "k": "{0}h {1}m",
+   "v": "{0}h {1}min"
+  },
+  {
+   "k": "{0}m",
+   "v": "{0} min"
+  },
+  {
+   "k": "{0}m {1}s",
+   "v": "{0}min {1}s"
+  },
+  {
+   "k": "{0}s",
+   "v": "{0} s"
+  },
+  {
+   "k": "{0}x Value",
+   "v": "Valeur ×{0}"
+  },
+  {
+   "k": "{name} joined your farm circle.",
+   "v": "{name} a rejoint ton cercle de fermes."
+  },
+  {
+   "k": "{name} reached level {level}: collect {coins} coins and {gems} gems.",
+   "v": "{name} a atteint le niveau {level} : récupère {coins} pièces et {gems} gemmes."
+  },
+  {
+   "k": "{x}  {0}/{1}",
+   "v": "{x}  {0}/{1}"
+  },
+  {
+   "k": "{x}  {0}/{1} · hungry",
+   "v": "{x}  {0}/{1} · affamés"
+  },
+  {
+   "k": "{x} is ready!",
+   "v": "{x} : terminé !"
+  },
+  {
+   "k": "{x} is repaired",
+   "v": "{x} : réparé"
+  },
+  {
+   "k": "{x} opens at island level {0}",
+   "v": "{x} s'ouvre au niveau {0} de l'île"
+  },
+  {
+   "k": "© Farmverse",
+   "v": "© Farmverse"
+  },
+  {
+   "k": "×{0} full",
+   "v": "×{0} plein"
+  },
+  {
+   "k": "×{0} · making",
+   "v": "×{0} · en cours"
+  },
+  {
+   "k": "“Good day to you!”",
+   "v": "« Bonne journée à toi ! »"
+  },
+  {
+   "k": "Zombies sighted {x}!",
+   "v": "Zombies en vue {x} !"
+  },
+  {
+   "k": "Zombies sighted {x} — the Builder leads them!",
+   "v": "Zombies en vue {x} — le Bâtisseur les mène !"
+  },
+  {
+   "k": "Zombies {x} · coming in {0}s",
+   "v": "Zombies {x} · arrivée dans {0} s"
+  },
+  {
+   "k": "{0} zombie {x}",
+   "v": "{0} zombie {x}"
+  },
+  {
+   "k": "{0} zombies {x}",
+   "v": "{0} zombies {x}"
+  },
+  {
+   "k": "{0} zombies shamble in {x}!",
+   "v": "{0} zombies arrivent en titubant {x} !"
+  },
+  {
+   "k": "The post office order for {0} {x} ran out",
+   "v": "La commande de la poste pour {0} {x} a expiré"
+  },
+  {
+   "k": "Take {x} from the farmhouse into your basket",
+   "v": "Prendre {x} à la ferme dans ton panier"
+  },
+  {
+   "k": "Needs {x}",
+   "v": "Il faut : {x}"
+  },
+  {
+   "k": "Everything's here — builders will repair the {x}",
+   "v": "Tout est là — les bâtisseurs vont réparer : {x}"
+  },
+  {
+   "k": "Everything's here — builders will put up the {x}",
+   "v": "Tout est là — les bâtisseurs vont construire : {x}"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Coins</color> to build the {x}.",
+   "v": "Il te faut <color=#ffd23a>{0} pièces de plus</color> pour construire : {x}."
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Planks</color> to upgrade the {x}.",
+   "v": "Il te faut <color=#ffd23a>{0} planches de plus</color> pour améliorer : {x}."
+  },
+  {
+   "k": "{x} growing",
+   "v": "{x} pousse"
+  },
+  {
+   "k": "🔒 {x}",
+   "v": "🔒 {x}"
+  },
+  {
+   "k": "{x} placed",
+   "v": "{x} installé"
+  },
+  {
+   "k": "{x} opens at farmhouse level {0}",
+   "v": "{x} s'ouvre au niveau {0} de la ferme"
+  },
+  {
+   "k": "Farm Pass: {x}",
+   "v": "Pass ferme : {x}"
+  },
+  {
+   "k": "Island Lv {0} · {x}",
+   "v": "Île niv. {0} · {x}"
+  },
+  {
+   "k": "{x} · Lv {0}",
+   "v": "{x} · niv. {0}"
+  },
+  {
+   "k": "{x} · Island Lv {0}",
+   "v": "{x} · Île niv. {0}"
+  },
+  {
+   "k": "Settler · Island Lv {0} · {x}",
+   "v": "Colon · Île niv. {0} · {x}"
+  },
+  {
+   "k": "{0} wheat → {1} flour",
+   "v": "{0} blé → {1} farine"
+  },
+  {
+   "k": "{0} maize → {1} feed",
+   "v": "{0} maïs → {1} aliment"
+  },
+  {
+   "k": "wheat",
+   "v": "blé"
+  },
+  {
+   "k": "egg",
+   "v": "œufs"
+  },
+  {
+   "k": "milk",
+   "v": "lait"
+  },
+  {
+   "k": "maize",
+   "v": "maïs"
+  },
+  {
+   "k": "beans",
+   "v": "haricots"
+  },
+  {
+   "k": "flour",
+   "v": "farine"
+  },
+  {
+   "k": "tomato",
+   "v": "tomates"
+  },
+  {
+   "k": "veg box",
+   "v": "panier de légumes"
+  },
+  {
+   "k": "wood",
+   "v": "bois"
+  },
+  {
+   "k": "stone",
+   "v": "pierre"
+  },
+  {
+   "k": "planks",
+   "v": "planches"
+  },
+  {
+   "k": "cabbage",
+   "v": "chou"
+  },
+  {
+   "k": "berries",
+   "v": "baies"
+  },
+  {
+   "k": "pumpkin",
+   "v": "citrouilles"
+  },
+  {
+   "k": "sunflower",
+   "v": "tournesols"
+  },
+  {
+   "k": "croissant",
+   "v": "croissants"
+  },
+  {
+   "k": "yogurt",
+   "v": "yaourt"
+  },
+  {
+   "k": "juice",
+   "v": "jus"
+  },
+  {
+   "k": "soda",
+   "v": "soda"
+  },
+  {
+   "k": "feed",
+   "v": "aliment"
+  },
+  {
+   "k": "fish",
+   "v": "poisson"
+  },
+  {
+   "k": "meat",
+   "v": "viande"
+  },
+  {
+   "k": "mushroom",
+   "v": "champignons"
+  },
+  {
+   "k": "oil",
+   "v": "huile"
+  },
+  {
+   "k": "flowers",
+   "v": "fleurs"
+  },
+  {
+   "k": "decor flower bed",
+   "v": "parterre de fleurs"
+  },
+  {
+   "k": "decor lamp post",
+   "v": "lampadaire"
+  },
+  {
+   "k": "decor mailbox",
+   "v": "boîte aux lettres"
+  },
+  {
+   "k": "fish market",
+   "v": "marché aux poissons"
+  },
+  {
+   "k": "greenhouse",
+   "v": "serre"
+  },
+  {
+   "k": "lumber yard",
+   "v": "scierie"
+  },
+  {
+   "k": "warehouse",
+   "v": "entrepôt"
+  },
+  {
+   "k": "farmhouse",
+   "v": "ferme"
+  },
+  {
+   "k": "windmill",
+   "v": "moulin"
+  },
+  {
+   "k": "Bedroom",
+   "v": "Chambre"
+  },
+  {
+   "k": "Bathroom",
+   "v": "Salle de bain"
+  },
+  {
+   "k": "Study",
+   "v": "Bureau"
+  },
+  {
+   "k": "Pouf",
+   "v": "Pouf"
+  },
+  {
+   "k": "<color=#7dff6a>{0}</color> codes ready",
+   "v": "<color=#7dff6a>{0}</color> codes prêts"
+  },
+  {
+   "k": "<size={0}%>Premium rewards on every tier!</size>",
+   "v": "<size={0}%>Des récompenses premium à chaque palier !</size>"
+  },
+  {
+   "k": "A bigger workers' house works longer offline: {0} hours at level {1} {2} at level {3} The Farm Pass makes it {4}",
+   "v": "Une maison d'ouvriers plus grande travaille plus longtemps hors ligne : {0} heures au niveau {1} {2} au niveau {3} Le Pass ferme porte cela à {4}"
+  },
+  {
+   "k": "A gift from the team.",
+   "v": "Un cadeau de l'équipe."
+  },
+  {
+   "k": "Army",
+   "v": "Armée"
+  },
+  {
+   "k": "Autumn: Harvest time: fields yield two more",
+   "v": "Automne : temps des récoltes, les champs donnent deux de plus"
+  },
+  {
+   "k": "Summer: Fields yield one more",
+   "v": "Été : les champs donnent un de plus"
+  },
+  {
+   "k": "Winter: Crops grow slowly and everyone eats more: stock up",
+   "v": "Hiver : les cultures poussent lentement et tout le monde mange plus — fais des réserves"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins · ate {5} food",
+   "v": "Absent {0} h {1} min · {2} ouvriers ont porté {3} charges · graines : {4} pièces · {5} nourriture mangée"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins · the farmhouse filled up",
+   "v": "Absent {0} h {1} min · {2} ouvriers ont porté {3} charges · graines : {4} pièces · la ferme s'est remplie"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins · the farmhouse filled up · ate {5} food",
+   "v": "Absent {0} h {1} min · {2} ouvriers ont porté {3} charges · graines : {4} pièces · la ferme s'est remplie · {5} nourriture mangée"
+  },
+  {
+   "k": "Baker",
+   "v": "Boulanger"
+  },
+  {
+   "k": "Beard",
+   "v": "Barbe"
+  },
+  {
+   "k": "Boss zombie",
+   "v": "Zombie chef"
+  },
+  {
+   "k": "Build a builders' hut",
+   "v": "Construis une cabane de bâtisseurs"
+  },
+  {
+   "k": "Build a water tower",
+   "v": "Construis un château d'eau"
+  },
+  {
+   "k": "Build an army house and keep it fed to stop the next night.",
+   "v": "Construis une caserne et nourris-la pour arrêter la prochaine nuit."
+  },
+  {
+   "k": "Builder",
+   "v": "Bâtisseur"
+  },
+  {
+   "k": "Builders",
+   "v": "Bâtisseurs"
+  },
+  {
+   "k": "Builders take {0} wood from the farmhouse",
+   "v": "Les bâtisseurs prennent {0} bois à la ferme"
+  },
+  {
+   "k": "Builders take {0} wood, {1} stone from the farmhouse",
+   "v": "Les bâtisseurs prennent {0} bois et {1} pierre à la ferme"
+  },
+  {
+   "k": "Cabbage",
+   "v": "Chou"
+  },
+  {
+   "k": "Cherry blossom",
+   "v": "Fleur de cerisier"
+  },
+  {
+   "k": "Chop {0} trees",
+   "v": "Coupe {0} arbres"
+  },
+  {
+   "k": "Crops grow a little faster.\n\nClear skies.",
+   "v": "Les cultures poussent un peu plus vite.\n\nCiel dégagé."
+  },
+  {
+   "k": "Crops grow slowly and everyone eats more: stock up.\n\nRain: crops sown now grow faster.",
+   "v": "Les cultures poussent lentement et tout le monde mange plus : fais des réserves.\n\nPluie : ce qui est semé maintenant pousse plus vite."
+  },
+  {
+   "k": "Customize",
+   "v": "Personnaliser"
+  },
+  {
+   "k": "Delivery orders that pay better than the market",
+   "v": "Des commandes de livraison mieux payées que le marché"
+  },
+  {
+   "k": "Drag to turn",
+   "v": "Glisse pour tourner"
+  },
+  {
+   "k": "Earned for: Daily · Harvest {0} crops",
+   "v": "Gagné pour : quotidien · récolter {0} cultures"
+  },
+  {
+   "k": "Earned today · expires in {0} days",
+   "v": "Gagné aujourd'hui · expire dans {0} jours"
+  },
+  {
+   "k": "Extras",
+   "v": "Extras"
+  },
+  {
+   "k": "FURNISH",
+   "v": "MEUBLER"
+  },
+  {
+   "k": "Face",
+   "v": "Visage"
+  },
+  {
+   "k": "Facility well",
+   "v": "Puits"
+  },
+  {
+   "k": "Facility well {0}",
+   "v": "Puits {0}"
+  },
+  {
+   "k": "Farm workers {0}/{1}",
+   "v": "Ouvriers agricoles {0}/{1}"
+  },
+  {
+   "k": "Farmhouse reached level {0}! (it eats a little more now)",
+   "v": "La ferme passe au niveau {0} ! (elle mange un peu plus maintenant)"
+  },
+  {
+   "k": "Field {0}",
+   "v": "Champ {0}"
+  },
+  {
+   "k": "Fill an order that gives planks",
+   "v": "Remplis une commande qui donne des planches"
+  },
+  {
+   "k": "Fill {0} orders",
+   "v": "Remplis {0} commandes"
+  },
+  {
+   "k": "Fill {0} orders in a day to open the chest.",
+   "v": "Remplis {0} commandes en un jour pour ouvrir le coffre."
+  },
+  {
+   "k": "Finish {0} goals",
+   "v": "Termine {0} objectifs"
+  },
+  {
+   "k": "Friends need the full game.\nStart from the <color=#ffd23a>Boot</color> scene to sign in.",
+   "v": "Les amis nécessitent le jeu complet.\nLance depuis la scène <color=#ffd23a>Boot</color> pour te connecter."
+  },
+  {
+   "k": "News needs the full game.\nStart from the <color=#ffd23a>Boot</color> scene to sign in.",
+   "v": "Les nouvelles nécessitent le jeu complet.\nLance depuis la scène <color=#ffd23a>Boot</color> pour te connecter."
+  },
+  {
+   "k": "Glasses",
+   "v": "Lunettes"
+  },
+  {
+   "k": "Gloves",
+   "v": "Gants"
+  },
+  {
+   "k": "Grandma",
+   "v": "Mamie"
+  },
+  {
+   "k": "Grow {0} crops",
+   "v": "Fais pousser {0} cultures"
+  },
+  {
+   "k": "Hair",
+   "v": "Cheveux"
+  },
+  {
+   "k": "Hat",
+   "v": "Chapeau"
+  },
+  {
+   "k": "Island Lv {0}",
+   "v": "Île niv. {0}"
+  },
+  {
+   "k": "Island level {0}",
+   "v": "Niveau de l'île {0}"
+  },
+  {
+   "k": "Jester",
+   "v": "Bouffon"
+  },
+  {
+   "k": "Labourer",
+   "v": "Ouvrier"
+  },
+  {
+   "k": "Labourers",
+   "v": "Ouvriers"
+  },
+  {
+   "k": "Laid in the chicken coop.\n<color=#ffd23a>Shops pay <b>{0}</b> coins each.</color>",
+   "v": "Pondu dans le poulailler.\n<color=#ffd23a>Les boutiques paient <b>{0}</b> pièces l'unité.</color>"
+  },
+  {
+   "k": "Load crates from your stores: the truck pays in building materials",
+   "v": "Charge des caisses depuis tes réserves : le camion paie en matériaux"
+  },
+  {
+   "k": "Make or gather planks on your island",
+   "v": "Fabrique ou récolte des planches sur ton île"
+  },
+  {
+   "k": "Makes feed · {0}% speed",
+   "v": "Fait de l'aliment · vitesse {0} %"
+  },
+  {
+   "k": "Makes flour · {0}% speed",
+   "v": "Fait de la farine · vitesse {0} %"
+  },
+  {
+   "k": "Making",
+   "v": "Fabrication"
+  },
+  {
+   "k": "Market",
+   "v": "Marché"
+  },
+  {
+   "k": "Market {0}",
+   "v": "Marché {0}"
+  },
+  {
+   "k": "Mascot",
+   "v": "Mascotte"
+  },
+  {
+   "k": "Me",
+   "v": "Moi"
+  },
+  {
+   "k": "Milk every {0}s",
+   "v": "Lait toutes les {0} s"
+  },
+  {
+   "k": "Milk goes off if left too long",
+   "v": "Le lait tourne s'il attend trop"
+  },
+  {
+   "k": "Need {0} more Planks — make or gather it, or fill orders that give it.",
+   "v": "Il faut {0} planches de plus — fabrique-les, récolte-les ou remplis des commandes qui en donnent."
+  },
+  {
+   "k": "Needs {0} planks",
+   "v": "Il faut {0} planches"
+  },
+  {
+   "k": "Needs {0} planks in the farmhouse (has {1}) — a lumber yard makes them",
+   "v": "Il faut {0} planches à la ferme (il y en a {1}) — une scierie en fabrique"
+  },
+  {
+   "k": "Needs {0} planks, {1} stone",
+   "v": "Il faut {0} planches et {1} pierre"
+  },
+  {
+   "k": "Needs {0} stone",
+   "v": "Il faut {0} pierre"
+  },
+  {
+   "k": "Needs {0} stone in the farmhouse (has {1}) — break rocks",
+   "v": "Il faut {0} pierre à la ferme (il y en a {1}) — casse des rochers"
+  },
+  {
+   "k": "Needs {0} wood, {1} planks",
+   "v": "Il faut {0} bois et {1} planches"
+  },
+  {
+   "k": "Next in {0}m {1}s",
+   "v": "Prochain dans {0} min {1} s"
+  },
+  {
+   "k": "Next truck in {0}m {1}s",
+   "v": "Prochain camion dans {0} min {1} s"
+  },
+  {
+   "k": "No new messages",
+   "v": "Aucun nouveau message"
+  },
+  {
+   "k": "No news right now.\nCheck back soon!",
+   "v": "Pas de nouvelles pour l'instant.\nReviens bientôt !"
+  },
+  {
+   "k": "None",
+   "v": "Aucun"
+  },
+  {
+   "k": "Not enough Coins",
+   "v": "Pas assez de pièces"
+  },
+  {
+   "k": "Not enough Planks",
+   "v": "Pas assez de planches"
+  },
+  {
+   "k": "Order Truck",
+   "v": "Camion de commandes"
+  },
+  {
+   "k": "Order delivered: {0} coins",
+   "v": "Commande livrée : {0} pièces"
+  },
+  {
+   "k": "Order ends in {0}m {1}s",
+   "v": "La commande se termine dans {0} min {1} s"
+  },
+  {
+   "k": "Pants",
+   "v": "Pantalon"
+  },
+  {
+   "k": "Paste your code and tap <color=#ffd23a>Redeem</color>.",
+   "v": "Colle ton code et touche <color=#ffd23a>Utiliser</color>."
+  },
+  {
+   "k": "People {0}/{1}",
+   "v": "Habitants {0}/{1}"
+  },
+  {
+   "k": "People {0}/{1} · hungry",
+   "v": "Habitants {0}/{1} · affamés"
+  },
+  {
+   "k": "Plant {0} crops",
+   "v": "Plante {0} cultures"
+  },
+  {
+   "k": "Required Level {0}",
+   "v": "Niveau requis {0}"
+  },
+  {
+   "k": "Reset",
+   "v": "Réinitialiser"
+  },
+  {
+   "k": "Shoes",
+   "v": "Chaussures"
+  },
+  {
+   "k": "Soldier",
+   "v": "Soldat"
+  },
+  {
+   "k": "Surprise me",
+   "v": "Surprends-moi"
+  },
+  {
+   "k": "Sign in with your <color=#ffd23a>VeWorld</color> wallet.",
+   "v": "Connecte-toi avec ton portefeuille <color=#ffd23a>VeWorld</color>."
+  },
+  {
+   "k": "Tap <color=#ffd23a>Open redeem page</color>.",
+   "v": "Touche <color=#ffd23a>Ouvrir la page d'échange</color>."
+  },
+  {
+   "k": "The night is over",
+   "v": "La nuit est finie"
+  },
+  {
+   "k": "The night is over — {0} people killed",
+   "v": "La nuit est finie — {0} habitants tués"
+  },
+  {
+   "k": "The raiders got away — {0} coins taken",
+   "v": "Les pillards se sont enfuis — {0} pièces volées"
+  },
+  {
+   "k": "The truck is out on the road. It'll be back with new crates soon.",
+   "v": "Le camion est sur la route. Il reviendra bientôt avec de nouvelles caisses."
+  },
+  {
+   "k": "The truck paid {0} coins",
+   "v": "Le camion a payé {0} pièces"
+  },
+  {
+   "k": "The truck paid {0} coins: {1} Planks, {2} Stone",
+   "v": "Le camion a payé {0} pièces : {1} planches, {2} pierre"
+  },
+  {
+   "k": "The truck paid {0} coins: {1} Stone, {2} Wood",
+   "v": "Le camion a payé {0} pièces : {1} pierre, {2} bois"
+  },
+  {
+   "k": "The zombies got away — {0} goods stolen, {1} people killed, {2} coins taken",
+   "v": "Les zombies se sont enfuis — {0} marchandises volées, {1} habitants tués, {2} pièces prises"
+  },
+  {
+   "k": "The zombies got what they came for — they're shambling back into the fog!",
+   "v": "Les zombies ont eu ce qu'ils voulaient — ils repartent en titubant dans le brouillard !"
+  },
+  {
+   "k": "Top",
+   "v": "Haut"
+  },
+  {
+   "k": "Top {0}",
+   "v": "Top {0}"
+  },
+  {
+   "k": "Townsfolk",
+   "v": "Citadins"
+  },
+  {
+   "k": "Truck",
+   "v": "Camion"
+  },
+  {
+   "k": "Warnings before the zombies come, and how the night went",
+   "v": "Alertes avant l'arrivée des zombies, et bilan de la nuit"
+  },
+  {
+   "k": "Warriors who fight the zombies",
+   "v": "Les guerriers qui combattent les zombies"
+  },
+  {
+   "k": "Warriors {0}/{1} · hungry",
+   "v": "Guerriers {0}/{1} · affamés"
+  },
+  {
+   "k": "Welcome, farmer!",
+   "v": "Bienvenue, fermier !"
+  },
+  {
+   "k": "When a friend you invite reaches Level {0} you both get {1} coins and {2} gems.",
+   "v": "Quand un ami invité atteint le niveau {0}, vous recevez tous les deux {1} pièces et {2} gemmes."
+  },
+  {
+   "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2}",
+   "v": "Les ouvriers ont récolté {0} · semé {1} champs · nourri les animaux {2} fois"
+  },
+  {
+   "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3}",
+   "v": "Les ouvriers ont récolté {0} · semé {1} champs · nourri les animaux {2} fois · ramassé {3}"
+  },
+  {
+   "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3} · refilled machines with {4}",
+   "v": "Les ouvriers ont récolté {0} · semé {1} champs · nourri les animaux {2} fois · ramassé {3} · rechargé les machines avec {4}"
+  },
+  {
+   "k": "World rank: {0}",
+   "v": "Rang mondial : {0}"
+  },
+  {
+   "k": "World {0}",
+   "v": "Monde {0}"
+  },
+  {
+   "k": "You have {0}",
+   "v": "Tu as {0}"
+  },
+  {
+   "k": "Your stable is being built ({0} %) — the horse comes when it's done",
+   "v": "Ton écurie est en construction ({0} %) — le cheval arrive quand elle est finie"
+  },
+  {
+   "k": "Your stable is waiting for materials: {0} stone",
+   "v": "Ton écurie attend des matériaux : {0} pierre"
+  },
+  {
+   "k": "Your stable is waiting for materials: {0} wood, {1} stone",
+   "v": "Ton écurie attend des matériaux : {0} bois, {1} pierre"
+  },
+  {
+   "k": "Zombies are stealing from the farmhouse!",
+   "v": "Les zombies pillent la ferme !"
+  },
+  {
+   "k": "resets {0}h {1}m",
+   "v": "réinitialisation dans {0} h {1} min"
+  },
+  {
+   "k": "the Builder",
+   "v": "le Bâtisseur"
+  },
+  {
+   "k": "wants:",
+   "v": "veut :"
+  },
+  {
+   "k": "zombies came",
+   "v": "les zombies sont venus"
+  },
+  {
+   "k": "{0} B3TR · Daily · Harvest {1} crops",
+   "v": "{0} B3TR · quotidien · récolter {1} cultures"
+  },
+  {
+   "k": "{0} Stone, {1} Wood",
+   "v": "{0} pierre, {1} bois"
+  },
+  {
+   "k": "{0} Wood, {1} Stone",
+   "v": "{0} bois, {1} pierre"
+  },
+  {
+   "k": "{0} coins · online",
+   "v": "{0} pièces · en ligne"
+  },
+  {
+   "k": "{0} coins · ready!",
+   "v": "{0} pièces · prêt !"
+  },
+  {
+   "k": "{0} food in every workers' house",
+   "v": "{0} nourriture dans chaque maison d'ouvriers"
+  },
+  {
+   "k": "{0} in store",
+   "v": "{0} en stock"
+  },
+  {
+   "k": "{0} uses left · expires in {1} days",
+   "v": "{0} utilisations restantes · expire dans {1} jours"
+  },
+  {
+   "k": "{0}% → <color=#7dff6a>{1}%</color>",
+   "v": "{0} % → <color=#7dff6a>{1} %</color>"
+  },
+  {
+   "k": "“Ah, hello dear. Lovely island you're making.”",
+   "v": "« Ah, bonjour mon petit. Quelle jolie île tu fais là. »"
+  },
+  {
+   "k": "“Hello, boss! Ask me about the stores or the fields.”",
+   "v": "« Salut, patron ! Demande-moi pour les réserves ou les champs. »"
+  },
+  {
+   "k": "“Hi there! Want to know how the building's going?”",
+   "v": "« Salut ! Tu veux savoir où en est le chantier ? »"
+  },
+  {
+   "k": "“That's the path dirt. A path to lay out your farm.”",
+   "v": "« C'est le chemin de terre. Un chemin pour dessiner ta ferme. »"
+  },
+  {
+   "k": "“{0} wood, {1} stone, {2} planks in the store.”",
+   "v": "« {0} bois, {1} pierre, {2} planches en réserve. »"
+  },
+  {
+   "k": "Get off",
+   "v": "Descendre"
+  },
+  {
+   "k": "Santa's gift: tap to open",
+   "v": "Cadeau du Père Noël : touche pour ouvrir"
+  },
+  {
+   "k": "Santa gave you {0} coins!",
+   "v": "Le Père Noël t'a donné {0} pièces !"
+  },
+  {
+   "k": "Snow Day Fair",
+   "v": "Foire des neiges"
+  },
+  {
+   "k": "Sweetheart Bakes",
+   "v": "Douceurs des amoureux"
+  },
+  {
+   "k": "Spring Planting",
+   "v": "Semailles de printemps"
+  },
+  {
+   "k": "Egg Hunt",
+   "v": "Chasse aux œufs"
+  },
+  {
+   "k": "Flower Show",
+   "v": "Floralies"
+  },
+  {
+   "k": "Picnic Week",
+   "v": "Semaine pique-nique"
+  },
+  {
+   "k": "Summer Harvest",
+   "v": "Moisson d'été"
+  },
+  {
+   "k": "County Fair",
+   "v": "Fête du comté"
+  },
+  {
+   "k": "Harvest Fair",
+   "v": "Foire des récoltes"
+  },
+  {
+   "k": "Pumpkin Festival",
+   "v": "Fête de la citrouille"
+  },
+  {
+   "k": "Woodland Week",
+   "v": "Semaine des bois"
+  },
+  {
+   "k": "Winter Festival",
+   "v": "Fête d'hiver"
+  },
+  {
+   "k": "Frosty Farm",
+   "v": "Ferme givrée"
+  },
+  {
+   "k": "Sweet Treats",
+   "v": "Gourmandises"
+  },
+  {
+   "k": "Green Shoots",
+   "v": "Jeunes pousses"
+  },
+  {
+   "k": "Spring Chicks",
+   "v": "Poussins du printemps"
+  },
+  {
+   "k": "In Bloom",
+   "v": "En fleurs"
+  },
+  {
+   "k": "Sunny Picnic",
+   "v": "Pique-nique ensoleillé"
+  },
+  {
+   "k": "Golden Fields",
+   "v": "Champs dorés"
+  },
+  {
+   "k": "Fair Days",
+   "v": "Jours de fête"
+  },
+  {
+   "k": "Harvest Moon",
+   "v": "Lune des moissons"
+  },
+  {
+   "k": "Spooky Nights",
+   "v": "Nuits d'épouvante"
+  },
+  {
+   "k": "Lumberjack",
+   "v": "Bûcheron"
+  },
+  {
+   "k": "Winter Wonderland",
+   "v": "Pays des merveilles d'hiver"
+  },
+  {
+   "k": "Shops pay 25% more for milk and yogurt",
+   "v": "Les boutiques paient 25 % de plus le lait et le yaourt"
+  },
+  {
+   "k": "Shops pay 30% more for croissants and flour",
+   "v": "Les boutiques paient 30 % de plus les croissants et la farine"
+  },
+  {
+   "k": "Every field sown yields one more",
+   "v": "Chaque champ semé donne un de plus"
+  },
+  {
+   "k": "Shops pay 30% more for eggs; 10% more XP",
+   "v": "Les boutiques paient 30 % de plus les œufs ; 10 % d'XP en plus"
+  },
+  {
+   "k": "Sunflowers yield one more and sell for 30% more; 20% more XP",
+   "v": "Les tournesols donnent un de plus et se vendent 30 % plus cher ; 20 % d'XP en plus"
+  },
+  {
+   "k": "Shops pay 25% more for juice, soda and veg boxes",
+   "v": "Les boutiques paient 25 % de plus le jus, le soda et les paniers de légumes"
+  },
+  {
+   "k": "Tomatoes, maize and beans yield two more",
+   "v": "Tomates, maïs et haricots donnent deux de plus"
+  },
+  {
+   "k": "50% more XP from everything",
+   "v": "50 % d'XP en plus pour tout"
+  },
+  {
+   "k": "Wheat and cabbage yield one more; wheat, flour and cabbage sell for 20% more",
+   "v": "Le blé et le chou donnent un de plus ; blé, farine et chou se vendent 20 % plus cher"
+  },
+  {
+   "k": "Pumpkins yield two more and sell for 30% more",
+   "v": "Les citrouilles donnent deux de plus et se vendent 30 % plus cher"
+  },
+  {
+   "k": "Shops pay 25% more for wood, planks and stone",
+   "v": "Les boutiques paient 25 % de plus le bois, les planches et la pierre"
+  },
+  {
+   "k": "Snow and decorations; Santa brings coins every day; milk, eggs and croissants sell for 25% more; 25% more XP",
+   "v": "Neige et décorations ; le Père Noël apporte des pièces chaque jour ; lait, œufs et croissants se vendent 25 % plus cher ; 25 % d'XP en plus"
+  },
+  {
+   "k": "Christmas tree",
+   "v": "Sapin de Noël"
+  },
+  {
+   "k": "Second armchair",
+   "v": "Deuxième fauteuil"
+  },
+  {
+   "k": "Guitar",
+   "v": "Guitare"
+  },
+  {
+   "k": "Sunset picture",
+   "v": "Tableau du couchant"
+  },
+  {
+   "k": "Tall plant",
+   "v": "Grande plante"
+  },
+  {
+   "k": "Book pile",
+   "v": "Pile de livres"
+  },
+  {
+   "k": "Microwave",
+   "v": "Micro-ondes"
+  },
+  {
+   "k": "Stand mixer",
+   "v": "Robot pâtissier"
+  },
+  {
+   "k": "Kitchen island",
+   "v": "Îlot de cuisine"
+  },
+  {
+   "k": "Cutting board",
+   "v": "Planche à découper"
+  },
+  {
+   "k": "Herb pot",
+   "v": "Pot d'herbes"
+  },
+  {
+   "k": "Fruit picture",
+   "v": "Tableau de fruits"
+  },
+  {
+   "k": "Teddy bear",
+   "v": "Ours en peluche"
+  },
+  {
+   "k": "Toy car",
+   "v": "Petite voiture"
+  },
+  {
+   "k": "Wardrobe",
+   "v": "Armoire"
+  },
+  {
+   "k": "Alarm clock",
+   "v": "Réveil"
+  },
+  {
+   "k": "Flower picture",
+   "v": "Tableau de fleurs"
+  },
+  {
+   "k": "Potted plant",
+   "v": "Plante en pot"
+  },
+  {
+   "k": "Bath mat",
+   "v": "Tapis de bain"
+  },
+  {
+   "k": "Fern",
+   "v": "Fougère"
+  },
+  {
+   "k": "Seaside picture",
+   "v": "Tableau de bord de mer"
+  },
+  {
+   "k": "Toothbrushes",
+   "v": "Brosses à dents"
+  },
+  {
+   "k": "Games console",
+   "v": "Console de jeux"
+  },
+  {
+   "k": "Exercise bike",
+   "v": "Vélo d'appartement"
+  },
+  {
+   "k": "Landscape picture",
+   "v": "Tableau de paysage"
+  },
+  {
+   "k": "Wall clock",
+   "v": "Horloge murale"
+  },
+  {
+   "k": "Caravan park",
+   "v": "Camping"
+  }
+ ]
+}

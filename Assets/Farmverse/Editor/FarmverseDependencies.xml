@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Native libraries for the in-repo plug-ins (Plugins/Android/*.java, Plugins/iOS/*.mm),
+  resolved by the External Dependency Manager that ships with the Firebase Unity SDK:
+  Assets ▸ External Dependency Manager ▸ Android Resolver ▸ Resolve, and CocoaPods on iOS builds.
+-->
+<dependencies>
+  <androidPackages>
+    <!-- FileProvider for the data-export share sheet -->
+    <androidPackage spec="androidx.core:core:1.13.1" />
+    <!-- Sign in with Google (ID token for Firebase Auth) -->
+    <androidPackage spec="androidx.credentials:credentials:1.3.0" />
+    <androidPackage spec="androidx.credentials:credentials-play-services-auth:1.3.0" />
+    <androidPackage spec="com.google.android.libraries.identity.googleid:googleid:1.1.1" />
+  </androidPackages>
+  <iosPods>
+    <!-- Sign in with Google on iOS (ID + access token for Firebase Auth) -->
+    <iosPod name="GoogleSignIn" version="~> 8.0" addToAllTargets="false" />
+  </iosPods>
+</dependencies>

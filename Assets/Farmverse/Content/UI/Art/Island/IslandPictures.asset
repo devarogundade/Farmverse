@@ -1,0 +1,305 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9864a1b3c505d343bffab4ed8a2f992, type: 3}
+  m_Name: IslandPictures
+  m_EditorClassIdentifier: Farmverse.Presentation.World::Farmverse.Presentation.World.Island.IslandPictures
+  pictures:
+  - key: b:chicken_coop
+    texture: {fileID: 2800000, guid: 5f98a059d8ed8cf4cb0bb188fa4267f9, type: 3}
+  - key: b:pigsty
+    texture: {fileID: 2800000, guid: 0af51cf008b9c7547b7444bc207181ce, type: 3}
+  - key: b:stable
+    texture: {fileID: 2800000, guid: bce9e8e78751ba44fab0db932b789701, type: 3}
+  - key: b:sign_default
+    texture: {fileID: 2800000, guid: ac460289dc622224dae2864eb0a63ef0, type: 3}
+  - key: b:decor_bench
+    texture: {fileID: 2800000, guid: f0aff757ea91c3b48814341f1335817f, type: 3}
+  - key: b:decor_mailbox
+    texture: {fileID: 2800000, guid: acb69679362032b42ad0724f00de14ef, type: 3}
+  - key: b:decor_default
+    texture: {fileID: 2800000, guid: cce4fd88ce4c6f049a1e729f75605194, type: 3}
+  - key: b:decor_flower_bed
+    texture: {fileID: 2800000, guid: 3dd8360e73022d04a94f3370bc8978ee, type: 3}
+  - key: b:decor_hay_bales
+    texture: {fileID: 2800000, guid: fd605bbbc491bee4890e74ef9e0b054d, type: 3}
+  - key: b:decor_lamp_post
+    texture: {fileID: 2800000, guid: dec7735d23f121a4d95f6bd421fd9b77, type: 3}
+  - key: b:decor_beehive
+    texture: {fileID: 2800000, guid: d1add2e51254cb7408842fe3ed1d5163, type: 3}
+  - key: b:pen
+    texture: {fileID: 2800000, guid: db3f8f77d27d2b24ebe0baae0b570562, type: 3}
+  - key: b:seasonal_default
+    texture: {fileID: 2800000, guid: 78ef7b1521fa5fb459d27f1d943b579c, type: 3}
+  - key: b:decor_fountain
+    texture: {fileID: 2800000, guid: 7638424a1f149d14985708f743d23297, type: 3}
+  - key: b:feed_mill
+    texture: {fileID: 2800000, guid: f8894236464cff64d8a6fd9f99997bd4, type: 3}
+  - key: b:lumber_yard
+    texture: {fileID: 2800000, guid: e691b975f4174c24c9c3b100a1549b4b, type: 3}
+  - key: b:bakery_factory
+    texture: {fileID: 2800000, guid: e6c96eb817fcb734aa1c6102c70fb60c, type: 3}
+  - key: b:dairy_factory
+    texture: {fileID: 2800000, guid: 670297c6a7c7209428755ca9a2035d1e, type: 3}
+  - key: b:sugar_mill
+    texture: {fileID: 2800000, guid: f4a4bcdbb7f4ffe40b3a0a0a27c834cd, type: 3}
+  - key: b:field
+    texture: {fileID: 2800000, guid: d9213f4828d12f347ba8c57e6bd88e2d, type: 3}
+  - key: b:potting_shed
+    texture: {fileID: 2800000, guid: e3d5ed30575e0564b86420ba2524acb3, type: 3}
+  - key: b:facility_well
+    texture: {fileID: 2800000, guid: 8250fa498d7ca08448e4120966d1caea, type: 3}
+  - key: b:grain_silos
+    texture: {fileID: 2800000, guid: 5585a8667899b2449a5a402091c5a511, type: 3}
+  - key: b:barn
+    texture: {fileID: 2800000, guid: 07d9ab089a88f42449d66f6a650ab239, type: 3}
+  - key: b:greenhouse
+    texture: {fileID: 2800000, guid: e0deebeb04bc4cf4eab3d6830ca1cb08, type: 3}
+  - key: b:facility_warehouse
+    texture: {fileID: 2800000, guid: fabe7a6d18c36b74180b8eb6d6e991ea, type: 3}
+  - key: b:windmill
+    texture: {fileID: 2800000, guid: 36e692250d4243d4aae36aed13308486, type: 3}
+  - key: b:farmhouse
+    texture: {fileID: 2800000, guid: f8b242e21cca7994787867d626d22931, type: 3}
+  - key: b:mine_entrance
+    texture: {fileID: 2800000, guid: 001000382af601c4ebf5b8f92d3b625f, type: 3}
+  - key: b:packing_shed
+    texture: {fileID: 2800000, guid: ac442443dbe459145b8a576d5f78ef19, type: 3}
+  - key: b:cider_press
+    texture: {fileID: 2800000, guid: 555f354fd50163742a03dd3cb7bb2f60, type: 3}
+  - key: b:path_dirt
+    texture: {fileID: 2800000, guid: 65c0b262c401aba44b669a0ce21ffd31, type: 3}
+  - key: b:path_stone
+    texture: {fileID: 2800000, guid: 8e98d5db773a3e64b9604422568821ff, type: 3}
+  - key: b:fence_wood
+    texture: {fileID: 2800000, guid: 87743a9522dbfaa40806f3241efadd01, type: 3}
+  - key: b:fence_white
+    texture: {fileID: 2800000, guid: 3f2d24d8c35c2114587c18a7a965342b, type: 3}
+  - key: b:builders_hut
+    texture: {fileID: 2800000, guid: 4d1a51f7a0aad7d47b8bfcff0cbad996, type: 3}
+  - key: b:workers_house
+    texture: {fileID: 2800000, guid: 64e839933bcf2b3408831e1bdfcd6f61, type: 3}
+  - key: b:army_house
+    texture: {fileID: 2800000, guid: ecd7d0a9a304f954fa3339489f92e077, type: 3}
+  - key: b:fishing_shed
+    texture: {fileID: 2800000, guid: 0dca015dd1b523e40b7328518311449c, type: 3}
+  - key: b:fish_market
+    texture: {fileID: 2800000, guid: ddd5c6ab07058a34a91e522037a7a584, type: 3}
+  - key: b:market_stall
+    texture: {fileID: 2800000, guid: e5d5e9b18e102a64097ba871838adb84, type: 3}
+  - key: b:bakery_shop
+    texture: {fileID: 2800000, guid: b3267a12766364d4da749430f59104d5, type: 3}
+  - key: b:grocer_shop
+    texture: {fileID: 2800000, guid: a03de5d5baad7b444af4c3c8e0142079, type: 3}
+  - key: b:post_office
+    texture: {fileID: 2800000, guid: 2876eba66484a7647885fb5198eafa32, type: 3}
+  - key: b:library
+    texture: {fileID: 2800000, guid: 1ff8536005b80a14eb9d14e7348124a7, type: 3}
+  - key: b:chapel
+    texture: {fileID: 2800000, guid: 786d818e138fc514cba4b1fd612e4c88, type: 3}
+  - key: b:clinic
+    texture: {fileID: 2800000, guid: 714d7764c3482094a9aa3ea2b8f4c98b, type: 3}
+  - key: b:police_station
+    texture: {fileID: 2800000, guid: b725178aa3e055c489a98843d571b941, type: 3}
+  - key: b:fire_station
+    texture: {fileID: 2800000, guid: 85635cb350fbbd344b47559745e39404, type: 3}
+  - key: b:school
+    texture: {fileID: 2800000, guid: b0cff543977c36d40ba95c6b49fa4f80, type: 3}
+  - key: b:community_hall
+    texture: {fileID: 2800000, guid: 6cdb5d3cf9f37934a82843b2098b6cdc, type: 3}
+  - key: b:bank
+    texture: {fileID: 2800000, guid: fc17132cdd0addd4282e0a55ac80ebbc, type: 3}
+  - key: b:town_hall
+    texture: {fileID: 2800000, guid: 04850ed11767957469b4dec3123fdf6c, type: 3}
+  - key: p:farmer
+    texture: {fileID: 2800000, guid: b76701ead22e28f4187676394eb1da35, type: 3}
+  - key: p:worker
+    texture: {fileID: 2800000, guid: 79c8fc17fb139724b80c0759b702e2cf, type: 3}
+  - key: p:builder
+    texture: {fileID: 2800000, guid: 1614692666d13d84d9663bfb2bf8c4d4, type: 3}
+  - key: p:warrior
+    texture: {fileID: 2800000, guid: 987f80a128ed54b4c942587cebd5fb40, type: 3}
+  - key: p:guard
+    texture: {fileID: 2800000, guid: 0dc48e46fc8b3484b9079cf159f8539f, type: 3}
+  - key: p:baker
+    texture: {fileID: 2800000, guid: 62e2404caac1a9847b16f7f816e70c12, type: 3}
+  - key: p:villager
+    texture: {fileID: 2800000, guid: bccf75927163fe247b57472bd5d9d4a2, type: 3}
+  - key: p:zombie
+    texture: {fileID: 2800000, guid: 5a051326aec6f6f4e8894b126fa83773, type: 3}
+  - key: p:zombie_footballer
+    texture: {fileID: 2800000, guid: 910231730416d8f41ba1b8b5f02da1e9, type: 3}
+  - key: p:zombie_builder
+    texture: {fileID: 2800000, guid: 3d032e701e2c4d0418533d028e190f09, type: 3}
+  - key: p:zombie_clerk
+    texture: {fileID: 2800000, guid: dfd87bb45bbac4b4abb2d8351979b9de, type: 3}
+  - key: p:zombie_policeman
+    texture: {fileID: 2800000, guid: fcee6c00d5d0dc14683a65f313bf8976, type: 3}
+  - key: p:zombie_mime
+    texture: {fileID: 2800000, guid: 8b6e6b1db7b7d4441a38825f71d0a55b, type: 3}
+  - key: p:zombie_tourist
+    texture: {fileID: 2800000, guid: 851a648a53912c04d941d86da0183585, type: 3}
+  - key: p:zombie_mayor
+    texture: {fileID: 2800000, guid: fe8a1fdf5c27d7e4198562d74a642f38, type: 3}
+  - key: p:cured_footballer
+    texture: {fileID: 2800000, guid: 693b5ee1808546b4484f4f30d8c3ce99, type: 3}
+  - key: p:cured_builder
+    texture: {fileID: 2800000, guid: 612b6819a37b263438efa751fb5ac3da, type: 3}
+  - key: p:cured_clerk
+    texture: {fileID: 2800000, guid: a9f773fcb8a5a784abd676340778a546, type: 3}
+  - key: p:cured_policeman
+    texture: {fileID: 2800000, guid: 5518168707cd273419fab9aebd1cef34, type: 3}
+  - key: p:cured_mime
+    texture: {fileID: 2800000, guid: 4933bb843777f2543a1a46f6955ed55c, type: 3}
+  - key: p:cured_tourist
+    texture: {fileID: 2800000, guid: b71b91cd54dab5c488f5b5ee72a97cd8, type: 3}
+  - key: p:costume_santa
+    texture: {fileID: 2800000, guid: 4c91255203eb0864e9bb76d6c4fa905f, type: 3}
+  - key: p:costume_builder
+    texture: {fileID: 2800000, guid: 7fc7ed326155f564c9afab3f2ff98f37, type: 3}
+  - key: p:costume_clerk
+    texture: {fileID: 2800000, guid: 790e813addd0d5f49bfc854f2c142231, type: 3}
+  - key: p:costume_footballer
+    texture: {fileID: 2800000, guid: 87c5081c23ce7e54daa1d3f704aa0d12, type: 3}
+  - key: p:costume_policeman
+    texture: {fileID: 2800000, guid: a88a0b42e2254b7468219b942eef658e, type: 3}
+  - key: p:costume_mime
+    texture: {fileID: 2800000, guid: 55200dac56e21ee4492dda8645324986, type: 3}
+  - key: p:costume_tourist
+    texture: {fileID: 2800000, guid: 573b7de1e2522014d9a6898db44387c9, type: 3}
+  - key: p:costume_wanderer
+    texture: {fileID: 2800000, guid: ade4e47385b419343b77350ac0fbc56d, type: 3}
+  - key: p:costume_drifter
+    texture: {fileID: 2800000, guid: 7d9c6d8ab8058c14cabfaa7b277108c1, type: 3}
+  - key: p:costume_rambler
+    texture: {fileID: 2800000, guid: e155c32235b9ede4f8f5d33045d02283, type: 3}
+  - key: p:costume_roamer
+    texture: {fileID: 2800000, guid: 47801b25db5c652499f4a696213d1ab9, type: 3}
+  - key: f:armchair_2
+    texture: {fileID: 2800000, guid: 89e1a59e4cfcb3447a65043acc407528, type: 3}
+  - key: f:bath_mat
+    texture: {fileID: 2800000, guid: e3608ee96bff3124fa7019e10cf031ad, type: 3}
+  - key: f:bath_picture
+    texture: {fileID: 2800000, guid: 3598486c6d375f8449ab95a51f30b327, type: 3}
+  - key: f:bath_plant
+    texture: {fileID: 2800000, guid: 30c92cb461556af4d961552373bb6fc7, type: 3}
+  - key: f:bed_clock
+    texture: {fileID: 2800000, guid: 45528947055d127408ea737f3ab78611, type: 3}
+  - key: f:books
+    texture: {fileID: 2800000, guid: c675b96f49abeac4fada668f2ef1b1ae, type: 3}
+  - key: f:closet_2
+    texture: {fileID: 2800000, guid: 4fb5ab221d552434c94194293f545041, type: 3}
+  - key: f:console
+    texture: {fileID: 2800000, guid: e9ea8df08835eba4687c69580ced05ee, type: 3}
+  - key: f:cutting_board
+    texture: {fileID: 2800000, guid: 68a3eb420d9261f45bb5f38955d4aa00, type: 3}
+  - key: f:exercise_bike
+    texture: {fileID: 2800000, guid: 017eb5d35fcbdde4f80a72aa5bc90a01, type: 3}
+  - key: f:guitar
+    texture: {fileID: 2800000, guid: cd7d2e0742662c2429b2688e52ce6d1c, type: 3}
+  - key: f:herb_pot
+    texture: {fileID: 2800000, guid: fbc7a913481ad214a82dac8c44ce9b5f, type: 3}
+  - key: f:island
+    texture: {fileID: 2800000, guid: 1a40bd7cceebe084aa0011d13ee65f7a, type: 3}
+  - key: f:microwave
+    texture: {fileID: 2800000, guid: f699dd69024f9ce419917253d238046c, type: 3}
+  - key: f:mixer
+    texture: {fileID: 2800000, guid: 999555f5d74047749a3fe970d0c0f1a1, type: 3}
+  - key: f:picture_flowers
+    texture: {fileID: 2800000, guid: 2e239b47eebad1344bb5c2b3aa085bd3, type: 3}
+  - key: f:picture_fruit
+    texture: {fileID: 2800000, guid: 5cea6e0b818cc0c41badc6501be975a1, type: 3}
+  - key: f:picture_sunset
+    texture: {fileID: 2800000, guid: 0ccbd9fadfd460e448c5137de0b9a714, type: 3}
+  - key: f:plant_bedroom
+    texture: {fileID: 2800000, guid: f12394261d6b2c5488e891fbbf49f561, type: 3}
+  - key: f:plant_tall
+    texture: {fileID: 2800000, guid: 73eda714fd64ed548bc625ba50850673, type: 3}
+  - key: f:pouf
+    texture: {fileID: 2800000, guid: 526f202afc2cd79489be9bc4cc20deff, type: 3}
+  - key: f:study_clock
+    texture: {fileID: 2800000, guid: 71d401d52776fe64d88ab81879527d2f, type: 3}
+  - key: f:study_guitar
+    texture: {fileID: 2800000, guid: 452fb4bb106e80c4387f554f1fd444f4, type: 3}
+  - key: f:study_picture
+    texture: {fileID: 2800000, guid: 45e4139c20d442e459a564886af5907a, type: 3}
+  - key: f:study_plant
+    texture: {fileID: 2800000, guid: a87c7f680ecb93549858d27cc7034766, type: 3}
+  - key: f:teddy
+    texture: {fileID: 2800000, guid: 2b521176439b70e4aa9f6117f50c0ac0, type: 3}
+  - key: f:toothbrushes
+    texture: {fileID: 2800000, guid: f67deb6a86a9f6e4c985198edbb92092, type: 3}
+  - key: f:toy_car
+    texture: {fileID: 2800000, guid: 0e8a14a12084d004887afecf187f6ae1, type: 3}
+  - key: f:tree_indoor
+    texture: {fileID: 2800000, guid: 6be080a4d8262274eb26d3230ef2d5ec, type: 3}
+  - key: g:wheat
+    texture: {fileID: 2800000, guid: 22670eaf16806d44eb7f7886541f6f03, type: 3}
+  - key: g:maize
+    texture: {fileID: 2800000, guid: 58d7cbbf85f4e8a4ba00986fe13876c3, type: 3}
+  - key: g:pumpkin
+    texture: {fileID: 2800000, guid: 03a2d3c62bac19a4795657d8286e229e, type: 3}
+  - key: g:tomato
+    texture: {fileID: 2800000, guid: e27371e60f5214b4692bebe4325ed283, type: 3}
+  - key: g:cabbage
+    texture: {fileID: 2800000, guid: a560fe5f7f70dc040b78db5b6cfe88a0, type: 3}
+  - key: g:beans
+    texture: {fileID: 2800000, guid: 533112e8c98f6314ab245de6766edece, type: 3}
+  - key: g:sunflower
+    texture: {fileID: 2800000, guid: 0492561aeca106645b8b732f91da0747, type: 3}
+  - key: g:flowers
+    texture: {fileID: 2800000, guid: 010fe9a00ea05ae47814e341fbab2c82, type: 3}
+  - key: g:egg
+    texture: {fileID: 2800000, guid: 903c081543838494b91b81c846883ced, type: 3}
+  - key: g:milk
+    texture: {fileID: 2800000, guid: 84edacd88c506f64693ba04c9838055b, type: 3}
+  - key: g:meat
+    texture: {fileID: 2800000, guid: 57aec90b9807d0145b032546ced14b03, type: 3}
+  - key: g:fish
+    texture: {fileID: 2800000, guid: f0967c0356a24174f956c222e17e40c4, type: 3}
+  - key: g:mushroom
+    texture: {fileID: 2800000, guid: 416b563ca259da6428e8938414de4d64, type: 3}
+  - key: g:croissant
+    texture: {fileID: 2800000, guid: 65f0fbc8816f59648874b11838d830ab, type: 3}
+  - key: g:yogurt
+    texture: {fileID: 2800000, guid: ed28d8d32d911a449a9b38cc37687aa7, type: 3}
+  - key: g:juice
+    texture: {fileID: 2800000, guid: e6627c65e28694743a29dba101d86a42, type: 3}
+  - key: g:soda
+    texture: {fileID: 2800000, guid: 0d3f7e02b1574d24288d8d3d171b4fd5, type: 3}
+  - key: g:wood
+    texture: {fileID: 2800000, guid: baaa59cf76582f14ca871f2e86f64d49, type: 3}
+  - key: g:stone
+    texture: {fileID: 2800000, guid: 142622806243f7a408dbaff2334af7cc, type: 3}
+  - key: g:planks
+    texture: {fileID: 2800000, guid: 7fff061dd9bf7c547ac0ab14725b585e, type: 3}
+  - key: g:flour
+    texture: {fileID: 2800000, guid: b289511f453efcf4abb1d6a191f70e58, type: 3}
+  - key: g:feed
+    texture: {fileID: 2800000, guid: e4f2a79f38e9c8f478b4bf670885d2ac, type: 3}
+  - key: g:oil
+    texture: {fileID: 2800000, guid: e97f032d7f414454797f6274f2b29544, type: 3}
+  - key: g:veg_box
+    texture: {fileID: 2800000, guid: 31a8644c127d37942a833acb3115e3ff, type: 3}
+  - key: x:shield
+    texture: {fileID: 2800000, guid: 6b7ccb0ef1a1667458e5c3267f4e4e9a, type: 3}
+  - key: x:fert
+    texture: {fileID: 2800000, guid: 4680272771b26a048ad9c0f0fbb2468d, type: 3}
+  - key: x:rush
+    texture: {fileID: 2800000, guid: 00108afef29d9204888f60f6719e4422, type: 3}
+  - key: x:instant
+    texture: {fileID: 2800000, guid: 379ec2a88ce30e9419134a581384be06, type: 3}
+  - key: x:basket
+    texture: {fileID: 2800000, guid: ce336ab157c614b428c194d6ca48a0ed, type: 3}
+  - key: x:nightshift
+    texture: {fileID: 2800000, guid: c3ca178023b48be428713d70af31e1d1, type: 3}
+  - key: x:lunch
+    texture: {fileID: 2800000, guid: bbee30d77cd047349b38d3d6ef54d339, type: 3}

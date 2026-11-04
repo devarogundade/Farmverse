@@ -1,0 +1,17 @@
+{
+    "name": "Farmverse.Domain",
+    "rootNamespace": "Farmverse.Domain",
+    "references": [
+        "Farmverse.Contracts",
+        "Farmverse.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

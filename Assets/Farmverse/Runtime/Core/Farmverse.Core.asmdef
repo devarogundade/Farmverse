@@ -1,0 +1,16 @@
+{
+    "name": "Farmverse.Core",
+    "rootNamespace": "Farmverse.Core",
+    "references": [
+        "Farmverse.Contracts"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

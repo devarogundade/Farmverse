@@ -1,0 +1,126 @@
+import { z } from 'zod';
+import { named } from '../registry';
+
+/**
+ * Every error the game can report, with the parameters each one carries.
+ *
+ * The server never sends a sentence: it sends a code and string parameters, and
+ * the client renders the localized message `error.<CODE>`. Adding a code here
+ * adds it to the C# enum on the next `contracts:gen`.
+ *
+ * The parameter list is the contract for localization: a translator can rely on
+ * exactly these placeholders being present.
+ */
+export const ERROR_CATALOGUE = {
+  // ---- transport / platform -------------------------------------------------
+  UNAUTHENTICATED: [],
+  PERMISSION_DENIED: [],
+  INVALID_ARGUMENT: [],
+  NOT_FOUND: [],
+  RATE_LIMITED: [],
+  CLIENT_OUTDATED: ['minVersion'],
+  MAINTENANCE: [],
+  INTERNAL: [],
+  DATA_CORRUPT: [],
+  CONFLICT: [],
+  // ---- client only (never produced by the server) ----------------------------
+  NETWORK_REQUIRED: [],
+  TIMEOUT: [],
+  CANCELLED: [],
+  /** The Google or Apple account already belongs to another player. */
+  ACCOUNT_IN_USE: [],
+  /** The feature needs a device capability this platform does not have (linking in the editor). */
+  UNSUPPORTED: [],
+  // ---- player ----------------------------------------------------------------
+  PLAYER_EXISTS: [],
+  PLAYER_NOT_FOUND: [],
+  NAME_TAKEN: [],
+  // ---- friends ---------------------------------------------------------------
+  INVITE_INVALID: [],
+  ALREADY_FRIENDS: [],
+  // ---- wallet ----------------------------------------------------------------
+  NOT_ENOUGH_GEMS: ['need'],
+  OFFER_UNKNOWN: [],
+  OFFER_SOLD_OUT: [],
+  // ---- shop ------------------------------------------------------------------
+  BOOST_NONE: [],
+  GIFT_NOT_READY: ['readyAt'],
+  CHEST_CLAIMED: [],
+  /** Today's orders or daily goals aren't done on the server's copy of the island. */
+  CHEST_LOCKED: ['have', 'need'],
+  // ---- goals -----------------------------------------------------------------
+  ACHIEVEMENT_LOCKED: ['have', 'need'],
+  ACHIEVEMENT_CLAIMED: [],
+  // ---- daily ------------------------------------------------------------------
+  DAILY_CLAIMED: [],
+  WHEEL_NO_SPINS: [],
+  // ---- pass -------------------------------------------------------------------
+  PASS_LOCKED: ['have', 'need'],
+  PASS_CLAIMED: [],
+  PASS_PREMIUM_REQUIRED: [],
+  // ---- coupons ----------------------------------------------------------------
+  COUPON_LOCKED: ['have', 'need'],
+  /** The coupon type needs a Google or Apple sign-in. */
+  COUPON_LINK_REQUIRED: [],
+  /** No such coupon code (redeeming). */
+  COUPON_UNKNOWN: [],
+  /** The code was already redeemed, or has expired. */
+  COUPON_USED: [],
+  // ---- visits -----------------------------------------------------------------
+  /** The owner doesn't take visitors (settings) or has no island on the server yet. */
+  VISITS_CLOSED: [],
+  // ---- ads --------------------------------------------------------------------
+  /** Today's ads for this placement are used up. */
+  AD_LIMIT: [],
+  /** AdMob's verification for this ad hasn't arrived (yet): try again in a moment. */
+  AD_NOT_VERIFIED: [],
+  // ---- accounts and purchases -------------------------------------------------
+  /** Needs a Google or Apple sign-in first. */
+  LINK_REQUIRED: [],
+  /** Already collected (the link reward). */
+  ALREADY_CLAIMED: [],
+  /** The store doesn't confirm this purchase (refunded, fake or for another app). */
+  IAP_INVALID: [],
+  /** Not a product the game sells. */
+  IAP_UNKNOWN: [],
+} as const satisfies Record<string, readonly string[]>;
+
+export type ErrorCodeName = keyof typeof ERROR_CATALOGUE;
+
+const ERROR_CODES = Object.keys(ERROR_CATALOGUE) as [ErrorCodeName, ...ErrorCodeName[]];
+
+/** Codes the server must never send: the client produces them for its own failures. */
+export const CLIENT_ONLY_ERRORS: ReadonlySet<ErrorCodeName> = new Set<ErrorCodeName>([
+  'NETWORK_REQUIRED',
+  'TIMEOUT',
+  'CANCELLED',
+  'ACCOUNT_IN_USE',
+  'UNSUPPORTED',
+]);
+
+export const ErrorCode = named('ErrorCode', z.enum(ERROR_CODES), 'Every error the game can report.');
+
+export const ValidationIssue = named(
+  'ValidationIssue',
+  z.object({
+    path: z.string().max(256),
+    message: z.string().max(512),
+  }),
+  'One schema violation. Sent only by non-production backends.',
+);
+
+export const ErrorBody = named(
+  'ErrorBody',
+  z.object({
+    code: ErrorCode,
+    /** Localization arguments. Always strings, so they format the same everywhere. */
+    params: z.record(z.string(), z.string()),
+    /** Present for RATE_LIMITED and MAINTENANCE. */
+    retryAfterMs: z.number().int().min(0).max(86_400_000).optional(),
+    /** Present for INVALID_ARGUMENT in non-production environments. */
+    issues: z.array(ValidationIssue).max(20).optional(),
+  }),
+  'A refusal: a code and the parameters its message needs.',
+);
+
+export type ErrorBody = z.infer<typeof ErrorBody>;

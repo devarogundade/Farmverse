@@ -1,0 +1,33 @@
+{
+  "name": "@farmverse/functions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The trusted half of Farmverse: every write the client may not make, as Cloud Functions.",
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run",
+    "build": "npm run typecheck && esbuild src/index.ts --bundle --platform=node --target=node22 --format=cjs --sourcemap --outfile=lib/index.js --external:firebase-admin --external:firebase-functions",
+    "serve": "npm run build && firebase emulators:start --only functions,firestore,auth",
+    "deploy": "firebase deploy --only functions:game",
+    "content:publish": "tsx tools/publishContent.ts",
+    "admin:set": "tsx tools/setAdmin.ts",
+    "news:publish": "tsx tools/publishNews.ts",
+    "catalogue:publish": "tsx tools/publishCatalogue.ts",
+    "mail:send": "tsx tools/sendMail.ts"
+  },
+  "dependencies": {
+    "firebase-admin": "14.5.0",
+    "firebase-functions": "7.4.0"
+  },
+  "devDependencies": {
+    "@farmverse/contracts": "0.1.0",
+    "@types/node": "22.20.5",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

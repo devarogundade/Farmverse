@@ -1,0 +1,23 @@
+{
+  "name": "@farmverse/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The single source of truth for every request, response, document and error code shared by the Unity client and the Firebase backend.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "gen": "tsx codegen/generate.ts",
+    "check": "tsx codegen/generate.ts --check"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

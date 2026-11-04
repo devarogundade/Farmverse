@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93f06bb366405fe4cac1805fa6af5758, type: 3}
+  m_Name: ItemCatalog
+  m_EditorClassIdentifier: Farmverse.Presentation.World::Farmverse.Presentation.World.ItemCatalog
+  tools:
+  - id: Bat
+    prefab: {fileID: 3923662470905922917, guid: baf64b95e7914db41bbcbd9458647edc, type: 3}
+  - id: Baton
+    prefab: {fileID: 2028426964211737521, guid: b6f6956ebf75617458ff89358746ac40, type: 3}
+  - id: Crowbar
+    prefab: {fileID: 7057631173984449936, guid: a8284b9b8a558304ab30a1109a3a5403, type: 3}
+  - id: FryingPan
+    prefab: {fileID: 7825267433709292114, guid: c555d86d583f92644a03c12dd0248a3d, type: 3}
+  - id: GardenShears
+    prefab: {fileID: 4097540350872169676, guid: bbe8543b5ddfd324194ce871d0fe9374, type: 3}
+  - id: Hoe
+    prefab: {fileID: 434464192848246794, guid: e64e1e502bdec8d44be2a6df3436c1c0, type: 3}
+  - id: Pickaxe
+    prefab: {fileID: 7811870127733600195, guid: d809df3c78b8b3b4aae61c564bc2f130, type: 3}
+  - id: Pipe
+    prefab: {fileID: 6690874595936066914, guid: c05d97454bf4c864393622336499d230, type: 3}
+  - id: PipeWrench
+    prefab: {fileID: 8965830463344031715, guid: 1a8a58ce61537c54a9d0cde11c38a2e8, type: 3}
+  - id: Rake
+    prefab: {fileID: 8254108579539314478, guid: 6d292c44615b95241891fedc7ac9d181, type: 3}
+  - id: RoadSign
+    prefab: {fileID: 5525829980152183615, guid: e18a88ec364e6b946955e9bb5bc77d66, type: 3}
+  - id: Saw
+    prefab: {fileID: 8746657495503967077, guid: 04808ba9a34816044b27d27a029d9aa9, type: 3}
+  - id: Shovel
+    prefab: {fileID: 3084727048320282649, guid: e743db7812521784ca11edb68c872247, type: 3}
+  - id: Weapon_005
+    prefab: {fileID: 8073771778893144072, guid: 75da404deb9757242951b3e1e9f5943b, type: 3}
+  - id: Wrench
+    prefab: {fileID: 4798819995678426861, guid: b2012e04aee81504bad1070e4e1b237d, type: 3}
+  - id: Axe
+    prefab: {fileID: 2243451953586318489, guid: f3600e5b80e1c08499d90b4f5a1a62c2, type: 3}
+  - id: Bucket
+    prefab: {fileID: 8838135091440898345, guid: 2bf5757b34874fc4db73a1a6ee987222, type: 3}
+  goods:
+  - id: wheat
+    prefab: {fileID: 3401595779703744783, guid: 0eccad04ccdb0ea4197f16e7bb7d4684, type: 3}
+  - id: maize
+    prefab: {fileID: 1196274439716041705, guid: 71e593b22ce2df340a235613c8045c0d, type: 3}
+  - id: pumpkin
+    prefab: {fileID: 2681443159163324123, guid: d0e824b2f335a2e4382c9238fc023c8e, type: 3}
+  - id: tomato
+    prefab: {fileID: 5867223458111113316, guid: 7b2b659728f6feb4484c5ae176e81771, type: 3}
+  - id: cabbage
+    prefab: {fileID: 7534995190032812052, guid: f28e2030b28a66c458416e50452faeff, type: 3}
+  - id: beans
+    prefab: {fileID: 7821992728267065304, guid: 830dd83fba993b44d849b71a489655f7, type: 3}
+  - id: sunflower
+    prefab: {fileID: 468089513024349453, guid: 315f00b77b3e8404a86d75021f0af89d, type: 3}
+  - id: flowers
+    prefab: {fileID: 2796311784549475754, guid: 0a8247c3cf07fdf439e0cd10564e6727, type: 3}
+  - id: egg
+    prefab: {fileID: 5621505773982668491, guid: 85d3f067120b1ae41848d294e651928e, type: 3}
+  - id: milk
+    prefab: {fileID: 5470291222165012578, guid: 1aef5aa6ac611354bb0fee1a41cdfed2, type: 3}
+  - id: meat
+    prefab: {fileID: 3649204169868761637, guid: 27dd75fa09773ca40a736efaf576a328, type: 3}
+  - id: fish
+    prefab: {fileID: 1946181268236889132, guid: f1a12beec73bf714a87ef35fe0795bdf, type: 3}
+  - id: mushroom
+    prefab: {fileID: 7311727984199987866, guid: 28a22426e0c737342b13b60b0497a77f, type: 3}
+  - id: croissant
+    prefab: {fileID: 7155082944294082287, guid: 5e209f394c09159458c829de7259c93c, type: 3}
+  - id: yogurt
+    prefab: {fileID: 2928539544258407657, guid: 30e81899b6b9c154da4463d2b33980a6, type: 3}
+  - id: juice
+    prefab: {fileID: 5170789872875913228, guid: 80694d3da81df9b4eb39f9f43ccc40ce, type: 3}
+  - id: soda
+    prefab: {fileID: 8885427068998575072, guid: 421075cd5e2a0444ba22e5b97438ac77, type: 3}
+  - id: wood
+    prefab: {fileID: 1181398738376686608, guid: 70254fe54da4c9a4e8a8abe75a01be12, type: 3}
+  - id: stone
+    prefab: {fileID: 5486018516588582364, guid: 984dd281f22ba174eb98c3953be1ec20, type: 3}
+  - id: planks
+    prefab: {fileID: 2911590047203836592, guid: 9300e5436fb67f54c95aa5cd32fb7af3, type: 3}
+  - id: flour
+    prefab: {fileID: 1493632509167051011, guid: 984c6fabf40825747b9d3a4df9757730, type: 3}
+  - id: feed
+    prefab: {fileID: 2141107357795050307, guid: 1aff29b9f9a0931449358788fce196e0, type: 3}
+  - id: oil
+    prefab: {fileID: 6834078325494650119, guid: 9ed61731bfc5e4545b4a0385739e6de2, type: 3}
+  - id: veg_box
+    prefab: {fileID: 5314571336541452472, guid: d33e62a703db95e499b240316a4cade8, type: 3}
+  barrows:
+  - {fileID: 6664186317783538635, guid: df44d8de110cd084a8189abf31b521f5, type: 3}
+  - {fileID: 4975370072923864938, guid: d567fa2059ea42c41a814fac02f10eaf, type: 3}
+  - {fileID: 7801715917972581817, guid: bc011dd24f0ff504faf81a3a90a950be, type: 3}
+  - {fileID: 4592716456303945941, guid: f88b4b6b8ad473441b5ddf0191556f05, type: 3}
+  - {fileID: 3492238113784152817, guid: 34ded5ff027d6114096b0982f00e740e, type: 3}
+  - {fileID: 7736084616199311875, guid: a5bfb55e188a91a4a9323b60f048579b, type: 3}
+  mowers:
+  - {fileID: 8803310283702249482, guid: 21a66a40ba8735040a745b3bc5900afd, type: 3}
+  - {fileID: 3968548778050548803, guid: db45f635be0e8634e9e7fd052e7ab14e, type: 3}
+  - {fileID: 4559279271684485224, guid: 5865f2bde3805a640b47c794b1a0c136, type: 3}
+  carts:
+  - {fileID: 2678644650273969566, guid: 617592e668dd04147aa4201b3f63f2f6, type: 3}
+  - {fileID: 2478934659226747193, guid: 0b0d5cff7a0256b448f2d2ce4a7be999, type: 3}
+  - {fileID: 9215446069620933052, guid: 661741711473b6e4d8fe715037bd9ac0, type: 3}
+  - {fileID: 8421330986843677872, guid: 4c81083607b9bfa4b8b8ed850370117d, type: 3}
+  fallbackGood: {fileID: 8484340031075430573, guid: ebd34ad9f8f29ef428a340271d4e4f03, type: 3}

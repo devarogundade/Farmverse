@@ -1,0 +1,67 @@
+{
+  "_comment": "Valid wire samples. The TypeScript suite parses each with its zod contract; the C# suite parses each with the generated FromWire, writes it back with ToWire, and requires the identical JSON. Together they prove both sides read and write the same shape.",
+  "samples": [
+    {
+      "contract": "IslandSyncRequest",
+      "value": {
+        "meta": {
+          "clientVersion": "1.0.0",
+          "platform": "android",
+          "locale": "en"
+        },
+        "adopt": "{\"rulesVersion\":1,\"simAt\":1800000000,\"buildings\":[]}",
+        "mirror": true
+      }
+    },
+    {
+      "contract": "IslandSyncResponse",
+      "value": {
+        "state": "{\"rulesVersion\":1,\"simAt\":1800003600,\"buildings\":[]}",
+        "rulesVersion": 1,
+        "report": {
+          "awaySeconds": 3600,
+          "workers": 2,
+          "loads": 14,
+          "seedCoins": 0,
+          "storageFull": false,
+          "gathered": [
+            {
+              "item": "wood",
+              "count": 9
+            },
+            {
+              "item": "stone",
+              "count": 5
+            }
+          ]
+        },
+        "nextWakeMs": 1800007200000
+      }
+    },
+    {
+      "contract": "PlayerDoc",
+      "value": {
+        "schemaVersion": 1,
+        "rev": 3,
+        "displayName": "Sunny Acres",
+        "avatarId": "avatar_default",
+        "shortId": "10042",
+        "lastSeenAt": 1800000000000,
+        "createdAt": 1790000000000
+      }
+    },
+    {
+      "contract": "ErrorBody",
+      "value": {
+        "code": "INVALID_ARGUMENT",
+        "params": {},
+        "issues": [
+          {
+            "path": "adopt",
+            "message": "Invalid string"
+          }
+        ]
+      }
+    }
+  ]
+}

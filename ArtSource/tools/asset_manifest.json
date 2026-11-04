@@ -1,0 +1,1696 @@
+{
+ "packs": [
+  {
+   "id": "P01",
+   "name": "UI icons",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "used_by": "HUD, tab bar, buttons, rows, dialogs (all screens)",
+   "count": 42
+  },
+  {
+   "id": "P02",
+   "name": "Crops",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "used_by": "inventory, seed picker, market listings, harvest result",
+   "count": 7
+  },
+  {
+   "id": "P03",
+   "name": "Seed packets",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "used_by": "seed picker, shop, inventory",
+   "count": 7
+  },
+  {
+   "id": "P04",
+   "name": "Animals and produce",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "used_by": "animal pen, feed and care, inventory",
+   "count": 7
+  },
+  {
+   "id": "P05",
+   "name": "Goods and resources",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "used_by": "processing station, inventory, market, granary, cellar",
+   "count": 12
+  },
+  {
+   "id": "P06",
+   "name": "Tools",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "used_by": "shop tools, tool durability and repair, gameplay dock",
+   "count": 10
+  },
+  {
+   "id": "P07",
+   "name": "Machines",
+   "folder": "Icons/Machines",
+   "kind": "icon",
+   "used_by": "shop machinery, processing station, build mode",
+   "count": 5
+  },
+  {
+   "id": "P08",
+   "name": "Facilities",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "used_by": "facilities hub, facility detail, upgrade dialogs, shop structures",
+   "count": 16
+  },
+  {
+   "id": "P09",
+   "name": "Land and plots",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "used_by": "land expansion, plot switcher, shop new plots, plot setup",
+   "count": 6
+  },
+  {
+   "id": "P10",
+   "name": "Rewards and offers",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "used_by": "daily bonus, starter pack, shop featured banner, reward dialogs",
+   "count": 7
+  },
+  {
+   "id": "P11",
+   "name": "Badges and medals",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "used_by": "leaderboard podium, player card, empire progress and titles",
+   "count": 8
+  },
+  {
+   "id": "P12",
+   "name": "Weather and seasons",
+   "folder": "Icons/Weather",
+   "kind": "icon",
+   "used_by": "HUD weather chip, crop progress, season banner",
+   "count": 5
+  },
+  {
+   "id": "P13",
+   "name": "Avatars",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "used_by": "HUD avatar, profile setup, leaderboard, player card",
+   "count": 12
+  },
+  {
+   "id": "P14",
+   "name": "Role portraits",
+   "folder": "Illustrations/Roles",
+   "kind": "illus",
+   "used_by": "role selection, welcome story",
+   "count": 4
+  },
+  {
+   "id": "P15",
+   "name": "Empty states and coach",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "used_by": "empty lists, tutorial overlay, connection lost",
+   "count": 11
+  },
+  {
+   "id": "P16",
+   "name": "Brand",
+   "folder": "Brand",
+   "kind": "illus",
+   "used_by": "splash, sign in, store listing",
+   "count": 2
+  },
+  {
+   "id": "P17",
+   "name": "Backgrounds",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "used_by": "system screens, Home per role, empire map",
+   "count": 10
+  },
+  {
+   "id": "P18",
+   "name": "Screen headers",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "used_by": "shop, market, leaderboard, facilities, animal pen, processing station",
+   "count": 6
+  },
+  {
+   "id": "P19",
+   "name": "Dialog art windows",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "used_by": "art window at the top of reward and info dialogs (9, 26, 32, 47, 48, 62, 63, 79) and the shop featured banner (27)",
+   "count": 9
+  },
+  {
+   "id": "P20",
+   "name": "Home event objects",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "used_by": "objects around the edge of Home (10) and Gameplay (82), each above a timer pill",
+   "count": 6
+  },
+  {
+   "id": "P21",
+   "name": "Shop art",
+   "folder": "Illustrations/Shop",
+   "kind": "icon",
+   "used_by": "shop home featured banner and category tiles (27)",
+   "count": 4
+  },
+  {
+   "id": "P22",
+   "name": "Facility scene cards",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "used_by": "facilities hub cards (59) and facility detail hero (60)",
+   "count": 8
+  },
+  {
+   "id": "P23",
+   "name": "Plot previews",
+   "folder": "Illustrations/Plots",
+   "kind": "card",
+   "used_by": "plot preview and details (76), plot detail hero (74)",
+   "count": 4
+  },
+  {
+   "id": "P24",
+   "name": "Story and seasonal key art",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "used_by": "welcome story panels (5) and seasonal splash / loading (1, 2)",
+   "count": 6
+  }
+ ],
+ "assets": [
+  {
+   "id": "ico_coin",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a thick shiny gold coin with a raised hexagon emblem and raised rim"
+  },
+  {
+   "id": "ico_coin_stack",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a neat stack of five gold coins with one coin leaning against it"
+  },
+  {
+   "id": "ico_coin_pile",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a big heaped pile of gold coins"
+  },
+  {
+   "id": "ico_money_bag",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a tied burlap money bag with a gold hexagon coin emblem on the front, no currency symbols"
+  },
+  {
+   "id": "ico_water_drop",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a glossy blue water droplet"
+  },
+  {
+   "id": "ico_food",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a shiny red apple with a short stem and one green leaf"
+  },
+  {
+   "id": "ico_star",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a chunky gold star with a raised inner star"
+  },
+  {
+   "id": "ico_inventory",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a wooden storage crate with lighter wood frame planks"
+  },
+  {
+   "id": "ico_shop",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a small blue shop building with a red and white striped awning"
+  },
+  {
+   "id": "ico_home_barn",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a red barn with white trim, grey roof and an X door"
+  },
+  {
+   "id": "ico_market",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a wooden market stall with a green and white awning and fruit on the counter"
+  },
+  {
+   "id": "ico_ranks_trophy",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a gold trophy cup with two handles on a blue plinth"
+  },
+  {
+   "id": "ico_settings_gear",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a silver cog wheel with a blue centre hub"
+  },
+  {
+   "id": "ico_bell",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a gold notification bell"
+  },
+  {
+   "id": "ico_mail",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a cream envelope with a red wax seal"
+  },
+  {
+   "id": "ico_map",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a folded parchment map with green land patches and a red pin"
+  },
+  {
+   "id": "ico_clock",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a red alarm clock with gold bells"
+  },
+  {
+   "id": "ico_warning",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a yellow warning triangle with a dark exclamation mark"
+  },
+  {
+   "id": "ico_check",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a chunky green check mark"
+  },
+  {
+   "id": "ico_lock",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a gold padlock with a silver shackle, closed"
+  },
+  {
+   "id": "ico_unlock",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a gold padlock with its silver shackle swung open"
+  },
+  {
+   "id": "ico_hourglass",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a wooden hourglass with golden sand"
+  },
+  {
+   "id": "ico_info",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a round blue badge with a white lowercase i"
+  },
+  {
+   "id": "ico_close",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a round red button with a white X"
+  },
+  {
+   "id": "ico_plus",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a chunky green plus sign"
+  },
+  {
+   "id": "ico_minus",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a chunky red minus sign"
+  },
+  {
+   "id": "ico_back",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a chunky light blue arrow pointing left"
+  },
+  {
+   "id": "ico_search",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a gold magnifying glass with a wooden handle"
+  },
+  {
+   "id": "ico_filter",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a teal funnel"
+  },
+  {
+   "id": "ico_trash",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a grey metal trash bin with a lid"
+  },
+  {
+   "id": "ico_gift",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a red gift box with a gold ribbon and big gold bow"
+  },
+  {
+   "id": "ico_chest",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a wooden treasure chest with gold bands, gold lock plate and a blue gem"
+  },
+  {
+   "id": "ico_ad_tv",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a purple retro TV with antennas and a white play symbol on the screen"
+  },
+  {
+   "id": "ico_megaphone",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a red megaphone with a white rim"
+  },
+  {
+   "id": "ico_calendar",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a desk calendar page with a red top band showing the number 7"
+  },
+  {
+   "id": "ico_sound",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a boxy blue hi-fi speaker cabinet with a round woofer cone on the front and two curved sound waves beside it, not a megaphone"
+  },
+  {
+   "id": "ico_music",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "two purple music notes joined by a beam"
+  },
+  {
+   "id": "ico_language_globe",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a blue globe with green continents and a gold orbit ring"
+  },
+  {
+   "id": "ico_help",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a light blue speech bubble with a white question mark"
+  },
+  {
+   "id": "ico_account",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a glossy blue person bust silhouette"
+  },
+  {
+   "id": "ico_sun",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a bright orange sun with yellow rays, no face"
+  },
+  {
+   "id": "ico_rain",
+   "pack": "P01",
+   "folder": "Icons/UI",
+   "kind": "icon",
+   "subject": "a white cloud with three blue raindrops"
+  },
+  {
+   "id": "crop_wheat",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "a bundle of golden wheat stalks tied with twine"
+  },
+  {
+   "id": "crop_maize",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "a ripe yellow corn cob with green husk leaves"
+  },
+  {
+   "id": "crop_potato",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "two brown potatoes"
+  },
+  {
+   "id": "crop_tomato",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "a plump ripe red tomato with a green leafy top"
+  },
+  {
+   "id": "crop_onion",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "a golden-brown onion with a green sprout"
+  },
+  {
+   "id": "crop_beans",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "a bunch of green bean pods"
+  },
+  {
+   "id": "crop_sunflower",
+   "pack": "P02",
+   "folder": "Icons/Crops",
+   "kind": "icon",
+   "subject": "a big sunflower head with yellow petals and a short stem"
+  },
+  {
+   "id": "seed_wheat",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of a bundle of golden wheat stalks tied on the front, slightly crinkled"
+  },
+  {
+   "id": "seed_maize",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of a ripe yellow corn cob on the front, slightly crinkled"
+  },
+  {
+   "id": "seed_potato",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of two brown potatoes on the front, slightly crinkled"
+  },
+  {
+   "id": "seed_tomato",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of a plump ripe red tomato on the front, slightly crinkled"
+  },
+  {
+   "id": "seed_onion",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of a golden-brown onion on the front, slightly crinkled"
+  },
+  {
+   "id": "seed_beans",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of a bunch of green bean pods on the front, slightly crinkled"
+  },
+  {
+   "id": "seed_sunflower",
+   "pack": "P03",
+   "folder": "Icons/Seeds",
+   "kind": "icon",
+   "subject": "a paper seed packet with a picture of a big sunflower head on the front, slightly crinkled"
+  },
+  {
+   "id": "animal_chicken",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "a cute round white chicken with red comb"
+  },
+  {
+   "id": "animal_cow",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "a cute chunky black and white dairy cow"
+  },
+  {
+   "id": "animal_sheep",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "a cute fluffy white sheep"
+  },
+  {
+   "id": "prod_egg",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "two brown eggs in a little straw nest"
+  },
+  {
+   "id": "prod_milk",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "a glass milk bottle with a blue cap"
+  },
+  {
+   "id": "prod_wool",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "a fluffy ball of cream wool"
+  },
+  {
+   "id": "prod_meat",
+   "pack": "P04",
+   "folder": "Icons/Animals",
+   "kind": "icon",
+   "subject": "a cartoon ham leg with a bone"
+  },
+  {
+   "id": "good_flour",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a white flour sack with a wheat emblem"
+  },
+  {
+   "id": "good_bread",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a golden loaf of bread with scored top"
+  },
+  {
+   "id": "good_oil",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a glass bottle of golden sunflower oil with a cork"
+  },
+  {
+   "id": "good_preserves",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a glass jar of red preserves with a gingham cloth lid"
+  },
+  {
+   "id": "good_cheese",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a wedge of yellow cheese with holes"
+  },
+  {
+   "id": "res_wood",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a stack of three cut logs"
+  },
+  {
+   "id": "res_charcoal",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a small pile of black charcoal lumps"
+  },
+  {
+   "id": "res_fertilizer",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a green fertilizer sack with a leaf emblem"
+  },
+  {
+   "id": "res_manure",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a wooden bucket of brown compost"
+  },
+  {
+   "id": "res_hay",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a round golden hay bale"
+  },
+  {
+   "id": "res_oilcake",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a stack of pressed brown seed cakes"
+  },
+  {
+   "id": "res_grain",
+   "pack": "P05",
+   "folder": "Icons/Goods",
+   "kind": "icon",
+   "subject": "a burlap sack overflowing with golden grain"
+  },
+  {
+   "id": "tool_watering_can",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a blue metal watering can"
+  },
+  {
+   "id": "tool_hoe",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a classic garden hoe shown diagonally: a long thin straight wooden handle, and at its lower end a small flat rectangular steel blade bent at 90 degrees to the handle like the foot of the letter L, the blade's sharp edge pointing down and sideways; it must NOT look like a shovel, spade or trowel (the blade is NOT in line with the handle)"
+  },
+  {
+   "id": "tool_shovel",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a shovel with wooden handle and steel blade"
+  },
+  {
+   "id": "tool_sickle",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a curved steel sickle with wooden grip"
+  },
+  {
+   "id": "tool_axe",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a wood axe with steel head"
+  },
+  {
+   "id": "tool_watering_can_broken",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a blue metal watering can, broken: cracked and chipped, bandaged with a strip of tape"
+  },
+  {
+   "id": "tool_hoe_broken",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a long-handled farm hoe: a long straight wooden pole with a flat rectangular steel blade fixed at a right angle at the end, not a trowel, broken: cracked and chipped, bandaged with a strip of tape"
+  },
+  {
+   "id": "tool_shovel_broken",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a shovel with wooden handle and steel blade, broken: cracked and chipped, bandaged with a strip of tape"
+  },
+  {
+   "id": "tool_sickle_broken",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a curved steel sickle with wooden grip, broken: cracked and chipped, bandaged with a strip of tape"
+  },
+  {
+   "id": "tool_axe_broken",
+   "pack": "P06",
+   "folder": "Icons/Tools",
+   "kind": "icon",
+   "subject": "a wood axe with steel head, broken: cracked and chipped, bandaged with a strip of tape"
+  },
+  {
+   "id": "mach_seed_miner",
+   "pack": "P07",
+   "folder": "Icons/Machines",
+   "kind": "icon",
+   "subject": "a chunky copper and slate-blue seed mining drill machine with a hopper"
+  },
+  {
+   "id": "mach_food_factory",
+   "pack": "P07",
+   "folder": "Icons/Machines",
+   "kind": "icon",
+   "subject": "a small red brick food factory machine with a chimney and conveyor"
+  },
+  {
+   "id": "mach_packer",
+   "pack": "P07",
+   "folder": "Icons/Machines",
+   "kind": "icon",
+   "subject": "a boxy packing machine stamping crates"
+  },
+  {
+   "id": "mach_mill",
+   "pack": "P07",
+   "folder": "Icons/Machines",
+   "kind": "icon",
+   "subject": "a small wooden flour mill machine with a millstone"
+  },
+  {
+   "id": "mach_oil_press",
+   "pack": "P07",
+   "folder": "Icons/Machines",
+   "kind": "icon",
+   "subject": "a sturdy iron oil press with a wooden barrel"
+  },
+  {
+   "id": "fac_well_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a grey stone water well with a red wooden roof and a bucket, simple level 1 version"
+  },
+  {
+   "id": "fac_well_l2",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a grey stone water well with a red wooden roof and a bucket, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_warehouse_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a red wooden warehouse barn with white trim and big doors, simple level 1 version"
+  },
+  {
+   "id": "fac_warehouse_l3",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a red wooden warehouse barn with white trim and big doors, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_granary_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a round silo with silver metal walls and a blue cone roof, simple level 1 version"
+  },
+  {
+   "id": "fac_granary_l2",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a round silo with silver metal walls and a blue cone roof, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_cellar_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a stone cellar entrance with a wooden door set into a grassy mound, simple level 1 version"
+  },
+  {
+   "id": "fac_cellar_l2",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a stone cellar entrance with a wooden door set into a grassy mound, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_farmhouse_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a cozy cream-walled farmhouse with a blue roof and a chimney, simple level 1 version"
+  },
+  {
+   "id": "fac_farmhouse_l3",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a cozy cream-walled farmhouse with a blue roof and a chimney, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_stall_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a wooden market stall with an awning, simple level 1 version"
+  },
+  {
+   "id": "fac_stall_l2",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a wooden market stall with an awning, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_chicken_coop_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a small white-painted chicken coop with a green roof and a ramp, simple level 1 version"
+  },
+  {
+   "id": "fac_chicken_coop_l2",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a small white-painted chicken coop with a green roof and a ramp, upgraded max-level version: bigger, more detail, gold trim"
+  },
+  {
+   "id": "fac_storage_shed_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a small blue-grey wooden storage shed, simple level 1 version"
+  },
+  {
+   "id": "fac_fence_pack_l1",
+   "pack": "P08",
+   "folder": "Icons/Facilities",
+   "kind": "icon",
+   "subject": "a bundle of wooden fence pieces, simple level 1 version"
+  },
+  {
+   "id": "land_hex",
+   "pack": "P09",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "subject": "a single hexagonal tile of green grassy farmland with a dirt edge"
+  },
+  {
+   "id": "land_hex_locked",
+   "pack": "P09",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "subject": "a single hexagonal tile of fogged land with a padlock"
+  },
+  {
+   "id": "plot_field",
+   "pack": "P09",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "subject": "a hexagonal plot with rows of crops"
+  },
+  {
+   "id": "plot_mine",
+   "pack": "P09",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "subject": "a hexagonal plot with a small quarry and mine cart"
+  },
+  {
+   "id": "plot_workshop",
+   "pack": "P09",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "subject": "a hexagonal plot with a small stone workshop and chimney"
+  },
+  {
+   "id": "plot_pasture",
+   "pack": "P09",
+   "folder": "Icons/Land",
+   "kind": "icon",
+   "subject": "a hexagonal fenced pasture plot with hay bales"
+  },
+  {
+   "id": "chest_wood",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "a small wooden treasure chest with iron bands"
+  },
+  {
+   "id": "chest_silver",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "a silver treasure chest with blue gems"
+  },
+  {
+   "id": "chest_gold",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "a large golden treasure chest overflowing with coins"
+  },
+  {
+   "id": "bundle_coins_s",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "a small handful of gold coins"
+  },
+  {
+   "id": "bundle_coins_m",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "an open burlap sack tied with rope, overflowing with gold coins"
+  },
+  {
+   "id": "bundle_coins_l",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "a wooden cart full of gold coins"
+  },
+  {
+   "id": "starter_pack",
+   "pack": "P10",
+   "folder": "Icons/Rewards",
+   "kind": "icon",
+   "subject": "a woven basket with seed packets, a hoe and gold coins"
+  },
+  {
+   "id": "medal_gold",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a gold medal with a red ribbon and number 1"
+  },
+  {
+   "id": "medal_silver",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a silver medal with a blue ribbon and number 2"
+  },
+  {
+   "id": "medal_bronze",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a bronze medal with a green ribbon and number 3"
+  },
+  {
+   "id": "title_1_sprout",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a hexagonal badge with a small green sprout, bronze rim"
+  },
+  {
+   "id": "title_2_grower",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a hexagonal badge with a young plant, silver rim"
+  },
+  {
+   "id": "title_3_farmer",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a hexagonal badge with a red barn, gold rim"
+  },
+  {
+   "id": "title_4_rancher",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a hexagonal badge with a cow head, gold rim and laurel"
+  },
+  {
+   "id": "title_5_tycoon",
+   "pack": "P11",
+   "folder": "Icons/Badges",
+   "kind": "icon",
+   "subject": "a hexagonal badge with a golden crown, gold rim, laurel and gems"
+  },
+  {
+   "id": "wx_drought",
+   "pack": "P12",
+   "folder": "Icons/Weather",
+   "kind": "icon",
+   "subject": "a cracked dry earth tile under a hot sun"
+  },
+  {
+   "id": "season_spring",
+   "pack": "P12",
+   "folder": "Icons/Weather",
+   "kind": "icon",
+   "subject": "a pink blossom branch"
+  },
+  {
+   "id": "season_summer",
+   "pack": "P12",
+   "folder": "Icons/Weather",
+   "kind": "icon",
+   "subject": "a bright sunflower and sun"
+  },
+  {
+   "id": "season_autumn",
+   "pack": "P12",
+   "folder": "Icons/Weather",
+   "kind": "icon",
+   "subject": "a pile of orange autumn leaves and a pumpkin"
+  },
+  {
+   "id": "season_winter",
+   "pack": "P12",
+   "folder": "Icons/Weather",
+   "kind": "icon",
+   "subject": "a snowflake and a small snow-covered pine"
+  },
+  {
+   "id": "avatar_01",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a cheerful chicken, front facing, round shapes"
+  },
+  {
+   "id": "avatar_02",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a cow, front facing, round shapes"
+  },
+  {
+   "id": "avatar_03",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a sheep, front facing, round shapes"
+  },
+  {
+   "id": "avatar_04",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a pig, front facing, round shapes"
+  },
+  {
+   "id": "avatar_05",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a goat, front facing, round shapes"
+  },
+  {
+   "id": "avatar_06",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a duck, front facing, round shapes"
+  },
+  {
+   "id": "avatar_07",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a rabbit, front facing, round shapes"
+  },
+  {
+   "id": "avatar_08",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a fox wearing a straw hat, front facing, round shapes"
+  },
+  {
+   "id": "avatar_09",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a frog wearing overalls, front facing, round shapes"
+  },
+  {
+   "id": "avatar_10",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a bear with a pitchfork, front facing, round shapes"
+  },
+  {
+   "id": "avatar_11",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of a cat with a bandana, front facing, round shapes"
+  },
+  {
+   "id": "avatar_12",
+   "pack": "P13",
+   "folder": "Illustrations/Avatars",
+   "kind": "illus",
+   "subject": "a cute cartoon portrait head of an owl with glasses, front facing, round shapes"
+  },
+  {
+   "id": "role_farmer",
+   "pack": "P14",
+   "folder": "Illustrations/Roles",
+   "kind": "illus",
+   "subject": "a cheerful farmer character in a straw hat holding a hoe, half-body"
+  },
+  {
+   "id": "role_seed_miner",
+   "pack": "P14",
+   "folder": "Illustrations/Roles",
+   "kind": "illus",
+   "subject": "a cheerful miner character with a helmet lamp and a bag of seeds, half-body"
+  },
+  {
+   "id": "role_manufacturer",
+   "pack": "P14",
+   "folder": "Illustrations/Roles",
+   "kind": "illus",
+   "subject": "a cheerful baker-manufacturer in an apron holding a crate of bread, half-body"
+  },
+  {
+   "id": "role_rearer",
+   "pack": "P14",
+   "folder": "Illustrations/Roles",
+   "kind": "illus",
+   "subject": "a cheerful rancher with a cowboy hat holding a chicken, half-body"
+  },
+  {
+   "id": "empty_storage",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "an empty wooden crate with a cobweb"
+  },
+  {
+   "id": "empty_listings",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "an empty market stall with a little sign"
+  },
+  {
+   "id": "empty_notifications",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "a sleeping bell with a Zzz cloud"
+  },
+  {
+   "id": "empty_friends",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "two empty chairs at a picnic table"
+  },
+  {
+   "id": "empty_sold_out",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "an empty shop shelf with a sold out tag"
+  },
+  {
+   "id": "empty_offline",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "an unplugged lantern with a cut rope"
+  },
+  {
+   "id": "empty_search",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "a magnifying glass looking at an empty field"
+  },
+  {
+   "id": "empty_locked",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "a padlocked wooden gate"
+  },
+  {
+   "id": "coach_wave",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "a friendly cartoon hen guide in a straw hat waving"
+  },
+  {
+   "id": "coach_point",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "a friendly cartoon hen guide in a straw hat pointing to the right"
+  },
+  {
+   "id": "coach_cheer",
+   "pack": "P15",
+   "folder": "Illustrations/Scenes",
+   "kind": "illus",
+   "subject": "a friendly cartoon hen guide in a straw hat cheering with wings up"
+  },
+  {
+   "id": "logo_wordmark",
+   "pack": "P16",
+   "folder": "Brand",
+   "kind": "illus",
+   "subject": "the word FARMVERSE in chunky rounded golden letters with a thick brown outline, on a hanging wooden sign with a small green sprout"
+  },
+  {
+   "id": "app_icon",
+   "pack": "P16",
+   "folder": "Brand",
+   "kind": "illus",
+   "subject": "an app icon: a red barn on a green hill under a bright sky, square with rounded corners, no text"
+  },
+  {
+   "id": "bg_splash",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "key art: a sunny farm valley at golden hour, red barn, windmill, fields of crops, rolling hills, lake, a wooden sign post at the top for the logo"
+  },
+  {
+   "id": "bg_loading",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a calm dawn sky over a barn silhouette on a hill, soft pink and gold light, mostly empty sky"
+  },
+  {
+   "id": "bg_onboarding",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a soft blurred green meadow with wildflowers and a bright sky"
+  },
+  {
+   "id": "bg_home_farmer",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a sunny farm valley with a red barn, silo, wooden fences, rows of crops, rolling hills, pine trees and a blue sky"
+  },
+  {
+   "id": "bg_home_miner",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a terraced copper-toned quarry with a timber headframe, mine carts, lanterns and slate-blue rock under a clear sky"
+  },
+  {
+   "id": "bg_home_manufacturer",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a cozy stone workshop yard with a chimney, stacked crates, a conveyor, hanging herbs and warm red brick"
+  },
+  {
+   "id": "bg_home_rearer",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a fenced green pasture with hay bales, a pond, sheep and cows in the distance, golden afternoon light"
+  },
+  {
+   "id": "bg_empire_map",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a top-down illustrated regional map of farmland with rivers, roads, forests and hexagonal plots, parchment edges"
+  },
+  {
+   "id": "bg_maintenance",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a barn in light rain behind a closed wooden gate, moody but friendly"
+  },
+  {
+   "id": "bg_offline",
+   "pack": "P17",
+   "folder": "Backgrounds",
+   "kind": "bg",
+   "subject": "a quiet farm at night under stars with a single lantern"
+  },
+  {
+   "id": "hdr_shop",
+   "pack": "P18",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "subject": "a cozy general store wall with wooden shelves of tools, seed packets and sacks"
+  },
+  {
+   "id": "hdr_market",
+   "pack": "P18",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "subject": "a lively village market square with colourful stalls and bunting"
+  },
+  {
+   "id": "hdr_podium",
+   "pack": "P18",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "subject": "a festive stage with a three-step podium, bunting and spotlights"
+  },
+  {
+   "id": "hdr_facilities",
+   "pack": "P18",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "subject": "a farm yard with a well, warehouse and granary side by side"
+  },
+  {
+   "id": "hdr_pen",
+   "pack": "P18",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "subject": "the inside of a cozy animal pen with straw and wooden walls"
+  },
+  {
+   "id": "hdr_workshop",
+   "pack": "P18",
+   "folder": "Backgrounds/Headers",
+   "kind": "header",
+   "subject": "a workshop interior with a machine, crates and warm lamps"
+  },
+  {
+   "id": "art_starter_pack",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a woven basket of seed packets, a shiny hoe and gold coins on a sunny farm porch"
+  },
+  {
+   "id": "art_welcome_back",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a cheerful farm at sunrise with crops ready to harvest and a full basket by the gate"
+  },
+  {
+   "id": "art_daily_bonus",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a wooden calendar board with gift boxes stacked beside a red barn"
+  },
+  {
+   "id": "art_rewarded_ad",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a retro purple TV on a hay bale showing a play symbol, with coins spilling out of the screen"
+  },
+  {
+   "id": "art_not_enough_coins",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "an empty open coin purse on a wooden market counter with one lonely coin"
+  },
+  {
+   "id": "art_construction",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a farm building under construction with wooden scaffolding, a crane pulley and stacked planks"
+  },
+  {
+   "id": "art_upgrade_complete",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a freshly upgraded farm building with gold trim, ribbon on the door and sparkles"
+  },
+  {
+   "id": "art_new_plot",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a fresh hexagonal plot of land with a wooden sign post, surrounded by rolling hills"
+  },
+  {
+   "id": "shop_featured_banner",
+   "pack": "P19",
+   "folder": "Illustrations/Dialogs",
+   "kind": "card",
+   "subject": "a sunny farm shop porch with crates of tools, seed sacks and a gold coin pile, wide banner composition"
+  },
+  {
+   "id": "hud_daily_bonus",
+   "pack": "P20",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "subject": "a gift box and small calendar standing on a round wooden pedestal plate"
+  },
+  {
+   "id": "hud_notifications",
+   "pack": "P20",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "subject": "a gold bell standing on a round wooden pedestal plate"
+  },
+  {
+   "id": "hud_rewarded_ad",
+   "pack": "P20",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "subject": "a small purple retro TV standing on a round wooden pedestal plate"
+  },
+  {
+   "id": "hud_facilities",
+   "pack": "P20",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "subject": "a tiny well and warehouse together on a round wooden pedestal plate"
+  },
+  {
+   "id": "hud_empire_map",
+   "pack": "P20",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "subject": "a rolled parchment map and a red pin on a round wooden pedestal plate"
+  },
+  {
+   "id": "hud_market",
+   "pack": "P20",
+   "folder": "Icons/HUD",
+   "kind": "icon",
+   "subject": "a tiny market stall with an awning on a round wooden pedestal plate"
+  },
+  {
+   "id": "shop_cat_tools",
+   "pack": "P21",
+   "folder": "Illustrations/Shop",
+   "kind": "icon",
+   "subject": "a hoe, watering can and sickle leaning together"
+  },
+  {
+   "id": "shop_cat_machinery",
+   "pack": "P21",
+   "folder": "Illustrations/Shop",
+   "kind": "icon",
+   "subject": "a small mill machine and a seed drill side by side"
+  },
+  {
+   "id": "shop_cat_structures",
+   "pack": "P21",
+   "folder": "Illustrations/Shop",
+   "kind": "icon",
+   "subject": "a little barn and a well side by side"
+  },
+  {
+   "id": "shop_cat_land",
+   "pack": "P21",
+   "folder": "Illustrations/Shop",
+   "kind": "icon",
+   "subject": "a hexagonal plot of green land with a SOLD sign post and a small fence"
+  },
+  {
+   "id": "scene_well",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a grey stone water well with a red wooden roof and a bucket in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_warehouse",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a red wooden warehouse barn with white trim and big doors in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_granary",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a round silo with silver metal walls and a blue cone roof in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_cellar",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a stone cellar entrance with a wooden door set into a grassy mound in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_farmhouse",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a cozy cream-walled farmhouse with a blue roof and a chimney in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_stall",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a wooden market stall with an awning in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_chicken_coop",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a small white-painted chicken coop with a green roof and a ramp in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "scene_storage_shed",
+   "pack": "P22",
+   "folder": "Illustrations/Facilities",
+   "kind": "card",
+   "subject": "a small blue-grey wooden storage shed in a sunny farm yard, close-up scene"
+  },
+  {
+   "id": "preview_field",
+   "pack": "P23",
+   "folder": "Illustrations/Plots",
+   "kind": "card",
+   "subject": "an isometric hexagonal farm field plot with crop rows and a small fence"
+  },
+  {
+   "id": "preview_mine",
+   "pack": "P23",
+   "folder": "Illustrations/Plots",
+   "kind": "card",
+   "subject": "an isometric hexagonal quarry plot with a timber headframe and mine cart"
+  },
+  {
+   "id": "preview_workshop",
+   "pack": "P23",
+   "folder": "Illustrations/Plots",
+   "kind": "card",
+   "subject": "an isometric hexagonal workshop plot with a stone building, chimney and crates"
+  },
+  {
+   "id": "preview_pasture",
+   "pack": "P23",
+   "folder": "Illustrations/Plots",
+   "kind": "card",
+   "subject": "an isometric hexagonal pasture plot with a pen, hay bales and a pond"
+  },
+  {
+   "id": "story_1_land",
+   "pack": "P24",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "subject": "a wide empty green valley with a blank wooden sign, morning light, a path leading in"
+  },
+  {
+   "id": "story_2_role",
+   "pack": "P24",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "subject": "four small workplaces in one valley: a field, a quarry, a workshop and a pasture"
+  },
+  {
+   "id": "story_3_harvest",
+   "pack": "P24",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "subject": "a farmer silhouette lifting a full basket of vegetables in front of a red barn at golden hour"
+  },
+  {
+   "id": "splash_spring",
+   "pack": "P24",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "subject": "the farm valley key art in spring with blossom trees and fresh green fields, logo space at the top"
+  },
+  {
+   "id": "splash_autumn",
+   "pack": "P24",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "subject": "the farm valley key art in autumn with orange trees, pumpkins and hay bales, logo space at the top"
+  },
+  {
+   "id": "splash_winter",
+   "pack": "P24",
+   "folder": "Backgrounds/Story",
+   "kind": "bg",
+   "subject": "the farm valley key art in winter with snow on the barn roof and warm lit windows, logo space at the top"
+  }
+ ]
+}

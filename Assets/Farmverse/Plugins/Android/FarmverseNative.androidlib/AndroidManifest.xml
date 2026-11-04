@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged into the app: the FileProvider the share sheet hands the export through, and the
+     vibration permission for haptic feedback (NativeHaptics.cs). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.farmverse.nativebridge.res">
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <application>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.farmverse.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/farmverse_file_paths" />
+        </provider>
+    </application>
+</manifest>

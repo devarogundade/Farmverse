@@ -1,0 +1,21 @@
+{
+    "name": "Farmverse.Presentation.UI",
+    "rootNamespace": "Farmverse.Presentation.UI",
+    "references": [
+        "Farmverse.Contracts",
+        "Farmverse.Core",
+        "Farmverse.Domain",
+        "Farmverse.Application",
+        "Farmverse.Presentation.World",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

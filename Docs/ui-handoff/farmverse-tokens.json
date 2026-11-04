@@ -1,0 +1,134 @@
+{
+  "color": {
+    "header-top": "#1259B4",
+    "header-bottom": "#0C4794",
+    "accent-rule": "#F08A12",
+    "page-top": "#4A6585",
+    "page-bottom": "#3C5675",
+    "inset": "#34506F",
+    "dialog-body": "#2563B0",
+    "dialog-rim": "#4FA7EA",
+    "dialog-outline": "#0E3E6E",
+    "reward-body": "#E8901A",
+    "reward-rim": "#FFD866",
+    "reward-outline": "#7A3F05",
+    "row-top": "#FFF9EA",
+    "row-bottom": "#F7E8C6",
+    "row-lip": "#E3CB98",
+    "value-box": "#E9D7AE",
+    "ink": "#22324A",
+    "ink-muted": "#6F82A0",
+    "title-light": "#FFFFF0",
+    "title-mid": "#FFB300",
+    "title-dark": "#F08A00",
+    "title-outline": "#5A2A06",
+    "timer-top": "#A8283B",
+    "timer-bottom": "#7C1829",
+    "alert-top": "#FF7A6A",
+    "alert-bottom": "#E0412E",
+    "ready-top": "#FFE27A",
+    "ready-bottom": "#F5B323",
+    "featured": "#B68CF5",
+    "offline-top": "#5E6F84",
+    "offline-bottom": "#4C5B6E",
+    "scrim": "rgba(6,24,50,0.55)",
+    "scrim-reward": "rgba(40,16,4,0.55)"
+  },
+  "button": {
+    "grass": {
+      "top": "#9BE85A",
+      "bottom": "#3FAE24",
+      "lip": "#2E8A18",
+      "outline": "#1F5E10"
+    },
+    "harvest": {
+      "top": "#FFC54A",
+      "bottom": "#F08A12",
+      "lip": "#C96A06",
+      "outline": "#7A3F05"
+    },
+    "sky": {
+      "top": "#6CC6FF",
+      "bottom": "#2A84D3",
+      "lip": "#1C66AE",
+      "outline": "#0E3E6E"
+    },
+    "plum": {
+      "top": "#C9A6F2",
+      "bottom": "#8C5BD6",
+      "lip": "#6E3FB8",
+      "outline": "#3E1F73"
+    },
+    "berry": {
+      "top": "#FF8A7A",
+      "bottom": "#E0412E",
+      "lip": "#B32E1E",
+      "outline": "#6E1408"
+    },
+    "slate": {
+      "top": "#8FB0CF",
+      "bottom": "#5A7FA3",
+      "lip": "#456685",
+      "outline": "#1E3550"
+    },
+    "cloud": {
+      "top": "#FFFFFF",
+      "bottom": "#E9EEF3",
+      "lip": "#C9D3DD",
+      "outline": "#3A4A5C"
+    }
+  },
+  "font": {
+    "display": "Cherry Bomb One",
+    "body": "Cabin"
+  },
+  "type": {
+    "screen-title": 38,
+    "dialog-title": 30,
+    "button-big": 26,
+    "button-pair": 20,
+    "row-name": 19,
+    "section": 18,
+    "body": 16,
+    "label": 13,
+    "small": 13.5
+  },
+  "space": {
+    "xs": 4,
+    "s": 8,
+    "list-gap": 10,
+    "pair-gap": 12,
+    "gutter": 14,
+    "card": 16,
+    "bottom-safe": 24
+  },
+  "radius": {
+    "value": 9,
+    "small-button": 14,
+    "row": 16,
+    "button": 20,
+    "dialog": 28
+  },
+  "size": {
+    "header": 100,
+    "accent-rule": 5,
+    "tab-bar": 86,
+    "button-big": 60,
+    "button-small": 44,
+    "price-chip": 42,
+    "icon-button": 46,
+    "tap-min": 48,
+    "dialog-rim": 12,
+    "button-lip": 4
+  },
+  "motion": {
+    "push-ms": 240,
+    "push-dp": 24,
+    "dialog-ms": 200,
+    "press-ms": 80,
+    "press-dp": 4,
+    "bar-ms": 300,
+    "reward-ms": 500,
+    "reduced-ms": 120
+  }
+}

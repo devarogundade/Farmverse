@@ -1,0 +1,6436 @@
+{
+ "entries": [
+  {
+   "k": " (faster with flowers nearby)",
+   "v": "（近くに花があると速くなる）"
+  },
+  {
+   "k": " (feed the animals grain)",
+   "v": "（動物に穀物をあげよう）"
+  },
+  {
+   "k": " (must stand by the sea)",
+   "v": "（海辺に建てる必要あり）"
+  },
+  {
+   "k": "+1 builder forever",
+   "v": "大工+1人（永久）"
+  },
+  {
+   "k": "+{0} basket room",
+   "v": "かご容量+{0}"
+  },
+  {
+   "k": "+{0} coins  +{1} gems",
+   "v": "+{0}コイン  +{1}ジェム"
+  },
+  {
+   "k": "+{0} food in every workers' house",
+   "v": "作業員の家すべてに食料+{0}"
+  },
+  {
+   "k": "+{0} gems for reaching island level {1}",
+   "v": "島レベル{1}到達で+{0}ジェム"
+  },
+  {
+   "k": "+{0}%",
+   "v": "+{0}%"
+  },
+  {
+   "k": ", {0}s away, {1} ms",
+   "v": ", {0}s away, {1} ms"
+  },
+  {
+   "k": "1,200 gems",
+   "v": "1,200ジェム"
+  },
+  {
+   "k": "110 gems across the season",
+   "v": "シーズン中に合計110ジェム"
+  },
+  {
+   "k": "13,000 coins across the season",
+   "v": "シーズン中に合計13,000コイン"
+  },
+  {
+   "k": "2,500 gems",
+   "v": "2,500ジェム"
+  },
+  {
+   "k": "2x Value",
+   "v": "2倍お得"
+  },
+  {
+   "k": "500 gems",
+   "v": "500ジェム"
+  },
+  {
+   "k": "5x Value",
+   "v": "5倍お得"
+  },
+  {
+   "k": "6,500 gems",
+   "v": "6,500ジェム"
+  },
+  {
+   "k": "80 gems",
+   "v": "80ジェム"
+  },
+  {
+   "k": "</b> coins each.</color>",
+   "v": "</b>コイン</color>"
+  },
+  {
+   "k": "<b>{0}</b> reached Level {1} on your invite!<br>Here's your thank-you.",
+   "v": "<b>{0}</b>さんがあなたの招待でレベル{1}になりました！<br>お礼をどうぞ。"
+  },
+  {
+   "k": "<br><br><b>Raiders are on the island!</b>",
+   "v": "<br><br><b>襲撃者が島に来ている！</b>"
+  },
+  {
+   "k": "<br><br>Next raid in about <b>{0}</b><br>Defence {1} vs threat {2}",
+   "v": "<br><br>次の襲撃まで約<b>{0}</b><br>防御{1} 対 脅威{2}"
+  },
+  {
+   "k": "<color=#ffd23a>Shops pay <b>",
+   "v": "<color=#ffd23a>ショップ買取：1個<b>"
+  },
+  {
+   "k": "<size={0}%>One time only!</size> <color=#ff5a6e>",
+   "v": "<size={0}%>今だけ！</size> <color=#ff5a6e>"
+  },
+  {
+   "k": "<size={0}%>Resets in:</size> <color=#ff5a6e>",
+   "v": "<size={0}%>リセットまで：</size> <color=#ff5a6e>"
+  },
+  {
+   "k": "<size={0}%>Resets in:</size> <color=#ff5a6e>{1}h {2}m</color>",
+   "v": "<size={0}%>リセットまで：</size> <color=#ff5a6e>{1}時間{2}分</color>"
+  },
+  {
+   "k": "A <b>Raid Shield</b> protects your island for {0} hours.",
+   "v": "<b>襲撃シールド</b>が{0}時間、島を守ります。"
+  },
+  {
+   "k": "A <b>Well</b> keeps fields within {0} m safe from drought.",
+   "v": "<b>井戸</b>があると{0}m以内の畑は干ばつの影響を受けません。"
+  },
+  {
+   "k": "A <color=#ffd23a>Raid Shield</color> protects your island for {0} hours.",
+   "v": "<color=#ffd23a>襲撃シールド</color>は{0}時間あなたの島を守ります。"
+  },
+  {
+   "k": "A <color=#ffd23a>Well</color> keeps fields within {0} m safe from drought.",
+   "v": "<color=#ffd23a>井戸</color>は{0}m以内の畑を干ばつから守ります。"
+  },
+  {
+   "k": "A bakery turns flour and eggs into bread",
+   "v": "パン屋は小麦粉と卵でパンを作る"
+  },
+  {
+   "k": "A bigger workers' house works longer offline: {0} hours at level {1}, {2} at level {3}. The Farm Pass makes it {4}.",
+   "v": "作業員の家が大きいほど留守中も長く働きます：レベル{1}で{0}時間、レベル{3}で{2}時間。ファームパスなら{4}時間。"
+  },
+  {
+   "k": "A code is {0} letters and numbers, like ABCD {1}",
+   "v": "コードは{0}文字の英数字です（例：ABCD {1}）"
+  },
+  {
+   "k": "A crop rotted in the field — harvest sooner, or get farm workers",
+   "v": "作物が畑で腐っちゃった — 早めに収穫するか、作業員を雇おう"
+  },
+  {
+   "k": "A dairy turns milk into cheese",
+   "v": "乳製品工場で牛乳がチーズになります"
+  },
+  {
+   "k": "A fence to lay out your farm",
+   "v": "農場を区切る柵"
+  },
+  {
+   "k": "A fountain: people nearby settle in faster",
+   "v": "噴水：近くの住人がなじみやすくなる"
+  },
+  {
+   "k": "A friend joined",
+   "v": "友だちが参加しました"
+  },
+  {
+   "k": "A full meal for every workers' house, so they keep working.",
+   "v": "作業員の家すべてにたっぷりの食事。働き続けてくれます。"
+  },
+  {
+   "k": "A guard has fallen",
+   "v": "衛兵が倒れた"
+  },
+  {
+   "k": "A path to lay out your farm",
+   "v": "農場を整える道"
+  },
+  {
+   "k": "A premium reward on every tier",
+   "v": "全ティアにプレミアム報酬"
+  },
+  {
+   "k": "A press this many rims from the centre still grabs the stick (a little forgiving for thumbs).",
+   "v": "A press this many rims from the centre still grabs the stick (a little forgiving for thumbs)."
+  },
+  {
+   "k": "A purchase is already on its way",
+   "v": "購入処理中です"
+  },
+  {
+   "k": "A raider knocked you down — {0} goods spilled!",
+   "v": "襲撃者に倒された — {0}個の品物を落とした！"
+  },
+  {
+   "k": "A raider knocked you down!",
+   "v": "襲撃者に倒された！"
+  },
+  {
+   "k": "A small farm island to make your own",
+   "v": "自分だけの小さな農場の島"
+  },
+  {
+   "k": "A stone crusher turns stone into bricks",
+   "v": "石砕き機で石がレンガになります"
+  },
+  {
+   "k": "A storm damaged the {0} — builders will mend it",
+   "v": "嵐で{0}が壊れた — 大工が直してくれるよ"
+  },
+  {
+   "k": "A tap on open ground farther than this (m) from the farmer rides the horse there.",
+   "v": "A tap on open ground farther than this (m) from the farmer rides the horse there."
+  },
+  {
+   "k": "A warrior has fallen",
+   "v": "戦士が倒れた"
+  },
+  {
+   "k": "A well keeps nearby fields growing in a drought",
+   "v": "井戸があれば干ばつでも近くの畑が育ちます"
+  },
+  {
+   "k": "A workers' house would give you hands to farm while you're away.",
+   "v": "作業員の家があれば、留守中も農作業をしてもらえるよ。"
+  },
+  {
+   "k": "ALL",
+   "v": "すべて"
+  },
+  {
+   "k": "Achievements",
+   "v": "実績"
+  },
+  {
+   "k": "Activate",
+   "v": "有効化"
+  },
+  {
+   "k": "Ad rewards without the ads",
+   "v": "広告なしで広告報酬"
+  },
+  {
+   "k": "Add",
+   "v": "追加"
+  },
+  {
+   "k": "Add friend",
+   "v": "友だちを追加"
+  },
+  {
+   "k": "Add friends to visit their farms.",
+   "v": "友だちを追加して農場を訪ねよう。"
+  },
+  {
+   "k": "Ah, hello dear. Lovely island you're making.",
+   "v": "あら、こんにちは。すてきな島を作っているわね。"
+  },
+  {
+   "k": "All",
+   "v": "すべて"
+  },
+  {
+   "k": "All animals: feed",
+   "v": "全部の動物：エサやり"
+  },
+  {
+   "k": "All fields: harvest",
+   "v": "全部の畑：収穫"
+  },
+  {
+   "k": "All fields: replant",
+   "v": "全部の畑：植え直し"
+  },
+  {
+   "k": "All goals done!",
+   "v": "目標をすべて達成！"
+  },
+  {
+   "k": "All machines: refill",
+   "v": "全部の機械：補充"
+  },
+  {
+   "k": "All workers",
+   "v": "作業員一覧"
+  },
+  {
+   "k": "All's well! Another field or a new building would grow the island.",
+   "v": "順調だよ！畑や建物を増やせば島がもっと育つよ。"
+  },
+  {
+   "k": "Already collected",
+   "v": "受け取り済み"
+  },
+  {
+   "k": "Also {0}: {1}/{2}",
+   "v": "{0}も：{1}/{2}"
+  },
+  {
+   "k": "An animal pen: people nearby settle in faster",
+   "v": "動物小屋：近くの住人がなじみやすくなる"
+  },
+  {
+   "k": "And:",
+   "v": "それと："
+  },
+  {
+   "k": "Animal goods",
+   "v": "畜産品"
+  },
+  {
+   "k": "Animal pen",
+   "v": "動物小屋"
+  },
+  {
+   "k": "Animals",
+   "v": "動物"
+  },
+  {
+   "k": "Any moment now. Get ready!",
+   "v": "もうすぐだ。準備して！"
+  },
+  {
+   "k": "Any tips?",
+   "v": "何かコツはある？"
+  },
+  {
+   "k": "Anything damaged?",
+   "v": "何か壊れてる？"
+  },
+  {
+   "k": "Are we ready for raiders?",
+   "v": "襲撃者への備えは大丈夫？"
+  },
+  {
+   "k": "Are you sure?",
+   "v": "本当によろしいですか？"
+  },
+  {
+   "k": "Army house",
+   "v": "兵舎"
+  },
+  {
+   "k": "Arriving…",
+   "v": "到着中…"
+  },
+  {
+   "k": "Autumn",
+   "v": "秋"
+  },
+  {
+   "k": "Autumn crops give <b>{0}</b> yield — plant before it ends!",
+   "v": "秋の作物は収穫量<b>{0}</b> — 終わる前に植えよう！"
+  },
+  {
+   "k": "Autumn crops give <color=#ffd23a>{0}</color> yield — plant before it ends!",
+   "v": "秋の作物は収穫量<color=#ffd23a>{0}</color> — 終わる前に植えよう！"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins",
+   "v": "{0}時間{1}分不在・働き手{2}人が{3}回運搬・種代{4}コイン"
+  },
+  {
+   "k": "Away, workers keep going for {0} hours (Night Shift: normal food price)",
+   "v": "留守中も作業員は{0}時間働きます（夜勤：通常の食料）"
+  },
+  {
+   "k": "Away, workers keep going for {0} hours at {1}% more food",
+   "v": "留守中も作業員は{0}時間働きます（食料{1}%増）"
+  },
+  {
+   "k": "B3TR arrives in your wallet.",
+   "v": "B3TRがウォレットに届きます。"
+  },
+  {
+   "k": "BOOSTS",
+   "v": "ブースト"
+  },
+  {
+   "k": "BUILD",
+   "v": "建設"
+  },
+  {
+   "k": "BUILDING",
+   "v": "建設中"
+  },
+  {
+   "k": "BUILDINGS",
+   "v": "建物"
+  },
+  {
+   "k": "Back to visit",
+   "v": "訪問に戻る"
+  },
+  {
+   "k": "Bake {0} bread",
+   "v": "パンを{0}個焼く"
+  },
+  {
+   "k": "Baked in the bakery.",
+   "v": "パン屋で焼いたもの。"
+  },
+  {
+   "k": "Bakery",
+   "v": "パン屋"
+  },
+  {
+   "k": "Bakery shop",
+   "v": "ベーカリーショップ"
+  },
+  {
+   "k": "Bank",
+   "v": "銀行"
+  },
+  {
+   "k": "Barn",
+   "v": "納屋"
+  },
+  {
+   "k": "Basket full",
+   "v": "かごがいっぱい"
+  },
+  {
+   "k": "Basket full — store some at the farmhouse",
+   "v": "かごがいっぱい — 農家にしまおう"
+  },
+  {
+   "k": "Basket full — walk into the farmhouse to store it",
+   "v": "かごがいっぱい — 農家に入ってしまおう"
+  },
+  {
+   "k": "Basket full — walk into the farmhouse to store it first",
+   "v": "かごがいっぱい — 先に農家に入ってしまおう"
+  },
+  {
+   "k": "Basket full! Take it to the farmhouse.",
+   "v": "かごがいっぱい！農家に運ぼう。"
+  },
+  {
+   "k": "Beans",
+   "v": "豆"
+  },
+  {
+   "k": "Beat a raid",
+   "v": "襲撃を撃退する"
+  },
+  {
+   "k": "Beat {0} raids",
+   "v": "襲撃を{0}回撃退する"
+  },
+  {
+   "k": "Beat {0} raids.",
+   "v": "襲撃を{0}回撃退する。"
+  },
+  {
+   "k": "Bee hives",
+   "v": "養蜂箱"
+  },
+  {
+   "k": "Bee hives and the warehouse open at {0}: chapter {1} done",
+   "v": "レベル{0}で巣箱と倉庫が開放：第{1}章クリア"
+  },
+  {
+   "k": "Beehive box",
+   "v": "ミツバチの巣箱"
+  },
+  {
+   "k": "Before you start",
+   "v": "はじめる前に"
+  },
+  {
+   "k": "Bench",
+   "v": "ベンチ"
+  },
+  {
+   "k": "Berries",
+   "v": "ベリー"
+  },
+  {
+   "k": "Best Value",
+   "v": "いちばんお得"
+  },
+  {
+   "k": "Big chest",
+   "v": "大きな宝箱"
+  },
+  {
+   "k": "Big updates and events on Farmverse",
+   "v": "Farmverseの大型アップデートやイベント"
+  },
+  {
+   "k": "Bigger Basket",
+   "v": "大きなかご"
+  },
+  {
+   "k": "Bigger islands get bigger orders",
+   "v": "島が大きいほど注文も大きくなる"
+  },
+  {
+   "k": "Bigger islands get more orders at once",
+   "v": "大きな島ほど一度に多くの注文が届きます"
+  },
+  {
+   "k": "Boost. Use it on your island.",
+   "v": "ブースト。島で使えます。"
+  },
+  {
+   "k": "Boosts",
+   "v": "ブースト"
+  },
+  {
+   "k": "Boosts and the Season chest",
+   "v": "ブーストとシーズン宝箱"
+  },
+  {
+   "k": "Bought",
+   "v": "購入済み"
+  },
+  {
+   "k": "Bought before on this Apple ID",
+   "v": "このApple IDで購入済み"
+  },
+  {
+   "k": "Bread",
+   "v": "パン"
+  },
+  {
+   "k": "Bread sells well and fills orders",
+   "v": "パンはよく売れ、注文にも使えます"
+  },
+  {
+   "k": "Bricks",
+   "v": "レンガ"
+  },
+  {
+   "k": "Bring grain to feed them",
+   "v": "穀物を運んでエサをあげよう"
+  },
+  {
+   "k": "Bring its ingredients from the farmhouse",
+   "v": "農家から材料を運ぶ"
+  },
+  {
+   "k": "Bringing in the {0} crop.",
+   "v": "{0}を収穫中。"
+  },
+  {
+   "k": "Broken from rocks or the quarry.",
+   "v": "岩や採石場で砕いたもの。"
+  },
+  {
+   "k": "Build",
+   "v": "建設"
+  },
+  {
+   "k": "Build a Post Office: the townsfolk send delivery orders there.",
+   "v": "郵便局を建てよう：住人がそこに配達の注文を送ってくるよ。"
+  },
+  {
+   "k": "Build a bakery",
+   "v": "パン工場を建てる"
+  },
+  {
+   "k": "Build a bank",
+   "v": "銀行を建てる"
+  },
+  {
+   "k": "Build a barn",
+   "v": "牛舎を建てる"
+  },
+  {
+   "k": "Build a chicken coop",
+   "v": "鶏小屋を建てる"
+  },
+  {
+   "k": "Build a clinic",
+   "v": "診療所を建てる"
+  },
+  {
+   "k": "Build a fishing shed",
+   "v": "釣り小屋を建てる"
+  },
+  {
+   "k": "Build a lumber yard",
+   "v": "製材所を建てる"
+  },
+  {
+   "k": "Build a mine",
+   "v": "鉱山を建てる"
+  },
+  {
+   "k": "Build a post office",
+   "v": "郵便局を建てる"
+  },
+  {
+   "k": "Build a school",
+   "v": "学校を建てる"
+  },
+  {
+   "k": "Build a sheep shed",
+   "v": "羊小屋を建てる"
+  },
+  {
+   "k": "Build a stable to keep a horse",
+   "v": "馬小屋を建てて馬を飼おう"
+  },
+  {
+   "k": "Build a well",
+   "v": "井戸を建てる"
+  },
+  {
+   "k": "Build a windmill",
+   "v": "風車を建てる"
+  },
+  {
+   "k": "Build a workers' house",
+   "v": "作業員の家を建てる"
+  },
+  {
+   "k": "Build a workers' house first",
+   "v": "先に作業員の家を建てよう"
+  },
+  {
+   "k": "Build a workers' house: its people run the farm for you.",
+   "v": "作業員の家を建てよう：住人が農場を回してくれます。"
+  },
+  {
+   "k": "Build an army house",
+   "v": "兵舎を建てる"
+  },
+  {
+   "k": "Build an army house and keep it fed to stop the next one.",
+   "v": "兵舎を建ててエサを切らさず、次の襲撃を防ごう。"
+  },
+  {
+   "k": "Build bee hives",
+   "v": "巣箱を建てる"
+  },
+  {
+   "k": "Build one too",
+   "v": "自分も建てる"
+  },
+  {
+   "k": "Build the town hall",
+   "v": "市役所を建てる"
+  },
+  {
+   "k": "Builder's Pass",
+   "v": "大工パス"
+  },
+  {
+   "k": "Builder's Pass — thank you!",
+   "v": "ビルダーパス — ありがとう！"
+  },
+  {
+   "k": "Builders at work",
+   "v": "大工が作業中"
+  },
+  {
+   "k": "Builders mend it after damage",
+   "v": "壊れたら大工が直します"
+  },
+  {
+   "k": "Builders take ",
+   "v": "大工が使う資材："
+  },
+  {
+   "k": "Builders walk over with what it needs",
+   "v": "大工が必要な物を運んでくれる"
+  },
+  {
+   "k": "Builders' hut",
+   "v": "大工小屋"
+  },
+  {
+   "k": "Building",
+   "v": "建設中"
+  },
+  {
+   "k": "Building the {0}.",
+   "v": "{0}を建設中。"
+  },
+  {
+   "k": "Buildings",
+   "v": "建物"
+  },
+  {
+   "k": "Buildings, goods & upgrades",
+   "v": "建物・品物・アップグレード"
+  },
+  {
+   "k": "Buy a field in the shop and walk into it to plant",
+   "v": "ショップで畑を買い、中を歩いて植えよう"
+  },
+  {
+   "k": "Bye",
+   "v": "またね"
+  },
+  {
+   "k": "CLAIMED",
+   "v": "受け取り済み"
+  },
+  {
+   "k": "COIN PACK",
+   "v": "コインパック"
+  },
+  {
+   "k": "COINS",
+   "v": "コイン"
+  },
+  {
+   "k": "COUPON CODE",
+   "v": "クーポンコード"
+  },
+  {
+   "k": "COUPONS",
+   "v": "クーポン"
+  },
+  {
+   "k": "CRATES",
+   "v": "木箱"
+  },
+  {
+   "k": "Can't go here · drag it somewhere else",
+   "v": "ここには置けません · 別の場所へドラッグしてね"
+  },
+  {
+   "k": "Can't go here: ",
+   "v": "ここには置けません："
+  },
+  {
+   "k": "Cancel",
+   "v": "キャンセル"
+  },
+  {
+   "k": "Carrot",
+   "v": "ニンジン"
+  },
+  {
+   "k": "Carry feed from the farmhouse to the trough",
+   "v": "農家からエサ箱へエサを運ぶ"
+  },
+  {
+   "k": "Carry the goods into the Post Office to deliver",
+   "v": "品物を郵便局に運んで配達しよう"
+  },
+  {
+   "k": "Carry what the order asks for into the post office",
+   "v": "注文の品を郵便局に運ぼう"
+  },
+  {
+   "k": "Carrying {0} {1} to the farmhouse.",
+   "v": "{1}を{0}個、農家に運び中。"
+  },
+  {
+   "k": "Catching my breath. That was a lot of loads!",
+   "v": "ひと休み。たくさん運んだなあ！"
+  },
+  {
+   "k": "Caught at the fishing hut.",
+   "v": "釣り小屋でとれたもの。"
+  },
+  {
+   "k": "Change Name",
+   "v": "名前を変更"
+  },
+  {
+   "k": "Chapel",
+   "v": "礼拝堂"
+  },
+  {
+   "k": "Chapter 2: the island grows a river valley, a lake and hills",
+   "v": "第2章：島に川の谷、湖、丘が広がります"
+  },
+  {
+   "k": "Chapter 3: mountains, a waterfall and a town rise from the sea",
+   "v": "第3章：山と滝と町が海から現れます"
+  },
+  {
+   "k": "Chapter complete: {x}",
+   "v": "章クリア：{x}"
+  },
+  {
+   "k": "Chapter {0} done: every level from here keeps paying",
+   "v": "第{0}章クリア：ここからも毎レベル報酬があります"
+  },
+  {
+   "k": "Chapter {0}: Homestead complete!",
+   "v": "第{0}章「農場」クリア！"
+  },
+  {
+   "k": "Chapter {0}: Town",
+   "v": "第{0}章：町"
+  },
+  {
+   "k": "Chapter {0}: Village",
+   "v": "第{0}章：村"
+  },
+  {
+   "k": "Chapter {0}: Village complete!",
+   "v": "第{0}章「村」クリア！"
+  },
+  {
+   "k": "Check your Wi-Fi or mobile data. Your farm is safe — we'll sync when you're back.",
+   "v": "Wi-Fiかモバイルデータを確認してね。農場は無事です — オンラインに戻ったら同期します。"
+  },
+  {
+   "k": "Cheese",
+   "v": "チーズ"
+  },
+  {
+   "k": "Chest opened!",
+   "v": "宝箱を開けた！"
+  },
+  {
+   "k": "Chicken coop",
+   "v": "鶏小屋"
+  },
+  {
+   "k": "Chickens lay eggs if you keep their trough fed",
+   "v": "餌箱を満たせば鶏が卵を産みます"
+  },
+  {
+   "k": "Chinese",
+   "v": "中国語"
+  },
+  {
+   "k": "Choose avatar",
+   "v": "アバターを選ぶ"
+  },
+  {
+   "k": "Chop 5 trees",
+   "v": "木を5本切る"
+  },
+  {
+   "k": "Chop {0} trees or rocks",
+   "v": "木か岩を{0}個切る"
+  },
+  {
+   "k": "Chopped from trees. Builds and repairs.",
+   "v": "木を切ったもの。建設や修理に使う。"
+  },
+  {
+   "k": "Cider press",
+   "v": "サイダー工房"
+  },
+  {
+   "k": "Claim",
+   "v": "受け取る"
+  },
+  {
+   "k": "Claim All",
+   "v": "すべて受け取る"
+  },
+  {
+   "k": "Claim ×{0}",
+   "v": "受け取る ×{0}"
+  },
+  {
+   "k": "Claimed",
+   "v": "受け取り済み"
+  },
+  {
+   "k": "Classic look",
+   "v": "クラシック"
+  },
+  {
+   "k": "Clear ",
+   "v": "撤去 "
+  },
+  {
+   "k": "Clear skies",
+   "v": "快晴"
+  },
+  {
+   "k": "Clear {0}",
+   "v": "撤去 {0}"
+  },
+  {
+   "k": "Clinic",
+   "v": "診療所"
+  },
+  {
+   "k": "Cloth opens at {0}",
+   "v": "布はレベル{0}で開放"
+  },
+  {
+   "k": "Coins",
+   "v": "コイン"
+  },
+  {
+   "k": "Coins a new island starts with: enough for a few first buildings, so choices matter.",
+   "v": "Coins a new island starts with: enough for a few first buildings, so choices matter."
+  },
+  {
+   "k": "Collect",
+   "v": "回収"
+  },
+  {
+   "k": "Collect {0} eggs",
+   "v": "卵を{0}個集める"
+  },
+  {
+   "k": "Collect {0} honey",
+   "v": "はちみつを{0}個集める"
+  },
+  {
+   "k": "Collect {0} milk",
+   "v": "牛乳を{0}個集める"
+  },
+  {
+   "k": "Collecting from the {0}.",
+   "v": "{0}から回収中。"
+  },
+  {
+   "k": "Come back tomorrow",
+   "v": "また明日来てね"
+  },
+  {
+   "k": "Community hall",
+   "v": "公民館"
+  },
+  {
+   "k": "Connect to the internet to buy",
+   "v": "購入するにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to buy with gems",
+   "v": "ジェムで購入するにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to change your name",
+   "v": "名前を変更するにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to collect it",
+   "v": "受け取るにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to collect the gift",
+   "v": "ギフトを受け取るにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to delete your account",
+   "v": "アカウントを削除するにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to get your code",
+   "v": "コードを取得するにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to open the chest",
+   "v": "宝箱を開けるにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to save your farm.",
+   "v": "農場をセーブするにはインターネットに接続してね。"
+  },
+  {
+   "k": "Connect to the internet to spin",
+   "v": "回すにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to use boosts",
+   "v": "ブーストを使うにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to visit farms",
+   "v": "農場を訪ねるにはインターネットに接続してね"
+  },
+  {
+   "k": "Connect to the internet to watch ads",
+   "v": "広告を見るにはインターネットに接続してね"
+  },
+  {
+   "k": "Connecting to the farm network…<br>Friends appear once you're online.",
+   "v": "農場ネットワークに接続中…<br>オンラインになると友だちが表示されます。"
+  },
+  {
+   "k": "Connecting...",
+   "v": "接続中..."
+  },
+  {
+   "k": "Connection lost",
+   "v": "接続が切れました"
+  },
+  {
+   "k": "Continue",
+   "v": "続ける"
+  },
+  {
+   "k": "Copied!",
+   "v": "コピーしました！"
+  },
+  {
+   "k": "Copy",
+   "v": "コピー"
+  },
+  {
+   "k": "Copy code",
+   "v": "コードをコピー"
+  },
+  {
+   "k": "Copy link",
+   "v": "リンクをコピー"
+  },
+  {
+   "k": "Corn",
+   "v": "トウモロコシ"
+  },
+  {
+   "k": "Couldn't buy it — check your connection and try again",
+   "v": "購入できませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't change it — check your connection",
+   "v": "変更できませんでした — 接続を確認してね"
+  },
+  {
+   "k": "Couldn't change your name — check your connection",
+   "v": "名前を変更できませんでした — 接続を確認してね"
+  },
+  {
+   "k": "Couldn't collect it — check your connection and try again",
+   "v": "受け取れませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't collect the reward — check your connection",
+   "v": "報酬を受け取れませんでした — 接続を確認してね"
+  },
+  {
+   "k": "Couldn't delete the account — check your connection and try again",
+   "v": "アカウントを削除できませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't delete — check your connection",
+   "v": "削除できませんでした — 接続を確認してね"
+  },
+  {
+   "k": "Couldn't get a code — check your connection and try again",
+   "v": "コードを取得できませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't link the account — check your connection and try again",
+   "v": "アカウントを連携できませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't open it — check your connection and try again",
+   "v": "開けませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't reach that farm — check your connection",
+   "v": "その農場に行けませんでした — 接続を確認してね"
+  },
+  {
+   "k": "Couldn't restore purchases — try again",
+   "v": "購入を復元できませんでした — もう一度試してね"
+  },
+  {
+   "k": "Couldn't save it — check your connection",
+   "v": "保存できませんでした。接続を確認してください"
+  },
+  {
+   "k": "Couldn't send the like — check your connection",
+   "v": "いいねを送れませんでした — 接続を確認してね"
+  },
+  {
+   "k": "Couldn't sign in — try again",
+   "v": "サインインできませんでした — もう一度試してね"
+  },
+  {
+   "k": "Couldn't spin — check your connection and try again",
+   "v": "回せませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Couldn't use it — check your connection and try again",
+   "v": "使えませんでした — 接続を確認してもう一度試してね"
+  },
+  {
+   "k": "Country",
+   "v": "国"
+  },
+  {
+   "k": "Coupons",
+   "v": "クーポン"
+  },
+  {
+   "k": "Cows give milk if you keep their trough fed",
+   "v": "餌箱を満たせば牛が牛乳を出します"
+  },
+  {
+   "k": "Crops",
+   "v": "作物"
+  },
+  {
+   "k": "Crops Grown",
+   "v": "育てた作物"
+  },
+  {
+   "k": "Crops grow a little faster",
+   "v": "作物の成長が少し速くなる"
+  },
+  {
+   "k": "Crops grow a little faster.\n\nRain: crops sown now grow faster.\n\nNext raid in about <color=#ffd23a>{0}m</color>\nDefence {1} vs threat {2}",
+   "v": "作物の成長が少し速くなります。\n\n雨：今まいた作物は早く育ちます。\n\n次の襲撃まで約<color=#ffd23a>{0}分</color>\n防御{1}対脅威{2}"
+  },
+  {
+   "k": "Crops grow slowly and everyone eats more: stock up",
+   "v": "作物の成長が遅く、みんなよく食べる：備蓄しよう"
+  },
+  {
+   "k": "Crops grow {0}× for {1} min.",
+   "v": "作物の成長{0}倍（{1}分間）。"
+  },
+  {
+   "k": "Crops grown",
+   "v": "育てた作物"
+  },
+  {
+   "k": "Crops {0}× · {1} min",
+   "v": "作物{0}× · {1}分"
+  },
+  {
+   "k": "DAILY DEAL",
+   "v": "デイリーセール"
+  },
+  {
+   "k": "DAILY TASK CHEST",
+   "v": "デイリータスク宝箱"
+  },
+  {
+   "k": "DAMAGED",
+   "v": "損傷"
+  },
+  {
+   "k": "DAY ",
+   "v": "DAY "
+  },
+  {
+   "k": "DAY {0}",
+   "v": "{0}日目"
+  },
+  {
+   "k": "Daily",
+   "v": "デイリー"
+  },
+  {
+   "k": "Daily Bonus",
+   "v": "デイリーボーナス"
+  },
+  {
+   "k": "Daily gifts, free coins and welcome-back gifts",
+   "v": "デイリーギフト、無料コイン、おかえりギフト"
+  },
+  {
+   "k": "Daily tasks",
+   "v": "デイリータスク"
+  },
+  {
+   "k": "Daily · ",
+   "v": "デイリー · "
+  },
+  {
+   "k": "Dairy",
+   "v": "酪農場"
+  },
+  {
+   "k": "Damaged · needs {0}",
+   "v": "損傷 · {0}が必要"
+  },
+  {
+   "k": "Days Played",
+   "v": "プレイ日数"
+  },
+  {
+   "k": "Decor",
+   "v": "デコ"
+  },
+  {
+   "k": "Decoration",
+   "v": "デコレーション"
+  },
+  {
+   "k": "Decoration: people nearby settle in faster",
+   "v": "デコレーション：近くの住人がなじみやすくなる"
+  },
+  {
+   "k": "Defence",
+   "v": "防御"
+  },
+  {
+   "k": "Delete",
+   "v": "削除"
+  },
+  {
+   "k": "Delete Account",
+   "v": "アカウント削除"
+  },
+  {
+   "k": "Delete account?",
+   "v": "アカウントを削除しますか？"
+  },
+  {
+   "k": "Delete forever",
+   "v": "完全に削除"
+  },
+  {
+   "k": "Deliver",
+   "v": "配達"
+  },
+  {
+   "k": "Deliver a post office order",
+   "v": "郵便局の注文を配達する"
+  },
+  {
+   "k": "Deliver an order",
+   "v": "注文を1件届ける"
+  },
+  {
+   "k": "Deliver {0} orders",
+   "v": "注文を{0}件届ける"
+  },
+  {
+   "k": "Deliver {0} post office orders",
+   "v": "郵便局の注文を{0}件配達する"
+  },
+  {
+   "k": "Deliver {0} post office orders.",
+   "v": "郵便局の注文を{0}件届ける。"
+  },
+  {
+   "k": "Delivery orders",
+   "v": "配達注文"
+  },
+  {
+   "k": "Delivery orders open at island level {0}, with the post office.",
+   "v": "配達注文は島レベル{0}で郵便局とともに開放されます。"
+  },
+  {
+   "k": "Delivery orders that pay double",
+   "v": "報酬2倍の配達注文"
+  },
+  {
+   "k": "Did you hear?",
+   "v": "聞いた？"
+  },
+  {
+   "k": "Did you hear? ",
+   "v": "ねえ、聞いた？"
+  },
+  {
+   "k": "Dirt path",
+   "v": "土の道"
+  },
+  {
+   "k": "Drag to move · it fits here",
+   "v": "ドラッグで移動 · ここに置けます"
+  },
+  {
+   "k": "Drought",
+   "v": "干ばつ"
+  },
+  {
+   "k": "Drought: crops sown now grow slowly",
+   "v": "干ばつ：今まいた作物はゆっくり育つ"
+  },
+  {
+   "k": "Dug from the mine.",
+   "v": "鉱山で掘ったもの。"
+  },
+  {
+   "k": "Dutch",
+   "v": "オランダ語"
+  },
+  {
+   "k": "Earn pass XP from orders and daily tasks.",
+   "v": "注文やデイリータスクでパスXPを獲得しよう。"
+  },
+  {
+   "k": "Earned for: ",
+   "v": "獲得条件："
+  },
+  {
+   "k": "Edit",
+   "v": "編集"
+  },
+  {
+   "k": "Egg",
+   "v": "卵"
+  },
+  {
+   "k": "Egg every {0}s",
+   "v": "{0}秒ごとに卵"
+  },
+  {
+   "k": "Egg goes off if left too long",
+   "v": "放置すると卵が傷みます"
+  },
+  {
+   "k": "Eggs or milk went off in a full house — collect more often",
+   "v": "満杯の小屋で卵やミルクが傷んだ — こまめに回収しよう"
+  },
+  {
+   "k": "Empty field",
+   "v": "空き畑"
+  },
+  {
+   "k": "Empty: bring your harvest in",
+   "v": "空っぽ：収穫物を運び込もう"
+  },
+  {
+   "k": "Empty: walk your harvest into the farmhouse.",
+   "v": "空っぽ：収穫物を持って農家に入ろう。"
+  },
+  {
+   "k": "English",
+   "v": "英語"
+  },
+  {
+   "k": "Enjoying Farmverse?",
+   "v": "Farmverseを楽しんでる？"
+  },
+  {
+   "k": "Enter your wallet address.",
+   "v": "ウォレットアドレスを入力してください。"
+  },
+  {
+   "k": "Every ad reward — the Lucky Wheel, Free Coins, the ×{0} daily bonus —\npays straight away, with no video to watch.",
+   "v": "広告報酬（ラッキールーレット、無料コイン、×{0}デイリーボーナス）が\n動画なしですぐにもらえます。"
+  },
+  {
+   "k": "Every ad reward — the Lucky Wheel, Free Coins, the ×{0} daily bonus —<br>pays straight away, with no video to watch.",
+   "v": "広告報酬 — ラッキールーレット、無料コイン、デイリーボーナス×{0} — が<br>動画を見ずにすぐもらえます。"
+  },
+  {
+   "k": "Every level from here is the same climb",
+   "v": "ここから先はどのレベルも同じ道のり"
+  },
+  {
+   "k": "Every level pays gems and coins",
+   "v": "毎レベル、ジェムとコインがもらえます"
+  },
+  {
+   "k": "Every story goal done!",
+   "v": "ストーリー目標をすべて達成！"
+  },
+  {
+   "k": "Everything you built stays where it is: the new land rises around it.",
+   "v": "建てたものはそのまま。新しい土地がその周りに現れます。"
+  },
+  {
+   "k": "Everything you do earns island XP",
+   "v": "島での行動すべてで経験値が入ります"
+  },
+  {
+   "k": "Everything's here — builders will put up the {0}",
+   "v": "材料はそろった — 大工が{0}を建てるよ"
+  },
+  {
+   "k": "Everything's here — builders will repair the army house",
+   "v": "材料がそろいました — 大工が兵舎を修理します"
+  },
+  {
+   "k": "Everything's here — builders will repair the {0}",
+   "v": "材料はそろった — 大工が{0}を修理するよ"
+  },
+  {
+   "k": "Expires in ",
+   "v": "期限まで "
+  },
+  {
+   "k": "Explore your new land!",
+   "v": "新しい土地を探検しよう！"
+  },
+  {
+   "k": "FARM\nPASS",
+   "v": "ファーム\nパス"
+  },
+  {
+   "k": "FARM PASS",
+   "v": "ファームパス"
+  },
+  {
+   "k": "FARM STATS",
+   "v": "農場データ"
+  },
+  {
+   "k": "FARM TITLE",
+   "v": "農場の称号"
+  },
+  {
+   "k": "FIELD",
+   "v": "畑"
+  },
+  {
+   "k": "FREE",
+   "v": "無料"
+  },
+  {
+   "k": "FREE\nPASS",
+   "v": "無料\nパス"
+  },
+  {
+   "k": "Factories",
+   "v": "工場"
+  },
+  {
+   "k": "Farm",
+   "v": "農場"
+  },
+  {
+   "k": "Farm Pass",
+   "v": "ファームパス"
+  },
+  {
+   "k": "Farm Pass active",
+   "v": "ファームパス有効"
+  },
+  {
+   "k": "Farm Pass — thank you!",
+   "v": "ファームパス — ありがとう！"
+  },
+  {
+   "k": "Farm found",
+   "v": "農場が見つかりました"
+  },
+  {
+   "k": "Farm saved!",
+   "v": "農場をセーブしました！"
+  },
+  {
+   "k": "Farm saved! +{0} gems",
+   "v": "農場をセーブしました！+{0}ジェム"
+  },
+  {
+   "k": "Farm worker",
+   "v": "農作業員"
+  },
+  {
+   "k": "Farm workers are hungry — feed the workers' house",
+   "v": "作業員がおなかをすかせている — 作業員の家に食料を"
+  },
+  {
+   "k": "Farm workers carry more",
+   "v": "作業員がもっと運べます"
+  },
+  {
+   "k": "Farm workers carry {0} more a trip",
+   "v": "作業員が1回に運べる量+{0}"
+  },
+  {
+   "k": "Farm workers harvest, carry and chop for you",
+   "v": "作業員が収穫・運搬・伐採をしてくれます"
+  },
+  {
+   "k": "Farm workers will bring food from the farmhouse",
+   "v": "作業員が農家から食料を運んでくれる"
+  },
+  {
+   "k": "Farm workers: harvest, carry, feed animals, chop wood",
+   "v": "作業員：収穫・運搬・エサやり・伐採"
+  },
+  {
+   "k": "Farmer",
+   "v": "農夫"
+  },
+  {
+   "k": "Farmhouse",
+   "v": "農家"
+  },
+  {
+   "k": "Farmhouse rooms",
+   "v": "農家の部屋"
+  },
+  {
+   "k": "Farmverse",
+   "v": "Farmverse"
+  },
+  {
+   "k": "Farmverse support",
+   "v": "Farmverseサポート"
+  },
+  {
+   "k": "Farmverse/Building Catalogue",
+   "v": "Farmverse/Building Catalogue"
+  },
+  {
+   "k": "Farmverse/Island Data",
+   "v": "Farmverse/Island Data"
+  },
+  {
+   "k": "Farmverse/Island Pictures",
+   "v": "Farmverse/Island Pictures"
+  },
+  {
+   "k": "Faster and roomier: needs planks and stone",
+   "v": "より速く広く：板材と石が必要"
+  },
+  {
+   "k": "Faster and roomier: needs planks, iron, oil or cloth",
+   "v": "より速く、より広く：板材・鉄・油・布が必要"
+  },
+  {
+   "k": "Feed",
+   "v": "エサやり"
+  },
+  {
+   "k": "Feed animals {0} times",
+   "v": "動物に{0}回餌をやる"
+  },
+  {
+   "k": "Feed mill",
+   "v": "飼料工場"
+  },
+  {
+   "k": "Feed the windmill wheat (workers do it from the farmhouse)",
+   "v": "風車に小麦を入れよう（作業員が農家から運びます）"
+  },
+  {
+   "k": "Feeds every workers' house",
+   "v": "作業員の家すべてに食料"
+  },
+  {
+   "k": "Fertilizer",
+   "v": "肥料"
+  },
+  {
+   "k": "Fertilizer · crops grow 2×",
+   "v": "肥料 · 作物の成長2倍"
+  },
+  {
+   "k": "Fertilizer · crops grow {0}×",
+   "v": "肥料・作物の成長{0}倍"
+  },
+  {
+   "k": "Fetching supplies for the {0}.",
+   "v": "{0}の資材を調達中。"
+  },
+  {
+   "k": "Fetching the latest news…",
+   "v": "最新ニュースを取得中…"
+  },
+  {
+   "k": "Field",
+   "v": "畑"
+  },
+  {
+   "k": "Fields nearby don't suffer drought",
+   "v": "近くの畑は干ばつの影響を受けない"
+  },
+  {
+   "k": "Fields nearby grow {0}% faster",
+   "v": "近くの畑の成長が{0}%速くなる"
+  },
+  {
+   "k": "Fields yield one more",
+   "v": "畑の収穫量+1"
+  },
+  {
+   "k": "Fields: {0}/{1}, the most an island can have",
+   "v": "畑：{0}/{1}、島の上限です"
+  },
+  {
+   "k": "Fields: {0}/{1}. One more at island level {2}",
+   "v": "畑：{0}/{1}。島レベル{2}でもう1面"
+  },
+  {
+   "k": "Fill ",
+   "v": "1日に"
+  },
+  {
+   "k": "Fill 3 orders",
+   "v": "注文を3件達成する"
+  },
+  {
+   "k": "Fill 50 orders",
+   "v": "注文を50件達成する"
+  },
+  {
+   "k": "Fill all three for a bonus crate of materials",
+   "v": "3つ全部積むと資材の木箱がもう1つ"
+  },
+  {
+   "k": "Fill an order that gives wood",
+   "v": "木材がもらえる注文をこなす"
+  },
+  {
+   "k": "Fill an order that gives {0}",
+   "v": "{0}がもらえる注文を達成する"
+  },
+  {
+   "k": "Fill townsfolk orders for coins",
+   "v": "住人の注文に応えてコインを稼ごう"
+  },
+  {
+   "k": "Finish 3 goals",
+   "v": "目標を3つ達成する"
+  },
+  {
+   "k": "Finish <color=#7dff6a>daily tasks</color> and <color=#7dff6a>goals</color> to earn coupons. Each coupon shows its value and how to redeem it.",
+   "v": "<color=#7dff6a>デイリータスク</color>や<color=#7dff6a>目標</color>を達成してクーポンをもらおう。各クーポンには価値と使い方が書いてあります。"
+  },
+  {
+   "k": "Finish all of today's tasks to open the chest.",
+   "v": "今日のタスクをすべて終えると宝箱が開くよ。"
+  },
+  {
+   "k": "Finish one build now",
+   "v": "今すぐ建設を1つ完了"
+  },
+  {
+   "k": "Finishes one building now.",
+   "v": "建設中の建物を1つすぐに完了します。"
+  },
+  {
+   "k": "Fire station",
+   "v": "消防署"
+  },
+  {
+   "k": "Fired from stone.",
+   "v": "石を焼いて作ったもの。"
+  },
+  {
+   "k": "First things first — let's build a field. Tap <color=#e08c00>BUILD</color>!",
+   "v": "まずは畑を作ろう。<color=#e08c00>建設</color>をタップ！"
+  },
+  {
+   "k": "Fish market",
+   "v": "魚市場"
+  },
+  {
+   "k": "Fishing shed",
+   "v": "釣り小屋"
+  },
+  {
+   "k": "Flour",
+   "v": "小麦粉"
+  },
+  {
+   "k": "Flour and eggs in, bread out",
+   "v": "小麦粉と卵からパンができます"
+  },
+  {
+   "k": "Flower bed",
+   "v": "花壇"
+  },
+  {
+   "k": "Flower beds near hives make honey up to <b>{0}×</b> faster.",
+   "v": "巣箱の近くに花壇があるとハチミツが最大<b>{0}倍</b>速くできる。"
+  },
+  {
+   "k": "Flower beds near hives make honey up to <color=#ffd23a>{0}×</color> faster.",
+   "v": "巣箱の近くの花壇ではちみつが最大<color=#ffd23a>{0}倍</color>速くできます。"
+  },
+  {
+   "k": "Food's running low.",
+   "v": "食料が少なくなってきた。"
+  },
+  {
+   "k": "Food: {0} · enough for the whole offline shift",
+   "v": "食料：{0} · 留守の間ずっと足ります"
+  },
+  {
+   "k": "Food: {0} · runs out after about {1} h of offline work",
+   "v": "食料：{0} · 留守中の作業 約{1}時間でなくなります"
+  },
+  {
+   "k": "Food: {0} · runs out after about {1} min of offline work",
+   "v": "食料：{0} · 留守中の作業 約{1}分でなくなります"
+  },
+  {
+   "k": "Fountain",
+   "v": "噴水"
+  },
+  {
+   "k": "Free Coins",
+   "v": "無料コイン"
+  },
+  {
+   "k": "Free Gift",
+   "v": "無料ギフト"
+  },
+  {
+   "k": "Free gift ready",
+   "v": "無料ギフトの準備完了"
+  },
+  {
+   "k": "Freight Train",
+   "v": "貨物列車"
+  },
+  {
+   "k": "French",
+   "v": "フランス語"
+  },
+  {
+   "k": "Fresh goods are waiting to be collected and sold.",
+   "v": "できたての品物が回収と販売を待っています。"
+  },
+  {
+   "k": "Friend's code",
+   "v": "友だちのコード"
+  },
+  {
+   "k": "Friends",
+   "v": "友だち"
+  },
+  {
+   "k": "Friends need the full game.<br>Start from the <b>Boot</b> scene to sign in.",
+   "v": "友だち機能はフル版のゲームで使えます。<br><b>Boot</b>シーンから始めてサインインしてね。"
+  },
+  {
+   "k": "From here every level is the same climb, and keeps paying",
+   "v": "ここから先はどのレベルも同じ道のりで、報酬も続く"
+  },
+  {
+   "k": "From the beehives. Flowers nearby make more.",
+   "v": "巣箱でとれたもの。近くに花があるともっと増える。"
+  },
+  {
+   "k": "From the cows. The dairy makes cheese from it.",
+   "v": "牛からとれたもの。酪農場でチーズになる。"
+  },
+  {
+   "k": "From the pig pen. Feeds your townsfolk.",
+   "v": "豚小屋でとれたもの。住人の食料になる。"
+  },
+  {
+   "k": "From the sheep.",
+   "v": "羊からとれたもの。"
+  },
+  {
+   "k": "Full storage, likes, crops and workshops done",
+   "v": "倉庫満杯、いいね、作物や工房の完了"
+  },
+  {
+   "k": "Full train: one more crate of materials!",
+   "v": "満載ボーナス：資材の木箱がもう1つ！"
+  },
+  {
+   "k": "GEM PACK",
+   "v": "ジェムパック"
+  },
+  {
+   "k": "GEMS",
+   "v": "ジェム"
+  },
+  {
+   "k": "GIVES",
+   "v": "獲得"
+  },
+  {
+   "k": "GOAL",
+   "v": "目標"
+  },
+  {
+   "k": "GRANDPA JOE",
+   "v": "ジョーじいさん"
+  },
+  {
+   "k": "Garden ornament",
+   "v": "庭のオーナメント"
+  },
+  {
+   "k": "German",
+   "v": "ドイツ語"
+  },
+  {
+   "k": "Get code",
+   "v": "コードを取得"
+  },
+  {
+   "k": "Get coins in the shop",
+   "v": "ショップでコインを入手"
+  },
+  {
+   "k": "Get my code",
+   "v": "コードを取得"
+  },
+  {
+   "k": "Getting wood and stone for the farmhouse. The builders need it.",
+   "v": "農家のために木と石を集めてるんだ。大工が必要としてるからね。"
+  },
+  {
+   "k": "Go",
+   "v": "行く"
+  },
+  {
+   "k": "Go inside",
+   "v": "中に入る"
+  },
+  {
+   "k": "Go outside",
+   "v": "外に出る"
+  },
+  {
+   "k": "Goal complete! +{0} coins",
+   "v": "目標達成！+{0}コイン"
+  },
+  {
+   "k": "Goal complete! {0} coins",
+   "v": "目標達成！{0}コイン"
+  },
+  {
+   "k": "Goal done! Tap to claim",
+   "v": "目標達成！タップして受け取ろう"
+  },
+  {
+   "k": "Goal · ",
+   "v": "目標 · "
+  },
+  {
+   "k": "Goals",
+   "v": "目標"
+  },
+  {
+   "k": "Goals Done",
+   "v": "達成した目標"
+  },
+  {
+   "k": "Golden Barn",
+   "v": "黄金の納屋"
+  },
+  {
+   "k": "Good day to you!",
+   "v": "ごきげんよう！"
+  },
+  {
+   "k": "Goods Sold",
+   "v": "売った品物"
+  },
+  {
+   "k": "Google and Apple sign-in work in the phone builds.",
+   "v": "GoogleとAppleのサインインはスマホ版で使えます。"
+  },
+  {
+   "k": "Grain silos",
+   "v": "穀物サイロ"
+  },
+  {
+   "k": "Greek",
+   "v": "ギリシャ語"
+  },
+  {
+   "k": "Green",
+   "v": "Green"
+  },
+  {
+   "k": "Green thumb",
+   "v": "緑の指"
+  },
+  {
+   "k": "Greenhouse",
+   "v": "温室"
+  },
+  {
+   "k": "Grocer",
+   "v": "八百屋"
+  },
+  {
+   "k": "Ground below this height is water: the farmer stops at the shore.",
+   "v": "Ground below this height is water: the farmer stops at the shore."
+  },
+  {
+   "k": "Grow 500 crops",
+   "v": "作物を500個育てる"
+  },
+  {
+   "k": "Grow crops: plant, wait, harvest",
+   "v": "作物を育てよう：植えて、待って、収穫"
+  },
+  {
+   "k": "Grow it: plant {0} on a field",
+   "v": "育てよう：畑に{0}を植えよう"
+  },
+  {
+   "k": "Grow or make more ",
+   "v": "もっと育てるか作ろう："
+  },
+  {
+   "k": "Grow or make more {x} and store it in the farmhouse",
+   "v": "{x}をもっと作って農家にしまおう"
+  },
+  {
+   "k": "Growing: walk in when it's ripe",
+   "v": "成長中：実ったら入ろう"
+  },
+  {
+   "k": "Grown in fields.",
+   "v": "畑で育てたもの。"
+  },
+  {
+   "k": "Grown in fields. Animal feed is made from it.",
+   "v": "畑で育てたもの。動物のエサの材料になる。"
+  },
+  {
+   "k": "Grown in fields. The windmill turns it into flour.",
+   "v": "畑で育てたもの。風車で小麦粉になる。"
+  },
+  {
+   "k": "Grown on your island.",
+   "v": "島で育てたもの。"
+  },
+  {
+   "k": "Guards, and a longer raid warning",
+   "v": "衛兵と、襲撃警報が早くなる"
+  },
+  {
+   "k": "HOW NET WORTH IS COUNTED",
+   "v": "純資産の計算方法"
+  },
+  {
+   "k": "HUNGRY",
+   "v": "空腹"
+  },
+  {
+   "k": "Halfway to the top of the island",
+   "v": "島の頂上まであと半分"
+  },
+  {
+   "k": "Hard hat",
+   "v": "ヘルメット"
+  },
+  {
+   "k": "Harvest",
+   "v": "収穫"
+  },
+  {
+   "k": "Harvest 20 crops",
+   "v": "作物を20個収穫する"
+  },
+  {
+   "k": "Harvest time: fields yield two more",
+   "v": "収穫期：畑の収穫量+2"
+  },
+  {
+   "k": "Harvest {0} crops",
+   "v": "作物を{0}個収穫する"
+  },
+  {
+   "k": "Harvest, make, sell and build to level up",
+   "v": "収穫・製造・販売・建設でレベルアップ"
+  },
+  {
+   "k": "Hay bales",
+   "v": "干し草"
+  },
+  {
+   "k": "Hello, boss! Ask me about the stores or the fields.",
+   "v": "やあ、ボス！倉庫や畑のことなら聞いてね。"
+  },
+  {
+   "k": "Here",
+   "v": "ここ"
+  },
+  {
+   "k": "Hi there! Want to know how the building's going?",
+   "v": "こんにちは！建設の様子を知りたい？"
+  },
+  {
+   "k": "Hi! Hi! Did you see the chickens?",
+   "v": "ねえねえ！ニワトリ見た？"
+  },
+  {
+   "k": "Holds",
+   "v": "容量"
+  },
+  {
+   "k": "Home",
+   "v": "ホーム"
+  },
+  {
+   "k": "Homestead",
+   "v": "開拓地"
+  },
+  {
+   "k": "Homesteader",
+   "v": "開拓者"
+  },
+  {
+   "k": "Honey",
+   "v": "はちみつ"
+  },
+  {
+   "k": "Honey, and fields nearby yield one more",
+   "v": "はちみつ、そして近くの畑の収穫が1つ増えます"
+  },
+  {
+   "k": "Houses",
+   "v": "住宅"
+  },
+  {
+   "k": "Houses can reach level {0}",
+   "v": "家はレベル{0}まで"
+  },
+  {
+   "k": "How close to a pad's centre the farmer must stand to unload.",
+   "v": "How close to a pad's centre the farmer must stand to unload."
+  },
+  {
+   "k": "How did the last raid go?",
+   "v": "前回の襲撃はどうだった？"
+  },
+  {
+   "k": "How far a press must move before it becomes a drag, in UI units.",
+   "v": "How far a press must move before it becomes a drag, in UI units."
+  },
+  {
+   "k": "How far from the middle of the view (m) a sound can still be heard.",
+   "v": "How far from the middle of the view (m) a sound can still be heard."
+  },
+  {
+   "k": "How far from their house (m) farm workers will go for work.",
+   "v": "How far from their house (m) farm workers will go for work."
+  },
+  {
+   "k": "How far from their house (m) warriors will run to meet raiders.",
+   "v": "How far from their house (m) warriors will run to meet raiders."
+  },
+  {
+   "k": "How far outside a field or animal house the farmer can still work it.",
+   "v": "How far outside a field or animal house the farmer can still work it."
+  },
+  {
+   "k": "How is our house?",
+   "v": "家の様子はどう？"
+  },
+  {
+   "k": "How is the army?",
+   "v": "軍の様子はどう？"
+  },
+  {
+   "k": "How much food is in the store?",
+   "v": "倉庫に食料はどれくらいある？"
+  },
+  {
+   "k": "How to get it",
+   "v": "入手方法"
+  },
+  {
+   "k": "How to redeem",
+   "v": "使い方"
+  },
+  {
+   "k": "How's the island?",
+   "v": "島の様子はどう？"
+  },
+  {
+   "k": "Hunger takes people half as fast",
+   "v": "空腹になる速さが半分に"
+  },
+  {
+   "k": "Hungry · bring grain",
+   "v": "空腹 · 穀物を運ぼう"
+  },
+  {
+   "k": "I've no home to speak of.",
+   "v": "家と呼べるものはないんだ。"
+  },
+  {
+   "k": "ID {0} · friends since {1}",
+   "v": "ID {0} · {1}から友だち"
+  },
+  {
+   "k": "IN STORE",
+   "v": "在庫"
+  },
+  {
+   "k": "In about {0} minutes. They come once a day.",
+   "v": "あと{0}分くらい。1日1回やって来るよ。"
+  },
+  {
+   "k": "In about {0} minutes.{1}",
+   "v": "あと{0}分くらいかな。{1}"
+  },
+  {
+   "k": "Inbox",
+   "v": "受信箱"
+  },
+  {
+   "k": "Indonesian",
+   "v": "インドネシア語"
+  },
+  {
+   "k": "Instant Build",
+   "v": "即時建設"
+  },
+  {
+   "k": "Interest, and coins raiders can't take",
+   "v": "利息が付き、略奪者にコインを奪われません"
+  },
+  {
+   "k": "Interest, and safe coins",
+   "v": "利息とコインの保護"
+  },
+  {
+   "k": "Invite friends",
+   "v": "友だちを招待"
+  },
+  {
+   "k": "Invite friends, earn rewards",
+   "v": "友だちを招待して報酬をもらおう"
+  },
+  {
+   "k": "Invite link copied — send it to a friend",
+   "v": "招待リンクをコピーしました — 友だちに送ろう"
+  },
+  {
+   "k": "Iron",
+   "v": "鉄"
+  },
+  {
+   "k": "Iron and the police station open at {0}",
+   "v": "鉄と警察署は{0}で解放"
+  },
+  {
+   "k": "Iron opens at {0}",
+   "v": "鉄はレベル{0}で開放"
+  },
+  {
+   "k": "Is anything missing?",
+   "v": "何か足りないものはある？"
+  },
+  {
+   "k": "Island",
+   "v": "島"
+  },
+  {
+   "k": "Island Lv ",
+   "v": "島Lv "
+  },
+  {
+   "k": "Island Lv {0} · {1} net worth",
+   "v": "島Lv {0} · 純資産{1}"
+  },
+  {
+   "k": "Island level 10",
+   "v": "島レベル10"
+  },
+  {
+   "k": "Island level {0}!",
+   "v": "島レベル{0}！"
+  },
+  {
+   "k": "Island level {0}! New in the shop",
+   "v": "島レベル{0}！ショップに新商品"
+  },
+  {
+   "k": "It comes down for half what it cost. What's stored in it is lost.",
+   "v": "半額で取り壊されます。中にしまってある物は失われます。"
+  },
+  {
+   "k": "It must stand by the sea",
+   "v": "海辺に建てる必要があります"
+  },
+  {
+   "k": "It'll be a fair fight.",
+   "v": "いい勝負になるだろう。"
+  },
+  {
+   "k": "It's {0}: {1}. {2}.",
+   "v": "今は{0}：{1}。{2}。"
+  },
+  {
+   "k": "Italian",
+   "v": "イタリア語"
+  },
+  {
+   "k": "Japanese",
+   "v": "日本語"
+  },
+  {
+   "k": "Keep growing: daily tasks still pay.",
+   "v": "成長を続けよう：デイリータスクは引き続き報酬あり。"
+  },
+  {
+   "k": "Keep it",
+   "v": "残す"
+  },
+  {
+   "k": "Keep the army fed: hungry warriors fight at half strength",
+   "v": "兵士に食事を：空腹だと力が半分になります"
+  },
+  {
+   "k": "Keep this house fed from the farmhouse",
+   "v": "農家からこの家に食料を届ける"
+  },
+  {
+   "k": "Keeps a horse to ride (feed it)",
+   "v": "乗るための馬を飼う（エサが必要）"
+  },
+  {
+   "k": "Kitchen",
+   "v": "キッチン"
+  },
+  {
+   "k": "Korean",
+   "v": "韓国語"
+  },
+  {
+   "k": "LANGUAGE",
+   "v": "言語"
+  },
+  {
+   "k": "LEVEL UP!",
+   "v": "レベルアップ！"
+  },
+  {
+   "k": "Laid in the chicken coop.",
+   "v": "鶏小屋で産まれたもの。"
+  },
+  {
+   "k": "Lamp post",
+   "v": "街灯"
+  },
+  {
+   "k": "Landholder",
+   "v": "地主"
+  },
+  {
+   "k": "Later",
+   "v": "あとで"
+  },
+  {
+   "k": "Leaderboard",
+   "v": "ランキング"
+  },
+  {
+   "k": "Leave {0} stars in the store!",
+   "v": "ストアで星{0}つの評価をお願い！"
+  },
+  {
+   "k": "Leaves in {0}h {1}m",
+   "v": "出発まで{0}時間{1}分"
+  },
+  {
+   "k": "Leaves in {0}m {1}s",
+   "v": "出発まで{0}分{1}秒"
+  },
+  {
+   "k": "Level {0} is the most at island level {1}: level up the island for more",
+   "v": "島レベル{1}ではレベル{0}が上限：島のレベルを上げよう"
+  },
+  {
+   "k": "Level {0} opens at island level {1}",
+   "v": "レベル{0}は島レベル{1}で開放"
+  },
+  {
+   "k": "Level {0}!",
+   "v": "レベル{0}！"
+  },
+  {
+   "k": "Levelled up: faster, and holds more",
+   "v": "レベルアップ：より速く、たくさん入る"
+  },
+  {
+   "k": "Library",
+   "v": "図書館"
+  },
+  {
+   "k": "Like",
+   "v": "いいね"
+  },
+  {
+   "k": "Liked!",
+   "v": "いいねしました！"
+  },
+  {
+   "k": "Likes",
+   "v": "いいね"
+  },
+  {
+   "k": "Linked accounts get a {0} thank-you.",
+   "v": "アカウントを連携すると{0}のお礼がもらえます。"
+  },
+  {
+   "k": "Living room",
+   "v": "リビング"
+  },
+  {
+   "k": "Load",
+   "v": "積む"
+  },
+  {
+   "k": "Load at least one crate first",
+   "v": "まず木箱を1つ以上積もう"
+  },
+  {
+   "k": "Load crates from your stores: the train pays in building materials",
+   "v": "倉庫から木箱に積もう：列車は建築資材で支払います"
+  },
+  {
+   "k": "Load its crates from your stores: it brings back wood and stone",
+   "v": "倉庫から木箱に積もう：木材と石を持ち帰ります"
+  },
+  {
+   "k": "Loaded",
+   "v": "積み込み済み"
+  },
+  {
+   "k": "Loading ad…",
+   "v": "広告を読み込み中…"
+  },
+  {
+   "k": "Loading...",
+   "v": "読み込み中..."
+  },
+  {
+   "k": "Loading...{0}%",
+   "v": "読み込み中...{0}%"
+  },
+  {
+   "k": "Look",
+   "v": "見る"
+  },
+  {
+   "k": "Looking around.",
+   "v": "あたりを見回し中。"
+  },
+  {
+   "k": "Loop ",
+   "v": "Loop "
+  },
+  {
+   "k": "Lost people come back twice as fast",
+   "v": "いなくなった住民が2倍速く戻ります"
+  },
+  {
+   "k": "Lucky Wheel",
+   "v": "ラッキールーレット"
+  },
+  {
+   "k": "Lumber yard",
+   "v": "製材所"
+  },
+  {
+   "k": "Lunch Basket",
+   "v": "お弁当バスケット"
+  },
+  {
+   "k": "Lunch Basket (use · {0} left)",
+   "v": "お弁当バスケット（使う・残り{0}）"
+  },
+  {
+   "k": "Lunch Basket · {0} gems",
+   "v": "お弁当バスケット · {0}ジェム"
+  },
+  {
+   "k": "Lv ",
+   "v": "Lv "
+  },
+  {
+   "k": "Lv {0}",
+   "v": "Lv {0}"
+  },
+  {
+   "k": "MAKES",
+   "v": "生産"
+  },
+  {
+   "k": "MAKING",
+   "v": "生産中"
+  },
+  {
+   "k": "MISMATCH ",
+   "v": "MISMATCH "
+  },
+  {
+   "k": "MY FARM",
+   "v": "マイ農場"
+  },
+  {
+   "k": "Machines",
+   "v": "機械"
+  },
+  {
+   "k": "Machines and animal houses can grow to level {0} from {1}",
+   "v": "機械と動物小屋はレベル{1}からレベル{0}まで上げられる"
+  },
+  {
+   "k": "Machines and animal houses can reach level {0}",
+   "v": "機械と動物小屋はレベル{0}まで"
+  },
+  {
+   "k": "Machines work {0}% faster",
+   "v": "機械の稼働が{0}%速くなる"
+  },
+  {
+   "k": "Made in the windmill. The bakery needs it.",
+   "v": "風車で作ったもの。パン屋で使う。"
+  },
+  {
+   "k": "Made on your island.",
+   "v": "島で作ったもの。"
+  },
+  {
+   "k": "Mailbox",
+   "v": "郵便受け"
+  },
+  {
+   "k": "Maize",
+   "v": "トウモロコシ"
+  },
+  {
+   "k": "Make a code and send it to a friend.",
+   "v": "コードを作って友だちに送ろう。"
+  },
+  {
+   "k": "Make or gather wood on your island",
+   "v": "島で木材を作るか集めよう"
+  },
+  {
+   "k": "Make or gather {0} on your island",
+   "v": "島で{0}を作るか集めよう"
+  },
+  {
+   "k": "Make {0} bricks",
+   "v": "レンガを{0}個作る"
+  },
+  {
+   "k": "Make {0} cheese",
+   "v": "チーズを{0}個作る"
+  },
+  {
+   "k": "Make {0} cloth",
+   "v": "布を{0}個作る"
+  },
+  {
+   "k": "Make {0} flour",
+   "v": "小麦粉を{0}個作る"
+  },
+  {
+   "k": "Make {0} iron",
+   "v": "鉄を{0}個作る"
+  },
+  {
+   "k": "Make {0} juice",
+   "v": "ジュースを{0}個作る"
+  },
+  {
+   "k": "Make {0} oil",
+   "v": "油を{0}個作る"
+  },
+  {
+   "k": "Make {0} planks",
+   "v": "板材を{0}個作る"
+  },
+  {
+   "k": "Makes {0} · +{1}% speed",
+   "v": "{0}を生産 · 速度+{1}%"
+  },
+  {
+   "k": "Manor Lord",
+   "v": "荘園領主"
+  },
+  {
+   "k": "Market stall",
+   "v": "露店"
+  },
+  {
+   "k": "Market · sell here",
+   "v": "市場・ここで売る"
+  },
+  {
+   "k": "Master builder",
+   "v": "棟梁"
+  },
+  {
+   "k": "Master farmer I",
+   "v": "農業の達人 I"
+  },
+  {
+   "k": "Master farmer II",
+   "v": "農業の達人 II"
+  },
+  {
+   "k": "Mastery",
+   "v": "極み"
+  },
+  {
+   "k": "Materials",
+   "v": "資材"
+  },
+  {
+   "k": "Max level",
+   "v": "最大レベル"
+  },
+  {
+   "k": "Maybe later",
+   "v": "また今度"
+  },
+  {
+   "k": "Meadow",
+   "v": "牧草地"
+  },
+  {
+   "k": "Mends damaged buildings nearby for free",
+   "v": "近くの壊れた建物を無料で修理"
+  },
+  {
+   "k": "Milk",
+   "v": "牛乳"
+  },
+  {
+   "k": "Mill {0} flour",
+   "v": "小麦粉を{0}個ひく"
+  },
+  {
+   "k": "Mine",
+   "v": "鉱山"
+  },
+  {
+   "k": "Missing a day pauses your streak — it never resets.",
+   "v": "1日休んでも連続記録は一時停止するだけ — リセットされません。"
+  },
+  {
+   "k": "Mix",
+   "v": "ミックス"
+  },
+  {
+   "k": "More builders: build and repair faster",
+   "v": "大工が増える：建設と修理が速くなる"
+  },
+  {
+   "k": "Morning! Bread's better with flour from your own mill.",
+   "v": "おはよう！自分の風車でひいた小麦粉のパンはおいしいよ。"
+  },
+  {
+   "k": "Move",
+   "v": "移動"
+  },
+  {
+   "k": "Move your {0}",
+   "v": "{0}を移動"
+  },
+  {
+   "k": "Move your {x}",
+   "v": "{x}を移動"
+  },
+  {
+   "k": "Music",
+   "v": "音楽"
+  },
+  {
+   "k": "My codes",
+   "v": "マイコード"
+  },
+  {
+   "k": "My island",
+   "v": "マイ島"
+  },
+  {
+   "k": "NEEDS",
+   "v": "必要"
+  },
+  {
+   "k": "NET WORTH",
+   "v": "純資産"
+  },
+  {
+   "k": "NEW",
+   "v": "NEW"
+  },
+  {
+   "k": "NEW IN THE SHOP",
+   "v": "ショップの新商品"
+  },
+  {
+   "k": "NEW!",
+   "v": "NEW！"
+  },
+  {
+   "k": "Name changed!",
+   "v": "名前を変更しました！"
+  },
+  {
+   "k": "Need more",
+   "v": "もっと必要"
+  },
+  {
+   "k": "Need {0} more Wood — make or gather it, or fill orders that give it.",
+   "v": "木材があと{0}必要 — 作る、集める、または木材がもらえる注文をこなそう。"
+  },
+  {
+   "k": "Need {0} more coins.",
+   "v": "コインがあと{0}枚必要です。"
+  },
+  {
+   "k": "Need {0} more {1} — make or gather it, or fill orders that give it.",
+   "v": "{1}があと{0}個必要 — 作るか集めるか、もらえる注文を達成しよう。"
+  },
+  {
+   "k": "Needs ",
+   "v": "必要："
+  },
+  {
+   "k": "Needs a builders' hut",
+   "v": "大工小屋が必要です"
+  },
+  {
+   "k": "Needs a workers' house",
+   "v": "作業員の家が必要です"
+  },
+  {
+   "k": "Needs the Farm Pass",
+   "v": "ファームパスが必要"
+  },
+  {
+   "k": "Needs {0}",
+   "v": "{0}が必要"
+  },
+  {
+   "k": "Needs {0} wood",
+   "v": "木材{0}が必要"
+  },
+  {
+   "k": "Needs {0} wood in the farmhouse (has {1}) — chop trees",
+   "v": "農家に木材{0}が必要（現在{1}）— 木を切ろう"
+  },
+  {
+   "k": "Needs {0} wood, {1} stone",
+   "v": "木材{0}、石{1}が必要"
+  },
+  {
+   "k": "Needs {0} {1} in the farmhouse (has {2}) — {3}",
+   "v": "農家に{1}が{0}個必要（現在{2}個） — {3}"
+  },
+  {
+   "k": "Net Worth",
+   "v": "純資産"
+  },
+  {
+   "k": "Net worth",
+   "v": "純資産"
+  },
+  {
+   "k": "Never miss a raid",
+   "v": "襲撃を見逃さない"
+  },
+  {
+   "k": "Never while you're playing, never at night, a few a day at most.",
+   "v": "プレイ中や夜には送らず、多くても1日数回です。"
+  },
+  {
+   "k": "New crop: {x}",
+   "v": "新しい作物：{x}"
+  },
+  {
+   "k": "New look",
+   "v": "ニュールック"
+  },
+  {
+   "k": "New order soon",
+   "v": "まもなく新しい注文"
+  },
+  {
+   "k": "News",
+   "v": "ニュース"
+  },
+  {
+   "k": "News needs the full game.<br>Start from the <b>Boot</b> scene to sign in.",
+   "v": "ニュースはフル版のゲームで見られます。<br><b>Boot</b>シーンから始めてサインインしてね。"
+  },
+  {
+   "k": "Next absence: normal food price, up to {0} h",
+   "v": "次の留守：通常の食料で最大{0}時間"
+  },
+  {
+   "k": "Next farm",
+   "v": "次の農場"
+  },
+  {
+   "k": "Next in ",
+   "v": "次まで "
+  },
+  {
+   "k": "Next in {0}h {1}m",
+   "v": "次まで{0}時間{1}分"
+  },
+  {
+   "k": "Next train in {0}h {1}m",
+   "v": "次の列車まで{0}時間{1}分"
+  },
+  {
+   "k": "Next train in {0}m {1}s",
+   "v": "次の列車まで{0}分{1}秒"
+  },
+  {
+   "k": "Night Shift",
+   "v": "夜勤"
+  },
+  {
+   "k": "Night Shift (use · {0} left)",
+   "v": "夜勤（使う・残り{0}）"
+  },
+  {
+   "k": "Night Shift on",
+   "v": "夜勤 予約済み"
+  },
+  {
+   "k": "Night Shift on (use · {0} left)",
+   "v": "夜勤 予約済み（使う・残り{0}）"
+  },
+  {
+   "k": "Night Shift on · {0} gems",
+   "v": "夜勤 予約済み · {0}ジェム"
+  },
+  {
+   "k": "Night Shift · {0} gems",
+   "v": "夜勤 · {0}ジェム"
+  },
+  {
+   "k": "Night Shift: watch an ad",
+   "v": "夜勤：広告を見る"
+  },
+  {
+   "k": "No ",
+   "v": "なし："
+  },
+  {
+   "k": "No Ads",
+   "v": "広告なし"
+  },
+  {
+   "k": "No Ads — thank you!",
+   "v": "広告なし — ありがとう！"
+  },
+  {
+   "k": "No ad right now — try again in a moment",
+   "v": "今は広告がありません — 少ししてからもう一度試してね"
+  },
+  {
+   "k": "No boosts yet: get them in the Shop.",
+   "v": "ブーストがありません：ショップで手に入れよう。"
+  },
+  {
+   "k": "No codes yet. Finish a daily task or a goal to earn one.",
+   "v": "まだコードがありません。デイリータスクか目標を達成してもらおう。"
+  },
+  {
+   "k": "No connection. Try again in a moment.",
+   "v": "接続できません。少ししてからもう一度試してね。"
+  },
+  {
+   "k": "No farm workers yet",
+   "v": "まだ農場作業員がいません"
+  },
+  {
+   "k": "No farms on this week's board yet.",
+   "v": "今週のランキングにはまだ農場がありません。"
+  },
+  {
+   "k": "No friends yet. Share your code, or add a friend's.",
+   "v": "まだ友だちがいません。コードを共有するか、友だちのコードを追加しよう。"
+  },
+  {
+   "k": "No island in this scene",
+   "v": "このシーンに島がありません"
+  },
+  {
+   "k": "No news right now.<br>Check back soon!",
+   "v": "今はニュースがありません。<br>また見に来てね！"
+  },
+  {
+   "k": "No one on this week's board yet — play to get on it.",
+   "v": "今週のランキングにはまだ誰もいません — プレイして載ろう。"
+  },
+  {
+   "k": "No other farms on this week's board yet",
+   "v": "今週のランキングにはまだ他の農場がありません"
+  },
+  {
+   "k": "No post office yet",
+   "v": "まだ郵便局がありません"
+  },
+  {
+   "k": "No prizes this week.",
+   "v": "今週は賞品なし。"
+  },
+  {
+   "k": "No raid since I got here. Long may it last.",
+   "v": "ここに来てから襲撃はないよ。このまま続くといいな。"
+  },
+  {
+   "k": "No spins left today — come back tomorrow",
+   "v": "今日はもう回せません — また明日来てね"
+  },
+  {
+   "k": "Not a scratch on anything.",
+   "v": "どこもかすり傷ひとつないよ。"
+  },
+  {
+   "k": "Not again today. They come once a day — be ready tomorrow.",
+   "v": "今日はもう来ないよ。1日1回だから、明日に備えよう。"
+  },
+  {
+   "k": "Not enough ",
+   "v": "足りない："
+  },
+  {
+   "k": "Not enough Wood",
+   "v": "木材が足りません"
+  },
+  {
+   "k": "Not enough coins",
+   "v": "コインが足りません"
+  },
+  {
+   "k": "Not enough gems",
+   "v": "ジェムが足りません"
+  },
+  {
+   "k": "Not finished yet",
+   "v": "まだ終わっていません"
+  },
+  {
+   "k": "Not now",
+   "v": "あとで"
+  },
+  {
+   "k": "Not reached yet",
+   "v": "未達成"
+  },
+  {
+   "k": "Note",
+   "v": "お知らせ"
+  },
+  {
+   "k": "Nothing for workers to do here.",
+   "v": "ここで作業員がする仕事はありません。"
+  },
+  {
+   "k": "Nothing here yet.",
+   "v": "まだ何もありません。"
+  },
+  {
+   "k": "Nothing is being built right now",
+   "v": "今は何も建設していません"
+  },
+  {
+   "k": "Nothing on the go. Buy something and I'll build it!",
+   "v": "今は何もしてないよ。何か買ってくれたら建てるよ！"
+  },
+  {
+   "k": "Nothing to build here yet.",
+   "v": "ここにはまだ建てられるものがありません。"
+  },
+  {
+   "k": "Nothing to collect.",
+   "v": "回収するものがありません。"
+  },
+  {
+   "k": "Nothing to do right now. More fields or animals would keep me busy.",
+   "v": "今はやることがないなあ。畑や動物が増えれば忙しくなるんだけど。"
+  },
+  {
+   "k": "Nothing you carry sells here.",
+   "v": "持っている物はここでは売れません。"
+  },
+  {
+   "k": "Nothing's waiting on anything.",
+   "v": "足止めされているものはないよ。"
+  },
+  {
+   "k": "Notifications",
+   "v": "通知"
+  },
+  {
+   "k": "Notifications are off for Farmverse in your phone's settings",
+   "v": "スマホの設定でFarmverseの通知がオフになっています"
+  },
+  {
+   "k": "Notifications on: we'll warn you before raids",
+   "v": "通知オン：襲撃の前にお知らせします"
+  },
+  {
+   "k": "OFFERS",
+   "v": "オファー"
+  },
+  {
+   "k": "OK",
+   "v": "OK"
+  },
+  {
+   "k": "ORDER CHEST",
+   "v": "注文宝箱"
+  },
+  {
+   "k": "ORDERS",
+   "v": "注文"
+  },
+  {
+   "k": "Oak tree",
+   "v": "オークの木"
+  },
+  {
+   "k": "Off",
+   "v": "オフ"
+  },
+  {
+   "k": "Off to the farmhouse.",
+   "v": "農家へ向かう。"
+  },
+  {
+   "k": "Offers",
+   "v": "セール"
+  },
+  {
+   "k": "Oil opens at {0}; machines can reach level {1}",
+   "v": "レベル{0}で油が開放、機械はレベル{1}まで"
+  },
+  {
+   "k": "On",
+   "v": "オン"
+  },
+  {
+   "k": "On a large screen (tablet, desktop) the stick sits in a corner instead, this far in from the side and up from the bottom (pixels at {0} short side).",
+   "v": "On a large screen (tablet, desktop) the stick sits in a corner instead, this far in from the side and up from the bottom (pixels at {0} short side)."
+  },
+  {
+   "k": "On guard! Ask me about the raiders.",
+   "v": "警戒中！襲撃者のことなら聞いてくれ。"
+  },
+  {
+   "k": "One raid a day: they'll be back tomorrow.",
+   "v": "襲撃は1日1回。また明日やって来ます。"
+  },
+  {
+   "k": "One-shot ",
+   "v": "One-shot "
+  },
+  {
+   "k": "Onion",
+   "v": "タマネギ"
+  },
+  {
+   "k": "Only a few a day, never at night. Change it any time in Settings.",
+   "v": "1日に数回だけ、夜は送りません。設定でいつでも変更できます。"
+  },
+  {
+   "k": "Open redeem page",
+   "v": "引き換えページを開く"
+  },
+  {
+   "k": "Opens at island level {0}",
+   "v": "島レベル{0}で開放"
+  },
+  {
+   "k": "Opens at level {0}",
+   "v": "レベル{0}で開放"
+  },
+  {
+   "k": "Or pay to clear the land at once.",
+   "v": "またはお金を払ってすぐに土地を整地。"
+  },
+  {
+   "k": "Orange",
+   "v": "Orange"
+  },
+  {
+   "k": "Orchard",
+   "v": "果樹園"
+  },
+  {
+   "k": "Order delivered: +{0} coins",
+   "v": "注文を配達：+{0}コイン"
+  },
+  {
+   "k": "Order ends in ",
+   "v": "注文終了まで "
+  },
+  {
+   "k": "Orders",
+   "v": "注文"
+  },
+  {
+   "k": "Orders Filled",
+   "v": "達成した注文"
+  },
+  {
+   "k": "Orders pay double",
+   "v": "注文報酬2倍"
+  },
+  {
+   "k": "Orders pay more than the market",
+   "v": "注文は市場より高く売れます"
+  },
+  {
+   "k": "Ore shed",
+   "v": "鉱石小屋"
+  },
+  {
+   "k": "Outline (runtime)",
+   "v": "Outline (runtime)"
+  },
+  {
+   "k": "Output room",
+   "v": "生産物の部屋"
+  },
+  {
+   "k": "PLAYER ID",
+   "v": "プレイヤーID"
+  },
+  {
+   "k": "Packing shed",
+   "v": "梱包小屋"
+  },
+  {
+   "k": "Pad ",
+   "v": "Pad "
+  },
+  {
+   "k": "Paid to your mailbox when the week closes.",
+   "v": "週の終わりに郵便受けに届きます。"
+  },
+  {
+   "k": "Paste your code and confirm.",
+   "v": "コードを貼り付けて確定しよう。"
+  },
+  {
+   "k": "Paste your code and tap <b>Redeem</b>.",
+   "v": "コードを貼り付けて<b>引き換え</b>をタップ。"
+  },
+  {
+   "k": "Payment pending — your items arrive once it goes through",
+   "v": "支払い処理中 — 完了するとアイテムが届きます"
+  },
+  {
+   "k": "Pays {0}% more for bread, flour, cheese, eggs and milk",
+   "v": "パン・小麦粉・チーズ・卵・ミルクの買取額+{0}%"
+  },
+  {
+   "k": "Pays {0}% more for crops, fruit, juice and honey",
+   "v": "作物・果物・ジュース・ハチミツの買取額+{0}%"
+  },
+  {
+   "k": "Pays {0}% more for fish and smoked goods",
+   "v": "魚と燻製品の買取額+{0}%"
+  },
+  {
+   "k": "People",
+   "v": "住人"
+  },
+  {
+   "k": "Pick a seed to sow this field.",
+   "v": "この畑にまく種を選ぼう。"
+  },
+  {
+   "k": "Pick ripe crops and store them",
+   "v": "実った作物を収穫して保管"
+  },
+  {
+   "k": "Pigsty",
+   "v": "豚小屋"
+  },
+  {
+   "k": "Place your {0}",
+   "v": "{0}を配置"
+  },
+  {
+   "k": "Place your {x}",
+   "v": "{x}を配置"
+  },
+  {
+   "k": "Planks",
+   "v": "板材"
+  },
+  {
+   "k": "Plant",
+   "v": "植える"
+  },
+  {
+   "k": "Plant 10 crops",
+   "v": "作物を10個植える"
+  },
+  {
+   "k": "Plant a field",
+   "v": "畑に植える"
+  },
+  {
+   "k": "Plant {0} fields",
+   "v": "畑に{0}回植える"
+  },
+  {
+   "k": "Play offline",
+   "v": "オフラインでプレイ"
+  },
+  {
+   "k": "Please enter a name to change.",
+   "v": "変更する名前を入力してください。"
+  },
+  {
+   "k": "Please wait…",
+   "v": "お待ちください…"
+  },
+  {
+   "k": "Plenty to eat, too.",
+   "v": "食べ物もたっぷりあるよ。"
+  },
+  {
+   "k": "Police station",
+   "v": "警察署"
+  },
+  {
+   "k": "Polish",
+   "v": "ポーランド語"
+  },
+  {
+   "k": "Portuguese",
+   "v": "ポルトガル語"
+  },
+  {
+   "k": "Post Office",
+   "v": "郵便局"
+  },
+  {
+   "k": "Post office",
+   "v": "郵便局"
+  },
+  {
+   "k": "Postman",
+   "v": "郵便屋さん"
+  },
+  {
+   "k": "Potato",
+   "v": "ジャガイモ"
+  },
+  {
+   "k": "Potting shed",
+   "v": "園芸小屋"
+  },
+  {
+   "k": "Premium is yours this season!",
+   "v": "今シーズンはプレミアム！"
+  },
+  {
+   "k": "Premium rewards on every tier!",
+   "v": "全ティアにプレミアム報酬！"
+  },
+  {
+   "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts.",
+   "v": "<color=#ffd23a>すべて受け取る</color>を押すと、広告ギフト以外の報酬をすべて受け取れます。"
+  },
+  {
+   "k": "Price from the store · rewards already earned this season unlock at once.",
+   "v": "ストア価格 · 今シーズンすでに獲得した報酬はすぐに解放されます。"
+  },
+  {
+   "k": "Privacy",
+   "v": "プライバシー"
+  },
+  {
+   "k": "Profile",
+   "v": "プロフィール"
+  },
+  {
+   "k": "Pumpkin",
+   "v": "カボチャ"
+  },
+  {
+   "k": "Purchases restored",
+   "v": "購入を復元しました"
+  },
+  {
+   "k": "Purple",
+   "v": "Purple"
+  },
+  {
+   "k": "Push Alarm",
+   "v": "プッシュ通知"
+  },
+  {
+   "k": "Quiet as a mouse round here.",
+   "v": "このあたりはとっても静かだよ。"
+  },
+  {
+   "k": "RAID!",
+   "v": "襲撃！"
+  },
+  {
+   "k": "READY",
+   "v": "完成"
+  },
+  {
+   "k": "REWARDS",
+   "v": "報酬"
+  },
+  {
+   "k": "REWARDS ×{0}",
+   "v": "報酬 ×{0}"
+  },
+  {
+   "k": "RUINED",
+   "v": "壊滅"
+  },
+  {
+   "k": "Raid Shield",
+   "v": "襲撃シールド"
+  },
+  {
+   "k": "Raid Shield ends soon",
+   "v": "襲撃シールドまもなく終了"
+  },
+  {
+   "k": "Raid driven off!",
+   "v": "襲撃を撃退！"
+  },
+  {
+   "k": "Raided while away",
+   "v": "留守中に襲撃"
+  },
+  {
+   "k": "Raider beaten — pick up what they dropped",
+   "v": "襲撃者を倒した — 落とした物を拾おう"
+  },
+  {
+   "k": "Raiders are coming soon, and we're too few to stop them. Feed the army or build up the guard.",
+   "v": "もうすぐ襲撃者が来るのに、止めるには人数が足りない。軍に食料を送るか、守りを固めよう。"
+  },
+  {
+   "k": "Raiders are smashing the {0}!",
+   "v": "襲撃者が{0}を壊している！"
+  },
+  {
+   "k": "Raiders are stealing from the farmhouse!",
+   "v": "略奪者が農家から盗んでいます！"
+  },
+  {
+   "k": "Raiders are stealing from the {0}!",
+   "v": "襲撃者が{0}から盗んでいる！"
+  },
+  {
+   "k": "Raiders came while you were away. Be here next time to fight them!",
+   "v": "留守中に略奪者が来ました。次は島にいて戦おう！"
+  },
+  {
+   "k": "Raiders came while you were away. Your warriors held them off.",
+   "v": "留守中に略奪者が来ましたが、戦士たちが撃退しました。"
+  },
+  {
+   "k": "Raiders come for rich islands: warriors stop them",
+   "v": "襲撃者は豊かな島を狙う：戦士が食い止める"
+  },
+  {
+   "k": "Raiders come from level {0}: warriors stop them",
+   "v": "略奪者はレベル{0}から：戦士が防ぎます"
+  },
+  {
+   "k": "Raiders driven off!",
+   "v": "襲撃者を撃退！"
+  },
+  {
+   "k": "Raiders from the {0} · landing in {1}s",
+   "v": "{0}から襲撃者 · {1}秒後に上陸"
+  },
+  {
+   "k": "Raiders killed a builder!",
+   "v": "襲撃者に大工がやられた！"
+  },
+  {
+   "k": "Raiders killed a farm worker!",
+   "v": "襲撃者に作業員がやられた！"
+  },
+  {
+   "k": "Raiders sighted {x}!",
+   "v": "{x}に略奪者を発見！"
+  },
+  {
+   "k": "Raiders stay away for {0} hours.",
+   "v": "襲撃者が{0}時間来なくなります。"
+  },
+  {
+   "k": "Raiders take notice: one raid a day",
+   "v": "略奪者が目をつけた：襲撃は1日1回"
+  },
+  {
+   "k": "Raiders took {0} coins! (a bank keeps coins safe)",
+   "v": "襲撃者に{0}コイン奪われた！（銀行があればコインは安全）"
+  },
+  {
+   "k": "Raiders {x} · landing in {0}s",
+   "v": "{x}から略奪者・あと{0}秒で上陸"
+  },
+  {
+   "k": "Raids",
+   "v": "襲撃"
+  },
+  {
+   "k": "Raids Beaten",
+   "v": "撃退した襲撃"
+  },
+  {
+   "k": "Raids beaten",
+   "v": "撃退した襲撃"
+  },
+  {
+   "k": "Rain",
+   "v": "雨"
+  },
+  {
+   "k": "Rain: crops sown now grow faster",
+   "v": "雨：今まいた作物は速く育つ"
+  },
+  {
+   "k": "Random",
+   "v": "ランダム"
+  },
+  {
+   "k": "Rank {0}",
+   "v": "{0}位"
+  },
+  {
+   "k": "Rate",
+   "v": "評価する"
+  },
+  {
+   "k": "Reach island level {0}",
+   "v": "島レベル{0}に到達する"
+  },
+  {
+   "k": "Read",
+   "v": "読む"
+  },
+  {
+   "k": "Read more",
+   "v": "続きを読む"
+  },
+  {
+   "k": "Read terms",
+   "v": "規約を読む"
+  },
+  {
+   "k": "Ready ×{0}",
+   "v": "完成 ×{0}"
+  },
+  {
+   "k": "Ready ×{0} · workers off",
+   "v": "収穫可 ×{0} · 作業員オフ"
+  },
+  {
+   "k": "Referral reward!",
+   "v": "紹介報酬！"
+  },
+  {
+   "k": "Refill",
+   "v": "補充"
+  },
+  {
+   "k": "Repair",
+   "v": "修理"
+  },
+  {
+   "k": "Repairing",
+   "v": "修理中"
+  },
+  {
+   "k": "Replant",
+   "v": "植え直し"
+  },
+  {
+   "k": "Required Level ",
+   "v": "必要レベル "
+  },
+  {
+   "k": "Resets In",
+   "v": "リセットまで"
+  },
+  {
+   "k": "Resets in <b><color=#ff7a8c>",
+   "v": "リセットまで <b><color=#ff7a8c>"
+  },
+  {
+   "k": "Resets in <b><color=#ff7a8c>{0}h {1}m</color></b>",
+   "v": "リセットまで<b><color=#ff7a8c>{0}時間{1}分</color></b>"
+  },
+  {
+   "k": "Restock food",
+   "v": "食料を補充"
+  },
+  {
+   "k": "Restore purchases",
+   "v": "購入を復元"
+  },
+  {
+   "k": "Retry",
+   "v": "再試行"
+  },
+  {
+   "k": "Reward",
+   "v": "報酬"
+  },
+  {
+   "k": "Rewards",
+   "v": "報酬"
+  },
+  {
+   "k": "Ride",
+   "v": "乗る"
+  },
+  {
+   "k": "Ride there",
+   "v": "馬で向かう"
+  },
+  {
+   "k": "Riding · farm work paused",
+   "v": "乗馬中 · 農作業は一時停止"
+  },
+  {
+   "k": "Rim radius in UI units ({0} = the short side of the screen).",
+   "v": "Rim radius in UI units ({0} = the short side of the screen)."
+  },
+  {
+   "k": "Romanian",
+   "v": "ルーマニア語"
+  },
+  {
+   "k": "Room camera",
+   "v": "Room camera"
+  },
+  {
+   "k": "Rotting ×{0}",
+   "v": "腐りかけ ×{0}"
+  },
+  {
+   "k": "Ruin smoke",
+   "v": "Ruin smoke"
+  },
+  {
+   "k": "Ruined · bring {0}",
+   "v": "壊滅 · {0}を運ぼう"
+  },
+  {
+   "k": "Ruined · bring {0} wood",
+   "v": "廃墟・木材{0}を持ってこよう"
+  },
+  {
+   "k": "Ruined · waiting for a builder",
+   "v": "壊滅 · 大工待ち"
+  },
+  {
+   "k": "Ruined: builders will repair it",
+   "v": "壊滅：大工が修理するよ"
+  },
+  {
+   "k": "Russian",
+   "v": "ロシア語"
+  },
+  {
+   "k": "SELLS FOR",
+   "v": "売値"
+  },
+  {
+   "k": "SHOP",
+   "v": "ショップ"
+  },
+  {
+   "k": "SKIP",
+   "v": "スキップ"
+  },
+  {
+   "k": "SPECIAL OFFERS",
+   "v": "特別オファー"
+  },
+  {
+   "k": "SPIN!",
+   "v": "回す！"
+  },
+  {
+   "k": "STOP",
+   "v": "ストップ"
+  },
+  {
+   "k": "STORAGE",
+   "v": "倉庫"
+  },
+  {
+   "k": "STORED",
+   "v": "保管中"
+  },
+  {
+   "k": "Sailing to {0}'s island…",
+   "v": "{0}さんの島へ航海中…"
+  },
+  {
+   "k": "Same again",
+   "v": "前と同じ"
+  },
+  {
+   "k": "Save",
+   "v": "セーブ"
+  },
+  {
+   "k": "Save Farm",
+   "v": "農場をセーブ"
+  },
+  {
+   "k": "Save your farm",
+   "v": "農場をセーブ"
+  },
+  {
+   "k": "Save your farm with Google or Apple to get coupons",
+   "v": "GoogleかAppleで農場をセーブしてクーポンをもらおう"
+  },
+  {
+   "k": "Sawn from wood.",
+   "v": "木材をひいたもの。"
+  },
+  {
+   "k": "School",
+   "v": "学校"
+  },
+  {
+   "k": "Sea",
+   "v": "海"
+  },
+  {
+   "k": "Season chest",
+   "v": "シーズン宝箱"
+  },
+  {
+   "k": "Season ends in",
+   "v": "シーズン終了まで"
+  },
+  {
+   "k": "Season {0} · {1} days",
+   "v": "シーズン{0} · {1}日間"
+  },
+  {
+   "k": "Seasonal display",
+   "v": "季節の飾り"
+  },
+  {
+   "k": "Seconds at full stick before the horse comes.",
+   "v": "Seconds at full stick before the horse comes."
+  },
+  {
+   "k": "Seconds of play before the first raid.",
+   "v": "Seconds of play before the first raid."
+  },
+  {
+   "k": "See it grow",
+   "v": "島が広がる様子を見る"
+  },
+  {
+   "k": "Sell",
+   "v": "売る"
+  },
+  {
+   "k": "Sell ",
+   "v": "売却 "
+  },
+  {
+   "k": "Sell 30 goods",
+   "v": "品物を30個売る"
+  },
+  {
+   "k": "Sell goods at a market stall",
+   "v": "露店で品物を売ろう"
+  },
+  {
+   "k": "Sell surplus",
+   "v": "余りを売る"
+  },
+  {
+   "k": "Sell what the farmhouse has spare",
+   "v": "農家の余った品を売る"
+  },
+  {
+   "k": "Sell {0}",
+   "v": "売る {0}"
+  },
+  {
+   "k": "Sell {0} goods",
+   "v": "品物を{0}個売る"
+  },
+  {
+   "k": "Sell {0} goods at the market",
+   "v": "市場で品物を{0}個売る"
+  },
+  {
+   "k": "Sell {x}?",
+   "v": "{x}を売りますか？"
+  },
+  {
+   "k": "Selling too much of one crop lowers the price <b>shops</b> pay.",
+   "v": "同じ作物をたくさん売ると<b>ショップ</b>の買取価格が下がります。"
+  },
+  {
+   "k": "Selling too much of one crop lowers the price <color=#ffd23a>shops</color> pay.",
+   "v": "同じ作物を売りすぎると<color=#ffd23a>店</color>の買取価格が下がります。"
+  },
+  {
+   "k": "Sells anything at the normal price",
+   "v": "何でも通常価格で売れる"
+  },
+  {
+   "k": "Send food",
+   "v": "食料を送る"
+  },
+  {
+   "k": "Send the freight train",
+   "v": "貨物列車を出発させる"
+  },
+  {
+   "k": "Send train",
+   "v": "列車を出発"
+  },
+  {
+   "k": "Settings",
+   "v": "設定"
+  },
+  {
+   "k": "Settler",
+   "v": "入植者"
+  },
+  {
+   "k": "Shear {0} wool",
+   "v": "羊毛を{0}個刈る"
+  },
+  {
+   "k": "Sheep arrive at level {0}",
+   "v": "羊はレベル{0}で登場"
+  },
+  {
+   "k": "Sheep give wool for cloth later on",
+   "v": "羊毛はあとで布になります"
+  },
+  {
+   "k": "Sheep shed",
+   "v": "羊小屋"
+  },
+  {
+   "k": "Shop",
+   "v": "ショップ"
+  },
+  {
+   "k": "Shop deals about to end",
+   "v": "まもなく終わるショップのセール"
+  },
+  {
+   "k": "Short screen side, in pixels, from which a screen counts as large.",
+   "v": "Short screen side, in pixels, from which a screen counts as large."
+  },
+  {
+   "k": "Show code",
+   "v": "コードを表示"
+  },
+  {
+   "k": "Sign in with your <b>VeWorld</b> wallet.",
+   "v": "<b>VeWorld</b>ウォレットでサインインしよう。"
+  },
+  {
+   "k": "Signpost",
+   "v": "道しるべ"
+  },
+  {
+   "k": "Site ring",
+   "v": "Site ring"
+  },
+  {
+   "k": "Skip the ads for good?",
+   "v": "広告をずっとスキップする？"
+  },
+  {
+   "k": "Smelted from ore. Needed to upgrade machines.",
+   "v": "鉱石を製錬したもの。機械のアップグレードに必要。"
+  },
+  {
+   "k": "Smokehouse",
+   "v": "燻製小屋"
+  },
+  {
+   "k": "Sold out for today — come back tomorrow",
+   "v": "今日は売り切れ — また明日来てね"
+  },
+  {
+   "k": "Sold to the shop · +",
+   "v": "ショップに売却 · +"
+  },
+  {
+   "k": "Something went wrong. Try again.",
+   "v": "問題が発生しました。もう一度試してね。"
+  },
+  {
+   "k": "Sound Fx",
+   "v": "効果音"
+  },
+  {
+   "k": "Sow the field again (pays the seed)",
+   "v": "畑にまた種をまく（種代がかかります）"
+  },
+  {
+   "k": "Sow:",
+   "v": "まく作物："
+  },
+  {
+   "k": "Sowing a bare field.",
+   "v": "空いた畑に種まき中。"
+  },
+  {
+   "k": "Spanish",
+   "v": "スペイン語"
+  },
+  {
+   "k": "Speed",
+   "v": "速度"
+  },
+  {
+   "k": "Spins today",
+   "v": "今日の回数"
+  },
+  {
+   "k": "Spring",
+   "v": "春"
+  },
+  {
+   "k": "Spring: Crops grow a little faster",
+   "v": "春：作物が少し早く育ちます"
+  },
+  {
+   "k": "Stable",
+   "v": "馬小屋"
+  },
+  {
+   "k": "Stand in the farmhouse: upgrading takes stock, wood and stone",
+   "v": "農家に入ろう：アップグレードには在庫・木材・石が必要"
+  },
+  {
+   "k": "Starter Pack",
+   "v": "スターターパック"
+  },
+  {
+   "k": "Stick deflection at which walking becomes running.",
+   "v": "Stick deflection at which walking becomes running."
+  },
+  {
+   "k": "Still offline",
+   "v": "まだオフラインです"
+  },
+  {
+   "k": "Stock the workers' house before you go.",
+   "v": "出かける前に作業員の家に食料を入れよう。"
+  },
+  {
+   "k": "Stone",
+   "v": "石"
+  },
+  {
+   "k": "Stone crusher",
+   "v": "砕石機"
+  },
+  {
+   "k": "Stone path",
+   "v": "石畳の道"
+  },
+  {
+   "k": "Stone, and ore underneath",
+   "v": "石と、その下に鉱石"
+  },
+  {
+   "k": "Stop all feeding",
+   "v": "エサやりを全部止める"
+  },
+  {
+   "k": "Stop at a tree or rock to chop it: wood and stone build things",
+   "v": "木や岩のそばで止まって切ろう：木材と石で建設します"
+  },
+  {
+   "k": "Stop beside it to chop it for wood, free.",
+   "v": "そばで止まると無料で木を切れます。"
+  },
+  {
+   "k": "Stop beside it to chop it for {0}, free.",
+   "v": "そばで止まると無料で切り出して{0}がもらえる。"
+  },
+  {
+   "k": "Stop food",
+   "v": "食料を止める"
+  },
+  {
+   "k": "Storage",
+   "v": "倉庫"
+  },
+  {
+   "k": "Store {0} goods",
+   "v": "品物を{0}個しまう"
+  },
+  {
+   "k": "Store {0} goods in the farmhouse",
+   "v": "農家に品物を{0}個しまう"
+  },
+  {
+   "k": "Stored {0}/{1}",
+   "v": "保管 {0}/{1}"
+  },
+  {
+   "k": "Stores your goods; upgrade for more room",
+   "v": "品物を保管する。アップグレードで容量アップ"
+  },
+  {
+   "k": "Stores {0} of any goods ({1} upgraded)",
+   "v": "どんな品物も{0}個保管（アップグレードで{1}個）"
+  },
+  {
+   "k": "Stores {0} raw crops",
+   "v": "収穫した作物を{0}個保管"
+  },
+  {
+   "k": "Storm",
+   "v": "嵐"
+  },
+  {
+   "k": "Storm: buildings may be damaged",
+   "v": "嵐：建物が壊れることがある"
+  },
+  {
+   "k": "Story goals",
+   "v": "ストーリー目標"
+  },
+  {
+   "k": "Sugar mill",
+   "v": "製糖所"
+  },
+  {
+   "k": "Summer",
+   "v": "夏"
+  },
+  {
+   "k": "Sunflower",
+   "v": "ひまわり"
+  },
+  {
+   "k": "Sunny",
+   "v": "晴れ"
+  },
+  {
+   "k": "Sunny Acres",
+   "v": "Sunny Acres"
+  },
+  {
+   "k": "Supplies cancelled",
+   "v": "資材の調達を中止"
+  },
+  {
+   "k": "Support",
+   "v": "サポート"
+  },
+  {
+   "k": "Survive a raid",
+   "v": "襲撃を乗り切る"
+  },
+  {
+   "k": "Survivor",
+   "v": "サバイバー"
+  },
+  {
+   "k": "Swedish",
+   "v": "スウェーデン語"
+  },
+  {
+   "k": "Switch",
+   "v": "切り替え"
+  },
+  {
+   "k": "Switched-on jobs run while you play and while you're away. Away, work costs {0}% more food.",
+   "v": "オンにした仕事は、プレイ中も留守中も続きます。留守中は食料が{0}%多くかかります。"
+  },
+  {
+   "k": "TAKE OUT",
+   "v": "取り出す"
+  },
+  {
+   "k": "TAKE OUT · your basket stays on your back here",
+   "v": "取り出す · ここではかごは背負ったまま"
+  },
+  {
+   "k": "TAP TO START",
+   "v": "タップしてスタート"
+  },
+  {
+   "k": "TODAY'S ORDERS",
+   "v": "今日の注文"
+  },
+  {
+   "k": "TROUGH",
+   "v": "エサ箱"
+  },
+  {
+   "k": "Taiwanese",
+   "v": "台湾華語"
+  },
+  {
+   "k": "Take",
+   "v": "取る"
+  },
+  {
+   "k": "Take ",
+   "v": "取り出す："
+  },
+  {
+   "k": "Take what it made to the farmhouse",
+   "v": "作ったものを農家へ運ぶ"
+  },
+  {
+   "k": "Take {0}",
+   "v": "{0}個取る"
+  },
+  {
+   "k": "Taking feed to the {0}.",
+   "v": "{0}にエサを運び中。"
+  },
+  {
+   "k": "Taking this load to the {0}.",
+   "v": "この荷物を{0}に運び中。"
+  },
+  {
+   "k": "Tap <b>OK</b> to agree to our <u>Terms of Service</u><br>and <u>Privacy Policy</u>.",
+   "v": "<b>OK</b>をタップすると<u>利用規約</u>と<br><u>プライバシーポリシー</u>に同意したことになります。"
+  },
+  {
+   "k": "Tap <b>Open redeem page</b>.",
+   "v": "<b>引き換えページを開く</b>をタップ。"
+  },
+  {
+   "k": "Tap anywhere to continue",
+   "v": "タップして続ける"
+  },
+  {
+   "k": "Tap to skip",
+   "v": "タップでスキップ"
+  },
+  {
+   "k": "Textile mill",
+   "v": "紡績工場"
+  },
+  {
+   "k": "Thai",
+   "v": "タイ語"
+  },
+  {
+   "k": "That code doesn't work — it may have expired or been used up.",
+   "v": "そのコードは使えません — 期限切れか、使用済みかもしれません。"
+  },
+  {
+   "k": "That name is taken — try another",
+   "v": "その名前は使われています — 別の名前を試してね"
+  },
+  {
+   "k": "That's all the ads for today — come back tomorrow",
+   "v": "今日の広告はここまで — また明日来てね"
+  },
+  {
+   "k": "That's all {0} spins for today.\nCome back tomorrow!",
+   "v": "今日の{0}回分はすべて回しました。\nまた明日来てね！"
+  },
+  {
+   "k": "The ad is still being checked — try again in a minute",
+   "v": "広告を確認中です — 1分ほどしてからもう一度試してね"
+  },
+  {
+   "k": "The background music clip (Content/Audio/Music), looped under everything.",
+   "v": "The background music clip (Content/Audio/Music), looped under everything."
+  },
+  {
+   "k": "The bakery opens at level {0}",
+   "v": "パン工場はレベル{0}で開放"
+  },
+  {
+   "k": "The bank opens at {0}",
+   "v": "銀行はレベル{0}で開放"
+  },
+  {
+   "k": "The barn opens at level {0} and raiders take notice",
+   "v": "レベル{0}で牛舎が開放、略奪者も目をつけます"
+  },
+  {
+   "k": "The base screen shown first.",
+   "v": "The base screen shown first."
+  },
+  {
+   "k": "The cider press opens at {0}",
+   "v": "搾り場はレベル{0}で開放"
+  },
+  {
+   "k": "The cider press turns tomatoes into juice",
+   "v": "搾り場でトマトがジュースになります"
+  },
+  {
+   "k": "The clinic opens at {0}",
+   "v": "診療所はレベル{0}で開放"
+  },
+  {
+   "k": "The cove",
+   "v": "入り江"
+  },
+  {
+   "k": "The dairy opens at level {0}",
+   "v": "乳製品工場はレベル{0}で開放"
+  },
+  {
+   "k": "The dairy opens at level {0}: milk in, cheese out",
+   "v": "酪農場はレベル{0}で解放：ミルクからチーズを作る"
+  },
+  {
+   "k": "The farmhouse is full — sell at a market, upgrade it, or build grain silos",
+   "v": "農家がいっぱい — 市場で売るか、アップグレードするか、穀物サイロを建てよう"
+  },
+  {
+   "k": "The farmhouse is full — workers are waiting with their loads",
+   "v": "農家がいっぱい — 作業員が荷物を持って待っている"
+  },
+  {
+   "k": "The farmhouse is nearly full. Sell at the market or upgrade it.",
+   "v": "農家がいっぱいになりそう。市場で売るか、アップグレードしよう。"
+  },
+  {
+   "k": "The fields are ripe. Harvest them before they spoil!",
+   "v": "畑が実りました。傷む前に収穫しよう！"
+  },
+  {
+   "k": "The freight train starts stopping at your station at island level {0}.",
+   "v": "貨物列車は島レベル{0}から駅に停車します。"
+  },
+  {
+   "k": "The freight train stops at your station: load crates for building materials",
+   "v": "貨物列車が駅に停車：木箱を積むと建築資材がもらえます"
+  },
+  {
+   "k": "The harbour",
+   "v": "港"
+  },
+  {
+   "k": "The horse is hungry — walk some grain or food into the stable",
+   "v": "馬がおなかをすかせている — 穀物か食料を馬小屋に運ぼう"
+  },
+  {
+   "k": "The island being played (its economy and life feed every screen).",
+   "v": "The island being played (its economy and life feed every screen)."
+  },
+  {
+   "k": "The island grows: a river with a lake and bridges, orchard and quarry hills, and a cove for fishing boats",
+   "v": "島が広がります：湖と橋のある川、果樹園と石切り場の丘、漁船の入り江"
+  },
+  {
+   "k": "The island grows: mountains with a waterfall, a town plateau, and a harbour with a lighthouse",
+   "v": "島が広がります：滝のある山々、町の台地、灯台のある港"
+  },
+  {
+   "k": "The island's crown",
+   "v": "島の象徴"
+  },
+  {
+   "k": "The island's crown, at level {0}",
+   "v": "島の王冠、レベル{0}で解放"
+  },
+  {
+   "k": "The lake",
+   "v": "湖"
+  },
+  {
+   "k": "The lumber yard opens at level {0}",
+   "v": "製材所はレベル{0}で開放"
+  },
+  {
+   "k": "The mine opens at level {0}: stone, and ore underneath",
+   "v": "鉱山はレベル{0}で解放：石と、その下に鉱石"
+  },
+  {
+   "k": "The mine opens at {0}",
+   "v": "鉱山はレベル{0}で開放"
+  },
+  {
+   "k": "The mountains",
+   "v": "山々"
+  },
+  {
+   "k": "The next gift is on its way",
+   "v": "次のギフトが届く予定です"
+  },
+  {
+   "k": "The orchard hills",
+   "v": "果樹園の丘"
+  },
+  {
+   "k": "The ore shed smelts ore into iron",
+   "v": "製錬小屋で鉱石が鉄になります"
+  },
+  {
+   "k": "The police station opens at {0}: chapter {1} done",
+   "v": "レベル{0}で警察署が開放：第{1}章クリア"
+  },
+  {
+   "k": "The post office opens at level {0}",
+   "v": "郵便局はレベル{0}で開放"
+  },
+  {
+   "k": "The post office wants {0} more {1}: double pay.",
+   "v": "郵便局が{1}をあと{0}個ほしがっている：報酬2倍。"
+  },
+  {
+   "k": "The quarry hills",
+   "v": "石切り場の丘"
+  },
+  {
+   "k": "The raid is over",
+   "v": "襲撃が終わった"
+  },
+  {
+   "k": "The raid is over — ",
+   "v": "襲撃終了 — "
+  },
+  {
+   "k": "The raiders got away — ",
+   "v": "襲撃者は逃げていった — "
+  },
+  {
+   "k": "The raiders got away — {0} goods stolen, {1} coins taken",
+   "v": "略奪者は逃げた — 品物{0}個と{1}コインを奪われた"
+  },
+  {
+   "k": "The raiders got what they came for — they're running back to their boats!",
+   "v": "襲撃者は目当ての物を手に入れた — 船へ逃げていく！"
+  },
+  {
+   "k": "The river and its bridges",
+   "v": "川と橋"
+  },
+  {
+   "k": "The sea opens at {0}: fishing",
+   "v": "レベル{0}で海が開放：釣り"
+  },
+  {
+   "k": "The stable has no horse yet — feed it so one moves in",
+   "v": "馬小屋にはまだ馬がいない — エサをあげると馬がやってくる"
+  },
+  {
+   "k": "The stable isn't ready yet",
+   "v": "馬小屋はまだ準備できていません"
+  },
+  {
+   "k": "The stable was wrecked — builders are fixing it",
+   "v": "馬小屋が壊された — 大工が修理中"
+  },
+  {
+   "k": "The stone crusher opens at {0}",
+   "v": "石砕き機はレベル{0}で開放"
+  },
+  {
+   "k": "The store didn't confirm this purchase",
+   "v": "ストアがこの購入を確認できませんでした"
+  },
+  {
+   "k": "The store has no food at all! Bring in a harvest, or eggs from the coop.",
+   "v": "倉庫に食料がまったくない！収穫物か鶏小屋の卵を運び込もう。"
+  },
+  {
+   "k": "The store isn't ready yet — try again in a moment",
+   "v": "ストアの準備ができていません — 少ししてからもう一度試してね"
+  },
+  {
+   "k": "The stores are empty: bring your harvest in.",
+   "v": "倉庫が空っぽ：収穫物を運び込もう。"
+  },
+  {
+   "k": "The sugar mill presses sunflowers into oil",
+   "v": "製油所でひまわりが油になります"
+  },
+  {
+   "k": "The textile mill weaves wool into cloth",
+   "v": "織物工場で羊毛が布になります"
+  },
+  {
+   "k": "The town hall opens at {0}",
+   "v": "市役所はレベル{0}で開放"
+  },
+  {
+   "k": "The town plateau",
+   "v": "町の台地"
+  },
+  {
+   "k": "The townsfolk are writing their next order…",
+   "v": "住人が次の注文を書いているところ…"
+  },
+  {
+   "k": "The train is out on the line. It'll be back with new crates soon.",
+   "v": "列車は運行中です。まもなく新しい木箱を持って戻ります。"
+  },
+  {
+   "k": "The train paid {0} coins",
+   "v": "列車の支払い：{0}コイン"
+  },
+  {
+   "k": "The walking economy: carrying, pads, energy (added at runtime if missing).",
+   "v": "The walking economy: carrying, pads, energy (added at runtime if missing)."
+  },
+  {
+   "k": "The waterfall",
+   "v": "滝"
+  },
+  {
+   "k": "The {0} animals are hungry. Bring them grain.",
+   "v": "{0}の動物たちがおなかをすかせている。穀物を運ぼう。"
+  },
+  {
+   "k": "The {0} is starving. Walk food into it, or order supplies from the farmhouse.",
+   "v": "{0}が飢えている。食料を運び込むか、農家から資材を注文しよう。"
+  },
+  {
+   "k": "The {0} was ruined{1}!",
+   "v": "{0}が壊滅した{1}！"
+  },
+  {
+   "k": "Theme",
+   "v": "テーマ"
+  },
+  {
+   "k": "There's no one to fight them! Build an army house.",
+   "v": "戦う者がいない！兵舎を建てよう。"
+  },
+  {
+   "k": "They dropped loot — walk over it to pick it up.",
+   "v": "戦利品を落とした — 上を歩いて拾おう。"
+  },
+  {
+   "k": "They ran out of food after",
+   "v": "食料が尽きたのは"
+  },
+  {
+   "k": "They stopped when the farmhouse filled up: sell, or upgrade it",
+   "v": "農家がいっぱいになって止まりました：売るか、アップグレードしよう"
+  },
+  {
+   "k": "They worked their {0}-hour shift, then rested",
+   "v": "{0}時間働いて休憩しました"
+  },
+  {
+   "k": "They'd beat us. We need more warriors, food and iron.",
+   "v": "このままじゃ負ける。戦士と食料と鉄がもっと必要だ。"
+  },
+  {
+   "k": "They're here!",
+   "v": "来たぞ！"
+  },
+  {
+   "k": "This can't be undone.",
+   "v": "この操作は取り消せません。"
+  },
+  {
+   "k": "This little island is all yours. Let's turn it into the best farm in the sea!",
+   "v": "この小さな島はぜんぶ君のものだよ。海でいちばんの農場にしよう！"
+  },
+  {
+   "k": "This offer has ended",
+   "v": "このオファーは終了しました"
+  },
+  {
+   "k": "This version is too old to connect.<br>Please update from the store.",
+   "v": "このバージョンは古いため接続できません。<br>ストアからアップデートしてください。"
+  },
+  {
+   "k": "This week's board · net worth updates whenever your island syncs.",
+   "v": "今週のランキング · 純資産は島が同期するたびに更新されます。"
+  },
+  {
+   "k": "This {0} account already has a farm.<br>Switch to it? <b>The farm on this phone will be replaced.</b>",
+   "v": "この{0}アカウントにはすでに農場があります。<br>切り替えますか？<b>この端末の農場は置き換えられます。</b>"
+  },
+  {
+   "k": "Though we eat more than we grow, mind.",
+   "v": "でも、育てるより食べるほうが多いから気をつけて。"
+  },
+  {
+   "k": "Today",
+   "v": "今日"
+  },
+  {
+   "k": "Tomato",
+   "v": "トマト"
+  },
+  {
+   "k": "Tomorrow",
+   "v": "明日"
+  },
+  {
+   "k": "Took {0} {1} — carry it where it's needed",
+   "v": "{1}を{0}個取った — 必要な場所へ運ぼう"
+  },
+  {
+   "k": "Took {0} {x} — carry it where it's needed",
+   "v": "{x}を{0}個取った — 必要な所へ運ぼう"
+  },
+  {
+   "k": "Top ",
+   "v": "トップ"
+  },
+  {
+   "k": "Top farms",
+   "v": "トップ農場"
+  },
+  {
+   "k": "Top level",
+   "v": "最高レベル"
+  },
+  {
+   "k": "Top level: as fast and roomy as it gets",
+   "v": "最高レベル：これ以上速く広くはならない"
+  },
+  {
+   "k": "Town",
+   "v": "町"
+  },
+  {
+   "k": "Town hall",
+   "v": "町役場"
+  },
+  {
+   "k": "Townsfolk send delivery orders there: they pay well",
+   "v": "住民がそこに注文を送ります：報酬がいいです"
+  },
+  {
+   "k": "Townsfolk who move in as the town grows (grandma, the kid, the baker, villagers).",
+   "v": "Townsfolk who move in as the town grows (grandma, the kid, the baker, villagers)."
+  },
+  {
+   "k": "Trader I",
+   "v": "商人 I"
+  },
+  {
+   "k": "Trader II",
+   "v": "商人 II"
+  },
+  {
+   "k": "Train",
+   "v": "列車"
+  },
+  {
+   "k": "Train crates: off",
+   "v": "列車の木箱：オフ"
+  },
+  {
+   "k": "Train crates: on",
+   "v": "列車の木箱：オン"
+  },
+  {
+   "k": "Turkish",
+   "v": "トルコ語"
+  },
+  {
+   "k": "Turn (degrees) that makes the chicken model face where it walks.",
+   "v": "Turn (degrees) that makes the chicken model face where it walks."
+  },
+  {
+   "k": "Turn (degrees) that makes the cow model face where it walks.",
+   "v": "Turn (degrees) that makes the cow model face where it walks."
+  },
+  {
+   "k": "Turn on",
+   "v": "オンにする"
+  },
+  {
+   "k": "US$ ",
+   "v": "US$ "
+  },
+  {
+   "k": "US$ {0}",
+   "v": "US$ {0}"
+  },
+  {
+   "k": "Ukrainian",
+   "v": "ウクライナ語"
+  },
+  {
+   "k": "Under maintenance",
+   "v": "メンテナンス中"
+  },
+  {
+   "k": "Unlocks at island level ",
+   "v": "解放：島レベル "
+  },
+  {
+   "k": "Update",
+   "v": "アップデート"
+  },
+  {
+   "k": "Update available",
+   "v": "アップデートがあります"
+  },
+  {
+   "k": "Update required",
+   "v": "アップデートが必要です"
+  },
+  {
+   "k": "Upgrade",
+   "v": "アップグレード"
+  },
+  {
+   "k": "Upgrade ",
+   "v": "アップグレード："
+  },
+  {
+   "k": "Upgrade 10 buildings",
+   "v": "建物を10回アップグレードする"
+  },
+  {
+   "k": "Upgrade a machine or animal house",
+   "v": "機械か動物小屋をアップグレードする"
+  },
+  {
+   "k": "Upgrade buildings {0} times.",
+   "v": "建物を{0}回アップグレードする。"
+  },
+  {
+   "k": "Upgrade the army house to field more warriors",
+   "v": "兵舎をアップグレードして戦士を増やそう"
+  },
+  {
+   "k": "Upgrade the farmhouse",
+   "v": "農家をアップグレードする"
+  },
+  {
+   "k": "Upgrade {x}",
+   "v": "{x}をアップグレード"
+  },
+  {
+   "k": "Upgrades",
+   "v": "アップグレード"
+  },
+  {
+   "k": "Use",
+   "v": "使う"
+  },
+  {
+   "k": "VISITING",
+   "v": "訪問中"
+  },
+  {
+   "k": "Vibration",
+   "v": "バイブレーション"
+  },
+  {
+   "k": "View",
+   "v": "見る"
+  },
+  {
+   "k": "Village",
+   "v": "村"
+  },
+  {
+   "k": "Villager",
+   "v": "村人"
+  },
+  {
+   "k": "Visit",
+   "v": "訪問"
+  },
+  {
+   "k": "Visit a farm",
+   "v": "農場を訪ねる"
+  },
+  {
+   "k": "WEEKLY PRIZES",
+   "v": "週間賞品"
+  },
+  {
+   "k": "Waiting for a builder",
+   "v": "大工待ち"
+  },
+  {
+   "k": "Waiting. Our house has no food, and I can't work hungry.",
+   "v": "待機中。家に食料がなくて、おなかがすいて働けないよ。"
+  },
+  {
+   "k": "Walk in to collect",
+   "v": "入って回収しよう"
+  },
+  {
+   "k": "Walk into a ripe field to harvest it",
+   "v": "実った畑を歩いて収穫しよう"
+  },
+  {
+   "k": "Walk into the Post Office with your basket",
+   "v": "かごを持って郵便局に入ろう"
+  },
+  {
+   "k": "Walk into the coop to collect",
+   "v": "鶏小屋に入って集めよう"
+  },
+  {
+   "k": "Walk into the farmhouse with a full basket",
+   "v": "かごがいっぱいになったら農家に入ろう"
+  },
+  {
+   "k": "Walk into the market stall to sell",
+   "v": "市場の屋台に入って売ろう"
+  },
+  {
+   "k": "Walk onto it to plant",
+   "v": "上を歩いて植えよう"
+  },
+  {
+   "k": "Walk onto the stall to sell. Selling lots of one good lowers its price for a while.",
+   "v": "露店に入って売ろう。同じ品物をたくさん売ると、しばらく値段が下がります。"
+  },
+  {
+   "k": "Walk to its door to upgrade it: it pays from what's stored there.",
+   "v": "入口まで行くとアップグレードできる：中の在庫から支払われます。"
+  },
+  {
+   "k": "Warehouse",
+   "v": "倉庫"
+  },
+  {
+   "k": "Warnings before raiders land, and how it went",
+   "v": "略奪者の上陸前の警告と結果"
+  },
+  {
+   "k": "Warriors",
+   "v": "戦士"
+  },
+  {
+   "k": "Warriors who fight raiders (iron makes them stronger)",
+   "v": "襲撃者と戦う戦士（鉄で強くなる）"
+  },
+  {
+   "k": "Warriors {0}/{1}",
+   "v": "戦士 {0}/{1}"
+  },
+  {
+   "k": "Watch a short ad for each spin.\n{0} spins a day, reset at midnight (UTC).",
+   "v": "1回ごとに短い広告を見てね。\n1日{0}回、深夜0時（UTC）にリセット。"
+  },
+  {
+   "k": "Watch the ad to the end to get the reward",
+   "v": "報酬をもらうには広告を最後まで見てね"
+  },
+  {
+   "k": "Watch the ad to the end to spin",
+   "v": "回すには広告を最後まで見てね"
+  },
+  {
+   "k": "We'll see them off.",
+   "v": "追い払ってやるさ。"
+  },
+  {
+   "k": "We'll warn you before raiders land, and tell you when crops are ready or a gift is waiting.",
+   "v": "略奪者が上陸する前にお知らせします。作物の収穫やギフトの準備ができた時もお知らせします。"
+  },
+  {
+   "k": "We're fed and fine.",
+   "v": "食料は足りてるし、元気だよ。"
+  },
+  {
+   "k": "We're improving the island.<br>Your farm is safe — please try again in a little while.",
+   "v": "島を改善中です。<br>農場は無事です — しばらくしてからもう一度試してね。"
+  },
+  {
+   "k": "We're starving! Bring food fast or people will leave.",
+   "v": "飢えている！早く食料を運ばないと住人が出ていっちゃう。"
+  },
+  {
+   "k": "We're {0} of {1}, level {2}, with {3} energy (we eat {4} a minute). {5}{6}",
+   "v": "今は{1}人中{0}人、レベル{2}、エネルギー{3}（1分に{4}消費）。{5}{6}"
+  },
+  {
+   "k": "We've got everything we need.",
+   "v": "必要な物はぜんぶそろってるよ。"
+  },
+  {
+   "k": "We've no army. Raiders will come once the island's worth robbing.",
+   "v": "軍がいない。島が豊かになったら襲撃者が来るぞ。"
+  },
+  {
+   "k": "Weave {0} cloth",
+   "v": "布を{0}個織る"
+  },
+  {
+   "k": "Weekly results are in",
+   "v": "週間結果が出ました"
+  },
+  {
+   "k": "Welcome back!",
+   "v": "おかえり！"
+  },
+  {
+   "k": "Welcome back! Your farm is restored.",
+   "v": "おかえり！農場を復元しました。"
+  },
+  {
+   "k": "Welcome to your island, farmer! I'm Grandpa Joe.",
+   "v": "ようこそ、君の島へ！わしはジョーじいさんじゃ。"
+  },
+  {
+   "k": "Well",
+   "v": "井戸"
+  },
+  {
+   "k": "What are you building?",
+   "v": "何を建ててるの？"
+  },
+  {
+   "k": "What are you doing?",
+   "v": "何してるの？"
+  },
+  {
+   "k": "What needs doing?",
+   "v": "何をすればいい？"
+  },
+  {
+   "k": "What's new?",
+   "v": "何か新しいことある？"
+  },
+  {
+   "k": "What's that building?",
+   "v": "あの建物は何？"
+  },
+  {
+   "k": "What's the weather?",
+   "v": "天気はどう？"
+  },
+  {
+   "k": "Wheat",
+   "v": "小麦"
+  },
+  {
+   "k": "Wheat in, flour out",
+   "v": "小麦から小麦粉ができます"
+  },
+  {
+   "k": "Wheel",
+   "v": "ルーレット"
+  },
+  {
+   "k": "When a friend you invite reaches Level {0}, you both get {1} coins and {2} gems.",
+   "v": "招待した友だちがレベル{0}になると、2人とも{1}コインと{2}ジェムがもらえます。"
+  },
+  {
+   "k": "When will they come?",
+   "v": "いつ来るの？"
+  },
+  {
+   "k": "Where the farmer sits, relative to the horse's feet (m, before the horse's scale).",
+   "v": "Where the farmer sits, relative to the horse's feet (m, before the horse's scale)."
+  },
+  {
+   "k": "Where the stick sits on a phone, as fractions of the screen (x across, y up from the bottom).",
+   "v": "Where the stick sits on a phone, as fractions of the screen (x across, y up from the bottom)."
+  },
+  {
+   "k": "Which one? There's nothing here yet!",
+   "v": "どれのこと？ここにはまだ何もないよ！"
+  },
+  {
+   "k": "While you were away",
+   "v": "留守中のできごと"
+  },
+  {
+   "k": "While you were away we drove off {n} raider.",
+   "v": "留守中に略奪者{n}人を撃退しました。"
+  },
+  {
+   "k": "While you were away we drove off {n} raiders.",
+   "v": "留守中に略奪者{n}人を撃退しました。"
+  },
+  {
+   "k": "While you were away {n} raiders came.",
+   "v": "留守中に{n}人の略奪者が来ました。"
+  },
+  {
+   "k": "White fence",
+   "v": "白い柵"
+  },
+  {
+   "k": "Windmill",
+   "v": "風車"
+  },
+  {
+   "k": "Winter",
+   "v": "冬"
+  },
+  {
+   "k": "Wood",
+   "v": "木材"
+  },
+  {
+   "k": "Wood and stone?",
+   "v": "木と石？"
+  },
+  {
+   "k": "Wood fence",
+   "v": "木の柵"
+  },
+  {
+   "k": "Wood in, planks out: big buildings need planks",
+   "v": "木材から板材を作ろう：大きな建物に必要です"
+  },
+  {
+   "k": "Wool",
+   "v": "羊毛"
+  },
+  {
+   "k": "Worker Rush",
+   "v": "作業員ラッシュ"
+  },
+  {
+   "k": "Workers",
+   "v": "作業員"
+  },
+  {
+   "k": "Workers bring wood from the farmhouse",
+   "v": "作業員が農家から木材を運びます"
+  },
+  {
+   "k": "Workers loaded a train crate",
+   "v": "作業員が列車の木箱を積みました"
+  },
+  {
+   "k": "Workers loaded {0} train crates",
+   "v": "作業員が列車の木箱を{0}個積みました"
+  },
+  {
+   "k": "Workers sold {0} surplus goods: +{1} coins",
+   "v": "作業員が余りを{0}個売りました：+{1}コイン"
+  },
+  {
+   "k": "Workers {0}× faster for {1} min.",
+   "v": "作業員の速さ{0}倍（{1}分間）。"
+  },
+  {
+   "k": "Workers {0}× · {1} min",
+   "v": "作業員{0}× · {1}分"
+  },
+  {
+   "k": "Workers' house",
+   "v": "作業員の家"
+  },
+  {
+   "k": "Workers' houses and builders' huts take one more",
+   "v": "作業員の家と大工小屋に1人追加"
+  },
+  {
+   "k": "Workers: {x}",
+   "v": "作業員：{x}"
+  },
+  {
+   "k": "Working on {string.Join(",
+   "v": "Working on {string.Join("
+  },
+  {
+   "k": "World",
+   "v": "ワールド"
+  },
+  {
+   "k": "World ",
+   "v": "ワールド "
+  },
+  {
+   "k": "World Rank",
+   "v": "ワールドランク"
+  },
+  {
+   "k": "World rank",
+   "v": "ワールドランク"
+  },
+  {
+   "k": "World rank: ",
+   "v": "ワールドランク："
+  },
+  {
+   "k": "Yellow",
+   "v": "Yellow"
+  },
+  {
+   "k": "You already liked this farm today",
+   "v": "今日はこの農場にもういいねしました"
+  },
+  {
+   "k": "You and {0} are now friends!",
+   "v": "{0}さんと友だちになりました！"
+  },
+  {
+   "k": "You can look, not touch",
+   "v": "見るだけで、さわれません"
+  },
+  {
+   "k": "You finished #{rank} this week!",
+   "v": "今週は{rank}位でした！"
+  },
+  {
+   "k": "You have ",
+   "v": "所持数 "
+  },
+  {
+   "k": "You liked {0}'s farm",
+   "v": "{0}さんの農場にいいねしました"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Wood</color> to upgrade the army house.",
+   "v": "兵舎のアップグレードには<color=#ffd23a>木材があと{0}</color>必要です。"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Wood</color> to upgrade the farmhouse.",
+   "v": "農家のアップグレードには<color=#ffd23a>木材があと{0}</color>必要です。"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more {1}</color> to {2}.",
+   "v": "<color=#ffd23a>{1}があと{0}</color>足りません（{2}）。"
+  },
+  {
+   "k": "You reached Level {0}!<br>Thanks to <b>{1}</b>'s invite, you both get a gift.",
+   "v": "レベル{0}に到達！<br><b>{1}</b>さんの招待のおかげで、2人ともギフトがもらえます。"
+  },
+  {
+   "k": "You won {0}!",
+   "v": "{0}を獲得！"
+  },
+  {
+   "k": "You're already friends.",
+   "v": "もう友だちです。"
+  },
+  {
+   "k": "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons.",
+   "v": "<b>ゲスト</b>としてプレイ中です。アカウントを連携すると、機種変更しても<br>農場を引き継げて、クーポンも受け取れます。"
+  },
+  {
+   "k": "Your Night Shift is already booked for your next absence",
+   "v": "次の留守の夜勤はもう予約済みです"
+  },
+  {
+   "k": "Your coupon",
+   "v": "あなたのクーポン"
+  },
+  {
+   "k": "Your crops are ready",
+   "v": "作物が実りました"
+  },
+  {
+   "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.<br>Purchases can't be refunded.",
+   "v": "農場・ジェム・友だち・進行状況が<b>完全に削除</b>されます。<br>購入の返金はできません。"
+  },
+  {
+   "k": "Your free coins are waiting in the shop.",
+   "v": "ショップで無料コインが待っています。"
+  },
+  {
+   "k": "Your friends",
+   "v": "友だちリスト"
+  },
+  {
+   "k": "Your invite code",
+   "v": "あなたの招待コード"
+  },
+  {
+   "k": "Your island reached a new level!",
+   "v": "島が新しいレベルに到達しました！"
+  },
+  {
+   "k": "Your next absence: workers keep going for {0} hours at the normal food price.",
+   "v": "次の留守：作業員が通常の食料で{0}時間働き続けます。"
+  },
+  {
+   "k": "Your purchase will arrive as soon as you're back online",
+   "v": "オンラインに戻りしだい購入品が届きます"
+  },
+  {
+   "k": "Your reward is on its way — try again in a minute",
+   "v": "報酬は送信中です — 1分ほどしてからもう一度試してね"
+  },
+  {
+   "k": "Your shield ends in {n} minutes. Raiders are watching!",
+   "v": "シールドはあと{n}分で切れます。略奪者が狙っています！"
+  },
+  {
+   "k": "Your stable is being built ({0}) — the horse comes when it's done",
+   "v": "馬小屋を建設中（{0}） — 完成したら馬が来るよ"
+  },
+  {
+   "k": "Your stable is waiting for materials: {0}",
+   "v": "馬小屋は資材待ち：{0}"
+  },
+  {
+   "k": "Your workers will run out of food in about {0} h — stock their house before you go",
+   "v": "作業員の食料は約{0}時間でなくなります。出かける前に家に食料を入れよう"
+  },
+  {
+   "k": "Your workers will run out of food in about {0} min — stock their house before you go",
+   "v": "作業員の食料は約{0}分でなくなります。出かける前に家に食料を入れよう"
+  },
+  {
+   "k": "Your workshops are done",
+   "v": "工房の生産が完了"
+  },
+  {
+   "k": "Yours already!",
+   "v": "もう持っています！"
+  },
+  {
+   "k": "a building",
+   "v": "建物"
+  },
+  {
+   "k": "a lumber yard makes them",
+   "v": "製材所で作れる"
+  },
+  {
+   "k": "army house",
+   "v": "兵舎"
+  },
+  {
+   "k": "at {0}: game …{1}… server …{2}…",
+   "v": "at {0}: game …{1}… server …{2}…"
+  },
+  {
+   "k": "ate {0} food",
+   "v": "食料を{0}消費"
+  },
+  {
+   "k": "break rocks",
+   "v": "岩を砕こう"
+  },
+  {
+   "k": "bring some",
+   "v": "運び込もう"
+  },
+  {
+   "k": "build the ",
+   "v": "建設："
+  },
+  {
+   "k": "builders' hut",
+   "v": "大工小屋"
+  },
+  {
+   "k": "building ruined",
+   "v": "建物が壊滅"
+  },
+  {
+   "k": "buildings ruined",
+   "v": "建物が壊滅"
+  },
+  {
+   "k": "chop trees",
+   "v": "木を切ろう"
+  },
+  {
+   "k": "clear the ",
+   "v": "撤去："
+  },
+  {
+   "k": "coins taken",
+   "v": "奪われたコイン"
+  },
+  {
+   "k": "collected {0}",
+   "v": "{0}個回収"
+  },
+  {
+   "k": "d MMM",
+   "v": "M月d日"
+  },
+  {
+   "k": "d MMM yyyy",
+   "v": "yyyy年M月d日"
+  },
+  {
+   "k": "device clock clamped",
+   "v": "device clock clamped"
+  },
+  {
+   "k": "farm workers",
+   "v": "作業員"
+  },
+  {
+   "k": "fed the animals {0}",
+   "v": "動物にエサを{0}"
+  },
+  {
+   "k": "flooded {0}",
+   "v": "浸水 {0}"
+  },
+  {
+   "k": "from the east",
+   "v": "東"
+  },
+  {
+   "k": "from the north",
+   "v": "北"
+  },
+  {
+   "k": "from the north-east",
+   "v": "北東"
+  },
+  {
+   "k": "from the north-west",
+   "v": "北西"
+  },
+  {
+   "k": "from the south",
+   "v": "南"
+  },
+  {
+   "k": "from the south-east",
+   "v": "南東"
+  },
+  {
+   "k": "from the south-west",
+   "v": "南西"
+  },
+  {
+   "k": "from the west",
+   "v": "西"
+  },
+  {
+   "k": "goods stolen",
+   "v": "盗まれた品物"
+  },
+  {
+   "k": "harvested {0}",
+   "v": "{0}個収穫"
+  },
+  {
+   "k": "in the east",
+   "v": "東"
+  },
+  {
+   "k": "in the north",
+   "v": "北"
+  },
+  {
+   "k": "in the north-east",
+   "v": "北東"
+  },
+  {
+   "k": "in the north-west",
+   "v": "北西"
+  },
+  {
+   "k": "in the south",
+   "v": "南"
+  },
+  {
+   "k": "in the south-east",
+   "v": "南東"
+  },
+  {
+   "k": "in the south-west",
+   "v": "南西"
+  },
+  {
+   "k": "in the west",
+   "v": "西"
+  },
+  {
+   "k": "loaded {0} train crates",
+   "v": "列車の木箱を{0}個積み込み"
+  },
+  {
+   "k": "must stand by the sea",
+   "v": "海辺に建てる必要あり"
+  },
+  {
+   "k": "no save",
+   "v": "no save"
+  },
+  {
+   "k": "people lost",
+   "v": "失った住人"
+  },
+  {
+   "k": "person lost",
+   "v": "失った住人"
+  },
+  {
+   "k": "plant ",
+   "v": "植え付け："
+  },
+  {
+   "k": "raiders beaten",
+   "v": "撃退した襲撃者"
+  },
+  {
+   "k": "raiders came",
+   "v": "襲撃者が来た"
+  },
+  {
+   "k": "refilled machines with {0}",
+   "v": "機械に{0}個補充"
+  },
+  {
+   "k": "resets ",
+   "v": "リセットまで "
+  },
+  {
+   "k": "skipped ({0})",
+   "v": "skipped ({0})"
+  },
+  {
+   "k": "sold {0} for {1} coins",
+   "v": "{0}個を{1}コインで販売"
+  },
+  {
+   "k": "sowed {0} fields",
+   "v": "{0}面の畑に種まき"
+  },
+  {
+   "k": "to the east",
+   "v": "東"
+  },
+  {
+   "k": "to the north",
+   "v": "北"
+  },
+  {
+   "k": "to the north-east",
+   "v": "北東"
+  },
+  {
+   "k": "to the north-west",
+   "v": "北西"
+  },
+  {
+   "k": "to the south",
+   "v": "南"
+  },
+  {
+   "k": "to the south-east",
+   "v": "南東"
+  },
+  {
+   "k": "to the south-west",
+   "v": "南西"
+  },
+  {
+   "k": "to the west",
+   "v": "西"
+  },
+  {
+   "k": "upgrade the ",
+   "v": "アップグレード："
+  },
+  {
+   "k": "workers' house",
+   "v": "作業員の家"
+  },
+  {
+   "k": "{0}  {1}/{2}",
+   "v": "{0}  {1}/{2}"
+  },
+  {
+   "k": "{0} / {1} XP",
+   "v": "{0} / {1} XP"
+  },
+  {
+   "k": "{0} Fertilizer added to Storage",
+   "v": "肥料{0}個を倉庫に追加しました"
+  },
+  {
+   "k": "{0} Lv{1}",
+   "v": "{0} Lv{1}"
+  },
+  {
+   "k": "{0} basket room",
+   "v": "かご容量{0}"
+  },
+  {
+   "k": "{0} basket slots, for good.",
+   "v": "かごの枠+{0}（永久）。"
+  },
+  {
+   "k": "{0} builder forever",
+   "v": "大工{0}人（永久）"
+  },
+  {
+   "k": "{0} coins",
+   "v": "{0}コイン"
+  },
+  {
+   "k": "{0} coins across the season",
+   "v": "シーズン合計{0}コイン"
+  },
+  {
+   "k": "{0} coins · watch an ad",
+   "v": "{0}コイン・広告を見る"
+  },
+  {
+   "k": "{0} crops rotted in the fields — harvest sooner, or get farm workers",
+   "v": "{0}個の作物が畑で腐った — 早めに収穫するか、作業員を雇おう"
+  },
+  {
+   "k": "{0} every {1}s",
+   "v": "{1}秒ごとに{0}"
+  },
+  {
+   "k": "{0} farm workers",
+   "v": "農場作業員 {0}人"
+  },
+  {
+   "k": "{0} fields",
+   "v": "畑{0}面"
+  },
+  {
+   "k": "{0} fresh goods went off — collect more often",
+   "v": "{0}個の生鮮品が傷んだ — こまめに回収しよう"
+  },
+  {
+   "k": "{0} gems",
+   "v": "{0}ジェム"
+  },
+  {
+   "k": "{0} gems across the season",
+   "v": "シーズン合計{0}ジェム"
+  },
+  {
+   "k": "{0} goes off if left too long",
+   "v": "{0}は放っておくと傷む"
+  },
+  {
+   "k": "{0} h · normal food",
+   "v": "{0}時間 · 通常の食料"
+  },
+  {
+   "k": "{0} hours",
+   "v": "{0}時間"
+  },
+  {
+   "k": "{0} is ready!",
+   "v": "{0}が完成！"
+  },
+  {
+   "k": "{0} is repaired",
+   "v": "{0}を修理しました"
+  },
+  {
+   "k": "{0} orders at a time",
+   "v": "同時に{0}件の注文"
+  },
+  {
+   "k": "{0} raider {x}",
+   "v": "{x}から略奪者{0}人"
+  },
+  {
+   "k": "{0} raiders landed {x}!",
+   "v": "略奪者{0}人が{x}に上陸！"
+  },
+  {
+   "k": "{0} raiders {x}",
+   "v": "{x}から略奪者{0}人"
+  },
+  {
+   "k": "{0} reached level {1}! (it eats a little more now)",
+   "v": "{0}がレベル{1}になった！（食べる量が少し増えます）"
+  },
+  {
+   "k": "{0} room",
+   "v": "容量{0}"
+  },
+  {
+   "k": "{0} slots forever",
+   "v": "{0}枠（永久）"
+  },
+  {
+   "k": "{0} wood, {1} stone, {2} planks in the store.{3}",
+   "v": "倉庫に木材{0}・石{1}・板材{2}。{3}"
+  },
+  {
+   "k": "{0} {1}",
+   "v": "{0} {1}"
+  },
+  {
+   "k": "{0} · Island Lv {1}",
+   "v": "{0} · 島Lv {1}"
+  },
+  {
+   "k": "{0} · Island Lv {1} · {2}",
+   "v": "{0} · 島Lv {1} · {2}"
+  },
+  {
+   "k": "{0} → <color=#7dff6a>{1}</color>",
+   "v": "{0} → <color=#7dff6a>{1}</color>"
+  },
+  {
+   "k": "{0}% interest every {1} min; raiders can't take coins",
+   "v": "{1}分ごとに{0}%の利息。襲撃者にコインを奪われない"
+  },
+  {
+   "k": "{0}% more people everywhere",
+   "v": "どこでも住人が{0}%増える"
+  },
+  {
+   "k": "{0}D RENDER",
+   "v": "{0}Dレンダー"
+  },
+  {
+   "k": "{0}d {1}h",
+   "v": "{0}日{1}時間"
+  },
+  {
+   "k": "{0}h {1}m",
+   "v": "{0}時間{1}分"
+  },
+  {
+   "k": "{0}m",
+   "v": "{0}分"
+  },
+  {
+   "k": "{0}m {1}s",
+   "v": "{0}分{1}秒"
+  },
+  {
+   "k": "{0}s",
+   "v": "{0}秒"
+  },
+  {
+   "k": "{0}x Value",
+   "v": "{0}倍お得"
+  },
+  {
+   "k": "{name} joined your farm circle.",
+   "v": "{name}さんがあなたの農場仲間になりました。"
+  },
+  {
+   "k": "{name} reached level {level}: collect {coins} coins and {gems} gems.",
+   "v": "{name}さんがレベル{level}に到達：{coins}コインと{gems}ジェムを受け取ろう。"
+  },
+  {
+   "k": "{x}  {0}/{1}",
+   "v": "{x}  {0}/{1}"
+  },
+  {
+   "k": "{x}  {0}/{1} · hungry",
+   "v": "{x}  {0}/{1}・空腹"
+  },
+  {
+   "k": "{x} is ready!",
+   "v": "{x}が完成！"
+  },
+  {
+   "k": "{x} is repaired",
+   "v": "{x}を修理しました"
+  },
+  {
+   "k": "{x} opens at island level {0}",
+   "v": "{x}は島レベル{0}で開放"
+  },
+  {
+   "k": "© Farmverse",
+   "v": "© Farmverse"
+  },
+  {
+   "k": "×{0} full",
+   "v": "×{0} 満杯"
+  },
+  {
+   "k": "×{0} · making",
+   "v": "×{0} · 生産中"
+  },
+  {
+   "k": "“Good day to you!”",
+   "v": "「こんにちは！」"
+  },
+  {
+   "k": "Zombies sighted {x}!",
+   "v": "{x}にゾンビを発見！"
+  },
+  {
+   "k": "Zombies sighted {x} — the Builder leads them!",
+   "v": "{x}にゾンビを発見 — ビルダーが率いている！"
+  },
+  {
+   "k": "Zombies {x} · coming in {0}s",
+   "v": "{x}からゾンビ · あと{0}秒"
+  },
+  {
+   "k": "{0} zombie {x}",
+   "v": "{x}からゾンビ{0}体"
+  },
+  {
+   "k": "{0} zombies {x}",
+   "v": "{x}からゾンビ{0}体"
+  },
+  {
+   "k": "{0} zombies shamble in {x}!",
+   "v": "{x}からゾンビ{0}体がよろよろとやって来た！"
+  },
+  {
+   "k": "The post office order for {0} {x} ran out",
+   "v": "郵便局の{x}{0}個の注文は期限切れ"
+  },
+  {
+   "k": "Take {x} from the farmhouse into your basket",
+   "v": "ファームハウスから{x}をかごに入れる"
+  },
+  {
+   "k": "Needs {x}",
+   "v": "必要：{x}"
+  },
+  {
+   "k": "Everything's here — builders will repair the {x}",
+   "v": "材料がそろいました — ビルダーが{x}を修理します"
+  },
+  {
+   "k": "Everything's here — builders will put up the {x}",
+   "v": "材料がそろいました — ビルダーが{x}を建てます"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Coins</color> to build the {x}.",
+   "v": "{x}を建てるには<color=#ffd23a>コインがあと{0}枚</color>必要です。"
+  },
+  {
+   "k": "You need <color=#ffd23a>{0} more Planks</color> to upgrade the {x}.",
+   "v": "{x}を強化するには<color=#ffd23a>板材があと{0}枚</color>必要です。"
+  },
+  {
+   "k": "{x} growing",
+   "v": "{x}が成長中"
+  },
+  {
+   "k": "🔒 {x}",
+   "v": "🔒 {x}"
+  },
+  {
+   "k": "{x} placed",
+   "v": "{x}を置きました"
+  },
+  {
+   "k": "{x} opens at farmhouse level {0}",
+   "v": "{x}はファームハウスレベル{0}で開きます"
+  },
+  {
+   "k": "Farm Pass: {x}",
+   "v": "ファームパス：{x}"
+  },
+  {
+   "k": "Island Lv {0} · {x}",
+   "v": "島 Lv {0} · {x}"
+  },
+  {
+   "k": "{x} · Lv {0}",
+   "v": "{x} · Lv {0}"
+  },
+  {
+   "k": "{x} · Island Lv {0}",
+   "v": "{x} · 島 Lv {0}"
+  },
+  {
+   "k": "Settler · Island Lv {0} · {x}",
+   "v": "開拓者 · 島 Lv {0} · {x}"
+  },
+  {
+   "k": "{0} wheat → {1} flour",
+   "v": "小麦{0} → 小麦粉{1}"
+  },
+  {
+   "k": "{0} maize → {1} feed",
+   "v": "トウモロコシ{0} → 飼料{1}"
+  },
+  {
+   "k": "wheat",
+   "v": "小麦"
+  },
+  {
+   "k": "egg",
+   "v": "卵"
+  },
+  {
+   "k": "milk",
+   "v": "牛乳"
+  },
+  {
+   "k": "maize",
+   "v": "トウモロコシ"
+  },
+  {
+   "k": "beans",
+   "v": "豆"
+  },
+  {
+   "k": "flour",
+   "v": "小麦粉"
+  },
+  {
+   "k": "tomato",
+   "v": "トマト"
+  },
+  {
+   "k": "veg box",
+   "v": "野菜箱"
+  },
+  {
+   "k": "wood",
+   "v": "木材"
+  },
+  {
+   "k": "stone",
+   "v": "石"
+  },
+  {
+   "k": "planks",
+   "v": "板材"
+  },
+  {
+   "k": "cabbage",
+   "v": "キャベツ"
+  },
+  {
+   "k": "berries",
+   "v": "ベリー"
+  },
+  {
+   "k": "pumpkin",
+   "v": "カボチャ"
+  },
+  {
+   "k": "sunflower",
+   "v": "ヒマワリ"
+  },
+  {
+   "k": "croissant",
+   "v": "クロワッサン"
+  },
+  {
+   "k": "yogurt",
+   "v": "ヨーグルト"
+  },
+  {
+   "k": "juice",
+   "v": "ジュース"
+  },
+  {
+   "k": "soda",
+   "v": "ソーダ"
+  },
+  {
+   "k": "feed",
+   "v": "飼料"
+  },
+  {
+   "k": "fish",
+   "v": "魚"
+  },
+  {
+   "k": "meat",
+   "v": "肉"
+  },
+  {
+   "k": "mushroom",
+   "v": "キノコ"
+  },
+  {
+   "k": "oil",
+   "v": "油"
+  },
+  {
+   "k": "flowers",
+   "v": "花"
+  },
+  {
+   "k": "decor flower bed",
+   "v": "花壇"
+  },
+  {
+   "k": "decor lamp post",
+   "v": "街灯"
+  },
+  {
+   "k": "decor mailbox",
+   "v": "郵便受け"
+  },
+  {
+   "k": "fish market",
+   "v": "魚市場"
+  },
+  {
+   "k": "greenhouse",
+   "v": "温室"
+  },
+  {
+   "k": "lumber yard",
+   "v": "製材所"
+  },
+  {
+   "k": "warehouse",
+   "v": "倉庫"
+  },
+  {
+   "k": "farmhouse",
+   "v": "ファームハウス"
+  },
+  {
+   "k": "windmill",
+   "v": "風車"
+  },
+  {
+   "k": "Bedroom",
+   "v": "寝室"
+  },
+  {
+   "k": "Bathroom",
+   "v": "バスルーム"
+  },
+  {
+   "k": "Study",
+   "v": "書斎"
+  },
+  {
+   "k": "Pouf",
+   "v": "プーフ"
+  },
+  {
+   "k": "<color=#7dff6a>{0}</color> codes ready",
+   "v": "コード<color=#7dff6a>{0}</color>件の準備完了"
+  },
+  {
+   "k": "<size={0}%>Premium rewards on every tier!</size>",
+   "v": "<size={0}%>全ティアにプレミアム報酬！</size>"
+  },
+  {
+   "k": "A bigger workers' house works longer offline: {0} hours at level {1} {2} at level {3} The Farm Pass makes it {4}",
+   "v": "大きな作業員の家ほどオフラインで長く働きます：レベル{1}で{0}時間 レベル{3}で{2} ファームパスで{4}"
+  },
+  {
+   "k": "A gift from the team.",
+   "v": "チームからのプレゼント。"
+  },
+  {
+   "k": "Army",
+   "v": "軍隊"
+  },
+  {
+   "k": "Autumn: Harvest time: fields yield two more",
+   "v": "秋：収穫の時期、畑の収量が2増える"
+  },
+  {
+   "k": "Summer: Fields yield one more",
+   "v": "夏：畑の収量が1増える"
+  },
+  {
+   "k": "Winter: Crops grow slowly and everyone eats more: stock up",
+   "v": "冬：作物の成長が遅く、みんなよく食べます。備蓄しよう"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins · ate {5} food",
+   "v": "不在{0}時間{1}分 · 作業員{2}人が{3}回運搬 · 種代{4}コイン · 食料{5}を消費"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins · the farmhouse filled up",
+   "v": "不在{0}時間{1}分 · 作業員{2}人が{3}回運搬 · 種代{4}コイン · ファームハウスが満杯に"
+  },
+  {
+   "k": "Away {0}h {1}m · {2} workers carried {3} loads · seeds cost {4} coins · the farmhouse filled up · ate {5} food",
+   "v": "不在{0}時間{1}分 · 作業員{2}人が{3}回運搬 · 種代{4}コイン · ファームハウスが満杯に · 食料{5}を消費"
+  },
+  {
+   "k": "Baker",
+   "v": "パン屋"
+  },
+  {
+   "k": "Beard",
+   "v": "ひげ"
+  },
+  {
+   "k": "Boss zombie",
+   "v": "ボスゾンビ"
+  },
+  {
+   "k": "Build a builders' hut",
+   "v": "ビルダー小屋を建てる"
+  },
+  {
+   "k": "Build a water tower",
+   "v": "給水塔を建てる"
+  },
+  {
+   "k": "Build an army house and keep it fed to stop the next night.",
+   "v": "兵舎を建てて食料を切らさず、次の夜を食い止めよう。"
+  },
+  {
+   "k": "Builder",
+   "v": "ビルダー"
+  },
+  {
+   "k": "Builders",
+   "v": "ビルダー"
+  },
+  {
+   "k": "Builders take {0} wood from the farmhouse",
+   "v": "ビルダーがファームハウスから木材{0}を受け取る"
+  },
+  {
+   "k": "Builders take {0} wood, {1} stone from the farmhouse",
+   "v": "ビルダーがファームハウスから木材{0}と石{1}を受け取る"
+  },
+  {
+   "k": "Cabbage",
+   "v": "キャベツ"
+  },
+  {
+   "k": "Cherry blossom",
+   "v": "桜"
+  },
+  {
+   "k": "Chop {0} trees",
+   "v": "木を{0}本切る"
+  },
+  {
+   "k": "Crops grow a little faster.\n\nClear skies.",
+   "v": "作物が少し早く育ちます。\n\n快晴。"
+  },
+  {
+   "k": "Crops grow slowly and everyone eats more: stock up.\n\nRain: crops sown now grow faster.",
+   "v": "作物の成長が遅く、みんなよく食べます。備蓄しよう。\n\n雨：今まいた作物は早く育ちます。"
+  },
+  {
+   "k": "Customize",
+   "v": "カスタマイズ"
+  },
+  {
+   "k": "Delivery orders that pay better than the market",
+   "v": "市場より高く買ってくれる配達注文"
+  },
+  {
+   "k": "Drag to turn",
+   "v": "ドラッグで回転"
+  },
+  {
+   "k": "Earned for: Daily · Harvest {0} crops",
+   "v": "獲得理由：デイリー · 作物を{0}個収穫"
+  },
+  {
+   "k": "Earned today · expires in {0} days",
+   "v": "本日獲得 · {0}日後に期限切れ"
+  },
+  {
+   "k": "Extras",
+   "v": "おまけ"
+  },
+  {
+   "k": "FURNISH",
+   "v": "家具"
+  },
+  {
+   "k": "Face",
+   "v": "顔"
+  },
+  {
+   "k": "Facility well",
+   "v": "井戸"
+  },
+  {
+   "k": "Facility well {0}",
+   "v": "井戸 {0}"
+  },
+  {
+   "k": "Farm workers {0}/{1}",
+   "v": "農場作業員 {0}/{1}"
+  },
+  {
+   "k": "Farmhouse reached level {0}! (it eats a little more now)",
+   "v": "ファームハウスがレベル{0}に！（少し多く食べるようになります）"
+  },
+  {
+   "k": "Field {0}",
+   "v": "畑 {0}"
+  },
+  {
+   "k": "Fill an order that gives planks",
+   "v": "板材がもらえる注文をこなす"
+  },
+  {
+   "k": "Fill {0} orders",
+   "v": "注文を{0}件こなす"
+  },
+  {
+   "k": "Fill {0} orders in a day to open the chest.",
+   "v": "1日に注文を{0}件こなすと宝箱が開きます。"
+  },
+  {
+   "k": "Finish {0} goals",
+   "v": "目標を{0}個達成"
+  },
+  {
+   "k": "Friends need the full game.\nStart from the <color=#ffd23a>Boot</color> scene to sign in.",
+   "v": "フレンド機能には完全版が必要です。\n<color=#ffd23a>Boot</color>シーンから始めてサインインしてください。"
+  },
+  {
+   "k": "News needs the full game.\nStart from the <color=#ffd23a>Boot</color> scene to sign in.",
+   "v": "ニュースには完全版が必要です。\n<color=#ffd23a>Boot</color>シーンから始めてサインインしてください。"
+  },
+  {
+   "k": "Glasses",
+   "v": "メガネ"
+  },
+  {
+   "k": "Gloves",
+   "v": "手袋"
+  },
+  {
+   "k": "Grandma",
+   "v": "おばあちゃん"
+  },
+  {
+   "k": "Grow {0} crops",
+   "v": "作物を{0}個育てる"
+  },
+  {
+   "k": "Hair",
+   "v": "髪"
+  },
+  {
+   "k": "Hat",
+   "v": "帽子"
+  },
+  {
+   "k": "Island Lv {0}",
+   "v": "島 Lv {0}"
+  },
+  {
+   "k": "Island level {0}",
+   "v": "島レベル {0}"
+  },
+  {
+   "k": "Jester",
+   "v": "道化師"
+  },
+  {
+   "k": "Labourer",
+   "v": "作業員"
+  },
+  {
+   "k": "Labourers",
+   "v": "作業員"
+  },
+  {
+   "k": "Laid in the chicken coop.\n<color=#ffd23a>Shops pay <b>{0}</b> coins each.</color>",
+   "v": "鶏小屋で産まれました。\n<color=#ffd23a>店は1個<b>{0}</b>コインで買います。</color>"
+  },
+  {
+   "k": "Load crates from your stores: the truck pays in building materials",
+   "v": "倉庫から木箱を積もう：トラックは建材で支払います"
+  },
+  {
+   "k": "Make or gather planks on your island",
+   "v": "島で板材を作るか集めよう"
+  },
+  {
+   "k": "Makes feed · {0}% speed",
+   "v": "飼料を作る · 速度{0}%"
+  },
+  {
+   "k": "Makes flour · {0}% speed",
+   "v": "小麦粉を作る · 速度{0}%"
+  },
+  {
+   "k": "Making",
+   "v": "製造中"
+  },
+  {
+   "k": "Market",
+   "v": "市場"
+  },
+  {
+   "k": "Market {0}",
+   "v": "市場 {0}"
+  },
+  {
+   "k": "Mascot",
+   "v": "マスコット"
+  },
+  {
+   "k": "Me",
+   "v": "自分"
+  },
+  {
+   "k": "Milk every {0}s",
+   "v": "{0}秒ごとに牛乳"
+  },
+  {
+   "k": "Milk goes off if left too long",
+   "v": "牛乳は放っておくと傷みます"
+  },
+  {
+   "k": "Need {0} more Planks — make or gather it, or fill orders that give it.",
+   "v": "板材があと{0}枚必要 — 作るか集めるか、もらえる注文をこなそう。"
+  },
+  {
+   "k": "Needs {0} planks",
+   "v": "板材が{0}枚必要"
+  },
+  {
+   "k": "Needs {0} planks in the farmhouse (has {1}) — a lumber yard makes them",
+   "v": "ファームハウスに板材が{0}枚必要（現在{1}）— 製材所で作れます"
+  },
+  {
+   "k": "Needs {0} planks, {1} stone",
+   "v": "板材{0}と石{1}が必要"
+  },
+  {
+   "k": "Needs {0} stone",
+   "v": "石が{0}必要"
+  },
+  {
+   "k": "Needs {0} stone in the farmhouse (has {1}) — break rocks",
+   "v": "ファームハウスに石が{0}必要（現在{1}）— 岩を砕こう"
+  },
+  {
+   "k": "Needs {0} wood, {1} planks",
+   "v": "木材{0}と板材{1}が必要"
+  },
+  {
+   "k": "Next in {0}m {1}s",
+   "v": "次まで{0}分{1}秒"
+  },
+  {
+   "k": "Next truck in {0}m {1}s",
+   "v": "次のトラックまで{0}分{1}秒"
+  },
+  {
+   "k": "No new messages",
+   "v": "新しいメッセージはありません"
+  },
+  {
+   "k": "No news right now.\nCheck back soon!",
+   "v": "今はニュースがありません。\nまた見に来てね！"
+  },
+  {
+   "k": "None",
+   "v": "なし"
+  },
+  {
+   "k": "Not enough Coins",
+   "v": "コインが足りません"
+  },
+  {
+   "k": "Not enough Planks",
+   "v": "板材が足りません"
+  },
+  {
+   "k": "Order Truck",
+   "v": "注文トラック"
+  },
+  {
+   "k": "Order delivered: {0} coins",
+   "v": "注文配達完了：{0}コイン"
+  },
+  {
+   "k": "Order ends in {0}m {1}s",
+   "v": "注文終了まで{0}分{1}秒"
+  },
+  {
+   "k": "Pants",
+   "v": "ズボン"
+  },
+  {
+   "k": "Paste your code and tap <color=#ffd23a>Redeem</color>.",
+   "v": "コードを貼り付けて<color=#ffd23a>引き換え</color>をタップ。"
+  },
+  {
+   "k": "People {0}/{1}",
+   "v": "人 {0}/{1}"
+  },
+  {
+   "k": "People {0}/{1} · hungry",
+   "v": "人 {0}/{1} · 空腹"
+  },
+  {
+   "k": "Plant {0} crops",
+   "v": "作物を{0}個植える"
+  },
+  {
+   "k": "Required Level {0}",
+   "v": "必要レベル {0}"
+  },
+  {
+   "k": "Reset",
+   "v": "リセット"
+  },
+  {
+   "k": "Shoes",
+   "v": "靴"
+  },
+  {
+   "k": "Soldier",
+   "v": "兵士"
+  },
+  {
+   "k": "Surprise me",
+   "v": "おまかせ"
+  },
+  {
+   "k": "Sign in with your <color=#ffd23a>VeWorld</color> wallet.",
+   "v": "<color=#ffd23a>VeWorld</color>ウォレットでサインイン。"
+  },
+  {
+   "k": "Tap <color=#ffd23a>Open redeem page</color>.",
+   "v": "<color=#ffd23a>引き換えページを開く</color>をタップ。"
+  },
+  {
+   "k": "The night is over",
+   "v": "夜が明けた"
+  },
+  {
+   "k": "The night is over — {0} people killed",
+   "v": "夜が明けた — {0}人が犠牲に"
+  },
+  {
+   "k": "The raiders got away — {0} coins taken",
+   "v": "略奪者に逃げられた — {0}コインを奪われた"
+  },
+  {
+   "k": "The truck is out on the road. It'll be back with new crates soon.",
+   "v": "トラックは出発中。まもなく新しい木箱を持って戻ります。"
+  },
+  {
+   "k": "The truck paid {0} coins",
+   "v": "トラックが{0}コイン支払った"
+  },
+  {
+   "k": "The truck paid {0} coins: {1} Planks, {2} Stone",
+   "v": "トラックが{0}コイン支払った：板材{1}、石{2}"
+  },
+  {
+   "k": "The truck paid {0} coins: {1} Stone, {2} Wood",
+   "v": "トラックが{0}コイン支払った：石{1}、木材{2}"
+  },
+  {
+   "k": "The zombies got away — {0} goods stolen, {1} people killed, {2} coins taken",
+   "v": "ゾンビに逃げられた — 品物{0}個を盗まれ、{1}人が犠牲、{2}コインを奪われた"
+  },
+  {
+   "k": "The zombies got what they came for — they're shambling back into the fog!",
+   "v": "ゾンビは目当てのものを手に入れ、霧の中へよろよろと帰っていく！"
+  },
+  {
+   "k": "Top",
+   "v": "トップス"
+  },
+  {
+   "k": "Top {0}",
+   "v": "トップ{0}"
+  },
+  {
+   "k": "Townsfolk",
+   "v": "町の人"
+  },
+  {
+   "k": "Truck",
+   "v": "トラック"
+  },
+  {
+   "k": "Warnings before the zombies come, and how the night went",
+   "v": "ゾンビ襲来前の警告と夜の結果"
+  },
+  {
+   "k": "Warriors who fight the zombies",
+   "v": "ゾンビと戦う戦士"
+  },
+  {
+   "k": "Warriors {0}/{1} · hungry",
+   "v": "戦士 {0}/{1} · 空腹"
+  },
+  {
+   "k": "Welcome, farmer!",
+   "v": "ようこそ、農家さん！"
+  },
+  {
+   "k": "When a friend you invite reaches Level {0} you both get {1} coins and {2} gems.",
+   "v": "招待した友だちがレベル{0}になると、2人とも{1}コインと{2}ジェムがもらえます。"
+  },
+  {
+   "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2}",
+   "v": "作業員が{0}個収穫 · {1}面に種まき · 動物に{2}回えさやり"
+  },
+  {
+   "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3}",
+   "v": "作業員が{0}個収穫 · {1}面に種まき · 動物に{2}回えさやり · {3}個回収"
+  },
+  {
+   "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3} · refilled machines with {4}",
+   "v": "作業員が{0}個収穫 · {1}面に種まき · 動物に{2}回えさやり · {3}個回収 · 機械に{4}補充"
+  },
+  {
+   "k": "World rank: {0}",
+   "v": "世界ランク：{0}"
+  },
+  {
+   "k": "World {0}",
+   "v": "ワールド {0}"
+  },
+  {
+   "k": "You have {0}",
+   "v": "所持：{0}"
+  },
+  {
+   "k": "Your stable is being built ({0} %) — the horse comes when it's done",
+   "v": "厩舎を建設中（{0}%）— 完成すると馬が来ます"
+  },
+  {
+   "k": "Your stable is waiting for materials: {0} stone",
+   "v": "厩舎は資材待ち：石{0}"
+  },
+  {
+   "k": "Your stable is waiting for materials: {0} wood, {1} stone",
+   "v": "厩舎は資材待ち：木材{0}、石{1}"
+  },
+  {
+   "k": "Zombies are stealing from the farmhouse!",
+   "v": "ゾンビがファームハウスから盗んでいる！"
+  },
+  {
+   "k": "resets {0}h {1}m",
+   "v": "{0}時間{1}分後にリセット"
+  },
+  {
+   "k": "the Builder",
+   "v": "ビルダー"
+  },
+  {
+   "k": "wants:",
+   "v": "ほしいもの："
+  },
+  {
+   "k": "zombies came",
+   "v": "ゾンビが来た"
+  },
+  {
+   "k": "{0} B3TR · Daily · Harvest {1} crops",
+   "v": "{0} B3TR · デイリー · 作物を{1}個収穫"
+  },
+  {
+   "k": "{0} Stone, {1} Wood",
+   "v": "石{0}、木材{1}"
+  },
+  {
+   "k": "{0} Wood, {1} Stone",
+   "v": "木材{0}、石{1}"
+  },
+  {
+   "k": "{0} coins · online",
+   "v": "{0}コイン · オンライン"
+  },
+  {
+   "k": "{0} coins · ready!",
+   "v": "{0}コイン · 受け取れます！"
+  },
+  {
+   "k": "{0} food in every workers' house",
+   "v": "すべての作業員の家に食料{0}"
+  },
+  {
+   "k": "{0} in store",
+   "v": "在庫{0}"
+  },
+  {
+   "k": "{0} uses left · expires in {1} days",
+   "v": "残り{0}回 · {1}日後に期限切れ"
+  },
+  {
+   "k": "{0}% → <color=#7dff6a>{1}%</color>",
+   "v": "{0}% → <color=#7dff6a>{1}%</color>"
+  },
+  {
+   "k": "“Ah, hello dear. Lovely island you're making.”",
+   "v": "「あら、こんにちは。すてきな島ね。」"
+  },
+  {
+   "k": "“Hello, boss! Ask me about the stores or the fields.”",
+   "v": "「やあ、ボス！倉庫や畑のことなら聞いて。」"
+  },
+  {
+   "k": "“Hi there! Want to know how the building's going?”",
+   "v": "「やあ！工事の進み具合、知りたい？」"
+  },
+  {
+   "k": "“That's the path dirt. A path to lay out your farm.”",
+   "v": "「それは土の道。農場を区切る道だよ。」"
+  },
+  {
+   "k": "“{0} wood, {1} stone, {2} planks in the store.”",
+   "v": "「倉庫に木材{0}、石{1}、板材{2}。」"
+  },
+  {
+   "k": "Get off",
+   "v": "降りる"
+  },
+  {
+   "k": "Santa's gift: tap to open",
+   "v": "サンタのプレゼント：タップで開ける"
+  },
+  {
+   "k": "Santa gave you {0} coins!",
+   "v": "サンタから{0}コイン！"
+  },
+  {
+   "k": "Snow Day Fair",
+   "v": "雪の日フェア"
+  },
+  {
+   "k": "Sweetheart Bakes",
+   "v": "スイートベイク"
+  },
+  {
+   "k": "Spring Planting",
+   "v": "春の種まき"
+  },
+  {
+   "k": "Egg Hunt",
+   "v": "エッグハント"
+  },
+  {
+   "k": "Flower Show",
+   "v": "フラワーショー"
+  },
+  {
+   "k": "Picnic Week",
+   "v": "ピクニックウィーク"
+  },
+  {
+   "k": "Summer Harvest",
+   "v": "夏の収穫祭"
+  },
+  {
+   "k": "County Fair",
+   "v": "カウンティフェア"
+  },
+  {
+   "k": "Harvest Fair",
+   "v": "収穫フェア"
+  },
+  {
+   "k": "Pumpkin Festival",
+   "v": "カボチャ祭り"
+  },
+  {
+   "k": "Woodland Week",
+   "v": "森の週間"
+  },
+  {
+   "k": "Winter Festival",
+   "v": "冬祭り"
+  },
+  {
+   "k": "Frosty Farm",
+   "v": "凍てつく農場"
+  },
+  {
+   "k": "Sweet Treats",
+   "v": "スイーツ"
+  },
+  {
+   "k": "Green Shoots",
+   "v": "新芽"
+  },
+  {
+   "k": "Spring Chicks",
+   "v": "春のひよこ"
+  },
+  {
+   "k": "In Bloom",
+   "v": "満開"
+  },
+  {
+   "k": "Sunny Picnic",
+   "v": "晴れのピクニック"
+  },
+  {
+   "k": "Golden Fields",
+   "v": "黄金の畑"
+  },
+  {
+   "k": "Fair Days",
+   "v": "お祭りの日々"
+  },
+  {
+   "k": "Harvest Moon",
+   "v": "中秋の名月"
+  },
+  {
+   "k": "Spooky Nights",
+   "v": "ゾッとする夜"
+  },
+  {
+   "k": "Lumberjack",
+   "v": "きこり"
+  },
+  {
+   "k": "Winter Wonderland",
+   "v": "冬のワンダーランド"
+  },
+  {
+   "k": "Shops pay 25% more for milk and yogurt",
+   "v": "牛乳とヨーグルトの買取価格が25%アップ"
+  },
+  {
+   "k": "Shops pay 30% more for croissants and flour",
+   "v": "クロワッサンと小麦粉の買取価格が30%アップ"
+  },
+  {
+   "k": "Every field sown yields one more",
+   "v": "まいた畑の収量がすべて1増える"
+  },
+  {
+   "k": "Shops pay 30% more for eggs; 10% more XP",
+   "v": "卵の買取価格が30%アップ、XP10%アップ"
+  },
+  {
+   "k": "Sunflowers yield one more and sell for 30% more; 20% more XP",
+   "v": "ヒマワリの収量が1増え、30%高く売れる、XP20%アップ"
+  },
+  {
+   "k": "Shops pay 25% more for juice, soda and veg boxes",
+   "v": "ジュース、ソーダ、野菜箱の買取価格が25%アップ"
+  },
+  {
+   "k": "Tomatoes, maize and beans yield two more",
+   "v": "トマト、トウモロコシ、豆の収量が2増える"
+  },
+  {
+   "k": "50% more XP from everything",
+   "v": "すべてのXPが50%アップ"
+  },
+  {
+   "k": "Wheat and cabbage yield one more; wheat, flour and cabbage sell for 20% more",
+   "v": "小麦とキャベツの収量が1増え、小麦・小麦粉・キャベツが20%高く売れる"
+  },
+  {
+   "k": "Pumpkins yield two more and sell for 30% more",
+   "v": "カボチャの収量が2増え、30%高く売れる"
+  },
+  {
+   "k": "Shops pay 25% more for wood, planks and stone",
+   "v": "木材、板材、石の買取価格が25%アップ"
+  },
+  {
+   "k": "Snow and decorations; Santa brings coins every day; milk, eggs and croissants sell for 25% more; 25% more XP",
+   "v": "雪と飾りつけ、サンタが毎日コインをくれる、牛乳・卵・クロワッサンが25%高く売れる、XP25%アップ"
+  },
+  {
+   "k": "Christmas tree",
+   "v": "クリスマスツリー"
+  },
+  {
+   "k": "Second armchair",
+   "v": "2つ目のひじ掛けいす"
+  },
+  {
+   "k": "Guitar",
+   "v": "ギター"
+  },
+  {
+   "k": "Sunset picture",
+   "v": "夕焼けの絵"
+  },
+  {
+   "k": "Tall plant",
+   "v": "背の高い植物"
+  },
+  {
+   "k": "Book pile",
+   "v": "本の山"
+  },
+  {
+   "k": "Microwave",
+   "v": "電子レンジ"
+  },
+  {
+   "k": "Stand mixer",
+   "v": "スタンドミキサー"
+  },
+  {
+   "k": "Kitchen island",
+   "v": "アイランドキッチン"
+  },
+  {
+   "k": "Cutting board",
+   "v": "まな板"
+  },
+  {
+   "k": "Herb pot",
+   "v": "ハーブの鉢"
+  },
+  {
+   "k": "Fruit picture",
+   "v": "果物の絵"
+  },
+  {
+   "k": "Teddy bear",
+   "v": "テディベア"
+  },
+  {
+   "k": "Toy car",
+   "v": "おもちゃの車"
+  },
+  {
+   "k": "Wardrobe",
+   "v": "ワードローブ"
+  },
+  {
+   "k": "Alarm clock",
+   "v": "目覚まし時計"
+  },
+  {
+   "k": "Flower picture",
+   "v": "花の絵"
+  },
+  {
+   "k": "Potted plant",
+   "v": "鉢植え"
+  },
+  {
+   "k": "Bath mat",
+   "v": "バスマット"
+  },
+  {
+   "k": "Fern",
+   "v": "シダ"
+  },
+  {
+   "k": "Seaside picture",
+   "v": "海辺の絵"
+  },
+  {
+   "k": "Toothbrushes",
+   "v": "歯ブラシ"
+  },
+  {
+   "k": "Games console",
+   "v": "ゲーム機"
+  },
+  {
+   "k": "Exercise bike",
+   "v": "エアロバイク"
+  },
+  {
+   "k": "Landscape picture",
+   "v": "風景画"
+  },
+  {
+   "k": "Wall clock",
+   "v": "掛け時計"
+  },
+  {
+   "k": "Caravan park",
+   "v": "キャンプ場"
+  }
+ ]
+}

@@ -1,0 +1,439 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8e3c8b5c45abb5499e5000b221fb63a, type: 3}
+  m_Name: BuildingCatalogue
+  m_EditorClassIdentifier: Farmverse.Presentation.World::Farmverse.Presentation.World.Island.BuildingCatalogue
+  entries:
+  - id: chicken_coop
+    displayName: Chicken coop
+    prefab: {fileID: 3550718953051152815, guid: 9000c5eb14b23754499b7a4841c6996a, type: 3}
+    altPrefab: {fileID: 0}
+    price: 250
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Animals
+  - id: pigsty
+    displayName: Pigsty
+    prefab: {fileID: 7012925887528216623, guid: 9d5b4defd27649945b9a8568c1185e74, type: 3}
+    altPrefab: {fileID: 0}
+    price: 350
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Animals
+  - id: stable
+    displayName: Stable
+    prefab: {fileID: 7906542165623247856, guid: 8215a0894e7357744b9e939d482390c8, type: 3}
+    altPrefab: {fileID: 4228866990487964133, guid: 88ba4502b1767804ca5f70d4089cf3ba, type: 3}
+    price: 700
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Animals
+  - id: sign_default
+    displayName: Signpost
+    prefab: {fileID: 7026510908440114695, guid: 0a3d2475cc632ef48aa5e9aec4ebe891, type: 3}
+    altPrefab: {fileID: 0}
+    price: 50
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_bench
+    displayName: Bench
+    prefab: {fileID: 8936741527162813487, guid: f5d7d16cfadf9c4448957baf2cfdbfc1, type: 3}
+    altPrefab: {fileID: 0}
+    price: 60
+    footprint: {x: 2, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_mailbox
+    displayName: Mailbox
+    prefab: {fileID: 6813426186732851207, guid: 270f780f0f732b146b4c316823961e85, type: 3}
+    altPrefab: {fileID: 0}
+    price: 60
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_default
+    displayName: Garden ornament
+    prefab: {fileID: 6456603245842800164, guid: 3148e30a3eda2b34894df47baae2f7b3, type: 3}
+    altPrefab: {fileID: 0}
+    price: 70
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_flower_bed
+    displayName: Flower bed
+    prefab: {fileID: 7283770142143786457, guid: ffa27dc46006ecb429a9c5a49ab193db, type: 3}
+    altPrefab: {fileID: 0}
+    price: 80
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_hay_bales
+    displayName: Hay bales
+    prefab: {fileID: 5186906920816935334, guid: 9b547d41b353515419a893a6b4f2ba36, type: 3}
+    altPrefab: {fileID: 0}
+    price: 90
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_lamp_post
+    displayName: Lamp post
+    prefab: {fileID: 6690875207364981272, guid: 7c3799feccbfc4d46bd8370c0ef956f4, type: 3}
+    altPrefab: {fileID: 0}
+    price: 100
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_beehive
+    displayName: Beehive box
+    prefab: {fileID: 5357060771554558110, guid: 6e1023ebc2ba56e41ad8c152ea27edc4, type: 3}
+    altPrefab: {fileID: 0}
+    price: 120
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: pen
+    displayName: Animal pen
+    prefab: {fileID: 8510186726589240281, guid: ff855f9b13fa0a0448d9ea2e19810853, type: 3}
+    altPrefab: {fileID: 0}
+    price: 150
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Decor
+  - id: seasonal_default
+    displayName: Seasonal display
+    prefab: {fileID: 9196076499660452015, guid: f014b8b0d5a22164cb53ecaf6eb22b93, type: 3}
+    altPrefab: {fileID: 0}
+    price: 150
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Decor
+  - id: decor_fountain
+    displayName: Fountain
+    prefab: {fileID: 3466907335798115461, guid: f6ab0957d182cc641862bfb54edaeb86, type: 3}
+    altPrefab: {fileID: 0}
+    price: 600
+    footprint: {x: 2, y: 2}
+    starter: 0
+    category: Decor
+  - id: feed_mill
+    displayName: Feed mill
+    prefab: {fileID: 1167796309420490741, guid: 508b03c7571786642b002dcbc96f76b4, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1000
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Factories
+  - id: lumber_yard
+    displayName: Lumber yard
+    prefab: {fileID: 4083497127529964888, guid: 90b6babef6fea81499b4f6743464d8e5, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1100
+    footprint: {x: 4, y: 2}
+    starter: 0
+    category: Factories
+  - id: bakery_factory
+    displayName: Bakery
+    prefab: {fileID: 5013260990495423441, guid: 3bc3123ff3b73d5419b1a99ebfeb8dd1, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1100
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Factories
+  - id: dairy_factory
+    displayName: Dairy
+    prefab: {fileID: 9106879567842382350, guid: 74966dad166ef454aa1a2530a8534aa4, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1200
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Factories
+  - id: sugar_mill
+    displayName: Sugar mill
+    prefab: {fileID: 2018839817878945758, guid: f89d3c577f8242b47b95417dae42610c, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1300
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Factories
+  - id: field
+    displayName: Field
+    prefab: {fileID: 5633215843825442282, guid: 4309c84154bb106479da2cfe4fc3b13b, type: 3}
+    altPrefab: {fileID: 0}
+    price: 20
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Farm
+  - id: potting_shed
+    displayName: Potting shed
+    prefab: {fileID: 3138792863380255705, guid: 11cd428a3985eff47b1649afde577ace, type: 3}
+    altPrefab: {fileID: 0}
+    price: 300
+    footprint: {x: 2, y: 2}
+    starter: 0
+    category: Farm
+  - id: facility_well
+    displayName: Well
+    prefab: {fileID: 4731253780530837590, guid: 59f475af301fa7449877a23812c9e2c5, type: 3}
+    altPrefab: {fileID: 265840709232989275, guid: c6f3b93277c6c4d4aa4ce8b9a10ebeaa, type: 3}
+    price: 400
+    footprint: {x: 2, y: 2}
+    starter: 0
+    category: Farm
+  - id: grain_silos
+    displayName: Grain silos
+    prefab: {fileID: 4418314025699778096, guid: 131515664bd6a8446b622e43cadc3799, type: 3}
+    altPrefab: {fileID: 6214793499186735339, guid: cf3c47546dff1884aaa3b20de136b937, type: 3}
+    price: 450
+    footprint: {x: 2, y: 1}
+    starter: 0
+    category: Farm
+  - id: barn
+    displayName: Barn
+    prefab: {fileID: 489227365912120567, guid: eff6cf93db0ecf74ea94c296f0919c45, type: 3}
+    altPrefab: {fileID: 322828768083578579, guid: 724d6ac252d1ee74aabb474caaae45a5, type: 3}
+    price: 600
+    footprint: {x: 4, y: 4}
+    starter: 0
+    category: Farm
+  - id: greenhouse
+    displayName: Greenhouse
+    prefab: {fileID: 2773227221226377578, guid: e5aa79a2e6e2e3b40b802bc5b083811b, type: 3}
+    altPrefab: {fileID: 508263807004104956, guid: 3d073858f47c7b347afac16760eb0bc3, type: 3}
+    price: 800
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Farm
+  - id: facility_warehouse
+    displayName: Warehouse
+    prefab: {fileID: 4594483575219487391, guid: 0820fc2c3c874eb47b940db487590da7, type: 3}
+    altPrefab: {fileID: 0}
+    price: 900
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Farm
+  - id: windmill
+    displayName: Windmill
+    prefab: {fileID: 6182835486131117379, guid: d5315db634399f542b0bde9f17df0e11, type: 3}
+    altPrefab: {fileID: 0}
+    price: 900
+    footprint: {x: 3, y: 2}
+    starter: 0
+    category: Farm
+  - id: farmhouse
+    displayName: Farmhouse
+    prefab: {fileID: 1889780232758696799, guid: 0564125c74038764f820535bf0ca098c, type: 3}
+    altPrefab: {fileID: 0}
+    price: 0
+    footprint: {x: 4, y: 3}
+    starter: 1
+    category: Home
+  - id: mine_entrance
+    displayName: Mine
+    prefab: {fileID: 6980874031947105257, guid: a5a044a2e53bf6445a1dbb512c0a839d, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1400
+    footprint: {x: 3, y: 2}
+    starter: 0
+    category: Mine
+  - id: packing_shed
+    displayName: Packing shed
+    prefab: {fileID: 4609182943997951557, guid: f2465f8c4f8ef5f44a37550868970e6c, type: 3}
+    altPrefab: {fileID: 928056762684262584, guid: 27a63fb6dbdd9134c96b4e206677ec8d, type: 3}
+    price: 500
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Orchard
+  - id: cider_press
+    displayName: Cider press
+    prefab: {fileID: 8441317821945507305, guid: e0e7cdc3c7357d940b53383ee83cf8d7, type: 3}
+    altPrefab: {fileID: 0}
+    price: 650
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Orchard
+  - id: path_dirt
+    displayName: Dirt path
+    prefab: {fileID: 6071453647167496494, guid: 1780031781012334991a3cbeb0ccc8d9, type: 3}
+    altPrefab: {fileID: 0}
+    price: 5
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Paths
+  - id: path_stone
+    displayName: Stone path
+    prefab: {fileID: 8282756375633209188, guid: b216be4dd13658e408fbed0531022e5c, type: 3}
+    altPrefab: {fileID: 0}
+    price: 15
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Paths
+  - id: fence_wood
+    displayName: Wood fence
+    prefab: {fileID: 6482741069518365884, guid: daaf4ef7a6270dd48b30cc391a2ab081, type: 3}
+    altPrefab: {fileID: 0}
+    price: 20
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Paths
+  - id: fence_white
+    displayName: White fence
+    prefab: {fileID: 8275205519678867425, guid: 3e45fdcfe612ccb44b4bf5409015aa24, type: 3}
+    altPrefab: {fileID: 0}
+    price: 30
+    footprint: {x: 1, y: 1}
+    starter: 0
+    category: Paths
+  - id: builders_hut
+    displayName: Builders' hut
+    prefab: {fileID: 8201014733673225222, guid: 99e788ec2f10577439d52771365e7cac, type: 3}
+    altPrefab: {fileID: 0}
+    price: 500
+    footprint: {x: 2, y: 2}
+    starter: 0
+    category: People
+  - id: workers_house
+    displayName: Workers' house
+    prefab: {fileID: 2124354791640511745, guid: 3565b36074a9b794e96e04c048030f0e, type: 3}
+    altPrefab: {fileID: 0}
+    price: 800
+    footprint: {x: 3, y: 2}
+    starter: 0
+    category: People
+  - id: army_house
+    displayName: Army house
+    prefab: {fileID: 1147072429600517843, guid: 7c866ab86e77b1e45a06565604f845c6, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1200
+    footprint: {x: 3, y: 2}
+    starter: 0
+    category: People
+  - id: fishing_shed
+    displayName: Fishing shed
+    prefab: {fileID: 2404971475188122414, guid: 4431e59ddf025854ba1c33802b730384, type: 3}
+    altPrefab: {fileID: 0}
+    price: 500
+    footprint: {x: 1, y: 2}
+    starter: 0
+    category: Sea
+  - id: fish_market
+    displayName: Fish market
+    prefab: {fileID: 3143700246224811903, guid: 902cd3de0953f6642b9a7ff38dc72663, type: 3}
+    altPrefab: {fileID: 0}
+    price: 900
+    footprint: {x: 2, y: 1}
+    starter: 0
+    category: Sea
+  - id: market_stall
+    displayName: Market stall
+    prefab: {fileID: 859323831464463950, guid: 19ba1d08d98e91a45ab1d98f9ce679b8, type: 3}
+    altPrefab: {fileID: 0}
+    price: 200
+    footprint: {x: 2, y: 2}
+    starter: 1
+    category: Shops
+  - id: bakery_shop
+    displayName: Bakery shop
+    prefab: {fileID: 3023865614557048183, guid: 74437016f2754fb478e28c8259ac5eb8, type: 3}
+    altPrefab: {fileID: 0}
+    price: 800
+    footprint: {x: 3, y: 2}
+    starter: 0
+    category: Shops
+  - id: grocer_shop
+    displayName: Grocer
+    prefab: {fileID: 3002782573063405584, guid: 3ff4e85fab88f2b439313b44b078b72b, type: 3}
+    altPrefab: {fileID: 0}
+    price: 800
+    footprint: {x: 2, y: 1}
+    starter: 0
+    category: Shops
+  - id: post_office
+    displayName: Post office
+    prefab: {fileID: 1985218411009955304, guid: 1e198cb9be960e64fbf0148fa7b38367, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1200
+    footprint: {x: 2, y: 2}
+    starter: 0
+    category: Town
+  - id: library
+    displayName: Library
+    prefab: {fileID: 6293921745335488731, guid: 0fe33175982b39447b0ca54ad09ac123, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1400
+    footprint: {x: 3, y: 2}
+    starter: 0
+    category: Town
+  - id: chapel
+    displayName: Chapel
+    prefab: {fileID: 5262623337181561442, guid: dc6db506f04abee40a119aa6d4ac6cdc, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1500
+    footprint: {x: 2, y: 2}
+    starter: 0
+    category: Town
+  - id: clinic
+    displayName: Clinic
+    prefab: {fileID: 1106780250619642103, guid: dc9aa9039f7b0cb4da3a21e7ef77b563, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1600
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Town
+  - id: police_station
+    displayName: Police station
+    prefab: {fileID: 6160955706621704051, guid: bcf4c6738037be94e9a1d1a325f05887, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1700
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Town
+  - id: fire_station
+    displayName: Fire station
+    prefab: {fileID: 8339497200433658042, guid: 84b760604fbf8ca4d9439b5b2a5b6dde, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1700
+    footprint: {x: 3, y: 3}
+    starter: 0
+    category: Town
+  - id: school
+    displayName: School
+    prefab: {fileID: 404395986206819277, guid: 826719640a6db5f4088e18ff5ff748cb, type: 3}
+    altPrefab: {fileID: 0}
+    price: 1800
+    footprint: {x: 4, y: 2}
+    starter: 0
+    category: Town
+  - id: community_hall
+    displayName: Community hall
+    prefab: {fileID: 6592023422555133565, guid: 253ddb397f20ef846ad6338c3fa13ea1, type: 3}
+    altPrefab: {fileID: 0}
+    price: 2000
+    footprint: {x: 4, y: 3}
+    starter: 0
+    category: Town
+  - id: bank
+    displayName: Bank
+    prefab: {fileID: 4809730605097722938, guid: 9fbd3263e38d8a843ba2074d9c9b1931, type: 3}
+    altPrefab: {fileID: 0}
+    price: 2500
+    footprint: {x: 2, y: 3}
+    starter: 0
+    category: Town
+  - id: town_hall
+    displayName: Town hall
+    prefab: {fileID: 849837932925315444, guid: af0327cf1862eb443a717c5df0bbbdb6, type: 3}
+    altPrefab: {fileID: 0}
+    price: 3000
+    footprint: {x: 4, y: 3}
+    starter: 0
+    category: Town

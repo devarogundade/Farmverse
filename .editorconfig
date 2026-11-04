@@ -1,0 +1,24 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+[*.{cs,ts,py}]
+indent_style = space
+indent_size = 4
+
+[*.ts]
+indent_size = 2
+
+[*.{json,yml,uss,tss,uxml,asmdef}]
+indent_style = space
+indent_size = 2
+
+[*.cs]
+# unused usings and write-only fields show up in the IDE (and in the dotnet analyzer run)
+dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0052.severity = warning
+dotnet_diagnostic.IDE0060.severity = suggestion
+dotnet_diagnostic.CS1591.severity = none

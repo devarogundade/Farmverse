@@ -1,0 +1,3 @@
+/* Farmverse runtime theme: Unity's default controls. The game UI (GameUi) styles itself in code.
+ * PanelSettings.themeStyleSheet points here. */
+@import url("unity-theme://default");

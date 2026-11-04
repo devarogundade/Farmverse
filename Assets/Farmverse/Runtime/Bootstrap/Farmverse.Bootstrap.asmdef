@@ -1,0 +1,24 @@
+{
+    "name": "Farmverse.Bootstrap",
+    "rootNamespace": "Farmverse.Bootstrap",
+    "references": [
+        "Farmverse.Contracts",
+        "Farmverse.Core",
+        "Farmverse.Domain",
+        "Farmverse.Application",
+        "Farmverse.Infrastructure.Firebase",
+        "Farmverse.Infrastructure.Unity",
+        "Farmverse.Presentation.UI",
+        "Farmverse.Presentation.World",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

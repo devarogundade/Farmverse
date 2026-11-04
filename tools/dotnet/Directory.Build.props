@@ -1,0 +1,16 @@
+<Project>
+  <!--
+    Builds the engine-free Unity assemblies (noEngineReferences: true) with plain
+    .NET so CI can compile and test the game logic in seconds without Unity.
+    Settings mirror Unity 6: C# 9, .NET Standard 2.1.
+  -->
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <AssetsRoot>$(MSBuildThisFileDirectory)../../Assets/Farmverse/</AssetsRoot>
+  </PropertyGroup>
+</Project>

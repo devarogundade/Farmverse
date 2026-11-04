@@ -1,0 +1,31 @@
+{
+    "name": "Farmverse.Infrastructure.Firebase",
+    "rootNamespace": "Farmverse.Infrastructure.Firebase",
+    "references": [
+        "Farmverse.Contracts",
+        "Farmverse.Core",
+        "Farmverse.Domain",
+        "Farmverse.Application",
+        "Firebase.Functions"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Firebase.App.dll",
+        "Firebase.Platform.dll",
+        "Firebase.TaskExtension.dll",
+        "Firebase.Auth.dll",
+        "Firebase.AppCheck.dll",
+        "Firebase.Firestore.dll",
+        "Firebase.RemoteConfig.dll",
+        "Firebase.Crashlytics.dll",
+        "Firebase.Messaging.dll",
+        "Firebase.Installations.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

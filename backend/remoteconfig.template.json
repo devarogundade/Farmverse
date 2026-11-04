@@ -1,0 +1,28 @@
+{
+  "parameters": {
+    "maintenance": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "description": "Show the maintenance screen and block the boot (11 \u00a73).",
+      "valueType": "BOOLEAN"
+    },
+    "min_client_version": {
+      "defaultValue": {
+        "value": "0.0.0"
+      },
+      "description": "Clients below this version see the forced-update screen.",
+      "valueType": "STRING"
+    },
+    "island_shadow": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "description": "Rollout phase 1: mirror the island to the server engine on every open and compare the runs.",
+      "valueType": "BOOLEAN"
+    }
+  },
+  "version": {
+    "description": "Farmverse Remote Config \u2014 keys mirror Assets/Farmverse/Runtime/Application/Config/RemoteKeys.cs"
+  }
+}

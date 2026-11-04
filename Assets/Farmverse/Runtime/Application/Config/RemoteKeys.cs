@@ -1,0 +1,20 @@
+#nullable enable
+namespace Farmverse.Application.Config
+{
+    /// <summary>
+    /// Remote Config keys and their compiled-in defaults (11 §3). The template in
+    /// backend/remoteconfig.template.json must carry the same keys.
+    /// </summary>
+    public static class RemoteKeys
+    {
+        public const string Maintenance = "maintenance";
+        public const bool MaintenanceDefault = false;
+
+        public const string MinClientVersion = "min_client_version";
+        public const string MinClientVersionDefault = "0.0.0";
+
+        /// <summary>Rollout phase 1: mirror the island to the server engine on every open and compare the runs.</summary>
+        public const string IslandShadow = "island_shadow";
+        public const bool IslandShadowDefault = true;
+    }
+}
