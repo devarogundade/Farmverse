@@ -201,6 +201,31 @@ const NEW_TASK = (typeId: string, order: number): CouponTask => ({
   amount: 1,
 });
 
+/** Common partner colours; the hex box takes any other. */
+const SWATCHES = ['#26a17b', '#2775ca', '#f3ba2f', '#e84142', '#8247e5'];
+
+function ColourPick({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [text, setText] = useState(value);
+  useEffect(() => setText(value), [value]);
+  return (
+    <span className="swatches" role="group" aria-label="Logo colour">
+      {SWATCHES.map((c) => (
+        <button key={c} type="button" className="swatch" style={{ background: c }} aria-label={c} aria-pressed={value.toLowerCase() === c} onClick={() => onChange(c)} />
+      ))}
+      <Input
+        value={text}
+        maxLength={7}
+        aria-label="Colour as a hex code"
+        onChange={(e) => {
+          const v = e.target.value.trim();
+          setText(v);
+          if (/^#[0-9a-f]{6}$/i.test(v)) onChange(v.toLowerCase());
+        }}
+      />
+    </span>
+  );
+}
+
 const NEW_TYPE: CouponType = {
   name: 'New coupon',
   logoArt: '',
@@ -264,7 +289,7 @@ function Editor({ tab }: { tab: 'tasks' | 'types' }) {
             <div key={id} className="edit-card fv-panel">
               <div className="edit-head">
                 <Input className="edit-name" value={t.name} maxLength={40} onChange={(e) => setTask(id, { name: e.target.value })} aria-label="Task name" />
-                <Pill tone={t.daily ? 'sky' : 'gold'}>{t.daily ? 'Daily' : 'Once'}</Pill>
+                <Pill tone="muted">{t.daily ? 'Daily' : 'Once'}</Pill>
                 <button className="fv-chip sm-chip" aria-label={`Remove ${t.name}`} onClick={() => drop('tasks', id)}>
                   <img className="fv-icon" src={sprite('Icon_PictoIcon_Delete')} alt="" />
                 </button>
@@ -298,7 +323,8 @@ function Editor({ tab }: { tab: 'tasks' | 'types' }) {
             </div>
           ))}
           <button className="add-card" onClick={() => setDraft({ ...draft, tasks: { ...draft.tasks, [nextId('t', draft.tasks)]: NEW_TASK(typeOptions[0]?.value ?? '', tasks.length + 1) } })} disabled={!typeOptions.length}>
-            + Add a task
+            <img src={sprite('Icon_PictoIcon_Add01')} alt="" />
+            Add a task
           </button>
         </div>
       ) : (
@@ -324,8 +350,8 @@ function Editor({ tab }: { tab: 'tasks' | 'types' }) {
                 <Field label="Unit">
                   <Input value={t.unit} maxLength={12} onChange={(e) => setType(id, { unit: e.target.value })} />
                 </Field>
-                <Field label="Code starts with" hint="2–8 capital letters or digits">
-                  <Input value={t.codePrefix} maxLength={8} onChange={(e) => setType(id, { codePrefix: e.target.value.toUpperCase() })} />
+                <Field label="Code starts with">
+                  <Input value={t.codePrefix} maxLength={8} placeholder="2–8 letters or digits" onChange={(e) => setType(id, { codePrefix: e.target.value.toUpperCase() })} />
                 </Field>
                 <Field label="Expires after (days)">
                   <Input type="number" min={1} max={365} value={t.expiryDays} onChange={(e) => setType(id, { expiryDays: Number(e.target.value) })} />
@@ -339,8 +365,8 @@ function Editor({ tab }: { tab: 'tasks' | 'types' }) {
                 <Field label="Wallet players only">
                   <Toggle on={t.linkedOnly} onChange={(v) => setType(id, { linkedOnly: v })} label="Wallet players only" />
                 </Field>
-                <Field label="Logo colour">
-                  <Input type="color" value={t.logoBg} onChange={(e) => setType(id, { logoBg: e.target.value })} />
+                <Field label="Logo colour" group>
+                  <ColourPick value={t.logoBg} onChange={(logoBg) => setType(id, { logoBg })} />
                 </Field>
                 <Field label="Logo letter">
                   <Input value={t.logoGlyph} maxLength={4} onChange={(e) => setType(id, { logoGlyph: e.target.value })} />
@@ -352,7 +378,8 @@ function Editor({ tab }: { tab: 'tasks' | 'types' }) {
             </div>
           ))}
           <button className="add-card" onClick={() => setDraft({ ...draft, types: { ...draft.types, [nextId('c', draft.types)]: NEW_TYPE } })}>
-            + Add a coupon type
+            <img src={sprite('Icon_PictoIcon_Add01')} alt="" />
+            Add a coupon type
           </button>
         </div>
       )}

@@ -76,7 +76,8 @@ export function Players({ q, status, sort, page }: { q: string; status: string; 
                     </span>
                     <span className="who-text">
                       <b>
-                        {p.name ?? 'No island yet'} {p.bannedAt && <Pill tone="pink">Banned</Pill>}
+                        <span className="who-name">{p.name ?? 'No island yet'}</span>
+                        {p.bannedAt && <Pill tone="pink">Banned</Pill>}
                       </b>
                       <small className="muted">
                         {p.accountId}

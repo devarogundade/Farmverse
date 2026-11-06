@@ -56,19 +56,23 @@ export function PlayerPage({ uid }: { uid: string }) {
   const action = usePlayerAction(uid);
   const [open, setOpen] = useState<null | 'gift' | 'ban' | 'unban' | 'signout'>(null);
 
-  if (isLoading) return <Loading />;
-  if (error || !d) return <Failed error={error} retry={() => void refetch()} />;
+  // The way back stays put while the player loads
+  const back = (
+    <nav className="crumbs">
+      <a href={href.players()}>
+        <img className="crumb-back" src={sprite('Icon_PictoIcon_Back')} alt="" />
+        Players
+      </a>
+    </nav>
+  );
+  if (isLoading) return <>{back}<Loading /></>;
+  if (error || !d) return <>{back}<Failed error={error} retry={() => void refetch()} /></>;
   const p = d.player;
   const unclaimed = d.rewards.filter((r) => !r.claimedAt);
 
   return (
     <>
-      <nav className="crumbs">
-        <a href={href.players()}>Players</a>
-        <span>›</span>
-        <b>{p.name ?? p.accountId}</b>
-      </nav>
-
+      {back}
       <div className="player-head fv-panel">
         <Avatar seed={p.accountId} label={p.name ?? p.accountId} size={72} />
         <div className="player-id">

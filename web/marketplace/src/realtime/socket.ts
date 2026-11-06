@@ -11,7 +11,12 @@ import { config } from '../config';
 /** What the server pushes (backend/server/src/chain/project.ts `MarketMessage`). */
 export type MarketMessage =
   | { type: 'listing' | 'delist' | 'sale' | 'redeem'; token_id: string }
-  | { type: 'offer'; token_id: string; to: string }
+  /** An offer changed (`token_id` is `#<item>` for an offer on any token of an item). */
+  | { type: 'offer'; token_id: string }
+  /** A worker was put up for hire, hired, paid out or taken back. */
+  | { type: 'rental'; token_id: string }
+  /** A shop drop changed or sold (`token_id` is the drop id). */
+  | { type: 'drop'; token_id: string }
   | { type: 'note'; to: string; text: string; icon?: string; href?: string };
 
 export type LiveStatus = 'connecting' | 'live' | 'offline';
@@ -42,7 +47,18 @@ function handle(qc: QueryClient, account: string | null, m: MarketMessage, onNot
       qc.invalidateQueries({ queryKey: keys.token(m.token_id) });
       break;
     case 'offer':
-      qc.invalidateQueries({ queryKey: keys.offers(m.token_id) });
+      // an item offer (#wheat) can be accepted with any matching token: refresh every offer list
+      qc.invalidateQueries({ queryKey: m.token_id.startsWith('#') ? ['market', 'offers'] : keys.offers(m.token_id) });
+      qc.invalidateQueries({ queryKey: ['market', 'offers-by'] });
+      break;
+    case 'rental':
+      qc.invalidateQueries({ queryKey: keys.rentals });
+      qc.invalidateQueries({ queryKey: ['market', 'my-rentals'] });
+      qc.invalidateQueries({ queryKey: keys.token(m.token_id) });
+      break;
+    case 'drop':
+      qc.invalidateQueries({ queryKey: keys.drops });
+      qc.invalidateQueries({ queryKey: ['market', 'listings'] });
       break;
     case 'note':
       if (m.to === account) {

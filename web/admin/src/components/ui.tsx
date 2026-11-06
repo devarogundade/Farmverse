@@ -116,13 +116,24 @@ export function Pager({ page, more, go }: { page: number; more: boolean; go: (pa
   );
 }
 
-export function Field({ label, hint, children }: { label: string; hint?: ReactNode; children: ReactNode }) {
+/**
+ * A labelled control. An error takes the hint's place under its own field, so nothing below jumps.
+ * `group` for several controls (swatches): a <label> would send a click on its text to the first one.
+ */
+export function Field({ label, hint, error, group, children }: { label: string; hint?: ReactNode; error?: string; group?: boolean; children: ReactNode }) {
+  const Box = group ? 'div' : 'label';
   return (
-    <label className="field">
+    <Box className="field" data-invalid={error ? true : undefined}>
       <span className="field-label">{label}</span>
       {children}
-      {hint && <small className="field-hint">{hint}</small>}
-    </label>
+      {error ? (
+        <small className="field-hint field-error" role="alert">
+          {error}
+        </small>
+      ) : (
+        hint && <small className="field-hint">{hint}</small>
+      )}
+    </Box>
   );
 }
 

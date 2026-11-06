@@ -12,6 +12,8 @@ const NAV = [
   { key: 'home', icon: 'Icon_Shop', label: 'Explore', to: href.explore() },
   // "Featured" is a token the studio picks (VITE_FEATURED_TOKEN); hidden without one.
   ...(config.featuredToken ? [{ key: 'token', icon: 'Icon_Crown', label: 'Featured', to: href.token(config.featuredToken) }] : []),
+  { key: 'shop', icon: 'Icon_Gift', label: 'Shop', to: href.shop() },
+  { key: 'rent', icon: 'Isl_p_worker', label: 'Hire', to: href.rent() },
   { key: 'mine', icon: 'Icon_MenuIcon02_Inventory', label: 'My items', to: href.mine() },
   { key: 'studio', icon: 'Icon_PictoIcon_Cloth', label: 'Wardrobe', to: href.studio() },
 ] as const;
@@ -19,6 +21,8 @@ const NAV = [
 function activeKey(route: Route) {
   if (route.name === 'token') return 'token';
   if (route.name === 'studio') return 'studio';
+  if (route.name === 'shop') return 'shop';
+  if (route.name === 'rent') return 'rent';
   return route.mine ? 'mine' : 'home';
 }
 
@@ -63,7 +67,6 @@ function ThemePicker() {
 
 export function Shell({ route, children, search, onSearch }: { route: Route; children: ReactNode; search: string; onSearch: (q: string) => void }) {
   const active = activeKey(route);
-  const mine = route.name === 'explore' && route.mine;
   const open = useFlow();
   const { accountId: account, ready } = useWallet();
   const { data: balance } = useBalance();
@@ -72,9 +75,6 @@ export function Shell({ route, children, search, onSearch }: { route: Route; chi
   return (
     <div className="frame">
       <aside className="rail">
-        <a className="rail-logo" href={href.explore()} aria-label="Farmverse Market home">
-          <img src={sprite('Paint_crop_wheat')} alt="" />
-        </a>
         <nav className="rail-nav" aria-label="Main">
           {NAV.map(({ key, icon, label, to }) => (
             <a key={key} href={to} className={`rail-item${active === key ? ' on' : ''}`} aria-current={active === key ? 'page' : undefined}>
@@ -107,14 +107,6 @@ export function Shell({ route, children, search, onSearch }: { route: Route; chi
             <img className="fv-icon" src={sprite('Icon_PictoIcon_Search')} alt="" />
           </button>
         </form>
-        <div className="seg" role="tablist" aria-label="View">
-          <a role="tab" aria-selected={!mine} className={!mine ? 'on' : ''} href={href.explore()}>
-            Market
-          </a>
-          <a role="tab" aria-selected={mine} className={mine ? 'on' : ''} href={href.mine()}>
-            My items
-          </a>
-        </div>
         <div className="top-actions">
           <button
             className={`fv-chip${unread && account ? ' has-dot' : ''}`}

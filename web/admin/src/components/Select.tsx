@@ -39,7 +39,9 @@ export function Select({ value, onChange, options, label, placeholder, className
       </RS.Trigger>
       <RS.Portal container={container ?? undefined}>
         <RS.Content className="fv-select-menu" position="popper" sideOffset={6} collisionPadding={12}>
-          <RS.ScrollUpButton className="fv-select-scroll">▲</RS.ScrollUpButton>
+          <RS.ScrollUpButton className="fv-select-scroll" data-dir="up">
+            <img src={sprite('Icon_PictoIcon_Next01')} alt="" />
+          </RS.ScrollUpButton>
           <RS.Viewport className="fv-select-list">
             {options.map((o) => (
               <RS.Item key={o.value} value={o.value} className="fv-select-item">
@@ -49,11 +51,12 @@ export function Select({ value, onChange, options, label, placeholder, className
                     {o.label}
                   </span>
                 </RS.ItemText>
-                <RS.ItemIndicator className="fv-select-check">✓</RS.ItemIndicator>
               </RS.Item>
             ))}
           </RS.Viewport>
-          <RS.ScrollDownButton className="fv-select-scroll">▼</RS.ScrollDownButton>
+          <RS.ScrollDownButton className="fv-select-scroll" data-dir="down">
+            <img src={sprite('Icon_PictoIcon_Next01')} alt="" />
+          </RS.ScrollDownButton>
         </RS.Content>
       </RS.Portal>
     </RS.Root>

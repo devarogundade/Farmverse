@@ -80,16 +80,8 @@
 
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
 .split-copy p { margin: 0 0 22px; }
-.bag { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 22px; }
-.bag .slot {
-  position: relative; aspect-ratio: 177 / 188;
-  display: grid; place-items: center;
-  border: 0 solid transparent;
-  border-image-slice: 40 40 46 40 fill;
-  border-image-width: 18px 18px 21px 18px;
-}
-.bag .slot img { width: 66%; height: 66%; object-fit: contain; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.3)); }
-.bag .slot b { position: absolute; right: 12px; bottom: 10px; font-size: 18px; }
+/* The mint-to-market demo (demos/MintDemo): 528 wide at 1:1, its compact design below 500. */
+.mint-demo { width: 100%; max-width: 528px; justify-self: center; }
 
 .workers { display: grid; grid-template-columns: 0.9fr 1.6fr; gap: 32px; align-items: center; padding: 34px; }
 .workers-copy p { margin: 0 0 22px; }
@@ -198,8 +190,6 @@
   .step-no { top: 8px; left: 8px; width: 26px; height: 26px; font-size: 14px; box-shadow: 0 0 0 2px var(--ink); }
 
   .split { gap: 24px; }
-  .bag { gap: 6px; padding: 12px; }
-  .bag .slot b { font-size: 14px; right: 9px; bottom: 7px; }
 
   /* Workers: three across, names under the cards (a scrolling row would let the 3D spill past
      the panel, since WebGL ignores CSS overflow clipping). */

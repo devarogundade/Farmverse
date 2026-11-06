@@ -14,6 +14,8 @@ const apiUrl = (str(env.VITE_API_URL) ?? (env.DEV ? 'http://localhost:8787/v1/ma
 export const config = {
   network: (env.VITE_NEAR_NETWORK === 'mainnet' ? 'mainnet' : 'testnet') as Network,
   apiUrl: apiUrl || null,
+  /** The game server itself (sign-in, crediting redeemed items); by default the API URL's origin part. */
+  gameApiUrl: str(env.VITE_GAME_API_URL) ?? (apiUrl ? apiUrl.replace(/\/v1\/market$/, '') : null),
   /** Live market updates; by default the API's /live socket. */
   wsUrl: str(env.VITE_WS_URL) ?? (apiUrl ? `${apiUrl.replace(/^http/, 'ws')}/live` : null),
   rpcUrl: str(env.VITE_NEAR_RPC) ?? (env.VITE_NEAR_NETWORK === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://rpc.testnet.near.org'),
@@ -22,16 +24,16 @@ export const config = {
     market: str(env.VITE_MARKET_CONTRACT) ?? 'market.farmverse.testnet',
     farm: str(env.VITE_FARM_CONTRACT) ?? 'farm.farmverse.testnet',
   },
+  /** The game (deep links: "Use in game" → `?open=nfts`, after a redeem → `?redeemed=<token>`). */
+  playUrl: (str(env.VITE_PLAY_URL) ?? (env.DEV ? 'http://localhost:8000' : 'https://play.farmverse.world')).replace(/\/$/, ''),
   /** A token to show under "Featured" in the menu; the item is hidden without one. */
   featuredToken: str(env.VITE_FEATURED_TOKEN) ?? null,
   /** Items per page for listings. */
   pageSize: 8,
 };
 
-/**
- * Features the backend doesn't serve yet stay hidden rather than half-working.
- * Offers are off-chain (docs 14 §3) and need marketplace sign-in and settlement first.
- */
-export const features = {
-  offers: env.VITE_OFFERS === 'on',
+/** Where the game opens for a token: its NFT tab, or the island after a redeem. */
+export const gameLink = {
+  nfts: () => `${config.playUrl}/?open=nfts`,
+  redeemed: (tokenId: string) => `${config.playUrl}/?redeemed=${encodeURIComponent(tokenId)}`,
 };

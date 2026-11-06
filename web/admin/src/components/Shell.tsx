@@ -87,9 +87,6 @@ export function Shell({ route, children }: { route: Route; children: ReactNode }
   return (
     <div className="frame">
       <aside className="rail">
-        <a className="rail-logo" href={href.dashboard()} aria-label="Admin home">
-          <img src={sprite('Icon_Crown')} alt="" />
-        </a>
         <nav className="rail-nav" aria-label="Main">
           {NAV.map(({ key, icon, label, to }) => (
             <a key={key} href={to} className={`rail-item${active === key ? ' on' : ''}`} aria-current={active === key ? 'page' : undefined}>

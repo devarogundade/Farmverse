@@ -1,0 +1,410 @@
+/* The mint-to-market demo. Every rule is scoped to the demo; the game's own classes (fv-frame, fv-panel, fv-btn,
+   fv-title) come from @farmverse/shared/theme.css and are used as they are on the real market. */
+.md {
+  & .ss-stage {
+    /* The game's palette as the kit's tokens */
+    --ss-canvas: var(--bg);
+    --ss-surface: var(--panel);
+    --ss-chrome: var(--night);
+    --ss-raised: var(--raised);
+    --ss-text: var(--sky-2);
+    --ss-text-strong: #fff;
+    --ss-text-faint: var(--muted);
+    --ss-icon: var(--sky-3);
+    --ss-accent: var(--gold);
+    --ss-font: var(--font-body);
+    --ss-radius-window: 16px;
+    --ss-ink-3: color-mix(in srgb, var(--sky-3) 22%, transparent);
+    --ss-ink-4: color-mix(in srgb, var(--sky-3) 34%, transparent);
+
+    --stage-w: 528px;
+    --gutter: 28px;
+    --win-top: 28px;
+    --win-left: 117px;
+    --win-width: 520px;
+    --rail: 89px;
+    --card-w: 120px;
+    --card-h: 142px;
+    --card-gap: 10px;
+    --icon: 60px;
+    --icon-top: 20px;
+    --storage-w: 178px;
+    --slot: 46px;
+    --storage-top: 122px;
+    --arrive: cubic-bezier(0.25, 0.8, 0.25, 1);
+    --travel: cubic-bezier(0.45, 0, 0.1, 1);
+
+    overflow: hidden;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  /* The phone design: the same composition, smaller, one row of Storage */
+  & .ss-stage[data-layout='compact'] {
+    --stage-w: 358px;
+    --gutter: 24px;
+    --win-top: 24px;
+    --win-left: 109px;
+    --win-width: 400px;
+    --rail: 85px;
+    --card-w: 100px;
+    --card-h: 118px;
+    --icon: 42px;
+    --icon-top: 20px;
+    --storage-w: 170px;
+    --slot: 44px;
+    --storage-top: 118px;
+  }
+
+  /* ---------- the market: pinned top-left, off the right and the bottom ---------- */
+  .md-window {
+    position: absolute;
+    top: var(--win-top);
+    left: var(--win-left);
+    width: var(--win-width);
+    height: 520px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .md-body {
+    display: flex;
+    height: 100%;
+    background: radial-gradient(120% 80% at 50% -10%, var(--panel) 0%, var(--deep) 70%);
+  }
+
+  .md-rail {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: var(--rail);
+    padding-top: 16px;
+    background: linear-gradient(180deg, var(--night), var(--deep));
+    box-shadow: inset -1px 0 0 color-mix(in srgb, var(--line) 60%, transparent);
+  }
+
+  .md-rail__btn {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 0 solid transparent;
+    border-image: var(--ui-Button_Square03_Navy) 20 20 24 20 fill / 10px 10px 12px 10px;
+  }
+
+  .md-rail__btn[data-on] {
+    border-image: url('/ui/Button01_195_Yellow.webp') 96 30 96 30 fill / 20px 6px 20px 6px;
+  }
+
+  .md-rail__btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .md-main {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    padding: 14px 0 0 16px;
+  }
+
+  /* The window runs past the stage's right edge: the header stops a gutter
+     short of what is visible, not of the window */
+  .md-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    margin-bottom: 12px;
+    margin-right: calc(var(--win-left) + var(--win-width) - var(--stage-w) + 16px);
+  }
+
+  .md-head__title {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .md-wallet {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 10px;
+    will-change: transform;
+    border-radius: 999px;
+    background: var(--night);
+    box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.35), 0 0 0 2px color-mix(in srgb, var(--line) 70%, transparent);
+    font-size: 14px;
+    color: #fff;
+  }
+
+  .md-wallet__n {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- listings ---------- */
+  .md-row {
+    display: flex;
+    width: max-content;
+  }
+
+  .md-row--lower {
+    margin-top: var(--card-gap);
+    opacity: 0.55;
+  }
+
+  .md-card {
+    position: relative;
+    flex: none;
+    width: var(--card-w);
+    height: var(--card-h);
+    margin-right: var(--card-gap);
+    border-image-width: 16px 16px 18px 16px;
+  }
+
+  .md-card__icon {
+    position: absolute;
+    left: 50%;
+    top: var(--icon-top);
+    width: var(--icon);
+    height: var(--icon);
+    margin-left: calc(var(--icon) / -2);
+    object-fit: contain;
+    filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.3));
+  }
+
+  .md-card__foot {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.38);
+  }
+
+  .md-card__name {
+    font-size: 14px;
+    line-height: 1.1;
+  }
+
+  .md-price {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    line-height: 1.2;
+    color: var(--gold);
+  }
+
+  /* The new listing's room: shut, then opened as the wheat travels, carrying
+     the cards behind it to the right */
+  .md-room {
+    flex: none;
+    width: 0;
+    overflow: hidden;
+    transition: width 0.75s var(--travel);
+  }
+
+  .md-room[data-open] {
+    width: calc(var(--card-w) + var(--card-gap));
+  }
+
+  .md-new {
+    position: relative;
+    width: calc(var(--card-w) + var(--card-gap));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .md-room[data-open] .md-new {
+    opacity: 1;
+    transition: opacity 0.6s ease 0.1s;
+  }
+
+  /* The wheat lands on its own icon, so the icon shows in the frame the flyer goes */
+  .md-new .md-card__icon {
+    opacity: 0;
+  }
+
+  .md-new[data-landed] .md-card__icon {
+    opacity: 1;
+  }
+
+  .md-new .md-card__foot,
+  .md-new .md-qty {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .md-new[data-landed] .md-card__foot,
+  .md-new[data-landed] .md-qty {
+    opacity: 1;
+    transition: opacity 0.45s ease 0.05s;
+  }
+
+  .md-qty {
+    position: absolute;
+    top: 12px;
+    right: calc(var(--card-gap) + 10px);
+    padding: 1px 7px 2px;
+    border-radius: 999px;
+    background: var(--red);
+    box-shadow: 0 0 0 2px var(--ink);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  /* Sold: the market's own ribbon, arriving whole from just above */
+  .md-sold {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    padding: 1px 8px 3px;
+    border-radius: 7px;
+    background: var(--gold-deep);
+    box-shadow: 0 0 0 2px var(--ink), inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    line-height: 1.3;
+    opacity: 0;
+    transform: translateY(-6px);
+    will-change: transform;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .md-sold[data-on] {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s ease, transform 0.8s var(--arrive);
+  }
+
+  /* ---------- Storage: the game's inventory, straddling the market's rail ---------- */
+  .md-storage {
+    position: absolute;
+    top: var(--storage-top);
+    left: var(--gutter);
+    width: var(--storage-w);
+    padding: 14px 14px 16px;
+    /* The satellite's fall without its hairline ring: the sprite draws its own dark edge */
+    border-radius: 16px;
+    box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.7), 0 4px 10px -4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* One row of Storage on a phone */
+  [data-layout='compact'] .md-slot:nth-child(n + 4) {
+    display: none;
+  }
+
+  /* The title would sit under Storage; the balance carries the header */
+  [data-layout='compact'] .md-head {
+    justify-content: flex-end;
+  }
+
+  [data-layout='compact'] .md-head__title {
+    display: none;
+  }
+
+  /* A 100px card holds one badge: the sale is the story, the quantity is in Storage */
+  [data-layout='compact'] .md-qty {
+    display: none;
+  }
+
+  [data-layout='compact'] .md-sold {
+    top: 10px;
+    padding: 1px 6px 2px;
+    font-size: 11px;
+  }
+
+  .md-storage__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    height: 32px;
+    margin-bottom: 10px;
+  }
+
+  .md-storage__title {
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  .md-mint {
+    --h: 32px;
+  }
+
+  .md-mint .ss-spinner {
+    color: #fff;
+  }
+
+  .md-slots {
+    display: grid;
+    grid-template-columns: repeat(3, var(--slot));
+    gap: 6px;
+  }
+
+  .md-slot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--slot);
+    height: calc(var(--slot) + 3px);
+    border: 0 solid transparent;
+    border-image: url('/ui/ItemFrame01_Single_Blue.webp') 40 40 46 40 fill / 10px 10px 12px 10px;
+  }
+
+  /* Picked: the game's yellow frame fades in over the blue one */
+  .md-slot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 0 solid transparent;
+    border-image: url('/ui/ItemFrame01_Single_Yellow.webp') 40 40 46 40 fill / 10px 10px 12px 10px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .md-slot[data-picked]::after {
+    opacity: 1;
+  }
+
+  .md-slot__icon {
+    position: relative;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3));
+  }
+
+  .md-slot__n {
+    position: absolute;
+    z-index: 1;
+    right: 6px;
+    bottom: 4px;
+    font-size: 11px;
+    line-height: 1.3;
+    transition: opacity 0.3s ease;
+  }
+
+  .md-slot[data-gone] .md-slot__icon {
+    visibility: hidden;
+  }
+
+  .md-slot[data-gone] .md-slot__n {
+    opacity: 0;
+  }
+
+  .md-flyer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3));
+  }
+}

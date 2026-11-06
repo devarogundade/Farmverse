@@ -22,8 +22,13 @@ export function Settings() {
     setMintCap(storedText(data.stored?.mintDailyValueCap));
   }, [data]);
 
-  if (isLoading) return <Loading />;
-  if (error || !data) return <Failed error={error} retry={() => void refetch()} />;
+  const head = (
+    <PageHead icon="Icon_Hammer" title="Game">
+      Switches that change the live game straight away, for every player.
+    </PageHead>
+  );
+  if (isLoading) return <>{head}<Loading /></>;
+  if (error || !data) return <>{head}<Failed error={error} retry={() => void refetch()} /></>;
 
   const versionOk = version === '' || /^\d{1,4}\.\d{1,4}\.\d{1,6}$/.test(version);
   const hoursOk = mintHours === '' || (/^\d+(\.\d+)?$/.test(mintHours) && Number(mintHours) <= 24 * 365);
@@ -40,9 +45,7 @@ export function Settings() {
 
   return (
     <>
-      <PageHead icon="Icon_Hammer" title="Game">
-        Switches that change the live game straight away, for every player.
-      </PageHead>
+      {head}
 
       <div className={`status-banner ${data.maintenance ? 'down' : 'up'}`}>
         <img src={sprite(data.maintenance ? 'Icon_Hammer' : 'Icon_Heart')} alt="" />
@@ -68,24 +71,23 @@ export function Settings() {
         <Field label="Message during maintenance" hint="Leave empty to use the game’s own words.">
           <Input value={message} maxLength={200} onChange={(e) => setMessage(e.target.value)} placeholder="We’re back at 15:00 UTC." />
         </Field>
-        <Field label="Oldest game version allowed" hint={`Older games are asked to update. Empty uses the server default (${data.fallbackMinClientVersion}). Now: ${data.minClientVersion}.`}>
+        <Field label="Oldest game version allowed" hint={`Older games are asked to update. Leave empty for the usual ${data.fallbackMinClientVersion}. Now: ${data.minClientVersion}.`} error={versionOk ? undefined : 'Use a version like 1.4.0.'}>
           <Input value={version} onChange={(e) => setVersion(e.target.value.trim())} placeholder={data.fallbackMinClientVersion} aria-invalid={!versionOk} />
         </Field>
-        {!versionOk && <p className="form-err">Use a version like 1.4.0.</p>}
         <Field
           label="Hours before a new farm can mint"
-          hint={`Empty uses the server default (${data.mintDefaults.minAccountHours}). Now: ${data.mintMinAccountHours}. 0 lets new farms mint at once.`}
+          hint={`Leave empty for the usual ${data.mintDefaults.minAccountHours}. Now: ${data.mintMinAccountHours}. 0 lets new farms mint at once.`}
+          error={hoursOk ? undefined : 'Use a number of hours, up to a year.'}
         >
           <Input value={mintHours} inputMode="decimal" onChange={(e) => setMintHours(e.target.value.trim())} placeholder={String(data.mintDefaults.minAccountHours)} aria-invalid={!hoursOk} />
         </Field>
-        {!hoursOk && <p className="form-err">Use a number of hours, up to a year.</p>}
         <Field
           label="Mint value per player per day (coins)"
-          hint={`The market value a player can mint each UTC day. Empty uses the server default (${data.mintDefaults.dailyValueCap}). Now: ${data.mintDailyValueCap}.`}
+          hint={`The market value a player can mint each day (days start at midnight UTC). Leave empty for the usual ${data.mintDefaults.dailyValueCap}. Now: ${data.mintDailyValueCap}.`}
+          error={capOk ? undefined : 'Use a whole number of coins.'}
         >
           <Input value={mintCap} inputMode="numeric" onChange={(e) => setMintCap(e.target.value.trim())} placeholder={String(data.mintDefaults.dailyValueCap)} aria-invalid={!capOk} />
         </Field>
-        {!capOk && <p className="form-err">Use a whole number of coins.</p>}
         <div className="dlg-actions">
           <button className="fv-btn gray" disabled={!dirty} onClick={undo}>
             Undo

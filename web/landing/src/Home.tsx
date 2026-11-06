@@ -3,6 +3,7 @@ import { sprite } from '@farmverse/shared/gameTheme';
 import type { NftMetadata } from '@farmverse/shared/nft/metadata';
 import { NftStage } from '@farmverse/shared/three/NftStage';
 import { useState } from 'react';
+import { MintDemo } from './demos/MintDemo';
 import { MARKET_URL, PLAY_URL, marketType } from './links';
 
 const HERO_WORKER: NftMetadata = {
@@ -34,20 +35,21 @@ const STEPS = [
   { icon: 'Paint_fac_farmhouse_l1', title: 'Redeem', text: 'Bring any item you hold back into the game. It lands on your island, ready to use.' },
 ];
 
-const BAG = [
-  { icon: 'Paint_crop_wheat', n: '250' }, { icon: 'Isl_g_milk', n: '40' }, { icon: 'Isl_g_egg', n: '120' }, { icon: 'Isl_g_flour', n: '60' },
-  { icon: 'Paint_good_bread', n: '85' }, { icon: 'Paint_animal_cow', n: '1' }, { icon: 'Isl_b_barn', n: '1' }, { icon: 'Isl_b_windmill', n: '1' },
-];
-const BAG_COLOURS = ['Yellow', 'Blue', 'Green', 'Purple', 'Brown'];
-
 const FAQ = [
   ['What is Farmverse?', 'A cosy island farming game you play in your browser. Grow crops, raise animals, build, hire workers — and trade what you make with other players.'],
-  ['Is it free to play?', 'Yes. You can play the whole game for free. FARM is only needed if you want to buy things on the market.'],
+  ['Is it free to play?', 'Yes. You can play the whole game for free. FARM is only needed if you want to buy things on the market or in the shop.'],
   ['How do I sign in?', 'With a NEAR wallet. Making one is free and takes about a minute; the game walks you through it the first time.'],
-  ['What does “Mint” mean?', 'Minting packs something from your island — a stack of wheat, a barn, a tractor — into an item you own outright. While it’s minted it leaves your island, and you can keep it, give it away or sell it.'],
-  ['And “Redeem”?', 'Redeeming brings a minted item back into the game, onto the island of whoever holds it. The item is used up when you do, so it can only be redeemed once.'],
-  ['What are workers?', 'Helpers who tend fields, feed animals and run machines. Each has their own look and skills. They work on the island of whoever holds them, and move with them when traded.'],
-  ['Are there fees on the market?', 'A small fee is taken on each sale. You always see the full amount before you confirm.'],
+  ['What is FARM?', 'Farmverse’s own coin. You earn it by selling what you make to other players, and spend it on the market and in the shop. There will only ever be one billion FARM: 35% for player rewards, 20% for trading pools, 20% for the Farmverse treasury, 15% for the team (released over two years) and 10% for partners and grants.'],
+  ['How do I get my first FARM?', 'Sell something you minted on the market. While Farmverse is in testing, the market and the game also have a free tap: 100 test FARM a day, plus a little test NEAR the first time so you can mint.'],
+  ['What does “Mint” mean?', 'Minting packs something from your island — a stack of wheat, a barn, a tractor — into an item you own outright. While it’s minted it leaves your island, and you can keep it, give it away or sell it. Minting costs a few coins from your island, and goods are minted in stacks of at least 10.'],
+  ['And “Redeem”?', 'Redeeming brings a minted item back into the game, onto the island of whoever holds it. The item is used up when you do, so it can only be redeemed once. You can redeem from the game’s NFTs tab or from the market.'],
+  ['What is the Farm Pass?', 'A season of premium rewards and longer offline work for your farmhands. Buy it for FARM right in the game with one approval, or in the market’s shop. If you already have premium this season, an extra pass is saved for the next one.'],
+  ['What are Farmhands?', 'Named workers with their own look, job and skills — some fields, some animals, some machines or freight. They work on the island of whoever holds them, get better the more they work, and keep their level when traded. Each workers’ house level gives one Farmhand a bed, up to six.'],
+  ['Can I rent out my Farmhands?', 'Yes. Put them up for hire on the market with a daily price. Until someone hires them they keep working for you; while hired they work on the hirer’s farm, and what they earn waits for you to collect.'],
+  ['How do offers work?', 'Offer FARM for any item, or for any stack of a good (“any wheat, 100 or more”). The market holds your FARM until the owner accepts or the offer ends, and you can cancel any time to get it back.'],
+  ['What are land deeds?', 'Genesis land deeds clear a wild plot on your island for good. Only 1,000 will ever exist, and each one is used up when redeemed.'],
+  ['What are golden crops?', 'Now and then a harvest comes up golden. Golden crops are worth far more than plain ones, and you can mint them one at a time to sell or keep.'],
+  ['Are there fees on the market?', 'A 5% fee is taken on each sale, offer or hire, and the original maker of studio items gets a small share of resales. You always see the full amount before you confirm.'],
   ['What do I need to play?', 'A modern browser. A desktop or laptop gives the best experience.'],
 ];
 
@@ -103,13 +105,8 @@ export function Home() {
       </section>
 
       <section className="section split" id="items">
-        <div className="bag fv-panel" aria-label="Example inventory">
-          {BAG.map((b, i) => (
-            <div key={b.icon} className="slot" style={{ borderImageSource: `url(${sprite('ItemFrame01_Single_' + BAG_COLOURS[i % BAG_COLOURS.length])})` }}>
-              <img src={sprite(b.icon)} alt="" />
-              <b className="fv-title">{b.n}</b>
-            </div>
-          ))}
+        <div className="mint-demo" aria-hidden="true">
+          <MintDemo />
         </div>
         <div className="split-copy">
           <h2 className="fv-title section-title left">Everything on your island can travel</h2>

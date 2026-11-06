@@ -13,8 +13,14 @@
  */
 import parts from '../../public/models/character.parts.json' with { type: 'json' };
 
-export const NFT_TYPES = ['worker', 'tractor', 'building', 'land', 'good', 'animal'] as const;
+export const NFT_TYPES = ['worker', 'tractor', 'building', 'land', 'good', 'animal', 'pack', 'deed'] as const;
 export type NftType = (typeof NFT_TYPES)[number];
+/** Types drawn as flat game art instead of a 3D model (studio passes, gem packs, land deeds). */
+export const FLAT_TYPES: readonly NftType[] = ['pack', 'deed'];
+/** Types with a 3D model (the dressing room offers these). */
+export const MODEL_TYPES = NFT_TYPES.filter((t) => !FLAT_TYPES.includes(t));
+/** Rare golden crops (`golden_wheat`) share the plain crop's model and get a gold frame. */
+export const GOLDEN_PREFIX = 'golden_';
 
 export const OUTFIT_SLOTS = [
   'hair', 'hat', 'face', 'glasses', 'accessory', 'top', 'bottom', 'glove', 'socks', 'shoes', 'costume',
@@ -68,7 +74,29 @@ export const ITEM_MODELS: Record<string, { type: Exclude<NftType, 'worker'>; lab
   pig: { type: 'animal', label: 'Pig' },
 };
 
-export const itemModelUrl = (itemId: string) => `/models/items/${itemId}.glb`;
+export const itemModelUrl = (itemId: string) => `/models/items/${itemId.startsWith(GOLDEN_PREFIX) ? itemId.slice(GOLDEN_PREFIX.length) : itemId}.glb`;
+
+/** A golden harvest (worth far more than the plain crop). */
+export const isGolden = (meta: Pick<NftMetadata, 'type' | 'item_id'>) => meta.type === 'good' && !!meta.item_id?.startsWith(GOLDEN_PREFIX);
+
+/** Packs and passes the studio sells, by item id: label and game sprite. */
+const PACKS: Record<string, { label: string; art: string }> = {
+  farm_pass: { label: 'Farm Pass', art: 'Icon_Crown' },
+  builder_pass: { label: 'Builder’s Pass', art: 'Icon_Hammer' },
+  starter_pack: { label: 'Starter Pack', art: 'Icon_Chest' },
+};
+
+/** The flat art (a game sprite) a pack or deed shows instead of a model; null for 3D types. */
+export function flatArt(meta: Pick<NftMetadata, 'type' | 'item_id'>): string | null {
+  if (meta.type === 'deed') return 'Icon_Map';
+  if (meta.type !== 'pack') return null;
+  const id = meta.item_id ?? '';
+  if (/^gems_\d+$/.test(id)) return 'Icon_Gems';
+  return PACKS[id]?.art ?? 'Icon_Gift';
+}
+
+const ITEM_ID = /^[a-z][a-z0-9_]{0,39}$/;
+const title = (id: string) => id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ');
 export const CHARACTER_URL = '/models/character.glb';
 
 export type ParseResult = { ok: true; value: NftMetadata; warnings: string[] } | { ok: false; error: string };
@@ -114,6 +142,16 @@ export function parseMetadata(raw: unknown): ParseResult {
       }
     }
     value.outfit = outfit;
+  } else if (FLAT_TYPES.includes(type)) {
+    // packs and deeds: any catalogue id, drawn as flat art
+    if (typeof m.item_id !== 'string' || !ITEM_ID.test(m.item_id)) return { ok: false, error: '"item_id" must be a catalogue id.' };
+    value.item_id = m.item_id;
+  } else if (type === 'good' && typeof m.item_id === 'string' && m.item_id.startsWith(GOLDEN_PREFIX) && ITEM_MODELS[m.item_id.slice(GOLDEN_PREFIX.length)]) {
+    value.item_id = m.item_id;
+  } else if (type === 'good' && typeof m.item_id === 'string' && ITEM_ID.test(m.item_id) && !ITEM_MODELS[m.item_id]) {
+    // a good this build has no model for yet: still listed (the stage stays empty)
+    warnings.push(`No model for "${m.item_id}" yet.`);
+    value.item_id = m.item_id;
   } else {
     const id = m.item_id;
     if (typeof id !== 'string' || !ITEM_MODELS[id]) {
@@ -138,7 +176,17 @@ export function parseMetadata(raw: unknown): ParseResult {
 /** Display name of a token's model ("Red Tractor", "Worker"). */
 export function modelLabel(meta: NftMetadata): string {
   if (meta.type === 'worker') return 'Worker';
-  return (meta.item_id && ITEM_MODELS[meta.item_id]?.label) || meta.type;
+  const id = meta.item_id ?? '';
+  if (meta.type === 'deed') return 'Land Deed';
+  if (meta.type === 'pack') {
+    const gems = /^gems_(\d+)$/.exec(id);
+    return gems ? `${Number(gems[1]).toLocaleString('en-US')} Gems` : (PACKS[id]?.label ?? title(id));
+  }
+  if (id.startsWith(GOLDEN_PREFIX)) {
+    const base = id.slice(GOLDEN_PREFIX.length);
+    return `Golden ${ITEM_MODELS[base]?.label ?? title(base)}`;
+  }
+  return ITEM_MODELS[id]?.label || (id ? title(id) : meta.type);
 }
 
 /** What people see instead of part ids. */
@@ -162,16 +210,19 @@ export const SLOT_LABEL: Record<OutfitSlot, string> = {
 };
 
 export const TYPE_LABEL: Record<NftType, string> = {
-  worker: 'Workers', tractor: 'Machines', building: 'Buildings', land: 'Land', good: 'Goods', animal: 'Animals',
+  worker: 'Workers', tractor: 'Machines', building: 'Buildings', land: 'Land', good: 'Goods', animal: 'Animals', pack: 'Passes & packs', deed: 'Land deeds',
 };
 export const TYPE_SINGULAR: Record<NftType, string> = {
-  worker: 'Worker', tractor: 'Machine', building: 'Building', land: 'Land', good: 'Goods', animal: 'Animal',
+  worker: 'Worker', tractor: 'Machine', building: 'Building', land: 'Land', good: 'Goods', animal: 'Animal', pack: 'Pack', deed: 'Land deed',
 };
 
-/** Short number people see: "w-1245" -> "1245", "g-01JD7Q3K8M" -> "Q3K8M". */
+/**
+ * Short number people see: "w-1245" -> "1245", "s-wheat-1" -> "wheat-1" (names the studio gave),
+ * "g-01JD7Q3K8M" -> "Q3K8M" (generated ids: their tail is enough to tell them apart).
+ */
 export const displayNo = (tokenId: string) => {
   const rest = tokenId.replace(/^[a-z]-/, '');
-  return /^\d+$/.test(rest) ? rest : rest.slice(-5);
+  return /^\d+$/.test(rest) || /[-_]/.test(rest) ? rest : rest.slice(-5);
 };
 
 /** "speed" -> "Speed", "minted_from" -> "Minted from". */

@@ -6,6 +6,8 @@ import { ToastHost, toast } from './components/Dialog';
 import { FlowHost } from './components/Flows';
 import { Shell } from './components/Shell';
 import { Explore } from './pages/Explore';
+import { Rent } from './pages/Rent';
+import { Shop } from './pages/Shop';
 import { Studio } from './pages/Studio';
 import { TokenPage } from './pages/TokenPage';
 import { useRealtime } from './realtime/socket';
@@ -34,6 +36,19 @@ function useDebounced<T>(value: T, ms = 250) {
   return v;
 }
 
+/** Credits for items used in game that didn't reach the server last time (api/game.ts). */
+function PendingRedeems() {
+  const { accountId } = useWallet();
+  useEffect(() => {
+    if (!accountId) return;
+    import('./api/game')
+      .then((g) => g.retryPendingRedeems(accountId))
+      .then((n) => n > 0 && toast(n === 1 ? 'An item you used reached your island' : `${n} items you used reached your island`, 'Paint_fac_farmhouse_l1'))
+      .catch(() => {});
+  }, [accountId]);
+  return null;
+}
+
 function Realtime() {
   const qc = useQueryClient();
   const { accountId } = useWallet();
@@ -48,9 +63,11 @@ function Routes() {
   const q = useDebounced(search.trim());
   return (
     <Shell route={route} search={search} onSearch={setSearch}>
-      {route.name === 'token' && <TokenPage key={route.id} id={route.id} />}
+      {route.name === 'token' && <TokenPage key={route.id} id={route.id} sell={route.sell} />}
       {route.name === 'studio' && <Studio />}
-      {route.name === 'explore' && <Explore type={route.type} mine={route.mine} search={q} />}
+      {route.name === 'shop' && <Shop />}
+      {route.name === 'rent' && <Rent />}
+      {route.name === 'explore' && <Explore type={route.type} mine={route.mine} search={q} item={route.item} sort={route.sort} />}
     </Shell>
   );
 }
@@ -62,6 +79,7 @@ export function App() {
           <FlowHost>
             <Routes />
             <Realtime />
+            <PendingRedeems />
             <SharedCanvas />
             <ToastHost />
           </FlowHost>

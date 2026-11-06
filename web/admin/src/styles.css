@@ -18,12 +18,6 @@
   background: linear-gradient(180deg, var(--night), var(--deep));
   box-shadow: inset -1px 0 0 color-mix(in srgb, var(--line) 60%, transparent);
 }
-.rail-logo {
-  width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center;
-  background: radial-gradient(circle at 50% 35%, var(--raised), var(--panel));
-  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.3), 0 0 0 3px var(--ink);
-}
-.rail-logo img { width: 40px; height: 40px; object-fit: contain; }
 .rail-nav { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .rail-btn { position: relative; --s: 50px; width: 50px; height: 50px; min-width: 0; padding: 0; }
 .rail-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 84px; padding: 0; }
@@ -88,8 +82,9 @@
 .page-actions { display: flex; gap: 10px; }
 .section-title { font-size: 22px; margin: 26px 0 12px; color: var(--sky-3); }
 .crumbs { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 15px; margin: 8px 0 16px; }
+.crumbs a { display: inline-flex; align-items: center; gap: 8px; }
 .crumbs a:hover { color: #fff; }
-.crumbs b { color: var(--gold); }
+.crumb-back { width: 18px; height: 18px; }
 .link { color: var(--sky-2); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--sky-2) 40%, transparent); text-underline-offset: 3px; }
 .link:hover { color: #fff; }
 .link-btn { color: var(--sky-2); font-size: 14px; padding: 4px 0; align-self: flex-start; }
@@ -106,11 +101,15 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .state-art { width: 96px; height: 96px; object-fit: contain; }
 .spin { width: 64px; height: 64px; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fade-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .state, .content > * { animation: fade-in 0.25s ease-out both; }
+}
 
 /* ---------- stats ---------- */
 .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
 .stats > a { display: block; }
-.stat { display: flex; align-items: center; gap: 14px; padding: 18px 20px 20px; height: 100%; }
+.stat { display: flex; align-items: center; gap: 14px; padding: 20px 22px 22px; height: 100%; }
 .stats > a .stat { transition: filter 0.15s; }
 .stats > a:hover .stat { filter: brightness(1.1); }
 .stat-icon { width: 48px; height: 48px; object-fit: contain; flex: none; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)); }
@@ -124,13 +123,15 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 
 /* ---------- charts ---------- */
 .charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
-.chart { margin: 0; padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 10px; }
+.chart { margin: 0; padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; }
 .chart-head { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 12px; }
 .chart-title { font-size: 15px; color: var(--sky-3); }
-.chart-value { font-size: 26px; grid-row: span 2; align-self: center; text-align: right; }
+.chart-value { font-size: 26px; grid-row: span 2; align-self: center; text-align: right; font-variant-numeric: tabular-nums; }
 .chart-value small { font-family: var(--font-body); font-size: 13px; -webkit-text-stroke: 0; color: var(--sky-3); }
 .chart-sub { font-size: 12px; }
+.chart-plot { position: relative; }
 .chart-plot svg { display: block; width: 100%; height: 150px; overflow: visible; }
+.chart-max { position: absolute; right: 0; font-size: 11px; line-height: 1; transform: translateY(calc(-100% - 4px)); pointer-events: none; }
 .chart-grid { stroke: color-mix(in srgb, var(--line) 55%, transparent); stroke-width: 1; stroke-dasharray: 3 4; }
 .chart-base { stroke: color-mix(in srgb, var(--line) 90%, transparent); stroke-width: 1.5; }
 .chart-bar.accent { fill: var(--accent-2); }
@@ -165,14 +166,17 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 /* ---------- list rows (the game's leaderboard row) ---------- */
 .rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .rows.refreshing { opacity: 0.6; transition: opacity 0.2s; }
-.rows-head { display: grid; padding: 0 18px 0 70px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-.rows-head span:first-child { margin-left: -70px; padding-left: 18px; }
+.rows-head { display: grid; padding: 0 18px 0 0; font-size: 13px; color: var(--muted); }
+/* The avatar column is 56px plus the 12px gap: the label sits over the names */
+.rows-head span:first-child { padding-left: 68px; }
 .player-row, .rows-head:not(.code-row) { display: grid; grid-template-columns: minmax(220px, 2.2fr) 0.6fr 0.9fr 1fr 0.9fr; align-items: center; gap: 12px; }
 .row-link { min-height: 60px; padding-right: 18px; font-size: 14px; transition: filter 0.15s; }
 .row-link:hover { filter: brightness(1.12); }
 .who { display: flex; align-items: center; gap: 12px; min-width: 0; align-self: stretch; }
 .who-text { display: flex; flex-direction: column; min-width: 0; padding: 8px 0; }
-.who-text b { display: flex; align-items: center; gap: 8px; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who-text b { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 15px; white-space: nowrap; }
+.who-text b > .who-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.who-text b > :not(.who-name) { flex: none; }
 .who-text small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
 
 .code-row { display: grid; grid-template-columns: minmax(200px, 1.6fr) 0.8fr 1.3fr 0.7fr minmax(190px, 1.1fr); align-items: center; gap: 12px; min-height: 60px; padding: 6px 18px 6px 22px; font-size: 14px; }
@@ -181,10 +185,10 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .code-cell { display: flex; flex-direction: column; min-width: 0; }
 .code-cell small { font-size: 12px; }
 .code-status { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
-.code-status .fv-btn { --h: 36px; }
+.code-status .fv-btn { --h: 40px; }
 .code-row a.link { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 
-.activity-row { display: grid; grid-template-columns: minmax(220px, 1fr) 2fr auto; align-items: center; gap: 14px; padding-right: 18px; min-height: 64px; font-size: 14px; }
+.activity-row { display: grid; grid-template-columns: minmax(220px, 1fr) 2fr auto; align-items: center; gap: 14px; padding-right: 18px; min-height: 60px; font-size: 14px; }
 .activity-what p { margin: 2px 0 0; color: var(--sky-3); }
 .activity-at { font-size: 12px; white-space: nowrap; }
 
@@ -203,7 +207,7 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .pager { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 22px 0 4px; font-size: 14px; }
 
 /* ---------- player page ---------- */
-.player-head { display: flex; align-items: center; gap: 20px; padding: 22px 26px 26px; flex-wrap: wrap; }
+.player-head { display: flex; align-items: center; gap: 20px; padding: 20px 22px 22px; flex-wrap: wrap; }
 .player-id { flex: 1; min-width: 220px; }
 .player-id h1 { font-size: 34px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .player-id p { margin: 4px 0 0; overflow-wrap: anywhere; }
@@ -231,6 +235,7 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--sky-3); min-width: 0; }
 .field-label { font-family: var(--font-display); font-size: 16px; color: var(--gold); }
 .field-hint { color: var(--muted); font-size: 12px; line-height: 1.4; }
+.field-error { color: var(--pink); animation: fade-in 0.2s ease-out both; }
 .input {
   width: 100%; background: var(--night); border: 0; border-radius: 12px; padding: 10px 12px; font-size: 15px; color: var(--text); resize: vertical;
   box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 2px color-mix(in srgb, var(--line) 70%, transparent);
@@ -238,6 +243,10 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .input:focus { outline: none; box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 3px var(--gold); }
 .input[aria-invalid='true'] { box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 3px var(--pink); }
 .input[type='color'] { padding: 4px; height: 40px; cursor: pointer; }
+/* Number fields without the browser's spinner arrows (game controls, not native ones) */
+.input[type='number'] { appearance: textfield; -moz-appearance: textfield; }
+.input[type='number']::-webkit-inner-spin-button,
+.input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .input::placeholder { color: var(--muted); }
 .field-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 15px; }
 .field-row small { font-size: 13px; }
@@ -251,7 +260,7 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .amount-box input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font-family: var(--font-display); font-size: 26px; color: var(--gold); }
 .grant-rows { display: flex; flex-direction: column; gap: 8px; }
 .grant-row { display: grid; grid-template-columns: 1fr 110px auto; gap: 8px; align-items: center; }
-.sm-chip { --s: 38px; }
+.sm-chip { --s: 40px; }
 .sm-chip:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .toggle {
@@ -276,14 +285,22 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .edit-card { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 14px; }
 .edit-head { display: flex; align-items: center; gap: 10px; }
 .edit-name { font-family: var(--font-display); font-size: 20px; }
-.edit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.edit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; align-items: start; }
+.edit-grid .field-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .edit-grid .fv-select { width: 100%; }
 .type-logo { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 12px; font-family: var(--font-display); font-size: 20px; box-shadow: 0 0 0 2px var(--ink); }
 .add-card {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
   min-height: 120px; border-radius: 20px; font-family: var(--font-display); font-size: 20px; color: var(--sky-3);
   border: 3px dashed color-mix(in srgb, var(--line) 90%, transparent);
 }
 .add-card:hover { color: #fff; border-color: var(--sky); }
+.add-card img { width: 22px; height: 22px; }
+/* Logo colour: the game's swatches plus a hex box for a partner's own colour */
+.swatches { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.swatch { width: 26px; height: 26px; flex: none; border-radius: 8px; box-shadow: 0 0 0 2px var(--ink); transition: box-shadow 0.15s; }
+.swatch[aria-pressed='true'] { box-shadow: 0 0 0 2px var(--ink), 0 0 0 5px var(--gold); }
+.swatches .input { width: 96px; flex: none; margin-left: 4px; }
 .save-bar {
   position: fixed; left: 50%; bottom: 20px; z-index: 8; display: flex; align-items: center; gap: 12px; padding: 12px 14px 14px 22px;
   transform: translate(-50%, 140%); transition: transform 0.2s ease-out; font-size: 15px;
@@ -300,7 +317,7 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 .news-side { display: flex; align-items: center; gap: 10px; }
 
 /* ---------- game settings ---------- */
-.status-banner { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 18px; margin-bottom: 14px; box-shadow: 0 0 0 3px var(--ink); }
+.status-banner { display: flex; align-items: center; gap: 14px; max-width: 720px; padding: 16px 20px; border-radius: 18px; margin-bottom: 14px; box-shadow: 0 0 0 3px var(--ink); }
 .status-banner img { width: 44px; height: 44px; object-fit: contain; }
 .status-banner b { display: block; font-size: 22px; }
 .status-banner small { color: var(--text); opacity: 0.85; }
@@ -369,8 +386,10 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
 }
 .fv-select-item[data-highlighted] { background: color-mix(in srgb, var(--night) 70%, transparent); color: #fff; }
 .fv-select-item[data-state='checked'] { color: var(--gold); }
-.fv-select-check { font-weight: 800; color: var(--gold); }
-.fv-select-scroll { display: grid; place-items: center; height: 22px; font-size: 10px; color: var(--sky-3); cursor: default; }
+.fv-select-scroll { display: grid; place-items: center; height: 22px; cursor: default; }
+.fv-select-scroll img { width: 12px; height: 12px; opacity: 0.85; }
+.fv-select-scroll[data-dir='up'] img { transform: rotate(-90deg); }
+.fv-select-scroll[data-dir='down'] img { transform: rotate(90deg); }
 
 @media (prefers-reduced-motion: reduce) {
   .spin { animation-duration: 3s; }
@@ -392,7 +411,7 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
     flex-direction: row; justify-content: space-between; align-items: center; gap: 0;
     padding: 8px 8px; border-radius: 24px; box-shadow: 0 0 0 3px var(--ink), 0 8px 24px rgba(0, 0, 0, 0.4);
   }
-  .rail-logo, .rail-bottom { display: none; }
+  .rail-bottom { display: none; }
   .rail-nav { flex-direction: row; gap: 0; width: 100%; justify-content: space-between; }
   .rail-btn, .rail-btn.active { width: 40px; height: 40px; --s: 40px; }
   .rail-item { width: auto; flex: 1; gap: 3px; }
@@ -428,6 +447,8 @@ code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-wei
   .player-actions .fv-btn { flex: 1 1 140px; --h: 44px; }
   .cards, .charts, .editor { grid-template-columns: 1fr; }
   .edit-grid { grid-template-columns: 1fr 1fr; }
+  /* The swatch row needs the full width on a phone */
+  .edit-grid > .field:has(.swatches) { grid-column: 1 / -1; }
   .two { grid-template-columns: 1fr; }
   .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
   .stat { flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px 16px; }

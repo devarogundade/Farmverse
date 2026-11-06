@@ -38,6 +38,22 @@ export interface Stats {
     indexer: { blockHeight: number; updatedAt: number } | null;
   } | null;
   days: DayPoint[];
+  /** The studio's drops: editions sold and FARM taken. */
+  drops?: { id: string; title: string; sold: number; cap: number | null; price: number; takings: number; paused: boolean }[];
+  /** The last nightly game ⇄ chain check, or null before it first ran. */
+  reconcile?: {
+    at: number;
+    ok: boolean;
+    vouchersIssued: number;
+    vouchersMinted: number;
+    vouchersRefunded: number;
+    voucherTokensOnChain: number;
+    refundedButMinted: number;
+    mintedNotRecorded: number;
+    redeemsOnChain: number;
+    redeemsCredited: number;
+    redeemsUncredited: number;
+  } | null;
 }
 
 export interface PlayerRow {

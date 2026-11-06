@@ -62,15 +62,15 @@ an indexer migration, and the Unity panels.
 
 ## E. Websites
 
-- [ ] E1 Marketplace: `pack` and `deed` types with card art; golden frame §5.4
-- [ ] E2 Marketplace: deep-link targets (`?sell=1`, `/shop`, explore by item and unit price) and "Use in game" §3.2
-- [ ] E3 Marketplace: Shop page (drops: price, sold/cap, time left, Buy) §5.4
-- [ ] E4 Marketplace: faucet button §6.6
-- [ ] E5 Marketplace: offers live on chain, `VITE_OFFERS` flag removed §12.2
-- [ ] E6 Marketplace: rentals — Rent out, Rent tab, Rent dialog, Earned + Withdraw, End §12.1
-- [ ] E7 Marketplace: worker filters, rarity/traits/level on cards and pages, floor price and supply per item §6.5 §7.5
-- [ ] E8 Landing: FAQ for FARM, mint, redeem, passes, Farmhands, renting, offers, land deeds §9 D15
-- [ ] E9 Admin: drops sold card, reconcile numbers §10
+- [x] E1 Marketplace: `pack` and `deed` types with card art; golden frame §5.4
+- [x] E2 Marketplace: deep-link targets (`?sell=1`, `/shop`, explore by item and unit price) and "Use in game" §3.2
+- [x] E3 Marketplace: Shop page (drops: price, sold/cap, time left, Buy) §5.4
+- [x] E4 Marketplace: faucet button §6.6
+- [x] E5 Marketplace: offers live on chain, `VITE_OFFERS` flag removed §12.2
+- [x] E6 Marketplace: rentals — Rent out, Rent tab, Rent dialog, Earned + Withdraw, End §12.1
+- [x] E7 Marketplace: worker filters, rarity/traits/level on cards and pages, floor price and supply per item §6.5 §7.5
+- [x] E8 Landing: FAQ for FARM, mint, redeem, passes, Farmhands, renting, offers, land deeds §9 D15
+- [x] E9 Admin: drops sold card, reconcile numbers §10
 
 ## G. Track brief: merchant NPCs and social login (plan §13)
 

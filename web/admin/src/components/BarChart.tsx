@@ -45,9 +45,12 @@ export function BarChart({ title, points, unit = '', tone = 'accent' }: { title:
             );
           })}
         </svg>
+        {/* The scale's top, written on the line it names */}
+        <span className="chart-max muted" style={{ top: `${(top / H) * 100}%` }}>
+          {fmt(nice)}
+        </span>
         <div className="chart-axis muted">
           <span>{label(points[0]?.day ?? '')}</span>
-          <span>max {fmt(nice)}</span>
           <span>{label(points[points.length - 1]?.day ?? '')}</span>
         </div>
       </div>

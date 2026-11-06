@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  ITEM_MODELS, NFT_TYPES, OUTFIT_PARTS, OUTFIT_SLOTS, SLOT_LABEL, TYPE_SINGULAR, modelLabel, partLabel,
+  ITEM_MODELS, MODEL_TYPES, OUTFIT_PARTS, OUTFIT_SLOTS, SLOT_LABEL, TYPE_SINGULAR, modelLabel, partLabel,
   type NftMetadata, type NftType, type OutfitSlot,
 } from '@farmverse/shared/nft/metadata';
 import { NftStage } from '@farmverse/shared/three/NftStage';
@@ -65,7 +65,7 @@ export function Studio() {
           <div className="field">
             <span className="field-label">Show me</span>
             <div className="chips small">
-              {NFT_TYPES.map((t) => (
+              {MODEL_TYPES.map((t) => (
                 <button key={t} className={meta.type === t ? 'on' : ''} onClick={() => setType(t)}>
                   <img className="fv-icon" src={sprite(TYPE_ICON[t])} alt="" />
                   {TYPE_SINGULAR[t]}

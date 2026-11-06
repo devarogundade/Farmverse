@@ -25,13 +25,6 @@
   background: linear-gradient(180deg, var(--night), var(--deep));
   box-shadow: inset -1px 0 0 color-mix(in srgb, var(--line) 60%, transparent);
 }
-.rail-logo {
-  width: 56px; height: 56px; border-radius: 18px;
-  display: grid; place-items: center;
-  background: radial-gradient(circle at 50% 35%, var(--raised), var(--panel));
-  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.3), 0 0 0 3px var(--ink);
-}
-.rail-logo img { width: 42px; height: 42px; object-fit: contain; }
 .rail-nav { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .rail-btn { position: relative; --s: 50px; width: 50px; height: 50px; min-width: 0; padding: 0; }
 /* Icon + name. The name is the link's accessible label. */
@@ -96,6 +89,7 @@
 .search input { flex: 1; min-width: 0; background: none; border: 0; outline: none; font-size: 15px; }
 .search input::placeholder { color: var(--muted); }
 .search .fv-chip { --s: 40px; }
+/* The game's segmented switch (My items: what's shown on the shelf) */
 .seg {
   margin-left: auto;
   display: flex; gap: 4px;
@@ -116,7 +110,7 @@
   paint-order: stroke fill;
   border-image: url('/ui/Button01_195_Yellow.webp') 96 30 96 30 fill / 21px 7px 21px 7px;
 }
-.top-actions { display: flex; align-items: center; gap: 12px; }
+.top-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
 .has-dot { position: relative; }
 .has-dot::after {
   content: ''; position: absolute; top: 9px; right: 10px;
@@ -212,7 +206,7 @@
 
 .floor-card { display: flex; flex-direction: column; }
 .bar-row + .bar-row { margin-top: 18px; }
-.bar-label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; padding-right: 30%; }
+.bar-label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; padding: 0 4px; }
 .bar-label b { color: var(--gold); }
 .bar {
   height: 22px; background: var(--night); border-radius: 999px; overflow: hidden;
@@ -564,7 +558,6 @@
     padding: 8px 14px; border-radius: 24px;
     box-shadow: 0 0 0 3px var(--ink), 0 8px 24px rgba(0, 0, 0, 0.4);
   }
-  .rail-logo { display: none; }
   .rail-nav { flex-direction: row; gap: 4px; }
   .rail-btn, .rail-btn.active { width: 42px; height: 42px; --s: 42px; }
   .rail-item { width: 58px; gap: 3px; }
@@ -576,7 +569,6 @@
   /* Top bar: logo + bell + wallet, search underneath. Market / My items live in the bottom bar. */
   .topbar { padding: 12px 16px 6px; flex-wrap: wrap; gap: 10px; }
   .wordmark img { height: 34px; }
-  .topbar .seg { display: none; }
   .search { flex: 1 1 100%; order: 3; }
   .top-actions { margin-left: auto; gap: 8px; }
   .top-actions .fv-chip { --s: 42px; }
@@ -593,7 +585,7 @@
   .chips {
     flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
     margin: 0 -16px 16px; padding: 2px 16px 4px;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x proximity; scroll-padding-inline: 16px;
   }
   .chips::-webkit-scrollbar { display: none; }
   .chips a, .chips button { flex: none; scroll-snap-align: start; }
@@ -668,6 +660,59 @@
   .studio { gap: 14px; }
   .studio .hero { position: sticky; top: 8px; height: 46vh; max-height: 400px; }
   .studio-panel { gap: 16px; }
-  .chips.small { margin: 0 -18px; padding: 2px 18px 4px; }
+  .chips.small { margin: 0 -18px; padding: 2px 18px 4px; scroll-padding-inline: 18px; }
   .slots { grid-template-columns: 1fr; }
 }
+.wallet-owed { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; padding: 10px 14px; font-size: 14px; }
+.wallet-owed b { color: var(--gold, #ffd34d); }
+
+/* ---------- v2: flat art (packs, deeds), golden goods, shop, rentals, worker stats ---------- */
+.flat-art { display: grid; place-items: center; }
+.flat-art img { width: 58%; max-width: 220px; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35)); }
+.nft-card:hover .flat-art img, .nft-card:focus-visible .flat-art img { transform: scale(1.06) rotate(-3deg); transition: transform 0.25s ease; }
+.fv-frame.golden { filter: drop-shadow(0 0 12px rgba(255, 206, 58, 0.65)); }
+.card-ribbon.golden { background: linear-gradient(180deg, #ffe27a, #e8a514); color: #4a2a00; }
+.golden-badge { background: linear-gradient(180deg, #ffe27a, #e8a514); color: #4a2a00; }
+
+/* worker stats under the hero */
+.worker-stats { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 14px 0; position: relative; z-index: 2; }
+.worker-stats div { background: var(--panel-2); border-radius: 10px; padding: 4px 10px; box-shadow: 0 0 0 2px var(--ink); }
+.worker-stats dt { font-size: 11px; opacity: 0.7; }
+.worker-stats dd { margin: 0; font-weight: 800; color: var(--gold); }
+.worker-stats.rarity-legendary div { box-shadow: 0 0 0 2px #ffb21a; }
+.worker-stats.rarity-epic div { box-shadow: 0 0 0 2px #b46cff; }
+.worker-stats.rarity-rare div { box-shadow: 0 0 0 2px #48a8ff; }
+.card-ribbon.rarity-legendary { background: linear-gradient(180deg, #ffe27a, #e8a514); color: #4a2a00; }
+.card-ribbon.rarity-epic { background: #8e44f0; }
+.card-ribbon.rarity-rare { background: #2f8de4; }
+.card-ribbon.rarity-common { background: #5c6b74; }
+
+/* worker filters */
+.filter-row { display: flex; flex-wrap: wrap; gap: 10px; margin: -4px 0 14px; }
+
+/* shop */
+.grid.drops { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.drop-card { position: relative; display: flex; flex-direction: column; min-height: 420px; padding: 18px; }
+.drop-card.off { filter: saturate(0.6); }
+.drop-art { height: 170px; }
+.drop-art img { width: 140px; }
+.drop-card:hover .drop-art img { transform: scale(1.06) rotate(-3deg); transition: transform 0.25s ease; }
+.drop-body { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.drop-body h2 { margin: 0; font-size: 24px; }
+.drop-body p { margin: 0; flex: 1; }
+.drop-meter { height: 10px; border-radius: 6px; background: var(--panel-2); box-shadow: 0 0 0 2px var(--ink); overflow: hidden; }
+.drop-meter i { display: block; height: 100%; background: linear-gradient(var(--gold-2), var(--gold-deep)); }
+.drop-foot { display: flex; align-items: baseline; justify-content: space-between; }
+
+/* hire */
+.rental-card { display: block; }
+.rental-stage-link { position: absolute; inset: 0; }
+.rental-foot { align-items: flex-end; }
+.rental-foot small { display: block; }
+.section-title { margin: 22px 0 10px; font-size: 22px; }
+
+/* goods: supply card */
+.stats-card .traits { margin-top: 6px; }
+
+/* wallet: faucet */
+.faucet-row { margin-top: 10px; }

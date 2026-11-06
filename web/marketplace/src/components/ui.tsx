@@ -1,19 +1,35 @@
 import { useId } from 'react';
 import { FarmIcon } from '@farmverse/shared/brand';
-import type { NftType } from '@farmverse/shared/nft/metadata';
-import type { EventKind } from '../api/types';
+import { sprite } from '@farmverse/shared/gameTheme';
+import { flatArt, isGolden, type NftMetadata, type NftType } from '@farmverse/shared/nft/metadata';
+import type { EventKind, Token } from '../api/types';
 
 export { FarmIcon };
 
 /** Game sprite for each kind of item (filter chips, headings). */
 export const TYPE_ICON: Record<NftType, string> = {
   worker: 'Isl_p_worker', tractor: 'Icon_Hammer', building: 'Isl_b_barn', land: 'Paint_plot_field', good: 'Paint_crop_wheat', animal: 'Paint_animal_cow',
+  pack: 'Icon_Gift', deed: 'Icon_Map',
 };
 
 /** Game item frame (ItemFrame01_Single_*) per kind of item. */
 export const FRAME: Record<NftType, string> = {
-  worker: 'yellow', tractor: 'blue', building: 'brown', land: 'green', good: 'purple', animal: 'green',
+  worker: 'yellow', tractor: 'blue', building: 'brown', land: 'green', good: 'purple', animal: 'green', pack: 'blue', deed: 'green',
 };
+
+/** The frame classes for an item: golden harvests get the gold frame and a glow. */
+export const frameOf = (m: Pick<NftMetadata, 'type' | 'item_id'>) => (isGolden(m) ? 'yellow golden' : FRAME[m.type]);
+
+/** Packs and deeds have no 3D model: their game art, centred where the model would be. */
+export function FlatArt({ meta, className = '' }: { meta: Pick<NftMetadata, 'type' | 'item_id'>; className?: string }) {
+  const art = flatArt(meta);
+  if (!art) return null;
+  return (
+    <span className={`flat-art ${className}`}>
+      <img src={sprite(art)} alt="" />
+    </span>
+  );
+}
 
 export function Price({ value, size = 'md' }: { value?: number; size?: 'md' | 'lg' }) {
   if (value == null) return <span className="price muted">Not listed</span>;
@@ -25,6 +41,11 @@ export function Price({ value, size = 'md' }: { value?: number; size?: 'md' | 'l
     </span>
   );
 }
+
+/** An item's name for display. Stacked goods are minted as "Wheat ×250"; where the ×250 badge sits
+ * beside the name, the name drops it so the amount is said once. */
+export const itemName = (token: Token) =>
+  token.metadata.quantity != null ? token.title.replace(/\s*×\s*[\d,.]+\s*$/, '') || token.title : token.title;
 
 export const fmt = (n: number) => (n >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : n.toLocaleString('en-US', { maximumFractionDigits: 2 }));
 

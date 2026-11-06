@@ -1,18 +1,18 @@
 import { sprite } from '@farmverse/shared/gameTheme';
-import { CHARACTER_CLIPS, OUTFIT_SLOTS, SLOT_LABEL, TYPE_LABEL, displayNo, modelLabel, partLabel, traitLabel } from '@farmverse/shared/nft/metadata';
+import { CHARACTER_CLIPS, OUTFIT_SLOTS, SLOT_LABEL, TYPE_LABEL, displayNo, flatArt, isGolden, modelLabel, partLabel, traitLabel } from '@farmverse/shared/nft/metadata';
 import { NftStage } from '@farmverse/shared/three/NftStage';
 import * as Tabs from '@radix-ui/react-tabs';
 import { ChevronRight, Rotate3d } from 'lucide-react';
-import { useState } from 'react';
-import { useOffers, useToken } from '../api/queries';
+import { useEffect, useRef, useState } from 'react';
+import { useItemStats, useOffers, useToken } from '../api/queries';
 import type { Offer, Token } from '../api/types';
 import { useWallet } from '../chain/wallet';
-import { features } from '../config';
+import { gameLink } from '../config';
 import { toast } from '../components/Dialog';
 import { useFlow } from '../components/Flows';
 import { NftCard } from '../components/NftCard';
 import { EmptyState, ErrorState, SkeletonDetail } from '../components/states';
-import { AccountAvatar, EventPill, FRAME, FarmIcon, Sparkline, fmt, timeAgo } from '../components/ui';
+import { AccountAvatar, EventPill, FarmIcon, FlatArt, Sparkline, fmt, frameOf, itemName, timeAgo } from '../components/ui';
 import { toggleSaved, useSaved } from '../lib/saved';
 import { href } from '../router';
 
@@ -20,7 +20,7 @@ const CLIP_LABEL: Record<string, string> = {
   Idle_Relaxed: 'Idle', Idle_Look_Around: 'Look', Walk_Forward: 'Walk', Run_Forward: 'Run', Attack_Punch: 'Punch', Jump_Start: 'Jump',
 };
 
-export function TokenPage({ id }: { id: string }) {
+export function TokenPage({ id, sell }: { id: string; sell?: boolean }) {
   const q = useToken(id);
   if (q.isPending) return <SkeletonDetail />;
   if (q.error) return <ErrorState title="Couldn’t load this item" error={q.error} onRetry={() => q.refetch()} />;
@@ -34,10 +34,75 @@ export function TokenPage({ id }: { id: string }) {
       </EmptyState>
     );
   }
-  return <TokenView token={q.data.token} floor={q.data.floor} related={q.data.related} />;
+  return <TokenView token={q.data.token} floor={q.data.floor} related={q.data.related} sell={sell} />;
 }
 
-function TokenView({ token, floor, related }: { token: Token; floor?: number; related: Token[] }) {
+const RARITY_LABEL: Record<string, string> = { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary' };
+const SPECIALTY_LABEL: Record<string, string> = { fields: 'Fields', animals: 'Animals', machines: 'Machines', freight: 'Freight' };
+
+/** A Farmhand's rarity, specialty, level and traits as chips under the hero. */
+function WorkerStats({ props }: { props: Record<string, string | number | boolean> }) {
+  const n = (k: string) => (typeof props[k] === 'number' ? (props[k] as number) : undefined);
+  const chips: [string, string][] = [];
+  if (typeof props.rarity === 'string') chips.push(['Rarity', RARITY_LABEL[props.rarity] ?? traitLabel(props.rarity)]);
+  if (typeof props.specialty === 'string') chips.push(['Best at', SPECIALTY_LABEL[props.specialty] ?? traitLabel(props.specialty)]);
+  if (n('level') != null) chips.push(['Level', String(n('level'))]);
+  for (const k of ['speed', 'carry', 'stamina']) if (n(k) != null) chips.push([traitLabel(k), '★'.repeat(n(k)!) + '☆'.repeat(Math.max(0, 5 - n(k)!))]);
+  if (!chips.length) return null;
+  return (
+    <dl className={`worker-stats rarity-${String(props.rarity ?? 'common')}`}>
+      {chips.map(([k, v]) => (
+        <div key={k}>
+          <dt>{k}</dt>
+          <dd>{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** Goods: how much of this item exists and its cheapest price per unit. */
+function ItemStatsCard({ itemId }: { itemId: string }) {
+  const q = useItemStats(itemId);
+  const s = q.data;
+  if (!s) return null;
+  return (
+    <section className="card fv-panel stats-card">
+      <div className="card-head">
+        <h2 className="fv-title">This item on the market</h2>
+        <a href={href.item(itemId)} className="more">
+          See all <ChevronRight size={14} />
+        </a>
+      </div>
+      <dl className="traits">
+        <div>
+          <dt>Cheapest, each</dt>
+          <dd>{s.floor_per_unit != null ? `${fmt(s.floor_per_unit)} FARM` : '—'}</dd>
+        </div>
+        <div>
+          <dt>For sale</dt>
+          <dd>{fmt(s.listed)}</dd>
+        </div>
+        <div>
+          <dt>Units out there</dt>
+          <dd>{fmt(s.supply)}</dd>
+        </div>
+        <div>
+          <dt>Made / used in game</dt>
+          <dd>
+            {fmt(s.minted)} / {fmt(s.burned)}
+          </dd>
+        </div>
+        <div>
+          <dt>Sold today</dt>
+          <dd>{fmt(s.sales_24h)}</dd>
+        </div>
+      </dl>
+    </section>
+  );
+}
+
+function TokenView({ token, floor, related, sell }: { token: Token; floor?: number; related: Token[]; sell?: boolean }) {
   const id = token.token_id;
   const [clip, setClip] = useState('Idle_Relaxed');
   const open = useFlow();
@@ -51,14 +116,25 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
   // 7-day change of the daily average price.
   const weekAgo = hist[Math.max(0, hist.length - 8)];
   const change = weekAgo ? ((hist[hist.length - 1] - weekAgo) / weekAgo) * 100 : 0;
-  const current = token.price ?? hist[hist.length - 1] ?? 0;
-  const barMax = Math.max(current, floor ?? 0) * 1.15 || 1;
+  // Undefined for an item that was never listed or sold: shown as "—", not 0.
+  const current: number | undefined = token.price ?? hist[hist.length - 1];
+  const barMax = Math.max(current ?? 0, floor ?? 0) * 1.15 || 1;
   const traits = Object.entries(m.props ?? {});
   const mine = !!accountId && token.owner_id === accountId;
   const listed = token.price != null;
   const worker = m.type === 'worker';
   const myOffer = offers.find((o) => o.from === accountId);
   const visibleOffers = mine ? offers : offers.filter((o) => o.from === accountId);
+  const flat = !!flatArt(m);
+
+  // Arrived from the game's "Sell on market": open the sell dialog once the page knows it's yours.
+  const sellOpened = useRef(false);
+  useEffect(() => {
+    if (sell && mine && !listed && !sellOpened.current) {
+      sellOpened.current = true;
+      open({ kind: 'list', token });
+    }
+  }, [sell, mine, listed, open, token]);
 
   return (
     <>
@@ -72,17 +148,20 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
       </nav>
 
       <div className="detail">
-        <section className={`hero fv-frame lg ${FRAME[m.type]}`} aria-label={`${token.title} 3D model`}>
-          <NftStage meta={m} className="hero-stage" framing="hero" interactive clip={clip} />
+        <section className={`hero fv-frame lg ${frameOf(m)}`} aria-label={`${token.title} 3D model`}>
+          {flat ? <FlatArt meta={m} className="hero-stage" /> : <NftStage meta={m} className="hero-stage" framing="hero" interactive clip={clip} />}
           <header className="hero-head">
-            <h1 className="fv-title">{token.title}</h1>
+            <h1 className="fv-title">{itemName(token)}</h1>
             <span className="fv-title">#{displayNo(id)}</span>
           </header>
           <div className="hero-side">
             {m.quantity != null && <span className="qty-badge static">×{fmt(m.quantity)}</span>}
-            <span className="hint">
-              <Rotate3d size={14} /> Drag to rotate
-            </span>
+            {isGolden(m) && <span className="qty-badge static golden-badge">Golden</span>}
+            {!flat && (
+              <span className="hint">
+                <Rotate3d size={14} /> Drag to rotate
+              </span>
+            )}
           </div>
           {worker && (
             <div className="clip-row" role="group" aria-label="Animation">
@@ -115,6 +194,14 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
                     Use in game
                   </button>
                 )}
+                {worker && (
+                  <button className="fv-btn yellow" onClick={() => open({ kind: 'rentOut', token })}>
+                    Rent out
+                  </button>
+                )}
+                <a className="fv-chip save" href={gameLink.nfts()} target="_blank" rel="noreferrer" aria-label="Open in the game" title="Open in the game">
+                  <img className="fv-icon" src={sprite('Paint_fac_farmhouse_l1')} alt="" />
+                </a>
                 <button className="fv-chip save" aria-label="Send to a friend" title="Send to a friend" onClick={() => open({ kind: 'send', token })}>
                   <img className="fv-icon" src={sprite('Icon_Gift')} alt="" />
                 </button>
@@ -127,11 +214,9 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
                     Buy now
                   </button>
                 )}
-                {features.offers && (
-                  <button className="fv-btn blue" onClick={() => open({ kind: 'offer', token })}>
-                    {myOffer ? 'New offer' : 'Make offer'}
-                  </button>
-                )}
+                <button className="fv-btn blue" onClick={() => open({ kind: 'offer', token })}>
+                  {myOffer ? 'New offer' : 'Make offer'}
+                </button>
                 <button
                   className={`fv-chip save${saved ? ' on' : ''}`}
                   aria-pressed={saved}
@@ -144,6 +229,7 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
             )}
           </div>
           {mine && worker && !listed && <p className="hero-note">Working on your island while you hold them.</p>}
+          {worker && m.props && <WorkerStats props={m.props} />}
         </section>
 
         <div className="side">
@@ -151,27 +237,31 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
             <h2 className="fv-title">{listed ? 'Current price' : 'Last price'}</h2>
             <div className="price-big">
               <FarmIcon size={34} />
-              <strong className="fv-title fv-gold">{fmt(current)}</strong>
+              <strong className="fv-title fv-gold">{current != null ? fmt(current) : '—'}</strong>
               <span className="price-unit">
-                <em className={change >= 0 ? 'up' : 'down'}>
-                  {Math.abs(change).toFixed(0)}% {change >= 0 ? '↑' : '↓'}
-                </em>
+                {hist.length > 1 && (
+                  <em className={change >= 0 ? 'up' : 'down'}>
+                    {Math.abs(change).toFixed(0)}% {change >= 0 ? '↑' : '↓'}
+                  </em>
+                )}
                 FARM
               </span>
             </div>
             {hist.length > 1 && <Sparkline values={hist} />}
           </section>
 
+          {m.type === 'good' && m.item_id && <ItemStatsCard itemId={m.item_id} />}
+
           <section className="card fv-panel floor-card">
             <div className="card-head">
-              <h2 className="fv-title">Floor price</h2>
+              <h2 className="fv-title">Compared to others</h2>
               <a href={href.explore(m.type)} className="more">
-                View More <ChevronRight size={14} />
+                See all <ChevronRight size={14} />
               </a>
             </div>
             <div className="bar-row">
               <div className="bar-label">
-                <span>Floor price</span>
+                <span>Lowest price</span>
                 <b>{floor != null ? fmt(floor) : '—'}</b>
               </div>
               <div className="bar">
@@ -180,11 +270,11 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
             </div>
             <div className="bar-row">
               <div className="bar-label">
-                <span>{listed ? 'Listed at' : 'Last sale'}</span>
-                <b>{fmt(current)}</b>
+                <span>{listed ? 'This one' : 'Last sale'}</span>
+                <b>{current != null ? fmt(current) : '—'}</b>
               </div>
               <div className="bar">
-                <i className="purple" style={{ width: `${(current / barMax) * 100}%` }} />
+                <i className="purple" style={{ width: `${((current ?? 0) / barMax) * 100}%` }} />
               </div>
             </div>
           </section>
@@ -194,12 +284,10 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
               <Tabs.Trigger value="history" className="tab fv-title">
                 History
               </Tabs.Trigger>
-              {features.offers && (
-                <Tabs.Trigger value="offers" className="tab fv-title">
-                  Offers
-                  {visibleOffers.length > 0 && <i className="count">{visibleOffers.length}</i>}
-                </Tabs.Trigger>
-              )}
+              <Tabs.Trigger value="offers" className="tab fv-title">
+                Offers
+                {visibleOffers.length > 0 && <i className="count">{visibleOffers.length}</i>}
+              </Tabs.Trigger>
               <Tabs.Trigger value="details" className="tab fv-title">
                 Details
               </Tabs.Trigger>
@@ -222,11 +310,9 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
               )}
             </Tabs.Content>
 
-            {features.offers && (
-              <Tabs.Content value="offers">
-                <OffersList offers={visibleOffers} mine={mine} me={accountId} loading={offersQ.isPending} error={offersQ.error} onRetry={() => offersQ.refetch()} token={token} />
-              </Tabs.Content>
-            )}
+            <Tabs.Content value="offers">
+              <OffersList offers={visibleOffers} mine={mine} me={accountId} loading={offersQ.isPending} error={offersQ.error} onRetry={() => offersQ.refetch()} token={token} />
+            </Tabs.Content>
 
             <Tabs.Content value="details">
               <dl className="traits">
@@ -338,21 +424,19 @@ function OffersList(props: { offers: Offer[]; mine: boolean; me: string | null; 
               <AccountAvatar account={o.from} />
             </span>
             <span className="who-text">
-              <span className="who-name">{o.from === me ? 'Your offer' : o.from}</span>
+              <span className="who-name">
+                {o.from === me ? 'Your offer' : o.from}
+                {o.token_id.startsWith('#') && o.item_id && <small className="ends"> · for any {o.min_quantity ? `${fmt(o.min_quantity)}+ ` : ''}{traitLabel(o.item_id)}</small>}
+              </span>
               <small className="ends">ends in {daysLeft(o.expires_at)}d</small>
             </span>
           </span>
           <span className="amt">{fmt(o.amount)} FARM</span>
           <span className="offer-btns">
             {mine ? (
-              <>
-                <button className="fv-btn green sm" onClick={() => open({ kind: 'accept', offer: o, token })}>
-                  Accept
-                </button>
-                <button className="fv-btn gray sm" onClick={() => open({ kind: 'decline', offer: o, token })}>
-                  Decline
-                </button>
-              </>
+              <button className="fv-btn green sm" onClick={() => open({ kind: 'accept', offer: o, token })}>
+                Accept
+              </button>
             ) : (
               <button className="fv-btn gray sm" onClick={() => open({ kind: 'cancelOffer', offer: o, token })}>
                 Cancel

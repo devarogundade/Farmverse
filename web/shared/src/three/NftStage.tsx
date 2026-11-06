@@ -2,7 +2,7 @@ import { Bounds, ContactShadows, OrbitControls, PerspectiveCamera, View } from '
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Component, Suspense, useRef, type ReactNode } from 'react';
 import type { Group } from 'three';
-import type { NftMetadata } from '../nft/metadata';
+import { FLAT_TYPES, type NftMetadata } from '../nft/metadata';
 import { Character } from './Character';
 import { Item } from './Item';
 
@@ -28,7 +28,8 @@ export function SharedCanvas() {
 /** The 3D model an NFT's metadata describes. */
 export function NftModel({ meta, clip, playing = true }: { meta: NftMetadata; clip?: string; playing?: boolean }) {
   if (meta.type === 'worker') return <Character outfit={meta.outfit} clip={clip} playing={playing} />;
-  if (!meta.item_id) return null;
+  // packs and deeds have no model: pages show their flat art (flatArt) instead
+  if (!meta.item_id || FLAT_TYPES.includes(meta.type)) return null;
   return <Item itemId={meta.item_id} quantity={meta.quantity} size={meta.type === 'good' ? 1.9 : 2.3} playing={playing} />;
 }
 

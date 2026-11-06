@@ -1,8 +1,8 @@
 import { sprite } from '@farmverse/shared/gameTheme';
-import { NFT_TYPES, TYPE_LABEL, type NftType } from '@farmverse/shared/nft/metadata';
-import { useState } from 'react';
+import { NFT_TYPES, TYPE_LABEL, modelLabel, type NftType } from '@farmverse/shared/nft/metadata';
+import { useEffect, useState } from 'react';
 import { useListings, useTokensByIds } from '../api/queries';
-import type { Sort, Token } from '../api/types';
+import type { Rarity, Sort, Specialty, Token } from '../api/types';
 import { useWallet } from '../chain/wallet';
 import { useFlow } from '../components/Flows';
 import { NftCard } from '../components/NftCard';
@@ -14,8 +14,18 @@ import { href } from '../router';
 
 type Shelf = 'owned' | 'saved';
 
-export function Explore({ type, mine, search }: { type?: string; mine?: boolean; search: string }) {
-  const [sort, setSort] = useState<Sort>('newest');
+const SORTS: Sort[] = ['newest', 'price_asc', 'price_desc', 'unit_price'];
+const SPECIALTIES: [Specialty | '', string][] = [['', 'Any job'], ['fields', 'Fields'], ['animals', 'Animals'], ['machines', 'Machines'], ['freight', 'Freight']];
+const RARITIES: [Rarity | '', string][] = [['', 'Any rarity'], ['common', 'Common'], ['rare', 'Rare'], ['epic', 'Epic'], ['legendary', 'Legendary']];
+
+export function Explore(props: { type?: string; mine?: boolean; search: string; item?: string; sort?: string }) {
+  const { type, mine, search, item } = props;
+  const [sort, setSort] = useState<Sort>(SORTS.includes(props.sort as Sort) ? (props.sort as Sort) : 'newest');
+  useEffect(() => {
+    if (SORTS.includes(props.sort as Sort)) setSort(props.sort as Sort);
+  }, [props.sort]);
+  const [specialty, setSpecialty] = useState<Specialty | ''>('');
+  const [rarity, setRarity] = useState<Rarity | ''>('');
   const [shelf, setShelf] = useState<Shelf>('owned');
   const open = useFlow();
   const { accountId, ready } = useWallet();
@@ -23,7 +33,19 @@ export function Explore({ type, mine, search }: { type?: string; mine?: boolean;
   const active = NFT_TYPES.includes(type as NftType) ? (type as NftType) : undefined;
   const showSaved = !!mine && shelf === 'saved';
 
-  const listings = useListings({ type: active, q: search || undefined, sort, owner: mine ? (accountId ?? undefined) : undefined }, !mine || (!!accountId && !showSaved));
+  const workers = active === 'worker';
+  const listings = useListings(
+    {
+      type: active,
+      q: search || undefined,
+      sort,
+      owner: mine ? (accountId ?? undefined) : undefined,
+      specialty: workers && specialty ? specialty : undefined,
+      rarity: workers && rarity ? rarity : undefined,
+      item: item || undefined,
+    },
+    !mine || (!!accountId && !showSaved),
+  );
   const savedQ = useTokensByIds(showSaved ? saved : []);
 
   if (mine && ready && !accountId) {
@@ -49,7 +71,7 @@ export function Explore({ type, mine, search }: { type?: string; mine?: boolean;
     <>
       <div className="explore-head">
         <div>
-          <h1 className="fv-title">{mine ? 'My items' : 'Explore'}</h1>
+          <h1 className="fv-title">{mine ? 'My items' : item ? `Buy ${modelLabel({ type: 'good', item_id: item })}` : 'Explore'}</h1>
           <p className="muted">
             {mine
               ? 'Everything you own. Sell it, send it to a friend, or use it in the game.'
@@ -75,6 +97,7 @@ export function Explore({ type, mine, search }: { type?: string; mine?: boolean;
               { value: 'newest', label: 'Newest', icon: 'Icon_Star' },
               { value: 'price_asc', label: 'Price: low to high', icon: 'ResourceBar_Icon_Gold' },
               { value: 'price_desc', label: 'Price: high to low', icon: 'Icon_Golds' },
+              { value: 'unit_price', label: 'Cheapest each', icon: 'Paint_crop_wheat' },
             ]}
           />
         </div>
@@ -92,6 +115,13 @@ export function Explore({ type, mine, search }: { type?: string; mine?: boolean;
           </a>
         ))}
       </div>
+
+      {workers && !showSaved && (
+        <div className="filter-row">
+          <Select size="sm" label="Job" value={specialty || 'any'} onChange={(v) => setSpecialty(v === 'any' ? '' : (v as Specialty))} options={SPECIALTIES.map(([v, l]) => ({ value: v || 'any', label: l }))} />
+          <Select size="sm" label="Rarity" value={rarity || 'any'} onChange={(v) => setRarity(v === 'any' ? '' : (v as Rarity))} options={RARITIES.map(([v, l]) => ({ value: v || 'any', label: l }))} />
+        </div>
+      )}
 
       {loading ? (
         <SkeletonGrid />

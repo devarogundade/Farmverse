@@ -88,6 +88,23 @@ export const getListing = (tokenId: string) => view<Listing | null>(market, 'get
 
 export const marketConfig = () => view<MarketConfig>(market, 'get_config');
 
+/** FARM the market holds for an account: sale proceeds it couldn't deliver (receiver not registered). */
+export async function owedOf(accountId: string): Promise<number> {
+  return fromYocto((await view<string>(market, 'owed_of', { account_id: accountId })) ?? '0');
+}
+
+/**
+ * The FARM registration (NEP-145) an account still needs, as a storage_deposit action, or null if
+ * it's registered. Without one, FARM can't be paid to it: sale proceeds wait in the market instead.
+ */
+export async function farmRegistration(accountId: string) {
+  const [registered, bounds] = await Promise.all([
+    view<object | null>(farm, 'storage_balance_of', { account_id: accountId }),
+    view<{ min: string }>(farm, 'storage_balance_bounds'),
+  ]);
+  return registered ? null : { receiverId: farm, actions: [call('storage_deposit', { account_id: accountId }, bounds.min, TGAS(30))] };
+}
+
 /* ---------- changes ---------- */
 
 /** Sell: top up the market storage deposit if this listing needs it, then approve the market with a price. */
@@ -98,6 +115,9 @@ export async function list(accountId: string, tokenId: string, price: number) {
   ]);
   const needed = BigInt(STORAGE_PER_LISTING) * BigInt(count + 1);
   const transactions = [];
+  // So the sale's FARM reaches the seller instead of waiting in the market.
+  const register = await farmRegistration(accountId);
+  if (register) transactions.push(register);
   if (BigInt(deposit ?? '0') < needed) {
     transactions.push({ receiverId: market, actions: [call('storage_deposit', { account_id: accountId }, (needed - BigInt(deposit ?? '0')).toString(), TGAS(30))] });
   }
@@ -105,6 +125,16 @@ export async function list(accountId: string, tokenId: string, price: number) {
     receiverId: items,
     actions: [call('nft_approve', { token_id: tokenId, account_id: market, msg: JSON.stringify({ price: toYocto(price) }) }, APPROVAL_DEPOSIT, TGAS(100))],
   });
+  check(await (await wallet()).signAndSendTransactions({ transactions }));
+}
+
+/** Collects FARM the market holds for the caller, registering it with FARM first if needed. */
+export async function collectOwed(accountId: string) {
+  const transactions = [];
+  const register = await farmRegistration(accountId);
+  if (register) transactions.push(register);
+  // withdraw_owed takes no deposit (it isn't payable).
+  transactions.push({ receiverId: market, actions: [call('withdraw_owed', {}, '0', TGAS(60))] });
   check(await (await wallet()).signAndSendTransactions({ transactions }));
 }
 
@@ -136,9 +166,14 @@ export async function buy(tokenId: string, expectedPrice: number) {
   if (emitted(logs, 'market_sale_failed')) throw new Error('Someone else got this item first. Your FARM was refunded.');
 }
 
-/** Use in game: burns the item; the game picks it up from the redeem event. Not for workers. */
-export async function redeem(tokenId: string) {
-  check(await (await wallet()).signAndSendTransaction({ receiverId: items, actions: [call('redeem', { token_id: tokenId })] }));
+/** Use in game: burns the item and returns the transaction hash the game credits it by. Not for workers. */
+export async function redeem(tokenId: string): Promise<string> {
+  const outcome = await (await wallet()).signAndSendTransaction({ receiverId: items, actions: [call('redeem', { token_id: tokenId })] });
+  check(outcome);
+  const o = outcome as { transaction?: { hash?: string }; transaction_outcome?: { id?: string } };
+  const hash = o.transaction?.hash ?? o.transaction_outcome?.id;
+  if (!hash) throw new Error('The wallet didn’t return the transaction. Your item was used; open the game to check it arrived.');
+  return hash;
 }
 
 export async function send(tokenId: string, receiverId: string) {

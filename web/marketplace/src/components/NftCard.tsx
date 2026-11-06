@@ -3,8 +3,8 @@ import { useState } from 'react';
 import type { Token } from '../api/types';
 import { href } from '../router';
 import { NftStage } from '@farmverse/shared/three/NftStage';
-import { displayNo } from '@farmverse/shared/nft/metadata';
-import { FRAME, Price, fmt } from './ui';
+import { displayNo, flatArt, isGolden } from '@farmverse/shared/nft/metadata';
+import { FlatArt, Price, fmt, frameOf, itemName } from './ui';
 
 /** Tile with a live 3D model, name chip and arrow, as in the "related" row of the design. */
 export function NftCard({ token, showPrice = true, badge }: { token: Token; showPrice?: boolean; badge?: string }) {
@@ -13,7 +13,7 @@ export function NftCard({ token, showPrice = true, badge }: { token: Token; show
   const [live, setLive] = useState(false);
   return (
     <a
-      className={`nft-card fv-frame ${FRAME[m.type]}`}
+      className={`nft-card fv-frame ${frameOf(m)}`}
       href={href.token(token.token_id)}
       aria-label={`${token.title}, #${displayNo(token.token_id)}`}
       onPointerEnter={() => setLive(true)}
@@ -21,12 +21,18 @@ export function NftCard({ token, showPrice = true, badge }: { token: Token; show
       onFocus={() => setLive(true)}
       onBlur={() => setLive(false)}
     >
-      <NftStage meta={m} className="nft-card-stage" animate={live} />
+      {flatArt(m) ? <FlatArt meta={m} className="nft-card-stage" /> : <NftStage meta={m} className="nft-card-stage" animate={live} />}
       {m.quantity != null && <span className="qty-badge">×{fmt(m.quantity)}</span>}
-      {badge && <span className="card-ribbon fv-title">{badge}</span>}
+      {badge ? (
+        <span className="card-ribbon fv-title">{badge}</span>
+      ) : isGolden(m) ? (
+        <span className="card-ribbon golden fv-title">Golden</span>
+      ) : (
+        m.type === 'worker' && typeof m.props?.rarity === 'string' && m.props.rarity !== 'common' && <span className={`card-ribbon fv-title rarity-${m.props.rarity}`}>{m.props.rarity}</span>
+      )}
       <div className="nft-card-foot">
         <div className="nft-card-text">
-          <strong className="fv-title">{token.title}</strong>
+          <strong className="fv-title">{itemName(token)}</strong>
           {showPrice && <Price value={token.price} />}
         </div>
         <span className="arrow-btn fv-chip" aria-hidden="true">

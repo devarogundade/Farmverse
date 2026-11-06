@@ -1,19 +1,22 @@
 import { sprite } from '@farmverse/shared/gameTheme';
-import { displayNo, modelLabel } from '@farmverse/shared/nft/metadata';
+import { displayNo, flatArt, modelLabel } from '@farmverse/shared/nft/metadata';
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { useMarket } from '../actions/useMarket';
-import { useBalance, useFeeRate, useMarkNotesRead, useNotes, useToken } from '../api/queries';
-import type { Offer, Token } from '../api/types';
+import { useBalance, useFeeRate, useMarkNotesRead, useNotes, useOwed, useToken } from '../api/queries';
+import type { Drop, Offer, Rental, Token } from '../api/types';
 import { useWallet } from '../chain/wallet';
+import { config, gameLink } from '../config';
 import { href } from '../router';
 import { isAccount } from '../lib/account';
 import { Dialog, Done, WalletWait, toast, useRun } from './Dialog';
 import { Select } from './Select';
-import { AccountAvatar, FRAME, FarmIcon, TYPE_ICON, fmt, timeAgo } from './ui';
+import { AccountAvatar, FarmIcon, TYPE_ICON, fmt, frameOf, timeAgo } from './ui';
 
 export type Flow =
-  | { kind: 'buy' | 'offer' | 'list' | 'delist' | 'send' | 'redeem'; token: Token }
-  | { kind: 'accept' | 'decline' | 'cancelOffer'; offer: Offer; token: Token }
+  | { kind: 'buy' | 'offer' | 'list' | 'delist' | 'send' | 'redeem' | 'rentOut'; token: Token }
+  | { kind: 'accept' | 'cancelOffer'; offer: Offer; token: Token }
+  | { kind: 'rent' | 'rentManage'; rental: Rental }
+  | { kind: 'drop'; drop: Drop }
   | { kind: 'wallet' }
   | { kind: 'notes' };
 
@@ -61,7 +64,8 @@ export function FlowHost({ children }: { children: ReactNode }) {
   );
 }
 
-const flowKey = (f: Flow) => f.kind + ('token' in f ? f.token.token_id : '') + ('offer' in f ? f.offer.id : '');
+const flowKey = (f: Flow) =>
+  f.kind + ('token' in f ? f.token.token_id : '') + ('offer' in f ? f.offer.id : '') + ('rental' in f ? f.rental.token.token_id : '') + ('drop' in f ? f.drop.id : '');
 
 function FlowDialog({ flow, onClose }: { flow: Flow; onClose: () => void }) {
   switch (flow.kind) {
@@ -70,9 +74,16 @@ function FlowDialog({ flow, onClose }: { flow: Flow; onClose: () => void }) {
     case 'notes':
       return <NotesFlow onClose={onClose} />;
     case 'accept':
-    case 'decline':
     case 'cancelOffer':
       return <OfferDecision kind={flow.kind} offer={flow.offer} token={flow.token} onClose={onClose} />;
+    case 'drop':
+      return <DropFlow drop={flow.drop} onClose={onClose} />;
+    case 'rentOut':
+      return <RentOutFlow token={flow.token} onClose={onClose} />;
+    case 'rent':
+      return <RentFlow rental={flow.rental} onClose={onClose} />;
+    case 'rentManage':
+      return <RentManageFlow rental={flow.rental} onClose={onClose} />;
     case 'buy':
       return <BuyFlow token={flow.token} onClose={onClose} />;
     case 'offer':
@@ -94,8 +105,8 @@ function ItemLine({ token }: { token: Token }) {
   const m = token.metadata;
   return (
     <div className="item-line">
-      <span className={`item-slot fv-frame ${FRAME[m.type]}`}>
-        <img src={sprite(TYPE_ICON[m.type])} alt="" />
+      <span className={`item-slot fv-frame ${frameOf(m)}`}>
+        <img src={sprite(flatArt(m) ?? TYPE_ICON[m.type])} alt="" />
       </span>
       <span className="item-line-text">
         <b className="fv-title">{token.title}</b>
@@ -266,7 +277,7 @@ function OfferFlow({ token, onClose }: { token: Token; onClose: () => void }) {
               ]}
             />
           </div>
-          <p className="dlg-note">Your FARM stays in your wallet until the owner accepts.</p>
+          <p className="dlg-note">The market holds your FARM until the owner accepts or the offer ends. Cancel any time to get it back. The first time, your wallet also asks for a small NEAR deposit.</p>
           {problem && <p className="dlg-err">{problem}</p>}
           <Err error={error} />
           <Actions>
@@ -425,6 +436,7 @@ function RedeemFlow({ token, onClose }: { token: Token; onClose: () => void }) {
       body={
         <>
           <p className="dlg-note">{token.title} will be waiting on your island the next time you play.</p>
+          <p className="dlg-note">Your wallet asks twice: once to use the item, once to sign in to the game (free).</p>
           <p className="dlg-warn">
             <img src={sprite('Icon_ImageIcon_Info')} alt="" />
             This uses the item up — it can’t be sold or used again afterwards.
@@ -434,7 +446,16 @@ function RedeemFlow({ token, onClose }: { token: Token; onClose: () => void }) {
       confirm="Use it"
       tone="yellow"
       doneTitle="On its way!"
-      doneBody={<p>Open the game to find {token.title} on your island.</p>}
+      doneBody={
+        <>
+          <p>{token.title} is waiting on your island.</p>
+          <Actions>
+            <a className="fv-btn yellow" href={gameLink.redeemed(token.token_id)} target="_blank" rel="noreferrer">
+              Open the game
+            </a>
+          </Actions>
+        </>
+      }
       action={() => market.redeem(token)}
       onClose={onClose}
       onDone={() => (location.hash = href.mine())}
@@ -490,7 +511,7 @@ function SendFlow({ token, onClose }: { token: Token; onClose: () => void }) {
   );
 }
 
-function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' | 'decline' | 'cancelOffer'; offer: Offer; token: Token; onClose: () => void }) {
+function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' | 'cancelOffer'; offer: Offer; token: Token; onClose: () => void }) {
   const market = useMarket();
   const rate = useFeeRate();
   if (kind === 'accept') {
@@ -514,22 +535,21 @@ function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' |
         tone="green"
         doneTitle="Sold!"
         doneBody={<p>{t.title} now belongs to {o.from}. Your FARM is in your wallet.</p>}
-        action={() => market.acceptOffer(o)}
+        action={() => market.acceptOffer(o, t)}
         onClose={onClose}
       />
     );
   }
-  const mine = kind === 'cancelOffer';
   return (
     <Confirm
-      title={mine ? 'Cancel your offer?' : 'Decline offer?'}
+      title="Cancel your offer?"
       icon="Icon_Mail"
       token={t}
-      body={<p className="dlg-note">{mine ? `Your ${fmt(o.amount)} FARM offer will be withdrawn.` : `${o.from} offered ${fmt(o.amount)} FARM. They’ll be told it was declined.`}</p>}
-      confirm={mine ? 'Cancel offer' : 'Decline'}
+      body={<p className="dlg-note">Your {fmt(o.amount)} FARM comes back to your wallet.</p>}
+      confirm="Cancel offer"
       tone="yellow"
-      doneTitle={mine ? 'Offer cancelled' : 'Offer declined'}
-      action={() => (mine ? market.cancelOffer(o) : market.declineOffer(o))}
+      doneTitle="Offer cancelled"
+      action={() => market.cancelOffer(o)}
       onClose={onClose}
     />
   );
@@ -537,7 +557,9 @@ function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' |
 
 function WalletFlow({ onClose }: { onClose: () => void }) {
   const wallet = useWallet();
+  const market = useMarket();
   const { data: balance } = useBalance();
+  const { data: owed } = useOwed();
   const { status, error, run } = useRun();
   if (!wallet.accountId) {
     return (
@@ -570,6 +592,18 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
         <strong className="fv-title fv-gold">{balance == null ? '…' : fmt(balance)}</strong>
         <span>FARM</span>
       </div>
+      {config.network === 'testnet' && <FaucetRow />}
+      {owed != null && owed > 0 && (
+        <div className="wallet-owed fv-row">
+          <span>
+            <b>{fmt(owed)} FARM</b> from your sales is waiting for you.
+          </span>
+          <button className="fv-btn green sm" disabled={status === 'busy'} onClick={() => run(() => market.collect())}>
+            {status === 'busy' ? 'Collecting…' : 'Collect'}
+          </button>
+        </div>
+      )}
+      <Err error={error} />
       <Actions>
         <button
           className="fv-btn blue"
@@ -636,5 +670,246 @@ function NotesFlow({ onClose }: { onClose: () => void }) {
         </ul>
       )}
     </Dialog>
+  );
+}
+
+/* ---------- v2: shop, rentals, faucet (plan 15 §5, §6.6, §12.1) ---------- */
+
+function DropFlow({ drop: d, onClose }: { drop: Drop; onClose: () => void }) {
+  const { data: balance, isPending } = useBalance();
+  const market = useMarket();
+  const { status, error, run } = useRun();
+  const short = balance == null ? 0 : d.price - balance;
+  const left = d.cap != null ? d.cap - d.sold : undefined;
+  return (
+    <Dialog open onClose={onClose} title={status === 'done' ? 'It’s yours!' : 'Buy from the shop'} icon="Icon_Shop">
+      {status === 'busy' ? (
+        <WalletWait />
+      ) : status === 'done' ? (
+        <Done title={d.title}>
+          <p>Find it under My items. Use it in the game whenever you like, or sell it here.</p>
+          <Actions>
+            <a className="fv-btn green" href={href.mine()} onClick={onClose}>
+              My items
+            </a>
+            <a className="fv-btn yellow" href={gameLink.nfts()} target="_blank" rel="noreferrer">
+              Use in game
+            </a>
+          </Actions>
+        </Done>
+      ) : (
+        <>
+          <div className="item-line">
+            <span className="item-slot fv-frame blue">
+              <img src={sprite(flatArt({ type: d.kind === 'land' ? 'deed' : 'pack', item_id: d.item_id }) ?? 'Icon_Gift')} alt="" />
+            </span>
+            <span className="item-line-text">
+              <b className="fv-title">{d.title}</b>
+              <small>{left != null ? `${fmt(left)} of ${fmt(d.cap!)} left` : 'From the Farmverse shop'}</small>
+            </span>
+          </div>
+          <Rows rows={[['Price', <Farm n={d.price} />], ['Your FARM', <Farm n={balance} />], ['After buying', <Farm n={balance == null ? undefined : Math.max(0, balance - d.price)} />, 'total']]} />
+          {short > 0 ? <p className="dlg-err">You need {fmt(short)} more FARM.</p> : <p className="dlg-note">If it sells out before your wallet confirms, your FARM comes straight back.</p>}
+          <Err error={error} />
+          <Actions>
+            <button className="fv-btn gray" onClick={onClose}>
+              Cancel
+            </button>
+            <button className="fv-btn green" disabled={isPending || short > 0} onClick={() => run(() => market.buyDrop(d))}>
+              Buy for {fmt(d.price)}
+            </button>
+          </Actions>
+        </>
+      )}
+    </Dialog>
+  );
+}
+
+const DAY_OPTIONS = [1, 3, 7, 14, 30];
+
+function RentOutFlow({ token, onClose }: { token: Token; onClose: () => void }) {
+  const market = useMarket();
+  const [amount, setAmount] = useState('');
+  const [maxDays, setMaxDays] = useState(7);
+  const { status, error, run } = useRun();
+  const rate = useFeeRate();
+  const n = Number(amount);
+  return (
+    <Dialog open onClose={onClose} title={status === 'done' ? 'Ready for hire!' : 'Rent out'} icon="Icon_PictoIcon_User">
+      {status === 'busy' ? (
+        <WalletWait />
+      ) : status === 'done' ? (
+        <Done title={token.title}>
+          <p>Until someone hires {token.title}, they keep working on your farm. What they earn waits for you to collect.</p>
+          <Actions>
+            <button className="fv-btn green" onClick={onClose}>
+              Done
+            </button>
+          </Actions>
+        </Done>
+      ) : (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (n > 0) run(() => market.rentOut(token, n, maxDays));
+          }}
+        >
+          <ItemLine token={token} />
+          <AmountInput label="Price per day" value={amount} onChange={setAmount} suggestions={[]} />
+          <div className="field-row">
+            <span>Longest hire</span>
+            <Select
+              size="sm"
+              label="Longest hire"
+              value={String(maxDays)}
+              onChange={(v) => setMaxDays(Number(v))}
+              options={DAY_OPTIONS.map((d) => ({ value: String(d), label: `${d} day${d > 1 ? 's' : ''}` }))}
+            />
+          </div>
+          <Rows
+            rows={[
+              ['A day’s hire', <Farm n={n || 0} />],
+              [feeLabel(rate), <span className="minus">−{rate == null ? '…' : fmt((n || 0) * rate)} FARM</span>],
+              ['You earn a day', <Farm n={rate == null ? undefined : Math.max(0, (n || 0) * (1 - rate))} />, 'total'],
+            ]}
+          />
+          <p className="dlg-note">The market looks after {token.title} while they’re up for hire. You can take them back whenever nobody is renting them.</p>
+          <Err error={error} />
+          <Actions>
+            <button type="button" className="fv-btn gray" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className="fv-btn green" disabled={!(n > 0)}>
+              Rent out
+            </button>
+          </Actions>
+        </form>
+      )}
+    </Dialog>
+  );
+}
+
+function RentFlow({ rental: r, onClose }: { rental: Rental; onClose: () => void }) {
+  const { data: balance, isPending } = useBalance();
+  const market = useMarket();
+  const [days, setDays] = useState(Math.min(3, r.max_days));
+  const { status, error, run } = useRun();
+  const total = r.price_per_day * days;
+  const short = balance == null ? 0 : total - balance;
+  return (
+    <Dialog open onClose={onClose} title={status === 'done' ? 'Hired!' : 'Hire a worker'} icon="Icon_PictoIcon_User">
+      {status === 'busy' ? (
+        <WalletWait />
+      ) : status === 'done' ? (
+        <Done title={r.token.title}>
+          <p>
+            {r.token.title} works on your farm for {days} day{days > 1 ? 's' : ''}. Open the game to see them at work.
+          </p>
+          <Actions>
+            <a className="fv-btn yellow" href={gameLink.nfts()} target="_blank" rel="noreferrer">
+              Open the game
+            </a>
+            <button className="fv-btn green" onClick={onClose}>
+              Done
+            </button>
+          </Actions>
+        </Done>
+      ) : (
+        <>
+          <ItemLine token={r.token} />
+          <div className="field-row">
+            <span>How long</span>
+            <Select
+              size="sm"
+              label="How long"
+              value={String(days)}
+              onChange={(v) => setDays(Number(v))}
+              options={DAY_OPTIONS.filter((d) => d <= r.max_days).map((d) => ({ value: String(d), label: `${d} day${d > 1 ? 's' : ''}` }))}
+            />
+          </div>
+          <Rows rows={[['A day', <Farm n={r.price_per_day} />], ['Your FARM', <Farm n={balance} />], ['Total', <Farm n={total} />, 'total']]} />
+          {short > 0 ? <p className="dlg-err">You need {fmt(short)} more FARM.</p> : <p className="dlg-note">They need a free bed in a workers’ house on your farm.</p>}
+          <Err error={error} />
+          <Actions>
+            <button className="fv-btn gray" onClick={onClose}>
+              Cancel
+            </button>
+            <button className="fv-btn green" disabled={isPending || short > 0} onClick={() => run(() => market.rent(r, days))}>
+              Hire for {fmt(total)}
+            </button>
+          </Actions>
+        </>
+      )}
+    </Dialog>
+  );
+}
+
+/** The lender's side: collect what the worker earned, or take them back. */
+function RentManageFlow({ rental: r, onClose }: { rental: Rental; onClose: () => void }) {
+  const market = useMarket();
+  const { status, error, run } = useRun();
+  const busy = r.rented_until > Date.now();
+  return (
+    <Dialog open onClose={onClose} title={status === 'done' ? 'Done' : 'Your worker for hire'} icon="Icon_PictoIcon_User">
+      {status === 'busy' ? (
+        <WalletWait />
+      ) : status === 'done' ? (
+        <Done title={r.token.title}>
+          <Actions>
+            <button className="fv-btn green" onClick={onClose}>
+              Done
+            </button>
+          </Actions>
+        </Done>
+      ) : (
+        <>
+          <ItemLine token={r.token} />
+          <Rows
+            rows={[
+              ['A day', <Farm n={r.price_per_day} />],
+              ['Hired by', busy ? `${r.renter_id} · ${Math.ceil((r.rented_until - Date.now()) / 86_400_000)}d left` : 'Nobody right now'],
+              ['Earned', <Farm n={r.earned} />, 'total'],
+            ]}
+          />
+          <Err error={error} />
+          <Actions>
+            <button className="fv-btn green" disabled={!(r.earned > 0)} onClick={() => run(() => market.rentWithdraw(r))}>
+              Collect {fmt(r.earned)} FARM
+            </button>
+            <button className="fv-btn yellow" disabled={busy} title={busy ? 'You can take them back when the hire ends' : undefined} onClick={() => run(() => market.rentEnd(r))}>
+              Take back
+            </button>
+          </Actions>
+        </>
+      )}
+    </Dialog>
+  );
+}
+
+/** Testnet: today's free FARM, in the wallet panel. */
+function FaucetRow() {
+  const market = useMarket();
+  const [state, setState] = useState<{ busy?: boolean; text?: string; error?: string }>({});
+  return (
+    <div className="wallet-owed fv-row faucet-row">
+      <span>{state.error ? <span className="dlg-err">{state.error}</span> : state.text ? <b>{state.text}</b> : 'Free test FARM to try things out, once a day.'}</span>
+      <button
+        className="fv-btn yellow sm"
+        disabled={state.busy}
+        onClick={async () => {
+          setState({ busy: true });
+          try {
+            const got = await market.faucet();
+            const text = `${got.farm} FARM sent${got.near !== '0' ? ` (and ${got.near} NEAR)` : ''}`;
+            setState({ text });
+            toast(text, 'ResourceBar_Icon_Gold');
+          } catch (e) {
+            setState({ error: (e as Error).message });
+          }
+        }}
+      >
+        {state.busy ? 'Sending…' : 'Get FARM'}
+      </button>
+    </div>
   );
 }

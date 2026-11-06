@@ -1,6 +1,8 @@
 import type { NftMetadata, NftType } from '@farmverse/shared/nft/metadata';
 
-export type Sort = 'newest' | 'price_asc' | 'price_desc';
+export type Sort = 'newest' | 'price_asc' | 'price_desc' | 'unit_price';
+export type Specialty = 'fields' | 'animals' | 'machines' | 'freight';
+export type Rarity = 'common' | 'rare' | 'epic' | 'legendary';
 
 export type EventKind = 'minted' | 'listed' | 'bought' | 'delisted' | 'redeemed' | 'sent' | 'offer';
 
@@ -17,6 +19,8 @@ export interface TokenEvent {
 export interface Token {
   token_id: string;
   title: string;
+  /** The contract's kind (good, boost, building, land, tool, pack, worker). */
+  kind?: string;
   owner_id: string;
   metadata: NftMetadata;
   /** Active listing price in FARM, if listed. */
@@ -27,13 +31,62 @@ export interface Token {
   events: TokenEvent[];
 }
 
+/** An offer escrowed on the market contract: on one token, or on any token of an item (`token_id` "#wheat"). */
 export interface Offer {
   id: string;
   token_id: string;
+  item_id?: string;
+  min_quantity?: number;
   from: string;
+  /** FARM. */
   amount: number;
   expires_at: number;
-  status: 'open' | 'accepted' | 'declined' | 'cancelled';
+  status: 'open' | 'accepted' | 'cancelled';
+}
+
+/** A studio drop: fixed price in FARM, maybe a cap (backend/server market read `DropWire`). */
+export interface Drop {
+  id: string;
+  kind: string;
+  item_id: string;
+  quantity: number;
+  title: string;
+  /** FARM. */
+  price: number;
+  /** yocto-FARM, exactly as the contract wants it. */
+  priceYocto: string;
+  cap?: number;
+  sold: number;
+  per_wallet?: number;
+  starts_at: number;
+  ends_at?: number;
+  paused: boolean;
+}
+
+/** A worker held by the market for rent. */
+export interface Rental {
+  token: Token;
+  lender_id: string;
+  /** FARM per day. */
+  price_per_day: number;
+  pricePerDayYocto: string;
+  max_days: number;
+  renter_id?: string;
+  /** Epoch ms; 0 when not rented. */
+  rented_until: number;
+  /** FARM waiting for the lender. */
+  earned: number;
+}
+
+export interface ItemStats {
+  item_id: string;
+  /** Cheapest listing per unit, FARM. */
+  floor_per_unit?: number;
+  listed: number;
+  minted: number;
+  burned: number;
+  supply: number;
+  sales_24h: number;
 }
 
 export interface Note {
@@ -59,6 +112,11 @@ export interface ListingQuery {
   sort?: Sort;
   /** Only this account's tokens (My items); listed or not. */
   owner?: string;
+  /** Workers: by specialty / rarity. */
+  specialty?: Specialty;
+  rarity?: Rarity;
+  /** Goods: one catalogue item (the game's "Buy more"). */
+  item?: string;
   cursor?: string | null;
   limit?: number;
 }
@@ -70,16 +128,19 @@ export interface TokenDetail {
   related: Token[];
 }
 
-/** The marketplace read API (docs 13 §9) plus off-chain offers and notifications (docs 14 §3). */
+/** The marketplace read API (docs 13 §9, plan 15 §12). Every change is a wallet transaction (chain/market). */
 export interface MarketApi {
   listings(q: ListingQuery, signal?: AbortSignal): Promise<Page<Token>>;
   token(id: string, signal?: AbortSignal): Promise<TokenDetail | null>;
   tokens(ids: string[], signal?: AbortSignal): Promise<Token[]>;
+  /** Live offers the token's owner could accept (on the token, and on its item). */
   offers(tokenId: string, signal?: AbortSignal): Promise<Offer[]>;
+  /** Offers an account made. */
+  offersBy(account: string, signal?: AbortSignal): Promise<Offer[]>;
   notifications(account: string, signal?: AbortSignal): Promise<Note[]>;
   markNotificationsRead(account: string): Promise<void>;
-  createOffer(tokenId: string, amount: number, days: number): Promise<void>;
-  cancelOffer(offerId: string): Promise<void>;
-  declineOffer(offerId: string): Promise<void>;
-  acceptOffer(offerId: string): Promise<void>;
+  drops(signal?: AbortSignal): Promise<Drop[]>;
+  rentals(signal?: AbortSignal): Promise<Rental[]>;
+  myRentals(account: string, signal?: AbortSignal): Promise<{ lent: Rental[]; renting: Rental[] }>;
+  itemStats(itemId: string, signal?: AbortSignal): Promise<ItemStats | null>;
 }
