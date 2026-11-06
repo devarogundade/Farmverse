@@ -72,6 +72,15 @@ an indexer migration, and the Unity panels.
 - [ ] E8 Landing: FAQ for FARM, mint, redeem, passes, Farmhands, renting, offers, land deeds §9 D15
 - [ ] E9 Admin: drops sold card, reconcile numbers §10
 
+## G. Track brief: merchant NPCs and social login (plan §13)
+
+- [ ] G1 Merchant accounts (`<name>.merchants.<master>`), FARM float from the treasury, keys in the server env (script)
+- [ ] G2 `merchant-tick` agent loop: stock + demand → prices → item offers and listings; `merchant_log`
+- [ ] G3 Game: merchants' offers at the market stall, "Sell to Bea" (mint + accept)
+- [ ] G4 Market site: Merchants page (stock, prices over time, why)
+- [ ] G5 Social-login wallets: check near-connect on testnet, put them first in the picker
+- [ ] G6 README: NEAR Intents (mainnet "Get FARM with any token") and NEP-245 for goods as next steps
+
 ## F. Deploy and submit
 
 - [ ] F1 Hosting: play., marketplace., farmverse.world on the EC2 nginx; `deploy.sh --web` §9 D18

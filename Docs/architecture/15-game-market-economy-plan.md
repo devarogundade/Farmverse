@@ -471,3 +471,44 @@ so items and market are upgraded once. The order of work is the checklist in
   `hash(island seed, field uid, harvest count) < 1 %`.
 - Golden goods show with a gold frame in storage and on the market; minting them works like any good (lot minimum
   1 for golden goods).
+
+## 13. The `games` track brief (added 2026-11-06)
+
+The track ("Games With Real Economies") judges the game loop, with a bonus if players never notice the chain. It
+asks for NPCs with wallets, player-owned markets and economies that evolve without a dev patch, and names
+NEP-245, the near-dapp skill and NEAR Intents as starting points. Its sample idea: *merchant NPCs that are agents
+with wallets and set prices from their own stock and demand.*
+
+| Brief asks | This plan | Decision |
+|---|---|---|
+| Player-owned markets | Listings, offers (§12.2), drops (§5) | Done in the contracts |
+| NPCs with wallets | Farmhands earn FARM into their own balance while rented (§12.1) | Keep, **and add merchant NPCs (§13.1)** |
+| Economy evolves without a patch | Fixed prices except player listings | **Merchants reprice themselves (§13.1)** |
+| Players never notice the chain | One approval per action, "Mint"/"Redeem" only | Keep; add social-login wallets where the network has them (§13.2) |
+| NEAR Intents | — | Mainnet only (the 1Click API and solvers don't serve testnet): "Get FARM with any token" is the mainnet path, documented, not built for the testnet submission |
+| NEP-245 multi token | Items are NEP-171 with a quantity | Not in this cut: moving goods to NEP-245 means a new contract and re-minting every good, the market and the indexer. Written in the README as the next step for fungible goods |
+
+### 13.1 Market Town merchants (agent NPCs)
+
+- Four merchants, each its own NEAR account with its own FARM (`bea.merchants.<master>` …): **Bea the baker**
+  (wheat, corn, flour, bread), **Ruth the rancher** (eggs, milk, wool), **Tomas the trader** (any good, small
+  margins), **Ivy the collector** (golden goods and buildings only).
+- An **agent loop** in the worker (`merchant-tick`, every 10 minutes) runs each merchant: read its own stock
+  (tokens it owns, from `chain.tokens`) and demand (its fills and the market's sales of each item in the last 24 h,
+  from `chain.sales` / offer accepts), then
+  - **buy price** per unit = `base × (target / max(stock, 1))^0.5 × demand factor`, clamped to 0.5–2× base;
+  - **sell price** = buy price × 1.25;
+  - post or replace an **item offer** (buy side, escrowed FARM, §12.2) and **list** what it holds (sell side).
+- The merchant's FARM is its own: it can only spend what it earned from sales plus a starting float from the
+  treasury. Its key is a hot key on the server, but a merchant can only move its **own** tokens and FARM, never a
+  player's (principle 3 stays true). Each tick writes `merchant_log` (what it saw, what it set) for the admin web.
+- **Game:** the market stall shows the merchants' offers: "Bea buys Wheat ×100 for 38 FARM". **Sell to Bea** mints the
+  lot and accepts her offer — two approvals the first time (mint, then accept), shown as one step.
+- **Market site:** a Merchants page with each merchant's stock, prices over time and "why" (low stock, high demand).
+- Optional, cosmetic: a line of chat per merchant from NEAR AI Cloud, with the prices still set by the rule.
+
+### 13.2 Social login
+
+The game page uses `near-connect`, which lists the wallets that support the network. Check which offer email or
+social sign-in on testnet and put them first in the picker. If none does on testnet, record it and switch them on
+with mainnet. Mint, redeem and buy stay one approval each.
