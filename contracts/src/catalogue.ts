@@ -462,6 +462,8 @@ export const PurchasesDoc = named(
   z.object({
     /** Extra builders granted for good (capped by the server). */
     extraBuilders: z.number().int().min(0).max(10),
+    /** Farm Passes used while premium was already on: each turns premium on for a later season. */
+    passCredits: z.number().int().min(0).max(100).optional(),
     updatedAt: EpochMs,
   }),
   'Lasting unlocks.',

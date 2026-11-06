@@ -1,8 +1,9 @@
-import { PassDoc, passSeason, type CatalogueDoc } from '@farmverse/contracts';
+import { PassDoc, passSeason, type CatalogueDoc, type PurchasesDoc } from '@farmverse/contracts';
 import { AppError, corrupt, legacyDoc } from '../core/errors';
 import { paths } from '../infra/paths';
 import { UnitOfWork } from '../infra/unitOfWork';
 import { catalogue } from './catalogue';
+import { readPurchases } from './entitlements';
 import { islandProgress } from './goals';
 import { preparePrize, type PrizePaid } from './prizes';
 import type { Env } from './services';
@@ -23,6 +24,19 @@ export function seasonDoc(data: Record<string, unknown> | undefined, seasonId: s
   return { doc: { seasonId, baseXp: xp, free: [], premium: [], premiumActive: false, updatedAt: nowMs }, fresh: true };
 }
 
+/**
+ * A new season's doc with premium switched on from a banked Farm Pass, if the player has one
+ * (`state/purchases.passCredits`). Returns the writes to make; call before the caller's first write.
+ */
+export function useBankedPass(
+  doc: PassDoc, fresh: boolean, purchasesData: Record<string, unknown> | undefined, nowMs: number,
+): { doc: PassDoc; purchases?: PurchasesDoc } {
+  if (!fresh || doc.premiumActive) return { doc };
+  const purchases = readPurchases(purchasesData, nowMs);
+  if (!purchases.passCredits) return { doc };
+  return { doc: { ...doc, premiumActive: true }, purchases: { ...purchases, passCredits: purchases.passCredits - 1, updatedAt: nowMs } };
+}
+
 /** Pass XP and the highest open tier for an island XP. */
 export function passTier(cat: CatalogueDoc, doc: PassDoc, islandXp: number): { passXp: number; tier: number } {
   const passXp = Math.max(0, Math.floor((islandXp - doc.baseXp) / cat.pass.islandXpPerPassXp));
@@ -36,10 +50,12 @@ export async function joinPass(env: Env, uid: string): Promise<{ seasonId: strin
     const uow = new UnitOfWork(tx);
     const nowMs = env.clock.nowMs();
     const season = passSeason(cat.pass, nowMs);
-    const [passSnap, islandSnap] = await uow.readAll([paths.pass(uid), paths.island(uid)]);
+    const [passSnap, islandSnap, purchasesSnap] = await uow.readAll([paths.pass(uid), paths.island(uid), paths.purchases(uid)]);
     const xp = islandProgress(islandSnap?.data)?.xp ?? 0;
-    const { doc, fresh } = seasonDoc(passSnap?.data, season.id, xp, nowMs);
-    if (fresh) uow.set(paths.pass(uid), doc);
+    const season0 = seasonDoc(passSnap?.data, season.id, xp, nowMs);
+    const { doc, purchases } = useBankedPass(season0.doc, season0.fresh, purchasesSnap?.data, nowMs);
+    if (season0.fresh) uow.set(paths.pass(uid), doc);
+    if (purchases) uow.set(paths.purchases(uid), purchases);
     uow.commit();
     return { seasonId: season.id, endsAt: season.endsAt, baseXp: doc.baseXp };
   });
@@ -61,9 +77,10 @@ export async function claimPass(env: Env, uid: string, tier: number, premium: bo
       return { ...r, fresh: false };
     }
     const season = passSeason(cat.pass, nowMs);
-    const [passSnap, islandSnap] = await uow.readAll([paths.pass(uid), paths.island(uid)]);
+    const [passSnap, islandSnap, purchasesSnap] = await uow.readAll([paths.pass(uid), paths.island(uid), paths.purchases(uid)]);
     const xp = islandProgress(islandSnap?.data)?.xp ?? 0;
-    const { doc } = seasonDoc(passSnap?.data, season.id, xp, nowMs);
+    const season0 = seasonDoc(passSnap?.data, season.id, xp, nowMs);
+    const { doc, purchases } = useBankedPass(season0.doc, season0.fresh, purchasesSnap?.data, nowMs);
     if (premium && !doc.premiumActive) throw new AppError('PASS_PREMIUM_REQUIRED');
     const claimed = premium ? doc.premium : doc.free;
     if (claimed.includes(tier)) throw new AppError('PASS_CLAIMED');
@@ -73,6 +90,7 @@ export async function claimPass(env: Env, uid: string, tier: number, premium: bo
     claimed.push(tier);
     claimed.sort((a, b) => a - b);
     uow.set(paths.pass(uid), { ...doc, updatedAt: nowMs });
+    if (purchases) uow.set(paths.purchases(uid), purchases);
     pay.apply();
     uow.set(ledgerPath, { kind: 'pass', ref: `${season.id}:${premium ? 'premium' : 'free'}:${tier}`, at: nowMs, result: pay.paid });
     uow.commit();

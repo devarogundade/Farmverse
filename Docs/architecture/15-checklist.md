@@ -27,8 +27,8 @@ an indexer migration, and the Unity panels.
 - [ ] B2 `chain-redeem` accepts buy-and-use transactions (walks the receipt tree) §5.1
 - [ ] B3 `redeem-backstop` job (every minute) §3.5
 - [ ] B4 `chain-reconcile` job (nightly) + admin number §10
-- [ ] B5 Farm Pass bank: a pass used while premium is on is saved for next season §5.2
-- [ ] B6 Extra builders reach the island sync §5.2
+- [x] B5 Farm Pass bank: a pass used while premium is on is saved for next season §5.2
+- [x] B6 Extra builders reach the island sync §5.2
 - [ ] B7 Mint fee (2 %, min 5 coins) + lot minimum (10; 1 for golden goods) §6.2
 - [ ] B8 `chain-pendingMints` ("Finish minting") §3.5
 - [ ] B9 Faucet route: 100 FARM/day + 1 NEAR once, from `faucet.`, rate-limited §6.6

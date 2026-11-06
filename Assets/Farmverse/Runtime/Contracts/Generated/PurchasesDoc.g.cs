@@ -12,12 +12,15 @@ namespace Farmverse.Contracts
     {
         public int ExtraBuilders { get; set; }
 
+        public int? PassCredits { get; set; }
+
         public long UpdatedAt { get; set; }
 
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(2);
+            var map = new Dictionary<string, object>(3);
             map["extraBuilders"] = ExtraBuilders;
+            if (PassCredits != null) map["passCredits"] = PassCredits.Value;
             map["updatedAt"] = UpdatedAt;
             return map;
         }
@@ -28,6 +31,7 @@ namespace Farmverse.Contracts
             return new PurchasesDoc
             {
                 ExtraBuilders = Wire.Required(map, "extraBuilders", "PurchasesDoc.extraBuilders", Wire.AsInt),
+                PassCredits = Wire.OptionalValue(map, "passCredits", "PurchasesDoc.passCredits", Wire.AsInt),
                 UpdatedAt = Wire.Required(map, "updatedAt", "PurchasesDoc.updatedAt", Wire.AsLong),
             };
         }

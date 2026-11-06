@@ -23,6 +23,7 @@ namespace Farmverse.Application.Features
         private const string GoalsCache = "shop_goals";
         private const string DailyCache = "shop_daily";
         private const string PassCache = "shop_pass";
+        private const string PurchasesCache = "shop_purchases";
 
         private readonly IDocumentStore _documents;
         private readonly ServerCalls _server;
@@ -33,6 +34,7 @@ namespace Farmverse.Application.Features
         private GoalsDoc? _goals;
         private DailyDoc? _daily;
         private PassDoc? _pass;
+        private PurchasesDoc? _purchases;
 
         public ShopService(IDocumentStore documents, ServerCalls server, ILocalStore local)
         {
@@ -44,6 +46,7 @@ namespace Farmverse.Application.Features
             _goals = Load(GoalsCache, GoalsDoc.FromWire);
             _daily = Load(DailyCache, DailyDoc.FromWire);
             _pass = Load(PassCache, PassDoc.FromWire);
+            _purchases = Load(PurchasesCache, PurchasesDoc.FromWire);
         }
 
         public event Action? Changed;
@@ -76,6 +79,12 @@ namespace Farmverse.Application.Features
         /// <summary>This season's Farm Pass for the player (null before joining / the server answered).</summary>
         public PassDoc? Pass => _pass;
 
+        /// <summary>Builders added for good by Builder's Passes (0 until the server answered).</summary>
+        public int ExtraBuilders => _purchases?.ExtraBuilders ?? 0;
+
+        /// <summary>Farm Passes saved for later seasons (used while premium was already on).</summary>
+        public int PassCredits => _purchases?.PassCredits ?? 0;
+
         public void Attach(string uid)
         {
             foreach (var w in _watches) w.Dispose();
@@ -83,6 +92,7 @@ namespace Farmverse.Application.Features
             _watches.Add(_documents.Listen(Paths.Inventory(uid), s => OnDoc(s, InventoryCache, d => _inventory = InventoryDoc.FromWire(d)), _ => { }));
             _watches.Add(_documents.Listen(Paths.Shop(uid), s => OnDoc(s, ShopCache, d => _shop = ShopDoc.FromWire(d)), _ => { }));
             _watches.Add(_documents.Listen(Paths.Pass(uid), s => OnDoc(s, PassCache, d => _pass = PassDoc.FromWire(d)), _ => { }));
+            _watches.Add(_documents.Listen(Paths.Purchases(uid), s => OnDoc(s, PurchasesCache, d => _purchases = PurchasesDoc.FromWire(d)), _ => { }));
             _watches.Add(_documents.Listen(Paths.Daily(uid), s => OnDoc(s, DailyCache, d => _daily = DailyDoc.FromWire(d)), _ => { }));
             _watches.Add(_documents.Listen(Paths.Goals(uid), s => OnDoc(s, GoalsCache, d => _goals = GoalsDoc.FromWire(d)), _ => { }));
             Online = true;

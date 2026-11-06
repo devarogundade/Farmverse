@@ -26,7 +26,7 @@ export type Entitlement =
   | { kind: 'bundle'; contents: Bundle }
   /** The catalogue's starter pack contents; its shop window closes. */
   | { kind: 'starter' }
-  /** The premium Farm Pass for the current season. */
+  /** The premium Farm Pass for the current season (banked for a later season if it is already on). */
   | { kind: 'pass' }
   /** One more builder, up to {@link MAX_EXTRA_BUILDERS}. */
   | { kind: 'builder' };
@@ -34,7 +34,7 @@ export type Entitlement =
 export function readPurchases(data: Record<string, unknown> | undefined, nowMs: number): PurchasesDoc {
   if (!data || legacyDoc('purchases', data)) return { extraBuilders: 0, updatedAt: nowMs };
   // older docs carried noAds / linkRewarded: dropped here
-  const parsed = PurchasesDoc.safeParse({ extraBuilders: data['extraBuilders'], updatedAt: data['updatedAt'] });
+  const parsed = PurchasesDoc.safeParse({ extraBuilders: data['extraBuilders'], passCredits: data['passCredits'], updatedAt: data['updatedAt'] });
   if (!parsed.success) throw corrupt('purchases', parsed.error);
   return { ...parsed.data };
 }
@@ -62,11 +62,17 @@ export async function prepareEntitlement(
       };
     }
     case 'pass': {
-      const [passSnap, islandSnap] = await uow.readAll([paths.pass(uid), paths.island(uid)]);
+      const [passSnap, islandSnap, purchasesSnap] = await uow.readAll([paths.pass(uid), paths.island(uid), paths.purchases(uid)]);
       const season = passSeason(cat.pass, nowMs);
       const xp = islandProgress(islandSnap?.data)?.xp ?? 0;
       const { doc } = seasonDoc(passSnap?.data, season.id, xp, nowMs);
-      return { paid: { coins: 0, gems: 0, boosts: {} }, apply: () => uow.set(paths.pass(uid), { ...doc, premiumActive: true, updatedAt: nowMs }) };
+      const none = { coins: 0, gems: 0, boosts: {} };
+      if (doc.premiumActive) {
+        // Already on this season: nothing is wasted, the pass waits for the next season.
+        const purchases = readPurchases(purchasesSnap?.data, nowMs);
+        return { paid: none, apply: () => uow.set(paths.purchases(uid), { ...purchases, passCredits: (purchases.passCredits ?? 0) + 1, updatedAt: nowMs }) };
+      }
+      return { paid: none, apply: () => uow.set(paths.pass(uid), { ...doc, premiumActive: true, updatedAt: nowMs }) };
     }
     case 'builder': {
       const purchases = readPurchases((await uow.read(paths.purchases(uid))).data, nowMs);

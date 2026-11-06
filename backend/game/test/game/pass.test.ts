@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_CATALOGUE, passSeason } from '@farmverse/contracts';
 import { AppError } from '../../src/core/errors';
 import { resetCatalogueCache } from '../../src/game/catalogue';
+import { grantEntitlement } from '../../src/game/entitlements';
 import { claimPass, joinPass } from '../../src/game/pass';
 import { paths } from '../../src/infra/paths';
 import { DAY, FARMER, World, islandWith } from './world';
@@ -45,5 +46,26 @@ describe('farm pass', () => {
     w.store.put(paths.island(FARMER), islandWith(w.clock.nowMs(), { xp: 900 }));
     expect(await joinPass(w.env, FARMER)).toMatchObject({ seasonId: 's1', baseXp: 900 });
     expect((await claimPass(w.env, FARMER, 1, false, 'k_pass_00011')).fresh).toBe(true);
+  });
+
+  it('a pass used while premium is on is banked and turns on the next season', async () => {
+    const w = new World();
+    w.clock.set(P.epochMs + DAY);
+    await w.createPlayer(FARMER);
+    w.store.put(paths.island(FARMER), islandWith(w.clock.nowMs(), { xp: 0 }));
+    await grantEntitlement(w.env, FARMER, { kind: 'pass' }, 'nft_d-farm_pass_s1-1');
+    await grantEntitlement(w.env, FARMER, { kind: 'pass' }, 'nft_d-farm_pass_s1-2');
+    expect(w.store.get(paths.pass(FARMER))?.['premiumActive']).toBe(true);
+    expect(w.store.get(paths.purchases(FARMER))?.['passCredits']).toBe(1);
+
+    w.clock.advance(P.seasonDays * DAY);
+    await joinPass(w.env, FARMER);
+    expect(w.store.get(paths.pass(FARMER))).toMatchObject({ seasonId: 's1', premiumActive: true });
+    expect(w.store.get(paths.purchases(FARMER))?.['passCredits']).toBe(0);
+
+    // the season after that: no credit left, premium is off
+    w.clock.advance(P.seasonDays * DAY);
+    await joinPass(w.env, FARMER);
+    expect(w.store.get(paths.pass(FARMER))).toMatchObject({ seasonId: 's2', premiumActive: false });
   });
 });
