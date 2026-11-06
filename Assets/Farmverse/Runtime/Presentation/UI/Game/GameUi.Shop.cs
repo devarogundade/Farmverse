@@ -136,6 +136,10 @@ namespace Farmverse.Presentation.UI.Game
 
             // the strip
             var bodyH = p.H - U(cfg.hh) - U(cfg.th) - U(3) - U(cfg.pad) * 2 - B;
+            // the phone layout keeps one card per column, but a browser window is wide *and* tall enough
+            // for two: stack them whenever each would still be ~120 points high
+            var rows = cfg.rows;
+            if (p.Phone && bodyH / p.Unit - cfg.hlh - cfg.spad >= 2 * 120 + cfg.gap) rows = 2;
             var sv = ShopScroller(screen, true, p.P(12));
             var strip = sv.contentContainer;
             strip.style.flexDirection = FlexDirection.Row;
@@ -162,7 +166,7 @@ namespace Farmverse.Presentation.UI.Game
                 grid.style.alignItems = Align.Stretch;
                 grid.style.flexGrow = 1;
                 var first = true;
-                foreach (var col in ShopColumns(s.items, cfg.rows))
+                foreach (var col in ShopColumns(s.items, rows))
                 {
                     var colEl = PK.Col(grid);
                     colEl.style.flexShrink = 0;

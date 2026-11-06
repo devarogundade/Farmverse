@@ -355,7 +355,10 @@ namespace Farmverse.Presentation.UI.Game
                 var hand = PK.Box(root);
                 PK.Size(hand, P(190), ht != null ? P(190) * ht.height / ht.width : P(190));
                 Kit.Picture(hand, ht);
-                PK.Abs(hand, right: xR + bigW / 2f - P(10), bottom: bottom + bigH / 2f - P(150));
+                // the fingertip (94% across, 72% down the art) on the ring's centre, the glove up and to its left
+                var handW = P(190);
+                var handH = ht != null ? handW * ht.height / ht.width : handW;
+                PK.Abs(hand, right: xR + bigW / 2f - handW * (1f - .94f), bottom: bottom + bigH / 2f - handH * (1f - .72f));
                 c.Live(() =>
                 {
                     var t = (1f - Mathf.Cos(Time.unscaledTime / 1.2f * Mathf.PI * 2f)) / 2f * P(6);

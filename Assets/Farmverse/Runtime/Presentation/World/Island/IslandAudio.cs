@@ -60,16 +60,19 @@ namespace Farmverse.Presentation.World.Island
         }
 
         /// <summary>The sound effects level, 0–1 (the settings slider; remembered on the device).</summary>
+        /// <summary>Where the sliders start for a new player: quiet enough to play with other things on.</summary>
+        public const float DefaultSoundVolume = 0.5f, DefaultMusicVolume = 0.4f;
+
         public static float SoundVolume
         {
-            get => PlayerPrefs.GetFloat("fv_sound_vol", 1f);
+            get => PlayerPrefs.GetFloat("fv_sound_vol", DefaultSoundVolume);
             set { PlayerPrefs.SetFloat("fv_sound_vol", Mathf.Clamp01(value)); PlayerPrefs.Save(); }
         }
 
         /// <summary>The music level, 0–1 (the settings slider; remembered on the device). 0 is off.</summary>
         public static float MusicVolume
         {
-            get => PlayerPrefs.GetFloat("fv_music_vol", 1f);
+            get => PlayerPrefs.GetFloat("fv_music_vol", DefaultMusicVolume);
             set { PlayerPrefs.SetFloat("fv_music_vol", Mathf.Clamp01(value)); PlayerPrefs.Save(); }
         }
 
@@ -116,6 +119,7 @@ namespace Farmverse.Presentation.World.Island
         public static bool Play(string name, Vector3? at = null, float vol = 1f, float pitchJitter = 0.06f, float gap = 0.06f, float pitch = 1f)
         {
             var a = _instance;
+            if (name == "cheer") name = "coin";   // no clapping: rewards and wins ring the coin
             if (a == null || !a._byName.TryGetValue(name, out var clip)) return false;
             if (a._lastPlayed.TryGetValue(name, out var last) && Time.unscaledTime - last < gap) return false;
             var (level, pan) = at is Vector3 p ? a.Place(p) : (1f, 0f);
