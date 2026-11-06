@@ -1,5 +1,6 @@
 // Serves a Unity WebGL build the way the real host does (docs 13 §5.1): the Brotli files with
-// Content-Encoding: br and their real content type, everything else as is. No dependencies.
+// Content-Encoding: br and their real content type, everything else as is, each with an ETag and
+// Last-Modified so Unity's browser cache (data caching) notices a rebuild. No dependencies.
 // Usage: node tools/web/serve-webgl.mjs [dir=Builds/WebGL-dev] [port=8000]
 import { createServer } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
@@ -18,9 +19,17 @@ createServer((req, res) => {
   let path = normalize(join(root, url));
   if (!path.startsWith(root)) { res.writeHead(403).end(); return; }
   try { if (statSync(path).isDirectory()) path = join(path, 'index.html'); } catch { res.writeHead(404).end('not found'); return; }
-  let size;
-  try { size = statSync(path).size; } catch { res.writeHead(404).end('not found'); return; }
-  const headers = { 'Content-Length': size, 'Cache-Control': 'no-cache' };
+  let stat;
+  try { stat = statSync(path); } catch { res.writeHead(404).end('not found'); return; }
+  // a rebuild changes size or time: the cached copy is checked against these on every load
+  const etag = `"${stat.size.toString(16)}-${Math.floor(stat.mtimeMs).toString(16)}"`;
+  const modified = new Date(Math.floor(stat.mtimeMs / 1000) * 1000).toUTCString();
+  const since = req.headers['if-modified-since'];
+  if (req.headers['if-none-match'] === etag || (!req.headers['if-none-match'] && since && Date.parse(since) >= Date.parse(modified))) {
+    res.writeHead(304, { ETag: etag, 'Last-Modified': modified, 'Cache-Control': 'no-cache' }).end();
+    return;
+  }
+  const headers = { 'Content-Length': stat.size, 'Cache-Control': 'no-cache', ETag: etag, 'Last-Modified': modified };
   let name = path;
   if (name.endsWith('.br')) { headers['Content-Encoding'] = 'br'; name = name.slice(0, -3); }
   else if (name.endsWith('.gz')) { headers['Content-Encoding'] = 'gzip'; name = name.slice(0, -3); }
