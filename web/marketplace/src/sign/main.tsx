@@ -24,7 +24,9 @@ const STYLE = `body{margin:0;font-family:system-ui,sans-serif;background:#0b2a55
 .sign-card label{display:grid;gap:6px;margin:12px 0}
 .sign-card input{padding:10px;border-radius:8px;border:0;font-size:16px}
 .sign-card button{width:100%;padding:12px;border:0;border-radius:10px;background:#ffd23a;font-weight:700;font-size:16px;cursor:pointer}
-.sign-note{opacity:.85}`;
+.sign-note{opacity:.85}
+.sign-google{width:100%;padding:12px;border:0;border-radius:10px;background:#fff;color:#1f1f1f;font-weight:700;font-size:16px;cursor:pointer;margin-top:12px}
+.sign-or{text-align:center;opacity:.7;margin:10px 0 0}`;
 
 function SignPage() {
   const privy = useMemo(() => new Privy({ appId: APP_ID, clientId: CLIENT_ID, storage: new LocalStorage() }), []);
@@ -44,7 +46,17 @@ function SignPage() {
   useEffect(() => {
     privy
       .initialize()
-      .then(async () => ((await privy.getAccessToken()) ? withWallet() : setStep('email')))
+      .then(async () => {
+        // back from Google: finish the login, then tidy the address
+        const q = new URLSearchParams(location.search);
+        const oauthCode = q.get('privy_oauth_code');
+        const oauthState = q.get('privy_oauth_state');
+        if (oauthCode && oauthState) {
+          await privy.auth.oauth.loginWithCode(oauthCode, oauthState, 'google');
+          history.replaceState(null, '', location.pathname);
+        }
+        return (await privy.getAccessToken()) ? withWallet() : setStep('email');
+      })
       .catch(() => {
         setMsg('Sign-in is not available right now.');
         setStep('error');
@@ -58,6 +70,24 @@ function SignPage() {
     <main className="sign-card">
       <h1>Farmverse</h1>
       {step === 'loading' || step === 'wallet' ? <p>{step === 'wallet' ? 'Setting up your wallet…' : 'One moment…'}</p> : null}
+      {step === 'email' ? (
+        <button
+          type="button"
+          className="sign-google"
+          onClick={async () => {
+            setMsg('');
+            try {
+              const { url } = await privy.auth.oauth.generateURL('google', `${location.origin}${location.pathname}`);
+              location.href = url;
+            } catch {
+              setMsg("Google sign-in isn't available right now. Use your email instead.");
+            }
+          }}
+        >
+          Continue with Google
+        </button>
+      ) : null}
+      {step === 'email' ? <p className="sign-or">or</p> : null}
       {step === 'email' ? (
         <form
           onSubmit={async (e) => {
