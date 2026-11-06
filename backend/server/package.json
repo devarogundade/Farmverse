@@ -18,9 +18,9 @@
     "start": "node --enable-source-maps dist/main.js",
     "start:worker": "node --enable-source-maps dist/worker.js",
     "start:indexer": "node --enable-source-maps dist/indexer.js",
-    "dev": "tsx watch src/main.ts",
-    "dev:worker": "tsx watch src/worker.ts",
-    "dev:indexer": "tsx watch src/indexer.ts"
+    "dev": "node scripts/dev.mjs main",
+    "dev:worker": "node scripts/dev.mjs worker",
+    "dev:indexer": "node scripts/dev.mjs indexer"
   },
   "dependencies": {
     "@farmverse/contracts": "0.1.0",
