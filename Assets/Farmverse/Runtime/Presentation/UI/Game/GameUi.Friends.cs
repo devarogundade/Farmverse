@@ -74,7 +74,7 @@ namespace Farmverse.Presentation.UI.Game
                 PK.N(text, p, $"{invite.UsesLeft} uses left · expires in {days} day{(days == 1 ? "" : "s")}", 16, GameTheme.T("#cfe8ff"));
                 PK.Btn(card, p, "green", "Copy link", 200, 66, 24, () =>
                 {
-                    GUIUtility.systemCopyBuffer = invite.Link;
+                    GameLinks.Copy(invite.Link);
                     Say("Invite link copied — send it to a friend");
                 });
             }

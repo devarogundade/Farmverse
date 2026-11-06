@@ -48,7 +48,8 @@ namespace Farmverse.Application.Features
             _itemsContract = itemsContract;
         }
 
-        public bool Available => _wallet.Available;
+        /// <summary>Minting and redeeming work: a wallet on the page and a chain on the server.</summary>
+        public bool Available => _wallet.Available && !string.IsNullOrEmpty(_itemsContract());
 
         /// <summary>Mints goods (or boosts) from the island as one NFT.</summary>
         public Task<Result<ChainOutcome>> MintGoods(string item, int quantity, bool boost, CancellationToken cancellation) =>

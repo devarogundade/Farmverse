@@ -13,7 +13,7 @@ namespace Farmverse.Presentation.UI.Game
         private static readonly bool RegSettings = Register("settings", UiLayer.Popup, (ui, c) => ui.SettingsPopup(c));
         private static readonly bool RegLanguage = Register("language", UiLayer.Popup, (ui, c) => ui.LanguagePopup(c));
 
-        private const string HapticPref = "fv_haptic", LangPref = "fv_lang";
+        private const string LangPref = "fv_lang";
 
         public static readonly string[] Flags = { "Eng", "Kor", "Chn", "Rus", "Deu", "Twn", "Esp", "Jpn", "Prt", "Gre", "Swe", "Ukr", "Fra", "Ita", "Tur", "Pol", "Pra", "Tha", "Rou", "Ina" };
 
@@ -57,29 +57,21 @@ namespace Farmverse.Presentation.UI.Game
             return i >= 0 ? Flags[i] : "Eng";
         }
 
-        /// <summary>Vibration on (the settings switch).</summary>
-        public static bool Haptics => PlayerPrefs.GetInt(HapticPref, 1) == 1;
-
         private void SettingsPopup(Ctx c)
         {
             var r = c.R;
             var body = Kit.Popup(c.Root, r, 2200, 1000, "Settings", Back);
 
-            // left: three rows (sound, music, vibration), each an icon, a name and a switch or a slider, with a line under the first two
+            // left: two rows (sound, music), each an icon, a name and a slider, with a line between them
             var musicNow = IslandAudio.MusicOn ? IslandAudio.MusicVolume : 0f;
             VisualElement? musicIcon = null;
-            for (var i = 1; i < 4; i++)
+            for (var i = 1; i < 3; i++)
             {
                 var yc = 271 + 95 + (i - 1) * 190;
-                var icon = i switch
-                {
-                    1 => "Icon_PictoIcon_Sound_on",
-                    2 => musicNow > 0 ? "Icon_PictoIcon_Music_on" : "Icon_PictoIcon_Music_off",
-                    _ => "Icon_PictoIcon_Haptic",
-                };
+                var icon = i == 1 ? "Icon_PictoIcon_Sound_on" : musicNow > 0 ? "Icon_PictoIcon_Music_on" : "Icon_PictoIcon_Music_off";
                 var ic = Kit.Image(body, r, icon, 139 - 36, yc - 36, 72, 72);
                 if (i == 2) musicIcon = ic;
-                Kit.TextAt(body, r, 210, yc - 30, i switch { 1 => "Sound Fx", 2 => "Music", _ => "Vibration" }, 52);
+                Kit.TextAt(body, r, 210, yc - 30, i == 1 ? "Sound Fx" : "Music", 52);
 
                 switch (i)
                 {
@@ -98,18 +90,9 @@ namespace Farmverse.Presentation.UI.Game
                             if (musicIcon != null) Kit.Contain(musicIcon, GameArt.Get(v > 0 ? "Icon_PictoIcon_Music_on" : "Icon_PictoIcon_Music_off"));
                         });
                         break;
-                    default:
-                        Kit.Switch(body, r, 826, yc, Haptics, on =>
-                        {
-                            Pref(HapticPref, on);
-#if UNITY_ANDROID || UNITY_IOS
-                            if (on) Handheld.Vibrate();
-#endif
-                        });
-                        break;
                 }
 
-                if (i < 3)
+                if (i < 2)
                 {
                     var line = Kit.Box(body, r, 94, yc + 92, 900, 4);
                     Kit.Colour(line, GameTheme.T("#104f8f"));
@@ -128,7 +111,7 @@ namespace Farmverse.Presentation.UI.Game
             Kit.Contain(flag, GameArt.Get("Icon_Flag_" + Flags[lang]));
 
             B(1, 0, "Blue", "Profile", () => Open("profile"));
-            B(1, 1, "Blue", "Rate", () => Open("rate"));
+            B(1, 1, "Blue", "Market", () => GameLinks.Open(GameLinks.Market));
             B(0, 1, "Blue", "Theme", () => Open("theme"));
             B(1, 2, "Blue", "Support", () => GameLinks.EmailSupport(Profile?.Player?.ShortId ?? ""));
             B(0, 2, "BlueGray", "Delete Account", AccountDeleteAsk);

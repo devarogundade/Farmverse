@@ -10,16 +10,16 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>"maintenance", "update" or "noconnection" while the session is stopped for it; null when fine.</summary>
         public static string? SystemNotice { get; set; }
 
-        /// <summary>Push opt-in and the inbox's read marks (set by GameRoot).</summary>
+        /// <summary>The admin's maintenance message (remote config), shown on the maintenance popup; null for the usual text.</summary>
+        public static string? MaintenanceMessage { get; set; }
+
+        /// <summary>The inbox's read marks (set by GameRoot).</summary>
         public static Farmverse.Application.Features.NotificationService? Notifications { get; set; }
 
         /// <summary>Start the session again (set by GameRoot).</summary>
         public static Action? RetrySession { get; set; }
 
         private string? _noticeShown;
-
-        /// <summary>The screen a tapped push notification asks for (set by GameRoot; opened once the game is past loading).</summary>
-        public static string? PendingRoute { get; set; }
 
         /// <summary>A short message from outside the screens (gems paid for levels…), shown once over any screen.</summary>
         public static string? PendingSay { get; set; }
@@ -31,15 +31,6 @@ namespace Farmverse.Presentation.UI.Game
                 PendingSay = null;
                 Say(say, 3f);
             }
-            var route = PendingRoute;
-            if (route == null || BaseScreen == "loading" || TopPopup != null) return;
-            PendingRoute = null;
-            var screen = route.Split('.')[0];
-            if (screen == "ranks") screen = "leaderboard";   // "ranks.friends" and the like
-            // a raid push: the island itself shows the result (it applies the server's raid and opens it)
-            if (screen == "raidresult") screen = "play";
-            if (screen == "play" && BaseScreen == "play") return;
-            Open(Registry.ContainsKey(screen) ? screen : "inbox");
         }
 
         private void SystemTick()

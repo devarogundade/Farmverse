@@ -390,7 +390,7 @@ namespace Farmverse.Presentation.UI.Game
 
         private void CpCopy(CpCoupon code)
         {
-            GUIUtility.systemCopyBuffer = code.code;
+            GameLinks.Copy(code.code);
             CpCouponStore.MarkCopied(code);
             Say("Copied!", 1.2f);
             MarkDirty();

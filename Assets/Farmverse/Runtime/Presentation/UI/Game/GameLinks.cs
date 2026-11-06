@@ -1,35 +1,25 @@
 #nullable enable
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Farmverse.Presentation.UI.Game
 {
     /// <summary>
-    /// Where the game sends the player outside itself: the site's legal pages, support, and the store
-    /// listing (to update or rate). Fill <see cref="AppStoreId"/> once the App Store listing exists.
+    /// Where the game sends the player outside itself (the site's legal pages, the market, support), and
+    /// the two things the browser page does for it: copy text to the clipboard and reload the game.
     /// </summary>
     public static class GameLinks
     {
         public const string Site = "https://farmverse.world";
-        public const string Terms = Site + "/terms";
-        public const string Privacy = Site + "/privacy";
-        public const string Support = Site + "/support";
+        public const string Terms = Site + "/#/terms";
+        public const string Privacy = Site + "/#/privacy";
+        public const string Market = "https://marketplace.farmverse.world";
         public const string SupportEmail = "support@farmverse.world";
-        public const string AndroidPackage = "world.farmverse.mobile";
-        /// <summary>The numeric App Store id (App Store Connect ▸ App Information ▸ Apple ID); empty until listed.</summary>
-        public const string AppStoreId = "";
 
-        /// <summary>The game's store page on this platform.</summary>
-        public static string StorePage
-        {
-            get
-            {
-#if UNITY_IOS
-                return AppStoreId.Length > 0 ? "itms-apps://apps.apple.com/app/id" + AppStoreId : Site;
-#else
-                return "https://play.google.com/store/apps/details?id=" + AndroidPackage;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")] private static extern void FvCopyText(string text);
+        [DllImport("__Internal")] private static extern void FvReload();
 #endif
-            }
-        }
 
         public static void Open(string url) => UnityEngine.Application.OpenURL(url);
 
@@ -41,13 +31,22 @@ namespace Farmverse.Presentation.UI.Game
             UnityEngine.Application.OpenURL($"mailto:{SupportEmail}?subject={subject}&body={body}");
         }
 
-        /// <summary>Ask for a rating: the system's own review sheet on iOS, the store page elsewhere.</summary>
-        public static void Rate()
+        /// <summary>Copies text to the clipboard (in the browser through the page; the Editor's own clipboard otherwise).</summary>
+        public static void Copy(string text)
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            if (UnityEngine.iOS.Device.RequestStoreReview()) return;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            FvCopyText(text);
+#else
+            GUIUtility.systemCopyBuffer = text;
 #endif
-            UnityEngine.Application.OpenURL(StorePage);
+        }
+
+        /// <summary>Loads the game page again (the newest build); does nothing outside the browser.</summary>
+        public static void Reload()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            FvReload();
+#endif
         }
     }
 }

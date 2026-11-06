@@ -124,6 +124,21 @@ redeems (wallet burns → server credits); afterwards, and whenever `island-sync
 `serverChanged`, `IslandServerState` writes the server's island into the device saves and reloads
 the scene. Farmverse ▸ Web ▸ Build makes the WebGL player.
 
+**Building and running it locally.** The project must already be on the WebGL platform. Then:
+
+1. The ithappy character pack (git-ignored, from the Asset Store) ships its editor tools without an
+   assembly of their own, which breaks every player build. Add
+   `Assets/ithappy/Creative_Characters_FREE/Scripts/Editor/ithappy.Creative_Characters_FREE.Editor.asmdef`
+   (Editor only, referencing `ithappy.Creative_Characters_FREE`) after importing the pack.
+   `com.unity.ai.inference` is not in the project for the same reason: its App UI dependency ships
+   a WebGL library that needs embind, and the player fails to link with it.
+2. Farmverse ▸ Web ▸ Build (dev, localhost server) writes `Builds/WebGL-dev`. It points at the API
+   on `localhost:8787`, NEAR testnet, and the marketplace on `localhost:5174`.
+3. `node tools/web/serve-webgl.mjs Builds/WebGL-dev 8000` serves it the way the real host does
+   (`.br` files with `Content-Encoding: br`). Port 8000 is in the server's `ALLOWED_ORIGINS`.
+4. Open `http://localhost:8000` and sign in with a testnet wallet. The server's `AUTH_RECIPIENT`
+   is `play.farmverse.world` in every environment, because that is the name the wallet shows.
+
 ### 5.2 Wallet sign-in
 
 1. Game page loads the wallet selector (via `near-api-unity`'s WS template, or our own small

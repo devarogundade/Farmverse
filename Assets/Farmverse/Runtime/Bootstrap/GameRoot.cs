@@ -173,6 +173,12 @@ namespace Farmverse.Bootstrap
 
             // application
             var callables = new CallableClient(new HttpCallableTransport(api, session), clock, _log);
+            // maintenance that starts mid-session: the next refused call brings up the maintenance popup
+            callables.Maintenance += () =>
+            {
+                GameUi.MaintenanceMessage = remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.MaintenanceMessage, "");
+                GameUi.SystemNotice = "maintenance";
+            };
             System.Func<Farmverse.Contracts.RequestMeta> meta = () => _session.Meta();
             _session = new SessionService(new SessionDependencies
             {
@@ -217,7 +223,7 @@ namespace Farmverse.Bootstrap
 #else
             Farmverse.Application.Ports.IWallet wallet = new NoWallet();
 #endif
-            _chain = new ChainService(_server, wallet, IslandServerState.Load, () => remoteConfig.GetString("items_contract", "items.farmverse.testnet"));
+            _chain = new ChainService(_server, wallet, IslandServerState.Load, () => remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.ItemsContract, ""));
             GameUi.Chain = _chain;
             GameUi.Account = _account;
             GameUi.RetrySession = () => _ = _session.Start(_life.Token);      // deleting the account restarts on a new guest
@@ -256,6 +262,7 @@ namespace Farmverse.Bootstrap
                 }
                 else if (state is SessionState.Maintenance or SessionState.UpdateRequired or SessionState.Offline or SessionState.Failed)
                 {
+                    GameUi.MaintenanceMessage = remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.MaintenanceMessage, "");
                     GameUi.SystemNotice = state switch
                     {
                         SessionState.Maintenance => "maintenance",

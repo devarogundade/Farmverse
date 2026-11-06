@@ -25,6 +25,9 @@ namespace Farmverse.Application.Remote
         private readonly ServerClock _clock;
         private readonly ILog _log;
 
+        /// <summary>A call was refused because the server is in maintenance (it started after the session did).</summary>
+        public event Action? Maintenance;
+
         public CallableClient(ICallableTransport transport, ServerClock clock, ILog log)
         {
             _transport = transport;
@@ -67,7 +70,9 @@ namespace Farmverse.Application.Remote
                 if (!ok)
                 {
                     var body = ErrorBody.FromWire(envelope.TryGetValue("error", out var errorValue) ? errorValue : null);
-                    return AppError.FromBody(body);
+                    var refused = AppError.FromBody(body);
+                    if (refused.Code == ErrorCode.Maintenance) Maintenance?.Invoke();
+                    return refused;
                 }
                 return Result<TResponse>.Ok(spec.ParseResponse(envelope.TryGetValue("data", out var data) ? data : null));
             }

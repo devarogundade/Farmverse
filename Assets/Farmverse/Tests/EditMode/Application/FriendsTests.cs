@@ -15,6 +15,8 @@ namespace Farmverse.Tests.Application
             Assert.AreEqual("ABCD2345", FriendsService.CodeFrom("ABCD-2345"));
             Assert.AreEqual("ABCD2345", FriendsService.CodeFrom("https://farmverse.world/invite/ABCD2345"));
             Assert.AreEqual("ABCD2345", FriendsService.CodeFrom("Join me! https://farmverse.world/invite/abcd2345?utm=x"));
+            Assert.AreEqual("ABCD2345", FriendsService.CodeFrom("https://play.farmverse.world/?invite=ABCD2345"));
+            Assert.AreEqual("ABCD2345", FriendsService.CodeFrom("https://play.farmverse.world/?ref=x&invite=abcd2345&utm=y"));
             Assert.IsNull(FriendsService.CodeFrom("ABC"));
             Assert.IsNull(FriendsService.CodeFrom("ABCD23456"));
             Assert.IsNull(FriendsService.CodeFrom("ÄBCD2345"));

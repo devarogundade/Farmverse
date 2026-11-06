@@ -94,10 +94,10 @@ namespace Farmverse.Application.Features
             Bump();
         }
 
-        /// <summary>A deep link opened the app: an invite link is accepted (now, or once signed in).</summary>
+        /// <summary>The game page was opened from an invite link (<c>?invite=CODE</c>): it's accepted now, or once signed in.</summary>
         public void OfferLink(string url)
         {
-            if (!url.Contains("/invite/")) return;
+            if (url.IndexOf("invite=", StringComparison.OrdinalIgnoreCase) < 0 && url.IndexOf("/invite/", StringComparison.OrdinalIgnoreCase) < 0) return;
             var code = CodeFrom(url);
             if (code == null) return;
             if (_ready.Value) _ = AcceptPending(code);
@@ -138,12 +138,13 @@ namespace Farmverse.Application.Features
         /// <summary>The 8-character code in what the player typed or pasted (spaces, dashes, case and the link around it don't matter).</summary>
         public static string? CodeFrom(string text)
         {
-            var at = text.LastIndexOf("/invite/", StringComparison.OrdinalIgnoreCase);
-            if (at >= 0) text = text.Substring(at + "/invite/".Length);
+            var at = text.LastIndexOf("invite=", StringComparison.OrdinalIgnoreCase);
+            if (at >= 0) text = text.Substring(at + "invite=".Length);
+            else if ((at = text.LastIndexOf("/invite/", StringComparison.OrdinalIgnoreCase)) >= 0) text = text.Substring(at + "/invite/".Length);
             var sb = new StringBuilder(CodeLength);
             foreach (var ch in text)
             {
-                if (ch == '?' || ch == '#') break;
+                if (ch == '?' || ch == '#' || ch == '&') break;
                 if (char.IsLetterOrDigit(ch)) sb.Append(char.ToUpperInvariant(ch));
             }
             if (sb.Length != CodeLength) return null;

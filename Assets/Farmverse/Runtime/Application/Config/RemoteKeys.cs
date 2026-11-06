@@ -10,6 +10,12 @@ namespace Farmverse.Application.Config
         public const string Maintenance = "maintenance";
         public const bool MaintenanceDefault = false;
 
+        /// <summary>What the admin says on the maintenance screen (empty: the usual text).</summary>
+        public const string MaintenanceMessage = "maintenance_message";
+
+        /// <summary>The items NFT contract; absent when the server has no chain (mint and redeem are then hidden).</summary>
+        public const string ItemsContract = "items_contract";
+
         public const string MinClientVersion = "min_client_version";
         public const string MinClientVersionDefault = "0.0.0";
 

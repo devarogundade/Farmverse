@@ -35,7 +35,7 @@ namespace Farmverse.Presentation.UI.Game
     {
         private static readonly bool RegHome_Terms = Register("terms", UiLayer.Popup, (ui, c) => ui.HomeTerms(c));
         private static readonly bool RegHome_Update = Register("update", UiLayer.Popup, (ui, c) => ui.HomeUpdate(c));
-        private static readonly bool RegHome_Maint = Register("maintenance", UiLayer.Popup, (ui, c) => ui.HomeSimple(c, "Under maintenance", "We're improving the island.<br>Your farm is safe — please try again in a little while.", new[] { ("blue", "OK", (Action)ui.Back), ("green", "Retry", (Action)ui.SystemRetry) }));
+        private static readonly bool RegHome_Maint = Register("maintenance", UiLayer.Popup, (ui, c) => ui.HomeSimple(c, "Under maintenance", string.IsNullOrWhiteSpace(MaintenanceMessage) ? "We're improving the island.<br>Your farm is safe — please try again in a little while." : MaintenanceMessage!, new[] { ("blue", "OK", (Action)ui.Back), ("green", "Retry", (Action)ui.SystemRetry) }));
         private static readonly bool RegHome_Net = Register("noconnection", UiLayer.Popup, (ui, c) => ui.HomeNoConnection(c));
         private static readonly bool RegHome_Confirm = Register("confirm", UiLayer.Popup, (ui, c) => ui.HomeConfirm(c));
         private static readonly bool RegHome_Message = Register("message", UiLayer.Popup, (ui, c) =>
@@ -45,7 +45,6 @@ namespace Farmverse.Presentation.UI.Game
         });
         private static readonly bool RegHome_Wait = Register("wait", UiLayer.Popup, (ui, c) => ui.HomeWait(c));
         private static readonly bool RegHome_Avatar = Register("avatar", UiLayer.Popup, (ui, c) => ui.HomeAvatar(c), .5f);
-        private static readonly bool RegHome_Rate = Register("rate", UiLayer.Popup, (ui, c) => ui.HomeRate(c), .5f);
 
         /// <summary>The avatars the player can pick (the last two unlock at the catalogue's island level).</summary>
         public static readonly string[] HomeAvatars = { "Icon_Pumkin", "Icon_Egg", "Icon_Clover", "Icon_Horsesheos", "Icon_Heart", "Icon_Star", "Icon_Food_Meat", "Icon_Gift", "Icon_Shield", "Icon_GearWheels" };
@@ -125,9 +124,9 @@ namespace Farmverse.Presentation.UI.Game
         private void HomeUpdate(Ctx c)
         {
             var force = c.Args as string == "force";
-            void Store() => GameLinks.Open(GameLinks.StorePage);
-            if (force) HomeSimple(c, "Update required", "This version is too old to connect.<br>Please update from the store.", new[] { ("green", "Update", (Action)Store) });
-            else HomeSimple(c, "Update available", "A new version of Farmverse is ready.<br>Update now to keep playing.", new[] { ("blue", "Later", (Action)Back), ("green", "Update", (Action)Store) });
+            void Reload() => GameLinks.Reload();
+            if (force) HomeSimple(c, "Update required", "This version is too old to connect.<br>Reload the page to get the new one.", new[] { ("green", "Reload", (Action)Reload) });
+            else HomeSimple(c, "Update available", "A new version of Farmverse is ready.<br>Reload the page to play it.", new[] { ("blue", "Later", (Action)Back), ("green", "Reload", (Action)Reload) });
         }
 
         private void HomeNoConnection(Ctx c)
@@ -256,33 +255,6 @@ namespace Farmverse.Presentation.UI.Game
                 PlayerPrefs.Save();
                 if (Profile is { Online: true } prof) _ = prof.SetAvatar(AvatarIdOf(pick));   // friends and the board see it
                 _homeAvaPick = null;
-                Back();
-            });
-        }
-
-        private void HomeRate(Ctx c)
-        {
-            var p = c.P;
-            HomeDim(c.Root, "#030c20", .8f);
-            var col = PK.Col(c.Root, p.P(14));
-            col.style.position = Position.Absolute;
-            col.style.left = new Length(50, LengthUnit.Percent);
-            col.style.top = p.P(p.Phone ? 60 : 240);
-            col.style.translate = new Translate(new Length(-50, LengthUnit.Percent), 0);
-            col.style.alignItems = Align.Center;
-            PK.T(col, p, "Enjoying Farmverse?", 30, GameTheme.T("#7fd0ff"));
-            PK.T(col, p, "Leave 5 stars in the store!", 42);
-            PK.Size(PK.Box(col), 1, p.P(30) - p.P(14));   // margin-top 30 on top of the gap
-            var stars = PK.Row(col, p.P(8));
-            foreach (var s in new[] { 90f, 120f, 160f, 120f, 90f }) PK.Img(stars, "Icon_ImageIcon_Star02_l", p.P(s));
-            PK.Size(PK.Box(col), 1, p.P(40) - p.P(14));
-            var row = PK.Row(col, p.P(26));
-            PK.Btn(row, p, "blue", "Maybe later", 240, 74, 28, Back);
-            PK.Btn(row, p, "yellow", "Rate", 240, 74, 30, () =>
-            {
-                PlayerPrefs.SetInt("fv_rated", 1);
-                PlayerPrefs.Save();
-                GameLinks.Rate();
                 Back();
             });
         }

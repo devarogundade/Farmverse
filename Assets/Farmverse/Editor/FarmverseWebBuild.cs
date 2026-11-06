@@ -16,10 +16,10 @@ namespace Farmverse.Editor
         private const string Template = "PROJECT:Farmverse";
 
         [MenuItem("Farmverse/Web/Configure WebGL Settings", priority = 40)]
-        public static void ConfigureDev() => Configure("http://localhost:8787", "testnet", "http://localhost:5173");
+        public static void ConfigureDev() => Configure("http://localhost:8787", "testnet", "http://localhost:5174");
 
         [MenuItem("Farmverse/Web/Build (dev, localhost server)", priority = 41)]
-        public static void BuildDev() => Build("dev", "http://localhost:8787", "testnet", "http://localhost:5173");
+        public static void BuildDev() => Build("dev", "http://localhost:8787", "testnet", "http://localhost:5174");
 
         [MenuItem("Farmverse/Web/Build (staging, testnet)", priority = 42)]
         public static void BuildStaging() => Build("staging", "https://api.staging.farmverse.world", "testnet", "https://marketplace.staging.farmverse.world");
@@ -35,6 +35,7 @@ namespace Farmverse.Editor
             PlayerSettings.WebGL.decompressionFallback = false;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
             PlayerSettings.WebGL.dataCaching = true;
+            PlayerSettings.WebGL.emscriptenArgs = "";
             PlayerSettings.SetTemplateCustomValue("FARMVERSE_API", apiBaseUrl);
             PlayerSettings.SetTemplateCustomValue("NEAR_NETWORK", network);
             PlayerSettings.SetTemplateCustomValue("MARKETPLACE_URL", marketplaceUrl);

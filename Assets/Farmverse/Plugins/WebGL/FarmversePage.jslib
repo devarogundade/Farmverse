@@ -52,6 +52,27 @@ mergeInto(LibraryManager.library, {
     if (ws && ws.readyState === 1) ws.send(UTF8ToString(text));
   },
 
+  FvCopyText: function (text) {
+    var value = UTF8ToString(text);
+    var fallback = function () {
+      var area = document.createElement('textarea');
+      area.value = value;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      try { document.execCommand('copy'); } catch (e) { }
+      document.body.removeChild(area);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(value).catch(fallback);
+    else fallback();
+  },
+
+  FvReload: function () {
+    window.location.reload();
+  },
+
   FvSocketClose: function (socket) {
     var ws = (window.__fvSockets || {})[socket];
     if (!ws) return;
