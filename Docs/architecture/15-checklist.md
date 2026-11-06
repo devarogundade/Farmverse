@@ -79,7 +79,7 @@ an indexer migration, and the Unity panels.
 - [x] G3 Game: merchants' offers at the market stall, "Sell to Bea" (mint + accept)
 - [x] G4 Market site: Merchants page (stock, prices over time, why)
 - [x] G5 Social login built: Privy wallet registered in near-connect (market + game, switch `VITE_PRIVY_APP_ID` / `SOCIAL_LOGIN=on`), `sign.html` (email code → NEAR wallet via `/v1/auth/privy/near-wallet` → sign), implicit accounts sign in (§13.2). **Goes live when the team adds the Privy App ID, Client ID, app secret and verification key**
-- [ ] G6 README: NEP-245 for goods as the next step; what intents do on mainnet
+- [x] G6 README: NEP-245 for goods as the next step; what intents do on mainnet
 - [x] G7 Buy FARM with any token (1Click → NEAR to the treasury → FARM from `sales.`), behind a mainnet switch; live quotes on testnet (§13.3)
 
 ## H. Sponsored fees (plan §14)
@@ -95,7 +95,7 @@ an indexer migration, and the Unity panels.
 - [ ] F2 Run `upgrade-testnet.sh`, `drops.sh`, `farmhands.mjs` on testnet
 - [ ] F3 Deploy server, worker, indexer, engine from a clean committed tree
 - [ ] F4 Launch checklist §11 by hand, plus: rent a Farmhand and see it work on the renter's farm; make, accept and cancel an offer; redeem a land deed and build on the cleared plot; harvest until a golden crop and mint it
-- [ ] F5 README for judges (links, contract accounts, how to run, accepted testnet risks) §10
+- [x] F5 README for judges (links, contract accounts, how to run, accepted testnet risks) §10
 - [ ] F6 Demo video — **you**
 - [ ] F7 Check no paid-pack content in the tree, then make the repo public — **you**
 - [ ] F8 Submit before 2026-11-14 23:59 UTC — **you**
