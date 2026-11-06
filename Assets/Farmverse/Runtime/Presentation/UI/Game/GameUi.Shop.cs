@@ -589,18 +589,45 @@ namespace Farmverse.Presentation.UI.Game
                     tap = () => ShopBuy("deal_daily"),
                 });
             }
-            // the Farm Pass's premium track: shown, but locked (it becomes an NFT pass later; nothing to buy here)
+            // the Farm Pass's premium track: bought with FARM (a drop, docs 15 §5.3); the pass screen sells it
             if (Wallet.Shop?.Pass is not { PremiumActive: true })
             {
                 var perkGems = Wallet.Prices.Pass.Tiers.Sum(t => t.Premium.Gems);
+                var passDrop = PassDrop();
                 offers.items.Add(new ShopItem
                 {
                     kind = "hero", frame = "p5", head = "<size=76%>" + Wallet.Prices.Pass.Pitch + "</size>", name = "PREMIUM FARM PASS", art = "ShopItem_SpecialChest_Green", glow = true,
-                    chips = perkGems > 0 ? new[] { ("Icon_ImageIcon_Gem01_s", "+" + PK.Num(perkGems)) } : null, locked = "Coming soon",
+                    chips = perkGems > 0 ? new[] { ("Icon_ImageIcon_Gem01_s", "+" + PK.Num(perkGems)) } : null,
+                    price = passDrop != null ? Farmverse.Application.Features.NftService.Farm(passDrop.Price) + " FARM" : null,
+                    locked = ChainReady ? null : "Web version",
+                    tap = () => Open("passbuy"),
                 });
             }
             offers.dot = deal != null && !dealBought ? 1 : 0;
             list.Add(offers);
+
+            // the FARM shop: the studio's drops (passes, gem packs, land deeds), docs 15 §5
+            if (ChainReady && Nfts != null)
+            {
+                Nfts.RefreshIfStale();
+                var farmShop = new ShopSection { id = "farm", tab = "FARM", icon = "Icon_Clover", title = "FARM SHOP" };
+                foreach (var d in Nfts.Drops.Where(d => !d.Paused))
+                {
+                    var drop = d;
+                    var left = d.Left;
+                    farmShop.items.Add(new ShopItem
+                    {
+                        frame = d.ItemId == "farm_pass" ? "p" : d.ItemId.StartsWith("gems_") ? "b" : "y",
+                        name = d.Title, art = DropArt(d.ItemId),
+                        sub = left.HasValue ? (left.Value == 0 ? "Sold out" : PK.Num(left.Value) + " of " + PK.Num(d.Cap ?? 0) + " left") : "Always in stock",
+                        price = Farmverse.Application.Features.NftService.Farm(d.Price) + " FARM",
+                        locked = left == 0 ? "Sold out" : null,
+                        tap = () => ShopBuyDrop(drop),
+                    });
+                }
+                if (farmShop.items.Count == 0) farmShop.items.Add(new ShopItem { frame = "b", name = "Opening soon", art = "Icon_Clover", sub = "Passes, gems and land deeds for FARM" });
+                list.Add(farmShop);
+            }
 
             // gems: earned in play (no real-money gem packs on the web build)
             var gems = new ShopSection { id = "gems", tab = "GEMS", icon = "Icon_Gems", title = "EARN GEMS" };

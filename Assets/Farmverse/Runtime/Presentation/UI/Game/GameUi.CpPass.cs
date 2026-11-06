@@ -137,8 +137,8 @@ namespace Farmverse.Presentation.UI.Game
             }
             else
             {
-                // the premium track is locked: it becomes an NFT pass later (the popup only shows what it holds)
-                var act = PK.Btn(top, p, "gray", null, 250, 72, 30, () => Open("passbuy"));
+                // the premium track: Get Premium (FARM) or use a Farm Pass NFT, in the popup
+                var act = PK.Btn(top, p, ChainReady ? "purple" : "gray", null, 250, 72, 30, () => Open("passbuy"));
                 var lockIcon = PK.Img(act, "Icon_ImageIcon_Lock01_s", P(44));
                 lockIcon.style.marginRight = P(8);
                 PK.T(act, p, "Premium", 30);
@@ -336,14 +336,12 @@ namespace Farmverse.Presentation.UI.Game
                 l.style.flexShrink = 1;
             }
 
-            if (Wallet.Shop?.Pass is { PremiumActive: true }) PK.T(box, p, "Premium is yours this season!", 28);
-            else
-            {
-                var locked = PK.Row(box, P(10));
-                PK.Img(locked, "Icon_ImageIcon_Lock01_s", P(44));
-                PK.T(locked, p, "Locked · coming soon", 28);
-            }
-            var note = PK.N(box, p, "The premium track isn't on sale yet · free-track rewards keep unlocking as you play.", 14, GameTheme.C("#e3d0ff"), TextAnchor.MiddleCenter, true);
+            var active = Wallet.Shop?.Pass is { PremiumActive: true };
+            if (active) PK.T(box, p, "Premium is yours this season!", 28);
+            PassBuyButtons(box, p, active);
+            var saved = Wallet.Shop?.PassCredits ?? 0;
+            var note = PK.N(box, p, (saved > 0 ? (saved == 1 ? "1 Farm Pass is" : saved + " Farm Passes are") + " saved for next season. " : "")
+                + "A pass used while premium is on waits for the next season · free-track rewards keep unlocking as you play.", 14, GameTheme.C("#e3d0ff"), TextAnchor.MiddleCenter, true);
             note.style.alignSelf = Align.Stretch;
         }
     }

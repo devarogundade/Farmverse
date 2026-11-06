@@ -1,4 +1,5 @@
 #nullable enable
+using System.Linq;
 using System.Threading;
 using Farmverse.Application.Features;
 using Farmverse.Contracts;
@@ -75,6 +76,90 @@ namespace Farmverse.Presentation.UI.Game
 
         private static string MarketBuy(string item) =>
             GameLinks.Market + "/#/?item=" + System.Uri.EscapeDataString(item) + "&sort=unit_price";
+
+        // ------------------------------------------------------------------ drops: Farm Pass, gem packs, deeds (docs 15 §5)
+
+        /// <summary>The Farm Pass drop on sale (the newest season's), or null.</summary>
+        private static Farmverse.Application.Ports.MarketDrop? PassDrop() =>
+            Nfts?.Drops.Where(d => d.ItemId == "farm_pass" && !d.Paused && d.Left != 0).OrderByDescending(d => d.StartsAt).FirstOrDefault();
+
+        private static string DropArt(string itemId) =>
+            itemId == "farm_pass" ? "ShopItem_SpecialChest_Green"
+            : itemId == "builder_pass" ? "Icon_Hammer"
+            : itemId.StartsWith("gems_") ? "Icon_Gems"
+            : itemId == "deed" ? "Icon_Map"
+            : "Icon_Gift";
+
+        /// <summary>The pass popup's buttons: use a held pass, or buy one with FARM (one approval, used at once).</summary>
+        private void PassBuyButtons(VisualElement box, Pt p, bool active)
+        {
+            if (!ChainReady || Nfts == null)
+            {
+                PK.N(box, p, "Premium is bought with FARM in the web version.", 18, Color.white, TextAnchor.MiddleCenter, true);
+                return;
+            }
+            Nfts.RefreshIfStale();
+            var held = Nfts.Holding("pack", "farm_pass");
+            if (held != null)
+            {
+                PK.Btn(box, p, "green", active ? "Use your Farm Pass (saved for next season)" : "Use your Farm Pass", 520, 72, 24, () => ChainRedeem(held));
+                return;
+            }
+            var drop = PassDrop();
+            if (drop == null)
+            {
+                PK.N(box, p, "No Farm Pass on sale right now. Check the market.", 18, Color.white, TextAnchor.MiddleCenter, true);
+                return;
+            }
+            var price = Farmverse.Application.Features.NftService.Farm(drop.Price);
+            PK.Btn(box, p, _chainBusy ? "gray" : "purple", _chainBusy ? "Buying…" : (active ? "Buy one for next season · " : "Get Premium · ") + price + " FARM", 520, 76, 26,
+                () => ShopBuyDrop(drop, use: true));
+            if (drop.Left.HasValue) PK.N(box, p, PK.Num(drop.Left.Value) + " of " + PK.Num(drop.Cap ?? 0) + " Founders passes left", 16, GameTheme.C("#e3d0ff"), TextAnchor.MiddleCenter);
+        }
+
+        /// <summary>Buys a drop with FARM. Packs are used at once (one approval); a deed stays an NFT to use or sell.</summary>
+        private async void ShopBuyDrop(Farmverse.Application.Ports.MarketDrop d, bool? use = null)
+        {
+            var chain = Chain;
+            if (chain == null || _chainBusy) return;
+            var useNow = use ?? (d.Kind == "pack");
+            var have = Nfts?.FarmYocto;
+            if (have != null && CompareYocto(have, d.Price) < 0)
+            {
+                Say("You need " + Farmverse.Application.Features.NftService.Farm(d.Price) + " FARM.", 3f);
+                Open("getfarm");
+                return;
+            }
+            _chainBusy = true;
+            MarkDirty();
+            try
+            {
+                Say("Approve the payment in your wallet", 4f);
+                var r = await chain.BuyDrop(d.Id, d.Price, useNow, CancellationToken.None);
+                if (!r.IsOk) Say(ChainError(r.Error), 4f);
+                else if (r.Value.Declined) Say("Not bought. Your FARM is still yours.");
+                else Say(useNow ? d.Title + ": done!" : d.Title + " is in your NFTs", 3f);
+                if (Nfts != null)
+                {
+                    await Nfts.RefreshBalances();
+                    await Nfts.RefreshDrops();
+                    await Nfts.RefreshOwned();
+                }
+            }
+            finally
+            {
+                _chainBusy = false;
+                MarkDirty();
+            }
+        }
+
+        /// <summary>Compares two non-negative integers written in decimal (yocto amounts).</summary>
+        private static int CompareYocto(string a, string b)
+        {
+            a = a.TrimStart('0');
+            b = b.TrimStart('0');
+            return a.Length != b.Length ? a.Length.CompareTo(b.Length) : string.CompareOrdinal(a, b);
+        }
 
         // ------------------------------------------------------------------ the NFTs tab (docs 15 §3.1)
 
