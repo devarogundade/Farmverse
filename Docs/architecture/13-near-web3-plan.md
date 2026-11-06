@@ -123,13 +123,14 @@ portrait UI reflowed for landscape desktop.
    deletes the nonce atomically (`GETDEL`; a missing nonce means replayed or expired), verifies the
    ed25519 signature over the NEP-413 payload, and checks via RPC `view_access_key` that `publicKey`
    is a **full-access key of `accountId`**. It then returns a short-lived **access JWT** (15 min,
-   EdDSA, `sub = accountId`) and a rotating **refresh token** (30 days, stored hashed in Postgres,
+   EdDSA, `sub = uid`, `acc = accountId`) and a rotating **refresh token** (30 days, stored hashed in Postgres,
    revocable).
 5. Bot protection: Cloudflare Turnstile on the nonce call, plus per-IP and per-account rate
    limits in Redis.
 
-The marketplace site uses the same sign-in. The island, wallet, goals etc. key off `uid =
-accountId` exactly as today. One NEAR account = one island.
+The marketplace site uses the same sign-in. The island, wallet, goals etc. key off the game uid
+(see §5.3) exactly as today. One NEAR account = one island. The contract's `Platform` gained
+`webgl`.
 
 ### 5.3 The backend: Node/TS + Postgres + Redis + BullMQ
 
@@ -157,16 +158,18 @@ written by Goldsky, so Prisma does not migrate it. Its tables are pulled in read
 `prisma db pull` into a separate `chain.prisma` client, or declared as Prisma `view`s. That keeps
 `migrate dev` from ever trying to drop them.
 
-**Store adapter.** `infra/prismaStore.ts` implements the existing `Store`/`TransactionPort` on
-an interactive `prisma.$transaction(fn, { isolationLevel: 'ReadCommitted', timeout })`.
-- `get` locks the row with `tx.$queryRaw\`SELECT … FOR UPDATE\``, because Prisma's typed API has
-  no row locks. Rows that don't exist yet are serialised with
-  `pg_advisory_xact_lock(hashtext(path))`.
-- `set` is a `tx.document.upsert` that increments `rev` by one.
-- Everything else (ledger, mints, redemptions, refresh tokens, idempotency) uses the typed client.
-On commit, the changed paths are published to Redis. Deadlocks and serialisation failures map to
-the existing `CONFLICT` + `retryAfterMs` the client already retries. The firestore-store tests
-are re-run against Postgres in CI (Testcontainers), so the behaviour is proven the same.
+**Store adapter.** `src/store/prismaStore.ts` implements the existing `Store`/`TransactionPort`
+(as built, 2026-11-06). Transactions run at **`SERIALIZABLE`** and retry on serialization failure
+(exponential backoff, full jitter), mapping to `CONFLICT` only after 12 attempts. This is
+Firestore's optimistic model: readers never block (every transaction reads the shared catalogue,
+so row locks would have serialized the whole game). Writes are buffered and applied at commit,
+and the changed paths go to Redis. Queries are parameterized SQL over `data` JSONB. A
+conformance suite runs the same scenarios against the in-memory store the game tests use and
+against Postgres.
+
+**Game uid.** NEAR account ids contain dots, which the contract's uid format
+(`[A-Za-z0-9]{20,128}`) and document paths don't allow. Each wallet's uid is `u` + 39 hex of
+`sha256(accountId)`, stored in `accounts.uid`; sessions carry both.
 
 **Redis**
 

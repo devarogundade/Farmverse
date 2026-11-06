@@ -4,7 +4,7 @@ import { ErrorBody } from './errors';
 import { EpochMs, SemVer } from './primitives';
 
 /** The client platform. `editor` is accepted only by non-production backends. */
-export const Platform = named('Platform', z.enum(['android', 'ios', 'editor']));
+export const Platform = named('Platform', z.enum(['android', 'ios', 'editor', 'webgl']));
 
 /** Sent with every callable request, for the version gate and for logs. */
 export const RequestMeta = named(

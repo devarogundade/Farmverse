@@ -1,0 +1,46 @@
+{
+  "name": "@farmverse/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Farmverse game server: Fastify + Postgres (Prisma) + Redis + BullMQ. Runs the game logic shared with backend/functions/src/{core,game,infra}.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "prisma generate --no-hints > /dev/null && tsc --noEmit -p .",
+    "test": "vitest run",
+    "test:db": "vitest run --config vitest.db.config.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "build": "prisma generate && esbuild src/main.ts src/worker.ts --bundle --platform=node --target=node22 --format=esm --sourcemap --outdir=dist --external:@prisma/client --external:@prisma/adapter-pg --external:pg --external:bullmq --external:ioredis --external:fastify --external:@fastify/websocket --external:dotenv --external:jose",
+    "start": "node --enable-source-maps dist/main.js",
+    "start:worker": "node --enable-source-maps dist/worker.js",
+    "dev": "tsx watch src/main.ts",
+    "dev:worker": "tsx watch src/worker.ts"
+  },
+  "dependencies": {
+    "@farmverse/contracts": "0.1.0",
+    "@fastify/websocket": "11.3.7",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "bullmq": "6.7.1",
+    "dotenv": "18.0.9",
+    "fastify": "5.12.8",
+    "ioredis": "5.11.1",
+    "jose": "6.2.15",
+    "pg": "8.23.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/ws": "8.18.2",
+    "esbuild": "0.28.2",
+    "prisma": "7.10.1",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5",
+    "ws": "8.22.1"
+  }
+}

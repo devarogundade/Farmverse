@@ -5,6 +5,7 @@
   "workspaces": [
     "contracts",
     "backend/functions",
+    "backend/server",
     "backend/rules-tests"
   ],
   "engines": {

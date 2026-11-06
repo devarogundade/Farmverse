@@ -14,6 +14,7 @@ namespace Farmverse.Contracts
         Android = 1,
         Ios = 2,
         Editor = 3,
+        Webgl = 4,
     }
 
     /// <summary>Wire strings for <see cref="Platform"/>.</summary>
@@ -26,6 +27,7 @@ namespace Farmverse.Contracts
                 case Platform.Android: return "android";
                 case Platform.Ios: return "ios";
                 case Platform.Editor: return "editor";
+                case Platform.Webgl: return "webgl";
                 default: throw new WireFormatException("Platform", "cannot send an unknown value");
             }
         }
@@ -37,6 +39,7 @@ namespace Farmverse.Contracts
                 case "android": return Platform.Android;
                 case "ios": return Platform.Ios;
                 case "editor": return Platform.Editor;
+                case "webgl": return Platform.Webgl;
                 default: return Platform.Unknown;
             }
         }

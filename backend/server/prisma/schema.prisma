@@ -1,0 +1,68 @@
+// The Farmverse game database. Game state keeps the document model the game code was written
+// for (path → JSON), so backend/functions/src/game runs unchanged; accounts and sessions are
+// ordinary tables. Chain data (Goldsky, schema `chain`) is written by the indexer and is not
+// managed here.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// One game document, addressed exactly like Firestore did: `players/{uid}/state/island`.
+model Document {
+  /// Full document path (an even number of segments).
+  path       String   @id
+  /// The parent collection path (`players/{uid}/notifications`) — what queries scan.
+  collection String
+  /// The owning player for anything under `players/{uid}/…`, else null (for account deletion
+  /// and per-player export).
+  uid        String?
+  data       Json
+  /// Bumped on every write; live subscribers drop stale pushes by it.
+  rev        BigInt   @default(1)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([collection, path])
+  @@index([uid])
+  @@map("documents")
+}
+
+/// A NEAR account that has signed in.
+model Account {
+  accountId   String         @id @map("account_id")
+  /// The game uid for this wallet (`u` + 39 hex of sha256(account_id)); NEAR ids contain dots,
+  /// which game ids and document paths don't allow.
+  uid         String         @unique
+  createdAt   DateTime       @default(now()) @map("created_at")
+  lastLoginAt DateTime       @default(now()) @map("last_login_at")
+  /// The key the last sign-in was signed with ("ed25519:…").
+  lastKey     String?        @map("last_key")
+  sessions    RefreshToken[]
+
+  @@map("accounts")
+}
+
+/// A refresh token (stored hashed). Rotated on every use; reuse of a rotated token revokes the
+/// whole family (stolen-token detection).
+model RefreshToken {
+  id         String    @id @default(uuid())
+  accountId  String    @map("account_id")
+  account    Account   @relation(fields: [accountId], references: [accountId], onDelete: Cascade)
+  /// sha256 of the token, hex.
+  tokenHash  String    @unique @map("token_hash")
+  /// All rotations of one sign-in share a family.
+  family     String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  expiresAt  DateTime  @map("expires_at")
+  revokedAt  DateTime? @map("revoked_at")
+  userAgent  String?   @map("user_agent")
+
+  @@index([accountId])
+  @@index([family])
+  @@map("refresh_tokens")
+}
