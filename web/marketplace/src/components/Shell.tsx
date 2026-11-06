@@ -14,6 +14,7 @@ const NAV = [
   ...(config.featuredToken ? [{ key: 'token', icon: 'Icon_Crown', label: 'Featured', to: href.token(config.featuredToken) }] : []),
   { key: 'shop', icon: 'Icon_Gift', label: 'Shop', to: href.shop() },
   { key: 'rent', icon: 'Isl_p_worker', label: 'Hire', to: href.rent() },
+  { key: 'town', icon: 'Icon_Shop', label: 'Town', to: href.merchants() },
   { key: 'mine', icon: 'Icon_MenuIcon02_Inventory', label: 'My items', to: href.mine() },
   { key: 'studio', icon: 'Icon_PictoIcon_Cloth', label: 'Wardrobe', to: href.studio() },
 ] as const;
@@ -23,6 +24,7 @@ function activeKey(route: Route) {
   if (route.name === 'studio') return 'studio';
   if (route.name === 'shop') return 'shop';
   if (route.name === 'rent') return 'rent';
+  if (route.name === 'merchants') return 'town';
   return route.mine ? 'mine' : 'home';
 }
 

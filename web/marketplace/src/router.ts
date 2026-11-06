@@ -6,6 +6,7 @@ export type Route =
   | { name: 'token'; id: string; sell?: boolean }
   | { name: 'shop' }
   | { name: 'rent' }
+  | { name: 'merchants' }
   | { name: 'studio' };
 
 function parse(hash: string): Route {
@@ -16,6 +17,7 @@ function parse(hash: string): Route {
   if (parts[0] === 'studio') return { name: 'studio' };
   if (parts[0] === 'shop') return { name: 'shop' };
   if (parts[0] === 'rent') return { name: 'rent' };
+  if (parts[0] === 'town') return { name: 'merchants' };
   return {
     name: 'explore',
     type: params.get('type') ?? undefined,
@@ -46,5 +48,6 @@ export const href = {
   token: (id: string) => `#/token/${encodeURIComponent(id)}`,
   shop: () => '#/shop',
   rent: () => '#/rent',
+  merchants: () => '#/town',
   studio: () => '#/studio',
 };
