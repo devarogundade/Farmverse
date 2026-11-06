@@ -3,7 +3,7 @@ using Farmverse.Application.Features;
 
 namespace Farmverse.Presentation.UI.Game
 {
-    // The account: Delete Account (wallet sign-in comes later). Set by GameRoot; null in the Island scene
+    // The account: Delete Account (the player signs in with their NEAR wallet on the page). Set by GameRoot; null in the Island scene
     // opened on its own.
     public sealed partial class GameUi
     {

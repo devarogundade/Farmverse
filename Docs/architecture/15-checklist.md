@@ -36,8 +36,8 @@ an indexer migration, and the Unity panels.
 - [x] B11 `worker_stats` XP per token from server island runs §7.4
 - [x] B12 Market read API: drops, offers, rentals, worker filters (specialty, rarity, level) §5.4 §7.5 §12
 - [x] B13 Land deed redeem → `open-plot` exchange op §12.3
-- [ ] B14 Golden crop goods in the catalogue (25× price, mintable) §12.4
-- [ ] B15 Notifications: offers received, rentals started/ended, sales §3.4 §12.2
+- [x] B14 Golden crop goods in the catalogue (25× price, mintable) §12.4
+- [x] B15 Notifications: offers received, rentals started/ended, sales §3.4 §12.2
 
 ## C. Shared C# rules (device + server engine)
 
@@ -48,7 +48,7 @@ an indexer migration, and the Unity panels.
 
 ## D. Unity game
 
-- [ ] D1 Chain/NFT/wallet strings into `en.json`; remove VeChain coupon steps and "coming soon" sign-in text; all links via `FvOpenTab` §4.3
+- [x] D1 Stale sign-in text out; every link via `GameLinks.Open` (`FvOpenTab`) §4.3. `en.json` fills itself when the Editor plays; the default coupon types (VeChain partner codes) are catalogue data the admin web edits
 - [ ] D2 Storage → My NFTs tab: list, Redeem (place mode for buildings/land), Sell, View, listed-token rule §3.1
 - [ ] D3 Deep links: outbound (token, sell, explore item, shop) and inbound (`?open=nfts`, `?redeemed=`) §3.2
 - [ ] D4 Mint sheet: chips + stepper, allowance bar, fee, four-step progress, Sell/Keep, errors in place, boosts mintable, "Finish minting" §4.1

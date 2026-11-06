@@ -93,7 +93,7 @@ namespace Farmverse.Presentation.UI.Game
                 if (!string.IsNullOrEmpty(item.Url))
                 {
                     var url = item.Url!;
-                    var more = PK.Btn(col, p, "blue", "Read more", 200, 58, 22, () => UnityEngine.Application.OpenURL(url));
+                    var more = PK.Btn(col, p, "blue", "Read more", 200, 58, 22, () => GameLinks.Open(url, "Read more"));
                     more.style.alignSelf = Align.FlexStart;
                     more.style.marginTop = p.P(6);
                 }

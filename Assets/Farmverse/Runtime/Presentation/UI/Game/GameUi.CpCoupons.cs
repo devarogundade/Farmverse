@@ -480,7 +480,7 @@ namespace Farmverse.Presentation.UI.Game
                 else
                     PK.Tap(b, p, () =>
                     {
-                        if (!string.IsNullOrEmpty(type.redeemUrl)) UnityEngine.Application.OpenURL(type.redeemUrl);
+                        if (!string.IsNullOrEmpty(type.redeemUrl)) GameLinks.Open(type.redeemUrl, type.redeemLabel);
                     });
             }
 
@@ -538,7 +538,7 @@ namespace Farmverse.Presentation.UI.Game
                 Say(result.Error.Code switch
                 {
                     ErrorCode.CouponLocked => "Not finished yet",
-                    ErrorCode.CouponLinkRequired => "Coupons need a signed-in account — wallet sign-in is coming soon",
+                    ErrorCode.CouponLinkRequired => "Sign in with your NEAR wallet to collect coupons",
                     _ => "Couldn't get a code — check your connection and try again",
                 });
                 MarkDirty();
