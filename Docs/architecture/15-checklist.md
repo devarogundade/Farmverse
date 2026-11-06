@@ -10,9 +10,9 @@ an indexer migration, and the Unity panels.
 
 ## A. Contracts (one testnet upgrade)
 
-- [ ] A1 items: versioned state + `migrate` (keeps existing tokens) §5.1
-- [ ] A2 items: drops — `create_drop`, `update_drop`, views, `ft_on_transfer` buy, edition numbers, per-wallet limit, NEAR float guard, FARM to treasury, `drop_sale` event §5.1
-- [ ] A3 items: buy-and-use (`"use": true` mints and burns in one receipt) §5.1
+- [x] A1 items: versioned state + `migrate` (keeps existing tokens) §5.1
+- [x] A2 items: drops — `create_drop`, `update_drop`, views, `ft_on_transfer` buy, edition numbers, per-wallet limit, NEAR float guard, FARM to treasury, `drop_sale` event §5.1
+- [x] A3 items: buy-and-use (`"use": true` mints and burns in one receipt) §5.1
 - [ ] A4 market: versioned state + `migrate` §12
 - [ ] A5 market: offers on tokens and on items — make, replace, accept via `nft_approve`, cancel, expiry refund §12.2
 - [ ] A6 market: rentals — rent out via `nft_transfer_call`, rent with FARM, worker balance, withdraw, end §12.1

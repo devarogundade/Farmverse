@@ -29,3 +29,13 @@ pub fn item_redeem(token_id: &str, owner_id: &AccountId, item: &Item) {
 pub fn config_change(field: &str, value: near_sdk::serde_json::Value) {
     emit("config_change", json!({ "field": field, "value": value }));
 }
+
+/// A drop was created or changed (the whole drop, so the indexer can mirror it).
+pub fn drop_update(action: &str, drop: &crate::drops::Drop) {
+    emit("drop_update", json!({ "action": action, "drop": drop }));
+}
+
+/// One edition of a drop was sold (`used`: minted and redeemed at once).
+pub fn drop_sale(drop_id: &str, token_id: &str, buyer_id: &AccountId, price: near_sdk::json_types::U128, edition: u64, used: bool) {
+    emit("drop_sale", json!({ "drop_id": drop_id, "token_id": token_id, "buyer_id": buyer_id, "price": price, "edition": edition, "used": used }));
+}

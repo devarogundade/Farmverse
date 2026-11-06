@@ -14,26 +14,32 @@
 //! * *Redeem (NFT → island).* The holder calls [`Contract::redeem`]; the token is burned, its storage
 //!   refunded to them, and an `item_redeem` event tells the game what to credit — once per token.
 //!   Workers are held, not redeemed.
-//! * *Studio items* (gem packs, Farm Pass, land, workers for primary sale) are minted by `minter`.
+//! * *Studio items* (gem packs, Farm Pass, land, workers for primary sale) are minted by `minter`,
+//!   either one by one ([`Contract::studio_mint`]) or sold as *drops*: fixed-price editions bought with
+//!   FARM through `ft_transfer_call`, with an optional cap this contract enforces (see [`drops`]).
 //!
 //! Admin methods need the `owner` (the team multisig) and exactly 1 yoctoNEAR, so they can only be
 //! signed with a full-access key.
 
+pub mod drops;
 mod events;
 pub mod item;
 mod standards;
 
 use std::collections::HashMap;
 
+use drops::{BuyMsg, Drop, DropInput, DropUpdate};
 use item::{Item, ItemKind, STUDIO_PREFIX, VOUCHER_PREFIX};
+use near_contract_standards::fungible_token::core::ext_ft_core;
+use near_contract_standards::fungible_token::receiver::FungibleTokenReceiver;
 use near_contract_standards::non_fungible_token::metadata::{NFTContractMetadata, NFT_METADATA_SPEC, TokenMetadata};
 use near_contract_standards::non_fungible_token::{NonFungibleToken, Token, TokenId};
 use near_sdk::collections::LazyOption;
 use near_sdk::json_types::{Base64VecU8, U128};
-use near_sdk::store::{IterableSet, LookupMap, LookupSet};
+use near_sdk::store::{IterableMap, IterableSet, LookupMap, LookupSet};
 use near_sdk::{
-    AccountId, BorshStorageKey, CurveType, PanicOnDefault, Promise, PublicKey, assert_one_yocto, borsh,
-    env, near, require, serde_json::json,
+    AccountId, BorshStorageKey, CurveType, Gas, NearToken, PanicOnDefault, Promise, PromiseOrValue, PublicKey,
+    assert_one_yocto, borsh, env, near, require, serde_json, serde_json::json,
 };
 
 /// Signed bytes = `MINT_DOMAIN || borsh(MintVoucher)`. The domain keeps a voucher signature from
@@ -48,6 +54,11 @@ pub const MAX_ROYALTY_BPS: u32 = 1_000;
 pub const BPS: u128 = 10_000;
 /// Payout map size when the caller doesn't say (royalty accounts + the owner).
 pub const DEFAULT_MAX_LEN_PAYOUT: u32 = 10;
+/// Drop editions' storage is paid by this contract; sales stop before its free balance drops below this.
+pub const DROP_FLOAT_MIN: NearToken = NearToken::from_millinear(500);
+pub const MAX_DROPS_PAGE: u32 = 100;
+const ONE_YOCTO: NearToken = NearToken::from_yoctonear(1);
+const GAS_FT_TRANSFER: Gas = Gas::from_tgas(10);
 
 /// What the game server signs for one mint. **Field order is the borsh layout — append only.**
 #[near(serializers = [borsh, json])]
@@ -85,6 +96,9 @@ pub struct Config {
     pub signers: Vec<PublicKey>,
     pub royalties: HashMap<AccountId, u32>,
     pub paused: bool,
+    /// The FT accepted for drops (FARM) and where the takings go.
+    pub farm_id: Option<AccountId>,
+    pub treasury_id: Option<AccountId>,
 }
 
 #[derive(BorshStorageKey)]
@@ -98,6 +112,24 @@ enum StorageKey {
     Items,
     Burned,
     Signers,
+    // v2
+    Drops,
+    DropBuys,
+}
+
+/// The state as deployed before drops (v1). Only [`Contract::migrate`] reads it.
+#[near(serializers = [borsh])]
+struct ContractV1 {
+    tokens: NonFungibleToken,
+    metadata: LazyOption<NFTContractMetadata>,
+    items: LookupMap<TokenId, Item>,
+    burned: LookupSet<TokenId>,
+    signers: IterableSet<PublicKey>,
+    owner_id: AccountId,
+    pending_owner_id: Option<AccountId>,
+    minter_id: AccountId,
+    royalties: HashMap<AccountId, u32>,
+    paused: bool,
 }
 
 #[derive(PanicOnDefault)]
@@ -118,6 +150,12 @@ pub struct Contract {
     royalties: HashMap<AccountId, u32>,
     /// Stops minting and redeeming (transfers and sales always work, so nobody's tokens are frozen).
     paused: bool,
+    // ---- v2: drops
+    farm_id: Option<AccountId>,
+    treasury_id: Option<AccountId>,
+    drops: IterableMap<String, Drop>,
+    /// `"<drop>:<account>"` → editions that account bought (per-wallet limits).
+    drop_buys: LookupMap<String, u32>,
 }
 
 #[near]
@@ -151,11 +189,40 @@ impl Contract {
             minter_id,
             royalties,
             paused: false,
+            farm_id: None,
+            treasury_id: None,
+            drops: IterableMap::new(StorageKey::Drops),
+            drop_buys: LookupMap::new(StorageKey::DropBuys),
         };
         for key in signers {
             this.insert_signer(key);
         }
         this
+    }
+
+    /// Upgrades v1 state (before drops) in place: every token, approval and setting stays. Called by the
+    /// contract account itself right after deploying the new code. Running it twice fails (v2 state
+    /// doesn't parse as v1), so it can't wipe the drops.
+    #[private]
+    #[init(ignore_state)]
+    pub fn migrate() -> Self {
+        let old: ContractV1 = env::state_read().unwrap_or_else(|| env::panic_str("No v1 state to migrate"));
+        Self {
+            tokens: old.tokens,
+            metadata: old.metadata,
+            items: old.items,
+            burned: old.burned,
+            signers: old.signers,
+            owner_id: old.owner_id,
+            pending_owner_id: old.pending_owner_id,
+            minter_id: old.minter_id,
+            royalties: old.royalties,
+            paused: old.paused,
+            farm_id: None,
+            treasury_id: None,
+            drops: IterableMap::new(StorageKey::Drops),
+            drop_buys: LookupMap::new(StorageKey::DropBuys),
+        }
     }
 
     // ---------------------------------------------------------------- mint & redeem
@@ -186,7 +253,7 @@ impl Contract {
             minted_from: Some(caller.clone()),
             minted_at_ms: now,
         };
-        self.mint_item(voucher.token_id, caller, item, voucher.title, voucher.media, "voucher")
+        self.mint_item(voucher.token_id, caller.clone(), item, voucher.title, voucher.media, "voucher", Some(caller))
     }
 
     /// Studio mint (primary-sale items: packs, land, workers …). `minter` only.
@@ -208,7 +275,7 @@ impl Contract {
         item::assert_token_id(&token_id, STUDIO_PREFIX);
         item::assert_item(kind, &item_id, quantity, &props, &title, &media);
         let item = Item { kind, item_id, quantity, props, minted_from: None, minted_at_ms: env::block_timestamp_ms() };
-        self.mint_item(token_id, receiver_id, item, title, media, "studio")
+        self.mint_item(token_id, receiver_id, item, title, media, "studio", Some(env::predecessor_account_id()))
     }
 
     /// Burns a token so the game credits its contents to the caller's island. Attach 1 yoctoNEAR.
@@ -224,17 +291,8 @@ impl Contract {
         require!(item.kind.redeemable(), "Workers are held, not redeemed");
 
         let before = env::storage_usage();
-        self.burn(&token_id, &owner);
+        self.burn_redeemed(&token_id, &owner, &item);
         let after = env::storage_usage();
-
-        near_contract_standards::non_fungible_token::events::NftBurn {
-            owner_id: &owner,
-            token_ids: &[&token_id],
-            authorized_id: None,
-            memo: Some("redeem"),
-        }
-        .emit();
-        events::item_redeem(&token_id, &owner, &item);
 
         if before > after {
             let refund = env::storage_byte_cost().saturating_mul((before - after) as u128);
@@ -243,6 +301,60 @@ impl Contract {
             }
         }
         item
+    }
+
+    // ---------------------------------------------------------------- drops
+
+    /// Creates a drop (minter only). Attach NEAR for the drop's storage; the rest is refunded.
+    #[payable]
+    pub fn create_drop(&mut self, drop: DropInput) -> Drop {
+        require!(env::predecessor_account_id() == self.minter_id, "Only the minter");
+        require!(self.farm_id.is_some(), "Set the drop payment token first");
+        let d = Drop::from_input(drop);
+        require!(!self.drops.contains_key(&d.id), "A drop with this id exists");
+        let before = env::storage_usage();
+        self.drops.insert(d.id.clone(), d.clone());
+        self.drops.flush();
+        charge_storage(env::storage_usage().saturating_sub(before), env::predecessor_account_id());
+        events::drop_update("create", &d);
+        d
+    }
+
+    /// Changes a drop's price, cap (down only), wallet limit, window or pause. Minter or owner; 1 yocto.
+    #[payable]
+    pub fn update_drop(&mut self, id: String, update: DropUpdate) -> Drop {
+        assert_one_yocto();
+        let caller = env::predecessor_account_id();
+        require!(caller == self.minter_id || caller == self.owner_id, "Only the minter or the owner");
+        let mut d = self.drops.get(&id).cloned().unwrap_or_else(|| env::panic_str("No such drop"));
+        d.apply(update);
+        self.drops.insert(id, d.clone());
+        events::drop_update("update", &d);
+        d
+    }
+
+    /// Sends FARM this contract holds (a forward to the treasury that failed) to the treasury. Anyone may call.
+    pub fn sweep_farm(&mut self, amount: U128) -> Promise {
+        let farm = self.farm_id.clone().unwrap_or_else(|| env::panic_str("No payment token"));
+        let treasury = self.treasury_id.clone().unwrap_or_else(|| env::panic_str("No treasury"));
+        ext_ft_core::ext(farm)
+            .with_attached_deposit(ONE_YOCTO)
+            .with_static_gas(GAS_FT_TRANSFER)
+            .ft_transfer(treasury, amount, Some("farmverse drop takings".into()))
+    }
+
+    pub fn get_drop(&self, id: String) -> Option<Drop> {
+        self.drops.get(&id).cloned()
+    }
+
+    pub fn get_drops(&self, from_index: Option<u32>, limit: Option<u32>) -> Vec<Drop> {
+        let limit = limit.unwrap_or(MAX_DROPS_PAGE).min(MAX_DROPS_PAGE) as usize;
+        self.drops.values().skip(from_index.unwrap_or(0) as usize).take(limit).cloned().collect()
+    }
+
+    /// Editions of `drop_id` that `account_id` bought (for per-wallet limits).
+    pub fn drop_bought(&self, drop_id: String, account_id: AccountId) -> u32 {
+        self.drop_buys.get(&Self::buy_key(&drop_id, &account_id)).copied().unwrap_or(0)
     }
 
     // ---------------------------------------------------------------- NEP-199 payouts
@@ -297,6 +409,8 @@ impl Contract {
             signers: self.signers.iter().cloned().collect(),
             royalties: self.royalties.clone(),
             paused: self.paused,
+            farm_id: self.farm_id.clone(),
+            treasury_id: self.treasury_id.clone(),
         }
     }
 
@@ -338,6 +452,16 @@ impl Contract {
         events::config_change("paused", json!(paused));
     }
 
+    /// The FT drops are paid in (FARM) and the account the takings go to. Register this contract with
+    /// the FT (`storage_deposit`) as well, so failed forwards can be swept.
+    #[payable]
+    pub fn set_drop_payment(&mut self, farm_id: AccountId, treasury_id: AccountId) {
+        self.assert_owner();
+        events::config_change("drop_payment", json!({ "farm_id": farm_id, "treasury_id": treasury_id }));
+        self.farm_id = Some(farm_id);
+        self.treasury_id = Some(treasury_id);
+    }
+
     #[payable]
     pub fn set_base_uri(&mut self, base_uri: Option<String>) {
         self.assert_owner();
@@ -365,7 +489,82 @@ impl Contract {
     }
 }
 
+#[near]
+impl FungibleTokenReceiver for Contract {
+    /// Buys one edition of a drop with FARM (`msg`: `{"drop":"<id>","use":false}`). Panicking returns the
+    /// FARM (FT standard); on success all of it is kept and forwarded to the treasury.
+    fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> PromiseOrValue<U128> {
+        require!(Some(env::predecessor_account_id()) == self.farm_id, "Only FARM is accepted");
+        self.assert_not_paused();
+        let buy: BuyMsg = serde_json::from_str(&msg).unwrap_or_else(|_| env::panic_str("msg must be {\"drop\":…}"));
+        let mut d = self.drops.get(&buy.drop).cloned().unwrap_or_else(|| env::panic_str("No such drop"));
+        let key = Self::buy_key(&d.id, &sender_id);
+        let bought = self.drop_buys.get(&key).copied().unwrap_or(0);
+        let now = env::block_timestamp_ms();
+        d.assert_buyable(now, amount.0, bought);
+        if buy.use_now {
+            require!(d.kind.redeemable(), "Workers are held, not used up");
+        }
+
+        let edition = d.sold + 1;
+        let token_id = d.token_id(edition);
+        let item = Item {
+            kind: d.kind,
+            item_id: d.item_id.clone(),
+            quantity: d.quantity,
+            props: d.edition_props(edition),
+            minted_from: None,
+            minted_at_ms: now,
+        };
+        self.mint_item(token_id.clone(), sender_id.clone(), item.clone(), d.edition_title(edition), d.media.clone(), "drop", None);
+        if buy.use_now {
+            self.burn_redeemed(&token_id, &sender_id, &item);
+        }
+        d.sold = edition;
+        self.drops.insert(d.id.clone(), d.clone());
+        self.drop_buys.insert(key, bought + 1);
+        self.drops.flush();
+        self.drop_buys.flush();
+        self.assert_float();
+        events::drop_sale(&d.id, &token_id, &sender_id, amount, edition, buy.use_now);
+
+        if let Some(treasury) = self.treasury_id.clone() {
+            // A failed forward leaves the FARM here; `sweep_farm` sends it on later.
+            ext_ft_core::ext(env::predecessor_account_id())
+                .with_attached_deposit(ONE_YOCTO)
+                .with_static_gas(GAS_FT_TRANSFER)
+                .ft_transfer(treasury, amount, Some(format!("drop {}", d.id)))
+                .detach();
+        }
+        PromiseOrValue::Value(U128(0))
+    }
+}
+
 impl Contract {
+    fn buy_key(drop_id: &str, account_id: &AccountId) -> String {
+        format!("{drop_id}:{account_id}")
+    }
+
+    /// Drop editions are stored at this contract's cost: refuse once the free balance runs low.
+    fn assert_float(&self) {
+        let locked = env::storage_byte_cost().saturating_mul(env::storage_usage() as u128);
+        let free = env::account_balance().saturating_sub(locked);
+        require!(free >= DROP_FLOAT_MIN, "The shop is restocking. Try again later");
+    }
+
+    /// Burns a redeemed token and announces it (`nft_burn` + `item_redeem`).
+    fn burn_redeemed(&mut self, token_id: &TokenId, owner: &AccountId, item: &Item) {
+        self.burn(token_id, owner);
+        near_contract_standards::non_fungible_token::events::NftBurn {
+            owner_id: owner,
+            token_ids: &[token_id],
+            authorized_id: None,
+            memo: Some("redeem"),
+        }
+        .emit();
+        events::item_redeem(token_id, owner, item);
+    }
+
     fn message(voucher: &MintVoucher) -> Vec<u8> {
         let mut bytes = MINT_DOMAIN.to_vec();
         bytes.extend(borsh::to_vec(voucher).unwrap_or_else(|_| env::panic_str("voucher encoding")));
@@ -419,8 +618,19 @@ impl Contract {
         }
     }
 
-    /// Mints and charges the caller for exactly the storage used (the rest of the deposit is refunded).
-    fn mint_item(&mut self, token_id: TokenId, owner: AccountId, item: Item, title: String, media: String, source: &str) -> Token {
+    /// Mints and charges `payer` for exactly the storage used (the rest of the attached deposit is
+    /// refunded). With no payer (drops) the contract's own balance pays.
+    #[allow(clippy::too_many_arguments)]
+    fn mint_item(
+        &mut self,
+        token_id: TokenId,
+        owner: AccountId,
+        item: Item,
+        title: String,
+        media: String,
+        source: &str,
+        payer: Option<AccountId>,
+    ) -> Token {
         require!(!self.burned.contains(&token_id), "token_id was used before");
         let before = env::storage_usage();
         let metadata = Self::token_metadata(&item, title, media);
@@ -428,7 +638,9 @@ impl Contract {
         let token = self.tokens.internal_mint_with_refund(token_id.clone(), owner.clone(), Some(metadata), None);
         self.items.flush();
         let used = env::storage_usage().saturating_sub(before);
-        charge_storage(used, env::predecessor_account_id());
+        if let Some(payer) = payer {
+            charge_storage(used, payer);
+        }
         near_contract_standards::non_fungible_token::events::NftMint {
             owner_id: &owner,
             token_ids: &[&token_id],
