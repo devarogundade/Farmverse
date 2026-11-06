@@ -24,7 +24,7 @@ import { contentFor } from '../../game/src/game/content';
 import type { IslandEngine } from '../../game/src/infra/islandEngine';
 import type { Store } from '../../game/src/infra/store';
 import { fail } from '../../game/src/core/errors';
-import { mint, redeem, type MintDeps, type MintLimits } from './mint/mint';
+import { mint, pendingMints, redeem, type MintDeps, type MintLimits } from './mint/mint';
 import type { ChainReader } from './mint/nearChain';
 import type { VoucherSigner } from './mint/voucher';
 
@@ -167,6 +167,11 @@ export function callDefinitions(rt: Runtime): ReadonlyMap<string, AnyDefinition>
       spec: CALLABLES.chainRedeem,
       auth: 'required',
       handler: async ({ uid, data, log }) => redeem(mintDeps(rt, log), uid, await walletOf(rt, uid), data.txHash, log),
+    }),
+    def({
+      spec: CALLABLES.chainPendingMints,
+      auth: 'required',
+      handler: async ({ uid, log }) => pendingMints(mintDeps(rt, log), uid),
     }),
   ];
   return new Map(list.map((d) => [d.spec.name, d]));

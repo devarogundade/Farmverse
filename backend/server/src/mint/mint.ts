@@ -264,6 +264,30 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
   fail('CONFLICT');
 }
 
+/**
+ * `chain-pendingMints`: vouchers this player was given that the wallet can still sign ("Finish minting").
+ * A voucher whose token is already on chain, or that expired, is not offered.
+ */
+export async function pendingMints(deps: MintDeps, uid: string): Promise<{ mints: Omit<MintResponse, 'state' | 'rulesVersion' | 'fee'>[] }> {
+  const nowMs = deps.env.clock.nowMs();
+  const rows = await deps.env.store.query({
+    collection: `players/${uid}/mints`,
+    where: [['status', '==', 'issued']],
+    limit: 50,
+  });
+  const live = rows
+    .map((r) => r.data as unknown as MintDoc)
+    .filter((m) => m.voucher.expires_at_ms > nowMs + 60_000)
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .slice(0, 20);
+  const out = [];
+  for (const m of live) {
+    if (await deps.chain.wasMinted(m.tokenId)) continue; // signed already; the expiry job settles it
+    out.push({ tokenId: m.tokenId, voucher: m.voucher, signer: m.signer, signature: m.signature, expiresAtMs: m.voucher.expires_at_ms });
+  }
+  return { mints: out };
+}
+
 export type ExpiryOutcome = 'missing' | 'settled' | 'early' | 'minted' | 'refunded';
 
 /**

@@ -626,6 +626,31 @@ export const ChainRedeemResponse = named(
   }),
 );
 
+export const ChainPendingMintsRequest = named(
+  'ChainPendingMintsRequest',
+  z.object({ meta: RequestMeta }),
+  "This wallet's mint vouchers that can still be used (\"Finish minting\").",
+);
+
+export const PendingMint = named(
+  'PendingMint',
+  z.object({
+    tokenId: z.string(),
+    voucher: MintVoucher,
+    signer: z.string(),
+    signature: z.string(),
+    expiresAtMs: EpochMs,
+  }),
+);
+
+export const ChainPendingMintsResponse = named(
+  'ChainPendingMintsResponse',
+  z.object({
+    /** Newest first; each can be signed in the wallet until `expiresAtMs`, then its items come back. */
+    mints: z.array(PendingMint).max(20),
+  }),
+);
+
 function callable<Req extends z.ZodType, Res extends z.ZodType>(
   name: string,
   request: Req,
@@ -670,6 +695,7 @@ export const CALLABLES = {
   raidFinish: callable('raid-finish', RaidFinishRequest, RaidFinishResponse),
   chainMint: callable('chain-mint', ChainMintRequest, ChainMintResponse),
   chainRedeem: callable('chain-redeem', ChainRedeemRequest, ChainRedeemResponse),
+  chainPendingMints: callable('chain-pendingMints', ChainPendingMintsRequest, ChainPendingMintsResponse),
 } as const;
 
 export type PlatformContent = z.infer<typeof PlatformContent>;
