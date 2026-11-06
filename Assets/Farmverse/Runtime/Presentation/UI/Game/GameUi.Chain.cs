@@ -136,7 +136,7 @@ namespace Farmverse.Presentation.UI.Game
             {
                 Say("Approve the payment in your wallet", 4f);
                 var r = await chain.BuyDrop(d.Id, d.Price, useNow, CancellationToken.None);
-                if (!r.IsOk) Say(ChainError(r.Error), 4f);
+                if (!r.IsOk) Say(ChainError(r.Error, "buy that"), 4f);
                 else if (r.Value.Declined) Say("Not bought. Your FARM is still yours.");
                 else Say(useNow ? d.Title + ": done!" : d.Title + " is in your NFTs", 3f);
                 if (Nfts != null)
@@ -408,7 +408,7 @@ namespace Farmverse.Presentation.UI.Game
                     });
                     if (t.Kind is "building" or "tool" || (t.Kind == "land" && t.ItemId != "deed")) Open("heldbuildings");
                 }
-                else Say(ChainError(r.Error));
+                else Say(ChainError(r.Error, "redeem"));
                 if (Nfts != null) await Nfts.RefreshOwned();
             }
             finally
@@ -483,7 +483,7 @@ namespace Farmverse.Presentation.UI.Game
         }
 
         /// <summary>A mint refusal in the player's words.</summary>
-        private static string ChainError(AppError e)
+        private static string ChainError(AppError e, string action = "mint")
         {
             string P(string key) => e.Params.TryGetValue(key, out var v) ? v : "";
             switch (e.Code)
@@ -507,7 +507,7 @@ namespace Farmverse.Presentation.UI.Game
                 case ErrorCode.MintNoCoins: return $"Minting this costs {P("fee")} coins. Sell a few goods first.";
                 case ErrorCode.Unsupported: return "Minting needs the web version with a NEAR wallet.";
                 case ErrorCode.NetworkRequired: return "You're offline. Try again when connected.";
-                default: return "Couldn't mint right now. Please try again.";
+                default: return $"Couldn't {action} right now. Please try again.";
             }
         }
 

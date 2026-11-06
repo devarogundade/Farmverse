@@ -20,7 +20,7 @@ namespace Farmverse.Presentation.UI.Game
 
         private static readonly (string id, string label, string? icon)[] ShopCats =
         {
-            ("all", "ALL", null), ("crops", "Crops", "Icon_Pumkin"), ("animal", "Animal goods", "Icon_Egg"), ("mat", "Materials", "G_Wood"), ("boost", "Boosts", "Icon_Potion02_Green"), ("nft", "NFTs", "Icon_Gift"),
+            ("all", "ALL", null), ("crops", "Crops", "Icon_Pumkin"), ("animal", "Animal goods", "Icon_Egg"), ("mat", "Materials", "G_Wood"), ("boost", "Boosts", "Icon_Potion02_Green"), ("nft", "NFTs", null), // a word, not a picture: there's no icon that says NFT
         };
 
         /// <summary>A row of the storage grid: a stored good or a boost.</summary>
@@ -159,6 +159,7 @@ namespace Farmverse.Presentation.UI.Game
                     MarkDirty();
                 });
                 if (slotIcon == null) ShopSlotGood(slot, p, i.goodId ?? i.id, s);
+                if (i.nft != null) ShopNftTag(cell, p);
                 cells.Add(cell);
             }
 
@@ -313,6 +314,19 @@ namespace Farmverse.Presentation.UI.Game
                     PK.Btn(side, p, "purple", "Mint as NFT", sideW - 60, 60, 24, () => MintOpenGoods(id, held, boost: true)).style.marginTop = p.P(10);
                 }
             }
+        }
+
+        /// <summary>The "NFT" tag on a storage slot holding an NFT (the detail panel's tag, small, top left).</summary>
+        private static void ShopNftTag(VisualElement cell, Pt p)
+        {
+            var tag = PK.N(cell, p, "NFT", 13, Color.white);
+            tag.pickingMode = PickingMode.Ignore; // taps go to the slot
+            tag.style.position = Position.Absolute;
+            tag.style.left = p.P(6);
+            tag.style.top = p.P(6);
+            tag.style.backgroundColor = GameTheme.T("#1a8de8");
+            Kit.Round(tag, p.U(6));
+            PK.Pad(tag, p.P(6), p.P(1), p.P(6), p.P(1));
         }
 
         /// <summary>Under Storage: redeemed NFT buildings waiting to be placed.</summary>
