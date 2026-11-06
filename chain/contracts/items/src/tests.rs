@@ -1,0 +1,395 @@
+use super::*;
+use ed25519_dalek::{Signer, SigningKey};
+use near_contract_standards::non_fungible_token::approval::NonFungibleTokenApproval;
+use near_contract_standards::non_fungible_token::core::NonFungibleTokenCore;
+use near_contract_standards::non_fungible_token::enumeration::NonFungibleTokenEnumeration;
+use near_sdk::test_utils::{VMContextBuilder, accounts};
+use near_sdk::{NearToken, testing_env};
+
+const NOW_MS: u64 = 1_800_000_000_000;
+const DEPOSIT: NearToken = NearToken::from_millinear(100);
+
+fn contract_id() -> AccountId {
+    "items.farmverse.near".parse().unwrap()
+}
+fn owner() -> AccountId {
+    "dao.farmverse.near".parse().unwrap()
+}
+fn minter() -> AccountId {
+    "studio.farmverse.near".parse().unwrap()
+}
+fn treasury() -> AccountId {
+    "treasury.farmverse.near".parse().unwrap()
+}
+fn alice() -> AccountId {
+    accounts(1)
+}
+fn bob() -> AccountId {
+    accounts(2)
+}
+
+fn key(seed: u8) -> SigningKey {
+    SigningKey::from_bytes(&[seed; 32])
+}
+fn public(k: &SigningKey) -> PublicKey {
+    PublicKey::from_parts(CurveType::ED25519, k.verifying_key().to_bytes().to_vec()).unwrap()
+}
+
+fn ctx(predecessor: AccountId, deposit: NearToken) -> VMContextBuilder {
+    let mut b = VMContextBuilder::new();
+    b.current_account_id(contract_id())
+        .signer_account_id(predecessor.clone())
+        .predecessor_account_id(predecessor)
+        .attached_deposit(deposit)
+        .block_timestamp(NOW_MS * 1_000_000);
+    b
+}
+
+fn setup() -> Contract {
+    testing_env!(ctx(owner(), NearToken::from_yoctonear(0)).build());
+    let mut royalties = HashMap::new();
+    royalties.insert(treasury(), 250);
+    Contract::new(
+        owner(),
+        minter(),
+        vec![public(&key(7))],
+        royalties,
+        NFTContractMetadata {
+            spec: NFT_METADATA_SPEC.into(),
+            name: "Farmverse Items".into(),
+            symbol: "FVITEM".into(),
+            icon: None,
+            base_uri: Some("https://cdn.farmverse.world".into()),
+            reference: None,
+            reference_hash: None,
+        },
+    )
+}
+
+fn voucher(token_id: &str, receiver: AccountId) -> MintVoucher {
+    MintVoucher {
+        contract_id: contract_id(),
+        token_id: token_id.into(),
+        receiver_id: receiver,
+        kind: ItemKind::Good,
+        item_id: "wheat".into(),
+        quantity: 250,
+        props: "{}".into(),
+        title: "Wheat ×250".into(),
+        media: "items/wheat.png".into(),
+        expires_at_ms: NOW_MS + 60_000,
+    }
+}
+
+fn sign(v: &MintVoucher, k: &SigningKey) -> Base64VecU8 {
+    Base64VecU8::from(k.sign(&voucher_signing_bytes(v)).to_bytes().to_vec())
+}
+
+fn mint(c: &mut Contract, v: MintVoucher) -> Token {
+    testing_env!(ctx(v.receiver_id.clone(), DEPOSIT).build());
+    let sig = sign(&v, &key(7));
+    c.mint_with_voucher(v, public(&key(7)), sig)
+}
+
+// ------------------------------------------------------------------ mint
+
+#[test]
+fn voucher_mint_creates_the_item() {
+    let mut c = setup();
+    let token = mint(&mut c, voucher("g-1", alice()));
+    assert_eq!(token.owner_id, alice());
+    let item = c.get_item("g-1".into()).unwrap();
+    assert_eq!(item.kind, ItemKind::Good);
+    assert_eq!(item.quantity, 250);
+    assert_eq!(item.minted_from, Some(alice()));
+    let meta = token.metadata.unwrap();
+    assert_eq!(meta.media.as_deref(), Some("items/wheat.png"));
+    assert!(meta.extra.unwrap().contains("\"wheat\""));
+    assert_eq!(c.nft_supply_for_owner(alice()).0, 1);
+}
+
+#[test]
+#[should_panic(expected = "Voucher is for another account")]
+fn voucher_only_works_for_its_receiver() {
+    let mut c = setup();
+    let v = voucher("g-1", alice());
+    testing_env!(ctx(bob(), DEPOSIT).build());
+    let sig = sign(&v, &key(7));
+    c.mint_with_voucher(v, public(&key(7)), sig);
+}
+
+#[test]
+#[should_panic(expected = "Voucher expired")]
+fn expired_voucher() {
+    let mut c = setup();
+    let mut v = voucher("g-1", alice());
+    v.expires_at_ms = NOW_MS - 1;
+    mint(&mut c, v);
+}
+
+#[test]
+#[should_panic(expected = "Voucher lives too long")]
+fn voucher_ttl_is_capped() {
+    let mut c = setup();
+    let mut v = voucher("g-1", alice());
+    v.expires_at_ms = NOW_MS + MAX_VOUCHER_TTL_MS + 1;
+    mint(&mut c, v);
+}
+
+#[test]
+#[should_panic(expected = "Unknown signer")]
+fn unknown_signer() {
+    let mut c = setup();
+    let v = voucher("g-1", alice());
+    testing_env!(ctx(alice(), DEPOSIT).build());
+    let sig = sign(&v, &key(9));
+    c.mint_with_voucher(v, public(&key(9)), sig);
+}
+
+#[test]
+#[should_panic(expected = "Bad voucher signature")]
+fn tampered_voucher() {
+    let mut c = setup();
+    let v = voucher("g-1", alice());
+    let sig = sign(&v, &key(7));
+    let mut forged = v;
+    forged.quantity = 10_000;
+    testing_env!(ctx(alice(), DEPOSIT).build());
+    c.mint_with_voucher(forged, public(&key(7)), sig);
+}
+
+#[test]
+#[should_panic(expected = "Voucher is for another contract")]
+fn voucher_for_another_contract() {
+    let mut c = setup();
+    let mut v = voucher("g-1", alice());
+    v.contract_id = "items.farmverse.testnet".parse().unwrap();
+    mint(&mut c, v);
+}
+
+#[test]
+#[should_panic(expected = "token_id must be unique")]
+fn voucher_is_single_use() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    mint(&mut c, voucher("g-1", alice()));
+}
+
+#[test]
+#[should_panic(expected = "Only the studio mints workers and packs")]
+fn vouchers_cannot_mint_workers() {
+    let mut c = setup();
+    let mut v = voucher("g-1", alice());
+    v.kind = ItemKind::Worker;
+    v.quantity = 1;
+    mint(&mut c, v);
+}
+
+#[test]
+#[should_panic(expected = "Must attach")]
+fn mint_needs_storage_deposit() {
+    let mut c = setup();
+    let v = voucher("g-1", alice());
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(1)).build());
+    let sig = sign(&v, &key(7));
+    c.mint_with_voucher(v, public(&key(7)), sig);
+}
+
+#[test]
+#[should_panic(expected = "Paused")]
+fn paused_stops_minting() {
+    let mut c = setup();
+    testing_env!(ctx(owner(), NearToken::from_yoctonear(1)).build());
+    c.set_paused(true);
+    mint(&mut c, voucher("g-1", alice()));
+}
+
+#[test]
+fn removed_signer_is_refused_and_rotation_works() {
+    let mut c = setup();
+    testing_env!(ctx(owner(), NearToken::from_yoctonear(1)).build());
+    c.add_signer(public(&key(8)));
+    c.remove_signer(public(&key(7)));
+    let v = voucher("g-1", alice());
+    testing_env!(ctx(alice(), DEPOSIT).build());
+    let sig = sign(&v, &key(8));
+    c.mint_with_voucher(v, public(&key(8)), sig);
+    assert!(c.get_item("g-1".into()).is_some());
+}
+
+// ------------------------------------------------------------------ studio
+
+#[test]
+fn studio_mints_workers() {
+    let mut c = setup();
+    testing_env!(ctx(minter(), DEPOSIT).build());
+    c.studio_mint("s-w-1".into(), alice(), ItemKind::Worker, "farmhand".into(), 1, "{\"speed\":3}".into(), "Farmhand #1".into(), "workers/farmhand.png".into());
+    let item = c.get_item("s-w-1".into()).unwrap();
+    assert_eq!(item.kind, ItemKind::Worker);
+    assert_eq!(item.minted_from, None);
+}
+
+#[test]
+#[should_panic(expected = "Only the minter")]
+fn only_minter_studio_mints() {
+    let mut c = setup();
+    testing_env!(ctx(alice(), DEPOSIT).build());
+    c.studio_mint("s-1".into(), alice(), ItemKind::Pack, "gems_500".into(), 1, "{}".into(), "500 gems".into(), "packs/gems.png".into());
+}
+
+#[test]
+#[should_panic(expected = "token_id must start with s-")]
+fn studio_ids_are_prefixed() {
+    let mut c = setup();
+    testing_env!(ctx(minter(), DEPOSIT).build());
+    c.studio_mint("g-1".into(), alice(), ItemKind::Pack, "gems_500".into(), 1, "{}".into(), "500 gems".into(), "packs/gems.png".into());
+}
+
+// ------------------------------------------------------------------ redeem
+
+#[test]
+fn redeem_burns_and_remembers() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(1)).build());
+    let item = c.redeem("g-1".into());
+    assert_eq!(item.item_id, "wheat");
+    assert!(c.get_item("g-1".into()).is_none());
+    assert!(c.nft_token("g-1".into()).is_none());
+    assert!(c.is_burned("g-1".into()));
+    assert_eq!(c.nft_supply_for_owner(alice()).0, 0);
+    assert_eq!(c.nft_total_supply().0, 0);
+}
+
+#[test]
+#[should_panic(expected = "token_id was used before")]
+fn burned_voucher_cannot_mint_again() {
+    let mut c = setup();
+    let v = voucher("g-1", alice());
+    mint(&mut c, v.clone());
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(1)).build());
+    c.redeem("g-1".into());
+    mint(&mut c, v);
+}
+
+#[test]
+#[should_panic(expected = "Only the owner can redeem")]
+fn only_owner_redeems() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    testing_env!(ctx(bob(), NearToken::from_yoctonear(1)).build());
+    c.redeem("g-1".into());
+}
+
+#[test]
+#[should_panic(expected = "Requires attached deposit of exactly 1 yoctoNEAR")]
+fn redeem_needs_one_yocto() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(0)).build());
+    c.redeem("g-1".into());
+}
+
+#[test]
+#[should_panic(expected = "Workers are held, not redeemed")]
+fn workers_cannot_be_redeemed() {
+    let mut c = setup();
+    testing_env!(ctx(minter(), DEPOSIT).build());
+    c.studio_mint("s-w-1".into(), alice(), ItemKind::Worker, "farmhand".into(), 1, "{}".into(), "Farmhand".into(), "workers/farmhand.png".into());
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(1)).build());
+    c.redeem("s-w-1".into());
+}
+
+#[test]
+fn buyer_can_redeem_after_transfer() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(1)).build());
+    c.nft_transfer(bob(), "g-1".into(), None, None);
+    testing_env!(ctx(bob(), NearToken::from_yoctonear(1)).build());
+    assert_eq!(c.redeem("g-1".into()).quantity, 250);
+}
+
+// ------------------------------------------------------------------ payouts
+
+#[test]
+fn payout_splits_royalty_and_remainder() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    let p = c.nft_payout("g-1".into(), U128(10_000), None).payout;
+    assert_eq!(p.get(&treasury()), Some(&U128(250)));
+    assert_eq!(p.get(&alice()), Some(&U128(9_750)));
+}
+
+#[test]
+#[should_panic(expected = "Payout exceeds max_len_payout")]
+fn payout_respects_max_len() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    c.nft_payout("g-1".into(), U128(10_000), Some(1));
+}
+
+#[test]
+fn transfer_payout_moves_the_token_for_an_approved_market() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    let market: AccountId = "market.farmverse.near".parse().unwrap();
+    testing_env!(ctx(alice(), DEPOSIT).build());
+    c.nft_approve("g-1".into(), market.clone(), None);
+    let approval_id = c.nft_token("g-1".into()).unwrap().approved_account_ids.unwrap()[&market];
+    testing_env!(ctx(market.clone(), NearToken::from_yoctonear(1)).build());
+    let p = c.nft_transfer_payout(bob(), "g-1".into(), Some(approval_id), None, U128(1_000), Some(10)).payout;
+    assert!(!c.nft_is_approved("g-1".into(), market, None), "approvals are cleared on sale");
+    assert_eq!(c.nft_token("g-1".into()).unwrap().owner_id, bob());
+    assert_eq!(p.get(&alice()), Some(&U128(975)));
+}
+
+#[test]
+#[should_panic(expected = "Sender not approved")]
+fn transfer_payout_needs_approval() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    testing_env!(ctx(bob(), NearToken::from_yoctonear(1)).build());
+    c.nft_transfer_payout(bob(), "g-1".into(), None, None, U128(1_000), None);
+}
+
+// ------------------------------------------------------------------ admin
+
+#[test]
+#[should_panic(expected = "Only the owner")]
+fn only_owner_admin() {
+    let mut c = setup();
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(1)).build());
+    c.set_paused(true);
+}
+
+#[test]
+#[should_panic(expected = "Royalties may total at most 1000 bps")]
+fn royalties_are_capped() {
+    let mut c = setup();
+    let mut r = HashMap::new();
+    r.insert(treasury(), 1_001);
+    testing_env!(ctx(owner(), NearToken::from_yoctonear(1)).build());
+    c.set_royalties(r);
+}
+
+#[test]
+fn ownership_moves_in_two_steps() {
+    let mut c = setup();
+    testing_env!(ctx(owner(), NearToken::from_yoctonear(1)).build());
+    c.propose_owner(Some(bob()));
+    assert_eq!(c.get_config().owner_id, owner());
+    testing_env!(ctx(bob(), NearToken::from_yoctonear(1)).build());
+    c.accept_owner();
+    assert_eq!(c.get_config().owner_id, bob());
+    assert_eq!(c.get_config().pending_owner_id, None);
+}
+
+#[test]
+fn voucher_message_is_domain_plus_borsh() {
+    let c = setup();
+    let v = voucher("g-1", alice());
+    let bytes = c.voucher_message(v.clone()).0;
+    assert!(bytes.starts_with(MINT_DOMAIN));
+    assert_eq!(&bytes[MINT_DOMAIN.len()..], borsh::to_vec(&v).unwrap().as_slice());
+}

@@ -1,0 +1,16 @@
+[package]
+name = "farmverse-chain-tests"
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+# Sandbox tests: deploy the built wasm (scripts/build.sh) to a local neard. Linux/macOS (or WSL).
+[dev-dependencies]
+farmverse-items = { path = "../contracts/items" }
+near-workspaces = "0.24.0"
+near-sdk = { workspace = true, features = ["non-contract-usage"] }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+serde_json = "1"
+ed25519-dalek = "2"
