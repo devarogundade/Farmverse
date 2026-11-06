@@ -9,7 +9,7 @@ namespace Farmverse.Presentation.World.Island
     /// <list type="bullet">
     /// <item>Ride on: the horse appears and the farmer mounts; the stick steers it and sets its pace,
     /// letting go stops it with the farmer still in the saddle. Ride off: back on foot.</item>
-    /// <item>In the saddle, tap a far-off spot and it rides there on its own (the stick becomes STOP).
+    /// <item>In the saddle, tap a far-off spot and it rides there on its own; pushing the stick takes the reins back.
     /// "Ride to the raid" mounts for that trip only.</item>
     /// </list>
     /// The horse is only a ride (no stable, no feeding yet). Work needs feet on the ground.
@@ -60,7 +60,6 @@ namespace Farmverse.Presentation.World.Island
             _steering = false;
             GridPath.Find(Grid, _horse!.position, where, MayCross, _route);
             _next = 0;
-            if (Stick != null) Stick.StopMode = true;
         }
 
         public void Mount()
@@ -112,7 +111,8 @@ namespace Farmverse.Presentation.World.Island
             if (_motion != null && _motion.enabled) _motion.enabled = false;
             if (HasDestination)
             {
-                if (stick != null && stick.StopPressed) { Dismount(); return; }
+                // the stick takes the reins back: the horse stops riding itself and you steer
+                if (stick != null && stick.Engaged && stick.Value.sqrMagnitude > 0.04f) { _route.Clear(); _steering = true; return; }
                 var target = _route[_next];
                 var flat = new Vector3(target.x - horse.position.x, 0, target.z - horse.position.z);
                 var step = rideSpeed * Time.deltaTime;

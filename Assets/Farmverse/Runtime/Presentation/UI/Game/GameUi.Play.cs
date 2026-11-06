@@ -11,7 +11,7 @@ namespace Farmverse.Presentation.UI.Game
 {
     /// <summary>
     /// The island while playing (gameplay.html): the HUD (level + XP, the goal, season · weather · raid chip,
-    /// coins, gems, Home; the joystick under the right thumb, STOP while riding; Build · Storage · Orders · Ride
+    /// coins, gems, Home; the joystick under the right thumb (it steers the horse too); Build · Storage · Orders · Ride, or Get off while riding
     /// under the left thumb), the labels over the world, and whatever has the player's attention — the build
     /// menu, placing, a building's band, the seed strip, a conversation, the farmhouse rooms, the raid banner.
     /// The screen is rebuilt when what it shows changes (<see cref="PlayKey"/>); numbers update every frame.
@@ -174,6 +174,7 @@ namespace Farmverse.Presentation.UI.Game
             PlayTopHud(c, false);
             if (bottom) PlayStick(c, riding);
             if (bottom && !riding) PlayButtons(c);
+            if (bottom && riding) PlayGetOff(c);
 
             if (toolPanel) PlayToolBand(c, cardUid, view.StartsWith("b:"));
             else if (card) PlayCard(c, cardUid, view.StartsWith("b:"));
@@ -497,6 +498,17 @@ namespace Farmverse.Presentation.UI.Game
         /// The joystick under the right thumb (the pack's Play_Joystick), or the see-through red STOP while
         /// riding. The farmer's stick (VirtualJoystick) is placed on it and reads presses there itself.
         /// </summary>
+        /// <summary>In the saddle the bottom-left buttons give way to one: Get off (the stick on the right steers).</summary>
+        private void PlayGetOff(Ctx c)
+        {
+            var p = c.P;
+            var ride = PlaySkill(c.Root, p, "Icon_Horsesheos", "Get off", p.L + p.P(16), p.B + p.P(26), 130, () => { Sandbox?.ToggleRide(); MarkDirty(); });
+            var ring = PK.Inset(PK.Box(ride), -p.P(6), -p.P(6), -p.P(6), -p.P(6));
+            Kit.Round(ring, p.P(150));
+            Kit.Border(ring, p.U(6), GameTheme.C("#ffd84a"));
+            ring.pickingMode = PickingMode.Ignore;
+        }
+
         private void PlayStick(Ctx c, bool riding)
         {
             var p = c.P;
@@ -510,21 +522,6 @@ namespace Farmverse.Presentation.UI.Game
                 return new Vector2(b.center.x * k, Screen.height - b.center.y * k);
             };
             VirtualJoystick.RadiusOverride = size * .5f * .62f * root();
-
-            if (riding)
-            {
-                PK.Centre(stick);
-                Kit.Round(stick, size);
-                Kit.Picture(stick, GameArt.Radial("pstop", .5f, .5f, .5f, .5f, (0f, new Color(1f, .35f, .35f, .22f)), (1f, new Color(.84f, .18f, .23f, .32f))));
-                Kit.Border(stick, p.P(5), GameTheme.Light(.45f));
-                var inner = PK.Centre(PK.Box(stick));
-                PK.Size(inner, p.P(110), p.P(110));
-                Kit.Round(inner, p.P(110));
-                inner.style.backgroundColor = new Color(.84f, .18f, .23f, .55f);
-                Kit.Border(inner, p.P(4), GameTheme.Light(.7f));
-                PK.T(inner, p, "STOP", 30);
-                return;
-            }
 
             stick.style.opacity = .9f;
             Kit.Picture(stick, GameArt.Get("Play_Joystick_bg"));
