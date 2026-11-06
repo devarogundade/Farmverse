@@ -341,6 +341,8 @@ export function packEntitlement(itemId: string, quantity: number): Entitlement |
 /** What crediting a redeemed item does to the island (empty for boosts and packs). */
 export function redeemOps(item: ChainItem): ExchangeOp[] {
   if (item.kind === 'good') return [{ op: 'give', item: item.item_id, n: item.quantity }];
+  // a Genesis land deed clears the next wild plot (plan 15 §12.3)
+  if (item.kind === 'land' && item.item_id === 'deed') return [{ op: 'openPlot' }];
   if (item.kind === 'building' || item.kind === 'land' || item.kind === 'tool') {
     let level = 1;
     let price = 0;

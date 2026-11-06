@@ -142,5 +142,17 @@ namespace Farmverse.Tests.Domain.Gameplay
             Assert.AreEqual(2, e.Crew.Count);
             Assert.AreEqual(1, e.WildPlotsOpen);
         }
+
+        [Test]
+        public void A_deed_on_a_fully_open_island_does_nothing_but_does_not_block()
+        {
+            var state = new IslandState { simAt = 1000, seed = 1, buildings = { new IslandState.Placed { id = "farmhouse", uid = 1, x = 150, z = 150, w = 4, d = 4 } } };
+            var ops = new List<ExchangeOp>();
+            for (var i = 0; i <= GameplayRules.WildPlots; i++) ops.Add(new ExchangeOp { op = "openPlot" });
+            ops.Add(new ExchangeOp { op = "give", item = "wheat", n = 5 });
+            var (a, done) = IslandExchange.Apply(state, 1001, ops);
+            Assert.AreEqual(-1, done[GameplayRules.WildPlots].n);
+            Assert.AreEqual(5, IslandSim.Load(a.State).StoredInFarmhouses("wheat"), "the other grants still land");
+        }
     }
 }

@@ -114,8 +114,9 @@ namespace Farmverse.Domain.Gameplay
                         break;
                     }
                     case "openPlot":
-                        if (!e.OpenWildPlot()) throw new ExchangeRefusal("all_open", "every wild plot is open already");
-                        done.Add(new ExchangeDone { op = "openPlot", n = e.WildPlotsOpen });
+                        // a deed burned on chain can't be refused here (it would hold up every other grant):
+                        // with every plot open it does nothing, and the game doesn't offer it then
+                        done.Add(new ExchangeDone { op = "openPlot", n = e.OpenWildPlot() ? e.WildPlotsOpen : -1 });
                         break;
                     case "crew":
                         e.SetCrew(op.crew ?? new List<Farmhand>());

@@ -46,3 +46,11 @@ describe('buy-and-use transactions', () => {
     expect(parseRedeems(failed, 'alice.testnet', 'items.farmverse.testnet')).toEqual([]);
   });
 });
+
+describe('land deeds', () => {
+  it('a redeemed deed opens a wild plot', async () => {
+    const { redeemOps } = await import('../src/mint/mint');
+    expect(redeemOps({ kind: 'land', item_id: 'deed', quantity: 1, props: '{"edition":3}' })).toEqual([{ op: 'openPlot' }]);
+    expect(redeemOps({ kind: 'land', item_id: 'field', quantity: 1, props: '{"level":2,"price":50}' })).toEqual([{ op: 'hold', id: 'field', level: 2, price: 50 }]);
+  });
+});

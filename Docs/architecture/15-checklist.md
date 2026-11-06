@@ -35,7 +35,7 @@ an indexer migration, and the Unity panels.
 - [x] B10 `crew` from owned + rented Farmhands, beds = sum of workers' house levels (max 6) §7.3 §12.1
 - [x] B11 `worker_stats` XP per token from server island runs §7.4
 - [x] B12 Market read API: drops, offers, rentals, worker filters (specialty, rarity, level) §5.4 §7.5 §12
-- [ ] B13 Land deed redeem → `open-plot` exchange op §12.3
+- [x] B13 Land deed redeem → `open-plot` exchange op §12.3
 - [ ] B14 Golden crop goods in the catalogue (25× price, mintable) §12.4
 - [ ] B15 Notifications: offers received, rentals started/ended, sales §3.4 §12.2
 

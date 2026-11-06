@@ -78,7 +78,9 @@ export type ExchangeOp =
   /** Spend `bps` of the value the earlier ops moved, at least `n` coins (the mint fee). */
   | { readonly op: 'fee'; readonly n: number; readonly bps: number }
   /** Add `n` coins (a mint fee given back). */
-  | { readonly op: 'credit'; readonly n: number };
+  | { readonly op: 'credit'; readonly n: number }
+  /** Clear the next wild plot (a redeemed land deed). */
+  | { readonly op: 'openPlot' };
 
 /** What an op did (the engine's ExchangeDone). */
 export interface ExchangeDone {
