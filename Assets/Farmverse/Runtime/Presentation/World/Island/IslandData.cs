@@ -41,7 +41,83 @@ namespace Farmverse.Presentation.World.Island
 
         public bool InBounds(int x, int z) => x >= 0 && z >= 0 && x < width && z < depth;
 
-        public bool IsBuildable(int x, int z) => IsBuildableIn(x, z, Chapter);
+        public bool IsBuildable(int x, int z) => IsBuildableIn(x, z, Chapter) || IsOpenWild(x, z);
+
+        // ---- wild plots (docs 15 §12.3): land next to the farm that only a land deed opens ----
+
+        /// <summary>Wild plots opened with land deeds (the island's economy says; one island is loaded at a time).</summary>
+        public static int WildOpen { get; set; }
+
+        /// <summary>How far (cells) wild land reaches out from the last chapter's buildable land.</summary>
+        private const int WildReach = 7;
+
+        [System.NonSerialized] private byte[]? _wild;
+
+        /// <summary>The wild plot a cell belongs to (1..WildPlots), or 0.</summary>
+        public int WildPlotOf(int x, int z)
+        {
+            if (!InBounds(x, z)) return 0;
+            _wild ??= ComputeWild();
+            return _wild[z * width + x];
+        }
+
+        private bool IsOpenWild(int x, int z)
+        {
+            if (WildOpen <= 0) return false;
+            var plot = WildPlotOf(x, z);
+            return plot > 0 && plot <= WildOpen;
+        }
+
+        /// <summary>
+        /// Never-buildable cells within <see cref="WildReach"/> of the final island's buildable land that are dry and
+        /// flat, away from the railway; split into plots by direction around the island's middle (the same for every
+        /// island, so a deed opens the same land everywhere).
+        /// </summary>
+        private byte[] ComputeWild()
+        {
+            var plots = Farmverse.Domain.Gameplay.GameplayRules.WildPlots;
+            var wild = new byte[width * depth];
+            if (width == 0 || depth == 0 || height.Length != width * depth) return wild;
+            var last = Mathf.Max(1, chapters);
+            var dist = new int[width * depth];
+            var queue = new System.Collections.Generic.Queue<int>();
+            long sx = 0, sz = 0, n = 0;
+            for (var i = 0; i < dist.Length; i++)
+            {
+                var (x, z) = (i % width, i / width);
+                if (IsBuildableIn(x, z, last)) { dist[i] = 0; queue.Enqueue(i); sx += x; sz += z; n++; }
+                else dist[i] = int.MaxValue;
+            }
+            if (n == 0) return wild;
+            float cx = sx / (float)n, cz = sz / (float)n;
+            var rail = new System.Collections.Generic.HashSet<int>();
+            foreach (var r in railPath)
+            {
+                var c = CellOf(r);
+                for (var dz = -2; dz <= 2; dz++)
+                    for (var dx = -2; dx <= 2; dx++)
+                        if (InBounds(c.x + dx, c.y + dz)) rail.Add((c.y + dz) * width + c.x + dx);
+            }
+            while (queue.Count > 0)
+            {
+                var i = queue.Dequeue();
+                if (dist[i] >= WildReach) continue;
+                var (x, z) = (i % width, i / width);
+                foreach (var (nx, nz) in new[] { (x + 1, z), (x - 1, z), (x, z + 1), (x, z - 1) })
+                {
+                    if (!InBounds(nx, nz)) continue;
+                    var j = nz * width + nx;
+                    if (dist[j] != int.MaxValue) continue;
+                    var h = height[j];
+                    if (h < seaLevel + 0.6f || Mathf.Abs(h - height[i]) > 0.9f || rail.Contains(j)) continue;
+                    dist[j] = dist[i] + 1;
+                    queue.Enqueue(j);
+                    var angle = Mathf.Atan2(nz - cz, nx - cx) + Mathf.PI;   // 0..2π
+                    wild[j] = (byte)(1 + Mathf.Min(plots - 1, Mathf.FloorToInt(angle / (2 * Mathf.PI) * plots)));
+                }
+            }
+            return wild;
+        }
 
         public bool IsBuildableIn(int x, int z, int chapter)
         {

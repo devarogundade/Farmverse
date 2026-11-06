@@ -171,6 +171,7 @@ namespace Farmverse.Presentation.UI.Game
             if (Time.unscaledTime < _crewNext) return;
             _crewNext = Time.unscaledTime + 3f;
             var eco = Economy;
+            if (eco != null) IslandData.WildOpen = eco.WildPlotsOpen;   // land deeds: wild plots become buildable
             var n = Nfts;
             if (eco == null || n == null || !n.OwnedLoaded || n.OwnedFailed) return;
             var crew = n.Owned.Where(t => t.Kind == "worker" && t.Price == null).Select(CrewOf).ToList();
