@@ -36,6 +36,9 @@ namespace Farmverse.Presentation.UI.Game
 #endif
         }
 
+        /// <summary>A page setting (window.FARMVERSE_CONFIG), or "" outside the web build.</summary>
+        public static string PageSetting(string key) => PageValue(key, "");
+
         private static string PageValue(string key, string fallback)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR

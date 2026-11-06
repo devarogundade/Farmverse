@@ -3,6 +3,7 @@
 #
 #   bash deployment/deploy.sh              # build, upload, migrate, restart
 #   bash deployment/deploy.sh --provision  # first run: also install packages, containers, units, nginx, certificates
+#   bash deployment/deploy.sh --web        # only the static sites: market, landing, admin, and Builds/WebGL-testnet
 #
 # What runs on the box (see provision.sh): farmverse-server (API :8787), farmverse-worker,
 # farmverse-indexer, farmverse-engine (:8080), Postgres and Redis in Docker, nginx + certbot on :80/:443.
@@ -17,6 +18,34 @@ STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 
 say() { printf '\n== %s\n' "$*"; }
+
+if [[ "${1:-}" == "--web" ]]; then
+  # The sites talk to api.farmverse.world on the network and contracts in chain/deploy/testnet.env.
+  ENVF="$ROOT/chain/deploy/testnet.env"
+  get() { sed -n "s/^$1=//p" "$ENVF" | tr -d '
+' | head -n1; }
+  export VITE_API_URL=https://api.farmverse.world/v1/market VITE_GAME_API_URL=https://api.farmverse.world     VITE_NEAR_NETWORK="$(get NEAR_NETWORK)" VITE_ITEMS_CONTRACT="$(get NEAR_ITEMS_CONTRACT)" VITE_MARKET_CONTRACT="$(get NEAR_MARKET_CONTRACT)"     VITE_FARM_CONTRACT="$(get NEAR_FARM_CONTRACT)" VITE_PLAY_URL=https://play.farmverse.world VITE_MARKET_URL=https://marketplace.farmverse.world
+  for site in marketplace:market landing:landing admin:admin; do
+    say "build ${site%%:*}"
+    api=$VITE_API_URL
+    [[ ${site%%:*} == admin ]] && api=https://api.farmverse.world   # the admin web calls the API's own routes
+    (cd "$ROOT/web/${site%%:*}" && VITE_API_URL=$api npx vite build --emptyOutDir --outDir "$STAGE/web/${site##*:}" --logLevel warn)
+  done
+  if [[ -d "$ROOT/Builds/WebGL-testnet" ]]; then
+    cp -r "$ROOT/Builds/WebGL-testnet" "$STAGE/web/play"
+  else
+    echo "no Builds/WebGL-testnet (Farmverse ▸ Web ▸ Build (testnet on farmverse.world)): the game is not uploaded"
+  fi
+  say "upload sites"
+  tar -C "$STAGE/web" -czf "$STAGE-web.tgz" .
+  scp -q -i "$KEY" -o BatchMode=yes "$STAGE-web.tgz" "$HOST:/tmp/farmverse-web.tgz"
+  rm -f "$STAGE-web.tgz"
+  "${SSH[@]}" 'set -e; rm -rf /tmp/farmverse-web && mkdir -p /tmp/farmverse-web && tar -C /tmp/farmverse-web -xzf /tmp/farmverse-web.tgz
+    for d in /tmp/farmverse-web/*; do n=$(basename "$d"); mkdir -p /var/www/farmverse/$n && rsync -a --delete "$d"/ /var/www/farmverse/$n/; done
+    rm -rf /tmp/farmverse-web /tmp/farmverse-web.tgz'
+  say "done: https://play.farmverse.world https://marketplace.farmverse.world https://farmverse.world https://admin.farmverse.world"
+  exit 0
+fi
 
 say "build server"
 (cd "$ROOT" && npm run build --workspace backend/server --silent)

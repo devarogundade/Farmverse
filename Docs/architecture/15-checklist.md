@@ -91,7 +91,7 @@ an indexer migration, and the Unity panels.
 
 ## F. Deploy and submit
 
-- [ ] F1 Hosting: play., marketplace., farmverse.world on the EC2 nginx; `deploy.sh --web` §9 D18
+- [x] F1 Hosting: play., marketplace., farmverse.world on the EC2 nginx; `deploy.sh --web` §9 D18
 - [ ] F2 Run `upgrade-testnet.sh`, `drops.sh`, `farmhands.mjs` on testnet
 - [ ] F3 Deploy server, worker, indexer, engine from a clean committed tree
 - [ ] F4 Launch checklist §11 by hand, plus: rent a Farmhand and see it work on the renter's farm; make, accept and cancel an offer; redeem a land deed and build on the cleared plot; harvest until a golden crop and mint it

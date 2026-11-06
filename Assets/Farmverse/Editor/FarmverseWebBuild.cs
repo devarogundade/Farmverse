@@ -24,6 +24,10 @@ namespace Farmverse.Editor
         [MenuItem("Farmverse/Web/Build (staging, testnet)", priority = 42)]
         public static void BuildStaging() => Build("staging", "https://api.staging.farmverse.world", "testnet", "https://marketplace.staging.farmverse.world", "https://farmverse.world");
 
+        /// <summary>The hackathon build: the real domains, NEAR testnet (also: -executeMethod Farmverse.Editor.FarmverseWebBuild.BuildTestnet).</summary>
+        [MenuItem("Farmverse/Web/Build (testnet on farmverse.world)", priority = 42)]
+        public static void BuildTestnet() => Build("testnet", "https://api.farmverse.world", "testnet", "https://marketplace.farmverse.world", "https://farmverse.world");
+
         [MenuItem("Farmverse/Web/Build (prod, mainnet)", priority = 43)]
         public static void BuildProd() => Build("prod", "https://api.farmverse.world", "mainnet", "https://marketplace.farmverse.world", "https://farmverse.world");
 
@@ -40,6 +44,8 @@ namespace Farmverse.Editor
             PlayerSettings.SetTemplateCustomValue("NEAR_NETWORK", network);
             PlayerSettings.SetTemplateCustomValue("MARKETPLACE_URL", marketplaceUrl);
             PlayerSettings.SetTemplateCustomValue("SITE_URL", siteUrl);
+            // "on": the Email or Google wallet (Privy) once the market's sign page has its Privy app (plan 15 §13.2)
+            PlayerSettings.SetTemplateCustomValue("SOCIAL_LOGIN", System.Environment.GetEnvironmentVariable("FARMVERSE_SOCIAL_LOGIN") == "on" ? "on" : "off");
             Debug.Log($"Farmverse: WebGL settings applied (template {Template}, API {apiBaseUrl}, {network}).");
         }
 

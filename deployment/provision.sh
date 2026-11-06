@@ -9,14 +9,14 @@
 #   ufw     → only 22, 80 and 443 open
 set -euo pipefail
 
-DOMAINS=(api.farmverse.world server.farmverse.world)
+DOMAINS=(api.farmverse.world server.farmverse.world play.farmverse.world marketplace.farmverse.world farmverse.world www.farmverse.world admin.farmverse.world)
 CERT_EMAIL=devarogundade@gmail.com
 
 say() { printf '\n== %s\n' "$*"; }
 
 say "packages"
 sudo apt-get update -qq
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ca-certificates curl gnupg docker.io nginx certbot python3-certbot-nginx aspnetcore-runtime-10.0 ufw >/dev/null
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ca-certificates curl gnupg rsync docker.io nginx certbot python3-certbot-nginx aspnetcore-runtime-10.0 ufw >/dev/null
 # Caddy was the proxy before nginx.
 if dpkg -s caddy >/dev/null 2>&1; then
   sudo systemctl disable --now caddy >/dev/null 2>&1 || true
@@ -56,6 +56,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable farmverse-engine farmverse-server farmverse-worker farmverse-indexer >/dev/null
 
 say "nginx"
+# the static sites (deploy.sh --web fills them)
+sudo mkdir -p /var/www/farmverse/{play,market,landing,admin}
+sudo chown -R "$USER" /var/www/farmverse
 sudo cp /tmp/farmverse-deploy/nginx/farmverse.conf /etc/nginx/sites-available/farmverse.conf
 sudo ln -sf /etc/nginx/sites-available/farmverse.conf /etc/nginx/sites-enabled/farmverse.conf
 sudo rm -f /etc/nginx/sites-enabled/default

@@ -145,6 +145,11 @@ namespace Farmverse.Bootstrap
         private void Compose(EnvironmentConfig config)
         {
             var web = config.ToWeb();
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // one build for every host: the page says which API it talks to (Player Settings ▸ FARMVERSE_API)
+            var pageApi = GameLinks.PageSetting("apiBaseUrl");
+            if (!string.IsNullOrEmpty(pageApi)) web.ApiBaseUrl = pageApi.TrimEnd('/');
+#endif
             _log = new Farmverse.Core.Logging.Logger(new ILogSink[] { new UnityLogSink() }, config.MinimumLog);
             var crash = new LogCrashReporter(_log);
 
