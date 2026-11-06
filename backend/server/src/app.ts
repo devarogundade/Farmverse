@@ -1,4 +1,5 @@
 import websocket from '@fastify/websocket';
+import { ensureNearWallet, type PrivyConfig } from './auth/privy';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { runCallable, type CallableDeps } from '../../game/src/core/callable';
@@ -13,6 +14,8 @@ import { adminRoutes, type AdminOptions } from './admin/routes';
 import type { OpsConfig } from './admin/ops';
 
 export interface AppOptions {
+  /** Social login: creates a player's NEAR wallet in Privy (plan 15 §13.2). */
+  readonly privy?: PrivyConfig;
   /** The NEAR RPC node, sent to the game in /v1/config (it reads balances there). */
   readonly rpcUrl?: string;
   readonly rt: Runtime;
@@ -129,6 +132,21 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
         return refuse(reply, error.code, req.id);
       }
       throw error;
+    }
+  });
+
+  // social login: the sign page asks for the Privy user's NEAR wallet (created on first use)
+  app.post('/v1/auth/privy/near-wallet', async (req, reply) => {
+    if (!o.privy) return refuse(reply, 'UNSUPPORTED', req.id);
+    if (await limited(`privy:${req.ip}`, 20, 60)) return refuse(reply, 'RATE_LIMITED', req.id);
+    const token = /^Bearer (.+)$/.exec(req.headers.authorization ?? '')?.[1];
+    if (!token) return refuse(reply, 'UNAUTHENTICATED', req.id);
+    try {
+      return await ensureNearWallet(o.privy, token);
+    } catch (error) {
+      if (error instanceof AppError) return refuse(reply, error.code, req.id);
+      log.warn('privy wallet failed', { error: String(error) });
+      return refuse(reply, 'INTERNAL', req.id);
     }
   });
 

@@ -11,6 +11,22 @@ const MARGIN_MS = 60_000;
 
 const connector = new NearConnector({ network: config.network, footerBranding: null, autoConnect: true });
 
+// social login (docs 15 §13.2): "Email or Google", a Privy wallet whose sign page lives on the market site
+if (config.socialLogin && config.marketplaceUrl) {
+  const site = config.marketplaceUrl.replace(/\/+$/, '');
+  connector
+    .registerWallet({
+      id: 'farmverse-email', name: 'Email or Google', icon: `${site}/ui/Icon_Clover.webp`,
+      description: 'Sign in with your email. No wallet app needed.', website: site, version: '1.0.0',
+      executor: 'https://raw.githubusercontent.com/beneviolabs/privy-near-connect/3d56b782669d242a1ea432921e291abc26b4ebc7/executor.js',
+      type: 'sandbox', platform: { web: site },
+      features: { signMessage: true, signInWithoutAddKey: true, signInAndSignMessage: true, signInWithFunctionCallKey: true, signAndSendTransaction: true, signAndSendTransactions: true, mainnet: true, testnet: true },
+      permissions: { isPrivyConnect: true, storage: true, allowsOpen: [site] },
+      metadata: { signPageURL: `${site}/sign.html`, debug: false },
+    })
+    .catch(() => {});
+}
+
 let session = null; // { accessToken, accessExpiresAt, uid, accountId }
 
 // ---- sponsored calls (docs 15 §14): a session key signs mints and redeems, our relayer pays the gas ----

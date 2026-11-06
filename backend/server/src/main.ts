@@ -29,6 +29,9 @@ async function main(): Promise<void> {
 
   const app = await buildApp({
     rpcUrl: config.NEAR_RPC_URL,
+    ...(config.PRIVY_APP_ID && config.PRIVY_APP_SECRET && config.PRIVY_VERIFICATION_KEY
+      ? { privy: { appId: config.PRIVY_APP_ID, appSecret: config.PRIVY_APP_SECRET, verificationKey: config.PRIVY_VERIFICATION_KEY } }
+      : {}),
     rt: services.rt,
     sessions: services.sessions,
     reader: services.reader,

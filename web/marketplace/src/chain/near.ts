@@ -10,15 +10,17 @@ let connector: Promise<NearConnector> | null = null;
 let rpc: Promise<JsonRpcProvider> | null = null;
 
 export function getConnector(): Promise<NearConnector> {
-  connector ??= import('@hot-labs/near-connect').then(
-    ({ NearConnector }) =>
-      new NearConnector({
-        network: config.network,
-        // MyNearWallet, Meteor, HOT, Intear, … from the NEAR Connect manifest.
-        footerBranding: null,
-        autoConnect: true,
-      }),
-  );
+  connector ??= import('@hot-labs/near-connect').then(async ({ NearConnector }) => {
+    const c = new NearConnector({
+      network: config.network,
+      // MyNearWallet, Meteor, HOT, Intear, … from the NEAR Connect manifest.
+      footerBranding: null,
+      autoConnect: true,
+    });
+    // social login: "Email or Google" next to them, when the Privy app is set (plan 15 §13.2)
+    if (import.meta.env.VITE_PRIVY_APP_ID) await (await import('./privyWallet')).registerPrivyWallet(c, location.origin);
+    return c;
+  });
   return connector;
 }
 
