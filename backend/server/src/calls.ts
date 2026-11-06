@@ -25,7 +25,7 @@ import type { IslandEngine } from '../../game/src/infra/islandEngine';
 import type { Store } from '../../game/src/infra/store';
 import { fail } from '../../game/src/core/errors';
 import { claimFaucet, type FaucetSender } from './chain/faucet';
-import { mint, pendingMints, redeem, type MintDeps, type MintLimits } from './mint/mint';
+import { mint, pendingMints, redeem, type MintDeps, type MintLimits, type UnclaimedRedeem } from './mint/mint';
 import type { ChainReader } from './mint/nearChain';
 import type { VoucherSigner } from './mint/voucher';
 
@@ -38,6 +38,8 @@ export interface ChainRuntime {
   readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
   /** The NEAR account behind a game uid. */
   readonly accountOf: (uid: string) => Promise<string | null>;
+  /** Redeems on chain that no `chain-redeem` call credited (the backstop job). */
+  readonly unclaimedRedeems?: () => Promise<UnclaimedRedeem[]>;
   /** Testnet only: who pays faucet claims and how much. */
   readonly faucet?: { readonly sender: FaucetSender; readonly farmUnits: bigint; readonly nearYocto: bigint; readonly dailyCap: number };
 }

@@ -7,7 +7,7 @@ import { payWeek } from '../../game/src/game/leaderboard';
 import { fanOutNews } from '../../game/src/game/news';
 import { raidTask } from '../../game/src/game/raids';
 import { bookingDeps, envOf, islandDeps, mintDeps, type Runtime } from './calls';
-import { expireMint } from './mint/mint';
+import { backstopRedeems, expireMint } from './mint/mint';
 import { loadConfig } from './config';
 import { redisClient } from './infra/redis';
 import { QUEUES, scheduleCron, type CronJob, type IslandWakeJob, type MintExpiryJob, type NewsFanoutJob, type PushTaskJob } from './jobs/queues';
@@ -48,6 +48,7 @@ export function processors(rt: Runtime, log: Logger) {
     [QUEUES.cron]: async (job: Job<CronJob>) => {
       const l = log.with({ job: job.data.name });
       if (job.data.name === 'leaderboard-pay-week') await payWeek(envOf(rt, l));
+      if (job.data.name === 'redeem-backstop' && rt.chain?.unclaimedRedeems) await backstopRedeems(envOf(rt, l), rt.chain.unclaimedRedeems, l);
     },
   };
 }

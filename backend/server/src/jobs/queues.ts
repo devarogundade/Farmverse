@@ -19,7 +19,7 @@ export const QUEUES = {
 export type IslandWakeJob = { uid: string };
 export type PushTaskJob = PushTask & { uid: string };
 export type NewsFanoutJob = { newsId: string };
-export type CronJob = { name: 'leaderboard-pay-week' };
+export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' };
 export type MintExpiryJob = { uid: string; tokenId: string };
 
 const RETRY = { attempts: 3, backoff: { type: 'exponential', delay: 30_000 } } as const;
@@ -79,6 +79,11 @@ export async function scheduleCron(queue: Queue<CronJob>): Promise<void> {
   await queue.upsertJobScheduler('leaderboard-pay-week', { pattern: '10 0 * * 1', tz: 'Etc/UTC' }, {
     name: 'leaderboard-pay-week',
     data: { name: 'leaderboard-pay-week' },
+  });
+  // Redeems nobody reported (tab closed before chain-redeem): credited from the indexer's events.
+  await queue.upsertJobScheduler('redeem-backstop', { every: 60_000 }, {
+    name: 'redeem-backstop',
+    data: { name: 'redeem-backstop' },
   });
 }
 

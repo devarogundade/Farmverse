@@ -367,6 +367,70 @@ export interface RedeemResponse {
 }
 
 /**
+ * Credits one redeemed token to a player, once (`redemptions/{tokenId}`): island items as a grant,
+ * boosts to the inventory, packs as an entitlement. Used by `chain-redeem` (tx checked on RPC) and by
+ * the backstop job (event from the indexer, for redeems nobody reported).
+ */
+export async function creditRedeem(
+  env: Env, uid: string, accountId: string, tokenId: string, item: ChainItem, txHash: string | null, log: Logger,
+): Promise<{ fresh: boolean; islandOps: boolean }> {
+  const nowMs = env.clock.nowMs();
+  const ops = redeemOps(item);
+  const fresh = await env.store.runTransaction(async (tx) => {
+    const done = await tx.get(paths.redemption(tokenId));
+    if (done.exists) return false;
+    const grants = ops.length > 0 ? await tx.get(paths.grants(uid)) : undefined;
+    const inv = item.kind === 'boost' ? await tx.get(paths.inventory(uid)) : undefined;
+    tx.set(paths.redemption(tokenId), { tokenId, uid, accountId, txHash, item: item as unknown as Record<string, unknown>, at: nowMs });
+    if (grants) {
+      const items = (grants.data as unknown as GrantsDoc | undefined)?.items ?? [];
+      tx.set(paths.grants(uid), { items: [...items, { id: `redeem_${tokenId}`, ops, at: nowMs }], updatedAt: nowMs });
+    }
+    if (inv) {
+      const boosts = { ...((inv.data?.['boosts'] as Record<string, number> | undefined) ?? {}) };
+      boosts[item.item_id] = (boosts[item.item_id] ?? 0) + item.quantity;
+      tx.set(paths.inventory(uid), { boosts, updatedAt: nowMs }, { merge: true });
+    }
+    return true;
+  });
+  if (item.kind === 'pack') {
+    // Idempotent by ref, so it also repairs a crash between the record above and this grant.
+    const grant = packEntitlement(item.item_id, item.quantity);
+    if (grant) await grantEntitlement(env, uid, grant, `redeem_${tokenId}`.slice(0, 120));
+    else log.error('redeemed pack has no entitlement', { uid, tokenId, item: item.item_id });
+  }
+  log.info('redeem credited', { uid, tokenId, fresh, kind: item.kind, item: item.item_id });
+  return { fresh, islandOps: ops.length > 0 };
+}
+
+/** One redeem the indexer saw that no `chain-redeem` call credited. */
+export interface UnclaimedRedeem {
+  readonly tokenId: string;
+  readonly ownerId: string;
+  readonly uid: string;
+  readonly item: ChainItem;
+  readonly txHash: string | null;
+}
+
+/**
+ * The redeem backstop (every minute): credits burns the indexer saw but nobody reported (the player
+ * closed the tab). Owners who never signed in to the game have no island yet and are left for later.
+ */
+export async function backstopRedeems(env: Env, find: () => Promise<UnclaimedRedeem[]>, log: Logger): Promise<number> {
+  let credited = 0;
+  for (const r of await find()) {
+    try {
+      const { fresh } = await creditRedeem(env, r.uid, r.ownerId, r.tokenId, r.item, r.txHash, log);
+      if (fresh) credited++;
+    } catch (e) {
+      log.error('backstop credit failed', { tokenId: r.tokenId, error: String(e) });
+    }
+  }
+  if (credited) log.info('redeem backstop', { credited });
+  return credited;
+}
+
+/**
  * `chain-redeem`: the wallet burned a token on chain; credit its items to this player once.
  * The transaction is checked on a NEAR RPC node: it succeeded, this wallet signed it, and the
  * items contract logged the redeem.
@@ -379,32 +443,8 @@ export async function redeem(deps: MintDeps, uid: string, accountId: string, txH
   let islandChanged = false;
   const results: Omit<RedeemResponse, 'state' | 'rulesVersion'>[] = [];
   for (const r of seen) {
-    const nowMs = env.clock.nowMs();
-    const ops = redeemOps(r.item);
-    const fresh = await env.store.runTransaction(async (tx) => {
-      const done = await tx.get(paths.redemption(r.tokenId));
-      if (done.exists) return false;
-      const grants = ops.length > 0 ? await tx.get(paths.grants(uid)) : undefined;
-      const inv = r.item.kind === 'boost' ? await tx.get(paths.inventory(uid)) : undefined;
-      tx.set(paths.redemption(r.tokenId), { tokenId: r.tokenId, uid, accountId, txHash, item: r.item as unknown as Record<string, unknown>, at: nowMs });
-      if (grants) {
-        const items = (grants.data as unknown as GrantsDoc | undefined)?.items ?? [];
-        tx.set(paths.grants(uid), { items: [...items, { id: `redeem_${r.tokenId}`, ops, at: nowMs }], updatedAt: nowMs });
-      }
-      if (inv) {
-        const boosts = { ...((inv.data?.['boosts'] as Record<string, number> | undefined) ?? {}) };
-        boosts[r.item.item_id] = (boosts[r.item.item_id] ?? 0) + r.item.quantity;
-        tx.set(paths.inventory(uid), { boosts, updatedAt: nowMs }, { merge: true });
-      }
-      return true;
-    });
-    if (fresh && r.item.kind === 'pack') {
-      const grant = packEntitlement(r.item.item_id, r.item.quantity);
-      if (grant) await grantEntitlement(env, uid, grant, `redeem_${r.tokenId}`.slice(0, 120));
-      else log.error('redeemed pack has no entitlement', { uid, tokenId: r.tokenId, item: r.item.item_id });
-    }
-    if (ops.length > 0) islandChanged = true;
-    log.info('redeem credited', { uid, tokenId: r.tokenId, fresh, kind: r.item.kind, item: r.item.item_id });
+    const { fresh, islandOps } = await creditRedeem(env, uid, accountId, r.tokenId, r.item, txHash, log);
+    if (islandOps) islandChanged = true;
     results.push({ tokenId: r.tokenId, kind: r.item.kind, item: r.item.item_id, quantity: r.item.quantity, fresh });
   }
 

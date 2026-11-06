@@ -24,8 +24,8 @@ an indexer migration, and the Unity panels.
 ## B. Server, indexer, jobs
 
 - [ ] B1 Indexer: drop mints from the `item_mint` event, `drop_sale`, offers, rentals → `chain.drops`, `chain.offers`, `chain.rentals` (migration) §5.1 §12
-- [ ] B2 `chain-redeem` accepts buy-and-use transactions (walks the receipt tree) §5.1
-- [ ] B3 `redeem-backstop` job (every minute) §3.5
+- [x] B2 `chain-redeem` accepts buy-and-use transactions (walks the receipt tree) §5.1
+- [x] B3 `redeem-backstop` job (every minute) §3.5
 - [ ] B4 `chain-reconcile` job (nightly) + admin number §10
 - [x] B5 Farm Pass bank: a pass used while premium is on is saved for next season §5.2
 - [x] B6 Extra builders reach the island sync §5.2
