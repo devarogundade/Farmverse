@@ -160,6 +160,17 @@ namespace Farmverse.Infrastructure.Web
             return Result<IReadOnlyList<ItemOffer>>.Ok(list);
         }
 
+        public async Task<Result<IReadOnlyList<(string id, string text, long at)>>> Notes(string account, CancellationToken cancellation)
+        {
+            var r = await Get("/v1/market/accounts/" + Uri.EscapeDataString(account) + "/notifications", cancellation);
+            if (!r.IsOk) return Result<IReadOnlyList<(string, string, long)>>.Fail(r.Error);
+            var list = new List<(string, string, long)>();
+            if (r.Value is List<object> rows)
+                foreach (var row in rows)
+                    if (row is Dictionary<string, object> n) list.Add((Str(n, "id"), Str(n, "text"), Long(n, "at", 0)));
+            return Result<IReadOnlyList<(string, string, long)>>.Ok(list);
+        }
+
         private async Task<Result<object?>> Get(string path, CancellationToken cancellation)
         {
             WebResponse res;

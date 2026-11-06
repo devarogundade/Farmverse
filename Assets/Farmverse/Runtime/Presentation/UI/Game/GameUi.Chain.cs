@@ -163,7 +163,7 @@ namespace Farmverse.Presentation.UI.Game
 
         // ------------------------------------------------------------------ Farmhands (docs 15 §7)
 
-        private float _crewNext;
+        private float _crewNext, _notesNext;
         private int _goldenSeen = -1;
 
         /// <summary>The wallet's Farmhands (held and rented) onto the island, with their outfits; the server does the same on sync.</summary>
@@ -181,6 +181,11 @@ namespace Farmverse.Presentation.UI.Game
                 _goldenSeen = golden;
             }
             var n = Nfts;
+            if (n != null && ChainReady && Time.unscaledTime >= _notesNext)
+            {
+                _notesNext = Time.unscaledTime + 60f;
+                NotesTick(n);
+            }
             if (eco == null || n == null || !n.OwnedLoaded || n.OwnedFailed) return;
             var crew = n.Owned.Where(t => t.Kind == "worker" && t.Price == null).Select(CrewOf).ToList();
             // compared with what the island holds now (a server island arrives without the outfits)
@@ -190,6 +195,13 @@ namespace Farmverse.Presentation.UI.Game
             eco.SetCrew(crew);
             Host?.Save();
             MarkDirty();
+        }
+
+        /// <summary>Market news as notes in the game (docs 15 §3.4): sold, sent to you, hired.</summary>
+        private async void NotesTick(NftService n)
+        {
+            var news = await n.NewNotes();
+            foreach (var text in news.Take(3)) Say(text, 4f);
         }
 
         private static Farmverse.Domain.Gameplay.Farmhand CrewOf(Farmverse.Application.Ports.OwnedNft t)

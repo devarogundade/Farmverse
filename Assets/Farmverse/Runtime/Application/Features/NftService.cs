@@ -130,6 +130,34 @@ namespace Farmverse.Application.Features
 
         public Task<Result<IReadOnlyList<ItemOffer>>> OffersForItem(string itemId) => _reader.OffersForItem(itemId, CancellationToken.None);
 
+        private long _notesSeenAt = -1;
+
+        /// <summary>
+        /// Market news since the last look (an item sold, one sent to you, a Farmhand hired). The first look only
+        /// remembers where it is, so old news isn't shown again when the game opens.
+        /// </summary>
+        public async Task<IReadOnlyList<string>> NewNotes()
+        {
+            var account = _account();
+            if (string.IsNullOrEmpty(account)) return Array.Empty<string>();
+            var r = await _reader.Notes(account!, CancellationToken.None);
+            if (!r.IsOk) return Array.Empty<string>();
+            var fresh = new List<string>();
+            var newest = _notesSeenAt;
+            foreach (var (_, text, at) in r.Value)
+            {
+                if (_notesSeenAt >= 0 && at > _notesSeenAt) fresh.Add(text);
+                if (at > newest) newest = at;
+            }
+            _notesSeenAt = Math.Max(newest, 0);
+            if (fresh.Count > 0)
+            {
+                _ = RefreshOwned();
+                _ = RefreshBalances();
+            }
+            return fresh;
+        }
+
         /// <summary>The drop with this id, if the studio sells it.</summary>
         public MarketDrop? Drop(string id)
         {
