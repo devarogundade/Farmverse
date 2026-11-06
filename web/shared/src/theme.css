@@ -103,10 +103,18 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--font-display); lett
   border: 0 solid transparent;
   border-image: var(--ui-Popup01_Single_Navy) 16 16 20 16 fill / 14px 14px 17px 14px;
 }
-/* Lighter inset list row (ListFrame03_Single_Inner_Blue). */
+/* List row, as the game's leaderboard draws it: ListFrame03_Single_Bg_Blue nine-sliced 122/18/22/24
+   (left/top/right/bottom), here at 0.3 scale. */
 .fv-row {
   border: 0 solid transparent;
-  border-image: var(--ui-ListFrame03_Single_Inner_Blue) 20 20 24 20 fill / 10px 10px 12px 10px;
+  border-image: var(--ui-ListFrame03_Single_Bg_Blue) 18 22 24 122 fill / 5.4px 6.6px 7.2px 36.6px;
+}
+/* The slanted backdrop the game puts behind a row's avatar (ListFrame03_Single_Inner_*, not sliced). */
+.fv-row-ava {
+  display: grid; place-items: center; flex: none;
+  width: 56px; align-self: stretch;
+  padding-right: 8px;
+  background: var(--ui-ListFrame03_Single_Inner_Blue) left center / 100% 100% no-repeat;
 }
 
 /* ---------- item frames (ItemFrame01_Single_*: 40/40/40/46) ---------- */

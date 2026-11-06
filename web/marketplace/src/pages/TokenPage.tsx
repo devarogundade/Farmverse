@@ -168,7 +168,9 @@ export function TokenPage({ id }: { id: string }) {
                 {token.events.slice(0, 4).map((e, i) => (
                   <li key={i} className="fv-row">
                     <span className="who">
-                      <AccountAvatar account={e.account} />
+                      <span className="fv-row-ava">
+                        <AccountAvatar account={e.account} />
+                      </span>
                       {e.account}
                     </span>
                     <EventPill kind={e.kind} />
