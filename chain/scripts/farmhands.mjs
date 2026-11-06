@@ -161,6 +161,12 @@ async function main() {
     call(market, 'storage_deposit', {}, `${more} yoctoNEAR`, studio);
   }
 
+  // sales pay the studio in FARM: without a FARM registration every purchase fails
+  if (!(await view(`farm.${master}`, 'storage_balance_of', { account_id: studio }))) {
+    console.log('• registering the studio with FARM');
+    call(`farm.${master}`, 'storage_deposit', { account_id: studio }, '0.0125 NEAR', master, '30.0 Tgas');
+  }
+
   for (const f of batch) {
     const token = await view(items, 'nft_token', { token_id: f.token_id });
     if (!token) {

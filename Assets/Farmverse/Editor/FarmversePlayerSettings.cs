@@ -16,6 +16,9 @@ namespace Farmverse.Editor
     {
         static FarmversePlayerSettings() => EditorApplication.delayCall += Apply;
 
+        /// <summary>The UI kit's clover (not in git: the icon stays unset in a clone without the kit).</summary>
+        private const string CloverIcon = "Assets/Farmverse/Content/UI/Game/Resources/GameUi/Art/Icon_Clover.png";
+
         [MenuItem("Farmverse/Apply Portrait Settings", priority = 30)]
         public static void Apply()
         {
@@ -33,10 +36,19 @@ namespace Farmverse.Editor
             Set(PlayerSettings.allowedAutorotateToLandscapeLeft, false, v => PlayerSettings.allowedAutorotateToLandscapeLeft = v);
             Set(PlayerSettings.allowedAutorotateToLandscapeRight, false, v => PlayerSettings.allowedAutorotateToLandscapeRight = v);
 
+            // the project's icon: the clover (also the sites' favicon and the FARM token's icon)
+            var clover = AssetDatabase.LoadAssetAtPath<Texture2D>(CloverIcon);
+            var icons = PlayerSettings.GetIcons(UnityEditor.Build.NamedBuildTarget.Unknown, IconKind.Any);
+            if (clover != null && (icons.Length == 0 || icons[0] != clover))
+            {
+                PlayerSettings.SetIcons(UnityEditor.Build.NamedBuildTarget.Unknown, new[] { clover }, IconKind.Any);
+                changed = true;
+            }
+
             if (changed)
             {
                 AssetDatabase.SaveAssets();
-                Debug.Log("[Farmverse] Player settings set to portrait only.");
+                Debug.Log("[Farmverse] Player settings set: portrait only, clover icon.");
             }
         }
     }

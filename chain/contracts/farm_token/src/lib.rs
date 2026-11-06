@@ -7,6 +7,9 @@
 //!
 //! Deploy to an account with no access keys left (or keys held only by the team multisig), so the
 //! code can't be replaced either.
+//!
+//! The one exception is the icon (`set_icon`, the token's own account only): with no keys left on
+//! the account nobody can call it, so a mainnet token is fixed; a testnet one can get its icon later.
 
 use near_contract_standards::fungible_token::events::FtMint;
 use near_contract_standards::fungible_token::metadata::{
@@ -56,6 +59,19 @@ impl Contract {
         this.token.internal_deposit(&treasury_id, total_supply.0);
         FtMint { owner_id: &treasury_id, amount: total_supply, memo: Some("FARM genesis supply") }.emit();
         this
+    }
+
+    /// The token's icon (a data URL, NEP-148), set by the token's own account only. Nothing else
+    /// about the token can change: no supply, no balances, no other metadata.
+    pub fn set_icon(&mut self, icon: Option<String>) {
+        require!(env::predecessor_account_id() == env::current_account_id(), "only the token's own account sets the icon");
+        if let Some(i) = &icon {
+            require!(i.starts_with("data:image/"), "icon must be a data:image/ URL");
+            require!(i.len() <= 16_384, "icon must be 16 KB or less");
+        }
+        let mut metadata = self.metadata.get().expect("metadata is set at init");
+        metadata.icon = icon;
+        self.metadata.set(&metadata);
     }
 }
 
@@ -170,6 +186,35 @@ mod tests {
         assert_eq!(c.ft_total_supply().0, SUPPLY);
         assert_eq!(c.ft_balance_of(accounts(1)).0, SUPPLY);
         assert_eq!(c.ft_metadata().symbol, "FARM");
+    }
+
+    #[test]
+    fn the_token_account_sets_the_icon_and_nothing_else() {
+        testing_env!(ctx(accounts(1)).build());
+        let mut c = Contract::new(accounts(1), U128(SUPPLY), meta());
+        testing_env!(ctx(accounts(0)).build()); // the token's own account
+        c.set_icon(Some("data:image/png;base64,AAAA".into()));
+        let m = c.ft_metadata();
+        assert_eq!(m.icon.as_deref(), Some("data:image/png;base64,AAAA"));
+        assert_eq!((m.symbol.as_str(), m.decimals), ("FARM", 18));
+        assert_eq!(c.ft_total_supply().0, SUPPLY);
+    }
+
+    #[test]
+    #[should_panic(expected = "only the token's own account sets the icon")]
+    fn nobody_else_sets_the_icon() {
+        testing_env!(ctx(accounts(1)).build());
+        let mut c = Contract::new(accounts(1), U128(SUPPLY), meta());
+        c.set_icon(None);
+    }
+
+    #[test]
+    #[should_panic(expected = "icon must be a data:image/ URL")]
+    fn the_icon_is_a_data_url() {
+        testing_env!(ctx(accounts(1)).build());
+        let mut c = Contract::new(accounts(1), U128(SUPPLY), meta());
+        testing_env!(ctx(accounts(0)).build());
+        c.set_icon(Some("https://example.com/x.png".into()));
     }
 
     #[test]

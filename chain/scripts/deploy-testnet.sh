@@ -108,8 +108,13 @@ sub "$STUDIO" "${STUDIO_NEAR:-1}"         # pays storage for studio mints (~0.01
 
 # ---------------------------------------------------------------- contracts
 SUPPLY_YOCTO="${FARM_SUPPLY}000000000000000000"
+# The token's icon (the clover, 64 px), set at launch so it never needs set_icon. The picture is the
+# UI kit's (not in git): without it the token launches without an icon.
+FARM_ICON_FILE=${FARM_ICON_FILE:-../web/shared/public/ui/Icon_Clover_64.png}
+ICON_JSON=""
+[[ -f "$FARM_ICON_FILE" ]] && ICON_JSON=",\"icon\":\"data:image/png;base64,$(base64 -w0 "$FARM_ICON_FILE")\""
 deploy "$FARM" res/farmverse_farm_token.wasm \
-  "{\"treasury_id\":\"$TREASURY\",\"total_supply\":\"$SUPPLY_YOCTO\",\"metadata\":{\"spec\":\"ft-1.0.0\",\"name\":\"Farmverse\",\"symbol\":\"FARM\",\"decimals\":18}}"
+  "{\"treasury_id\":\"$TREASURY\",\"total_supply\":\"$SUPPLY_YOCTO\",\"metadata\":{\"spec\":\"ft-1.0.0\",\"name\":\"Farmverse\",\"symbol\":\"FARM\",\"decimals\":18$ICON_JSON}}"
 deploy "$ITEMS" res/farmverse_items.wasm \
   "{\"owner_id\":\"$OWNER\",\"minter_id\":\"$STUDIO\",\"signers\":[\"$SIGNER\"],\"royalties\":{\"$TREASURY\":$ROYALTY_BPS},\"metadata\":{\"spec\":\"nft-1.0.0\",\"name\":\"Farmverse Items\",\"symbol\":\"FVITEM\",\"base_uri\":\"$BASE_URI\"}}"
 deploy "$MARKET" res/farmverse_market.wasm \
