@@ -1,0 +1,18 @@
+{
+    "name": "Farmverse.Infrastructure.Web",
+    "rootNamespace": "Farmverse.Infrastructure.Web",
+    "references": [
+        "Farmverse.Contracts",
+        "Farmverse.Core",
+        "Farmverse.Application"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

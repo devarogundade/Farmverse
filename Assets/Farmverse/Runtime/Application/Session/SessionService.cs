@@ -107,7 +107,7 @@ namespace Farmverse.Application.Session
                         Stop(SessionState.Offline, AppError.Of(ErrorCode.NetworkRequired));
                         return;
                     }
-                    var signedIn = await WithRetry(ct => _d.Auth.SignInAnonymously(ct), cancellation);
+                    var signedIn = await WithRetry(ct => _d.Auth.SignIn(ct), cancellation);
                     user = signedIn;
                 }
                 Uid = user.Uid;

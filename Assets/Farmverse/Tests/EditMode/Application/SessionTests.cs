@@ -37,7 +37,7 @@ namespace Farmverse.Tests.Application
         private readonly ReactiveProperty<AuthUser?> _user = new ReactiveProperty<AuthUser?>(null);
         public IReadOnlyReactiveProperty<AuthUser?> User => _user;
         public int SignIns;
-        public Task<Result<AuthUser>> SignInAnonymously(CancellationToken cancellation)
+        public Task<Result<AuthUser>> SignIn(CancellationToken cancellation)
         {
             SignIns++;
             _user.Value = new AuthUser(ClientRig.Uid, true);

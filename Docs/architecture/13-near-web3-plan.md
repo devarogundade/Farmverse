@@ -112,6 +112,18 @@ Also: WebGL build profile (Brotli, decompression fallback off, URP WebGL quality
 compression ASTC/ETC2 → DXT/ASTC for desktop + mobile web), Addressables served from the same CDN,
 portrait UI reflowed for landscape desktop.
 
+**As built (2026-11-06).** `Runtime/Infrastructure/Web` replaced `Infrastructure.Firebase`, which is
+deleted (the Firebase Unity SDK can't ship in WebGL). `WebComposition` binds `WebDocumentStore`
+(HTTP reads/queries, `PATCH` for the two direct writes, listeners on one `LiveChannel` WebSocket
+that reconnects and resubscribes), `HttpCallableTransport`, `WebAuthService` and `WebRemoteConfig`.
+On WebGL the **page owns the wallet**: `Assets/WebGLTemplates/Farmverse` (near-connect) signs the
+player in and signs contract calls; the game reaches it through `Plugins/WebGL/FarmversePage.jslib`
+(`PageBridge`), including the browser WebSocket. In the editor, `DevTokenSource` uses the server's
+dev-only `/v1/auth/dev` (FARMVERSE_ENV=dev). `ChainService` mints (server takes → wallet mints) and
+redeems (wallet burns → server credits); afterwards, and whenever `island-sync` answers
+`serverChanged`, `IslandServerState` writes the server's island into the device saves and reloads
+the scene. Farmverse ▸ Web ▸ Build makes the WebGL player.
+
 ### 5.2 Wallet sign-in
 
 1. Game page loads the wallet selector (via `near-api-unity`'s WS template, or our own small
