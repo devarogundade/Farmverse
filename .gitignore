@@ -179,3 +179,8 @@ GoogleService-Info*.plist
 # local working files
 Claude outputs/
 _to_delete/
+
+# 3D models exported from the ithappy packs (same licence as above). Rebuild: npm --prefix web run models
+/web/shared/public/models/**/*.glb
+web/**/node_modules/
+web/**/dist/

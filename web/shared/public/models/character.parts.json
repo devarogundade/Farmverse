@@ -1,0 +1,67 @@
+{
+  "slots": {
+    "hair": [
+      "Hairstyle_Male_001",
+      "Hairstyle_Male_005",
+      "Hairstyle_Male_Single_006"
+    ],
+    "hat": [
+      "Hat_010",
+      "Hat_Single_008",
+      "Hat_Single_013",
+      "Hat_Single_016"
+    ],
+    "face": [
+      "Male_emotion_angry_003",
+      "Male_emotion_happy_002",
+      "Male_emotion_usual_001"
+    ],
+    "glasses": [
+      "Glasses_004",
+      "Glasses_006"
+    ],
+    "accessory": [
+      "Clown_nose_001",
+      "Headphones_002",
+      "Mustache_003",
+      "Mustache_011",
+      "Pacifier_001"
+    ],
+    "top": [
+      "Outwear_004",
+      "Outwear_043",
+      "Outwear_050",
+      "Outfit_010"
+    ],
+    "bottom": [
+      "Pants_009",
+      "Pants_010",
+      "Shorts_003"
+    ],
+    "glove": [
+      "Gloves_006",
+      "Gloves_014"
+    ],
+    "socks": [
+      "Socks_008"
+    ],
+    "shoes": [
+      "Shoe_Slippers_002",
+      "Shoe_Slippers_005",
+      "Shoe_Sneakers_009"
+    ],
+    "costume": [
+      "Costume_13_001",
+      "Costume_13_002",
+      "Mascot_002"
+    ]
+  },
+  "clips": [
+    "Idle_Relaxed",
+    "Idle_Look_Around",
+    "Walk_Forward",
+    "Run_Forward",
+    "Attack_Punch",
+    "Jump_Start"
+  ]
+}

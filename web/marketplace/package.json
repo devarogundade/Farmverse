@@ -1,0 +1,30 @@
+{
+  "name": "@farmverse/marketplace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "marketplace.farmverse.world \u00e2\u20ac\u201d browse, buy and sell Farmverse NFTs; renders each NFT in 3D from its metadata.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "lucide-react": "^1.69.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.187.0",
+    "@farmverse/shared": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.187.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  }
+}

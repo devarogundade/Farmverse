@@ -1,0 +1,131 @@
+/*
+ * Farmverse web theme — the game's own UI kit (Assets/Farmverse/Content/UI/Game) on the web.
+ * Colours and themed sprites come from tokens.css (generated from GameTheme); the 9-slice values
+ * below are the ones GameKit.Nine() uses in Unity, in CSS border-image order (top right bottom left).
+ */
+@import './tokens.css';
+
+@font-face {
+  font-family: 'Lilita One';
+  src: url('/fonts/LilitaOne.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/NunitoExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+}
+
+:root {
+  --font-display: 'Lilita One', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --muted: color-mix(in srgb, var(--sky-2) 72%, var(--bg));
+  --radius-lg: 26px;
+  --radius: 20px;
+  --radius-sm: 14px;
+  color-scheme: dark;
+  font-family: var(--font-body);
+  font-weight: 800;
+  color: var(--text);
+  background: var(--deep);
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh;
+  background: radial-gradient(120% 80% at 50% -10%, var(--panel) 0%, var(--deep) 60%) fixed, var(--deep);
+}
+a { color: inherit; text-decoration: none; }
+button, select, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--font-display); letter-spacing: 0.01em; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.muted { color: var(--muted); }
+
+/* Game titles: Lilita One with the dark outline and drop the game's text uses. */
+.fv-title {
+  font-family: var(--font-display);
+  color: #fff;
+  -webkit-text-stroke: 0.14em var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.35);
+}
+.fv-gold { color: var(--gold); }
+
+/* Sprite icon from the game (img). */
+.fv-icon { width: 24px; height: 24px; object-fit: contain; flex: none; display: block; }
+
+/* ---------- pill buttons (Button01_195_*: slices 30/96/30/96) ---------- */
+.fv-btn {
+  --h: 52px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: var(--h);
+  padding: 0 calc(var(--h) * 0.45);
+  border: 0 solid transparent;
+  border-image-source: url('/ui/Button01_195_Green.webp');
+  border-image-slice: 96 30 96 30 fill;
+  border-image-width: calc(var(--h) / 2) calc(var(--h) / 2 * 30 / 96);
+  font-family: var(--font-display);
+  font-size: calc(var(--h) * 0.38);
+  color: #fff;
+  -webkit-text-stroke: 0.16em rgba(0, 0, 0, 0.55);
+  paint-order: stroke fill;
+  white-space: nowrap;
+  transition: filter 0.15s, transform 0.1s;
+}
+.fv-btn:hover { filter: brightness(1.08); }
+.fv-btn:active { transform: translateY(2px); }
+.fv-btn:disabled { filter: grayscale(0.8) brightness(0.8); cursor: not-allowed; }
+.fv-btn.yellow { border-image-source: url('/ui/Button01_195_Yellow.webp'); -webkit-text-stroke-color: rgba(120, 50, 0, 0.7); }
+.fv-btn.purple { border-image-source: url('/ui/Button01_195_Purple.webp'); }
+.fv-btn.gray { border-image-source: url('/ui/Button01_195_Gray.webp'); }
+.fv-btn.blue { border-image-source: var(--ui-Button01_195_Blue); }
+.fv-btn.sm { --h: 40px; }
+.fv-btn.lg { --h: 64px; }
+.fv-btn img { height: 60%; width: auto; }
+
+/* ---------- square chip buttons (Button_Square03_Navy: 20/20/20/24) ---------- */
+.fv-chip {
+  --s: 46px;
+  display: inline-grid; place-items: center;
+  min-width: var(--s); height: var(--s);
+  border: 0 solid transparent;
+  border-image: var(--ui-Button_Square03_Navy) 20 20 24 20 fill / 12px 12px 14px 12px;
+}
+.fv-chip:hover { filter: brightness(1.15); }
+.fv-chip .fv-icon { width: 58%; height: 58%; }
+
+/* ---------- panels (Popup01_Single_Navy: 16/16/16/20) ---------- */
+.fv-panel {
+  border: 0 solid transparent;
+  border-image: var(--ui-Popup01_Single_Navy) 16 16 20 16 fill / 14px 14px 17px 14px;
+}
+/* Lighter inset list row (ListFrame03_Single_Inner_Blue). */
+.fv-row {
+  border: 0 solid transparent;
+  border-image: var(--ui-ListFrame03_Single_Inner_Blue) 20 20 24 20 fill / 10px 10px 12px 10px;
+}
+
+/* ---------- item frames (ItemFrame01_Single_*: 40/40/40/46) ---------- */
+.fv-frame {
+  border: 0 solid transparent;
+  border-image-slice: 40 40 46 40 fill;
+  border-image-width: 22px 22px 25px 22px;
+  border-image-source: url('/ui/ItemFrame01_Single_Blue.webp');
+}
+.fv-frame.yellow { border-image-source: url('/ui/ItemFrame01_Single_Yellow.webp'); }
+.fv-frame.green { border-image-source: url('/ui/ItemFrame01_Single_Green.webp'); }
+.fv-frame.purple { border-image-source: url('/ui/ItemFrame01_Single_Purple.webp'); }
+.fv-frame.brown { border-image-source: url('/ui/ItemFrame01_Single_Brown.webp'); }
+.fv-frame.lg { border-image-width: 34px 34px 39px 34px; }
+
+/* The shared WebGL layer (three/NftStage SharedCanvas): fixed over the page, never takes clicks. */
+.gl-layer {
+  position: fixed !important;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}

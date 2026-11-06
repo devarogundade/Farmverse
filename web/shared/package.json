@@ -1,0 +1,20 @@
+{
+  "name": "@farmverse/shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "NFT metadata schema, 3D renderer and models shared by the landing page and the marketplace.",
+  "exports": {
+    "./nft/*": "./src/nft/*.ts",
+    "./three/*": "./src/three/*.tsx",
+    "./theme.css": "./src/theme.css",
+    "./brand": "./src/brand.tsx",
+    "./gameTheme": "./src/gameTheme.ts"
+  },
+  "peerDependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "react": "^19.3.1",
+    "three": "^0.187.0"
+  }
+}

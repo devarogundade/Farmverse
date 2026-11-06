@@ -1,0 +1,14 @@
+{
+  "name": "farmverse-web",
+  "private": true,
+  "description": "Farmverse websites: landing (farmverse.world), marketplace (marketplace.farmverse.world) and the shared 3D/NFT code.",
+  "workspaces": ["shared", "marketplace", "landing"],
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev:market": "npm run dev -w @farmverse/marketplace",
+    "dev:landing": "npm run dev -w @farmverse/landing",
+    "build": "npm run build -w @farmverse/marketplace -w @farmverse/landing",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "models": "blender -b --factory-startup -P ../tools/blender/export_marketplace_models.py"
+  }
+}
