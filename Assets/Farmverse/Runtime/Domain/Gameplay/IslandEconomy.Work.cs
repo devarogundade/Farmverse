@@ -257,7 +257,7 @@ namespace Farmverse.Domain.Gameplay
             var capEnd = AwaySince + report.CapHours * 3600.0;
             var end = Math.Min(to, capEnd);
             report.Capped = to > capEnd;
-            report.Workers = WorkerHouses().Sum(d => d.Present);
+            report.Workers = WorkerHouses().Sum(d => d.Present) + WorkingCrew.Count;
             var step = GameplayRules.AwayTripSeconds;
             var t = Math.Floor(from / step) * step + step;
             _tickAway = true;
@@ -282,7 +282,7 @@ namespace Farmverse.Domain.Gameplay
             if (houses.Count == 0) return;
             var farmhouse = MainFarmhouse();
             if (farmhouse == null) return;
-            var hands = houses.Sum(h => h.Present);
+            var hands = houses.Sum(h => h.Present) + CrewHands;
             var carry = WorkerCarry;
             var load = new List<string>();
             var hungry = false;
@@ -312,6 +312,7 @@ namespace Farmverse.Domain.Gameplay
 
             foreach (var job in WorkJob.Order)
             {
+                hands += SpecialistHands(job);   // a Farmhand of this trade lends a hand when its job comes up
                 if (hands <= 0 || hungry) break;
                 switch (job)
                 {

@@ -50,6 +50,7 @@ namespace Farmverse.Domain.Gameplay
         /// </summary>
         public static int PriceOf(string item)
         {
+            if (item.StartsWith(GoldenPrefix, StringComparison.Ordinal)) return GoldenPriceFactor * PriceOf(item.Substring(GoldenPrefix.Length));
             if (Prices.TryGetValue(item, out var p)) return p;
             return Math.Max(1, EnergyOf(item));
         }
@@ -453,6 +454,19 @@ namespace Farmverse.Domain.Gameplay
 
         /// <summary>Units a farm worker carries at a time (a school adds <see cref="SchoolCarryBonus"/>).</summary>
         public const int WorkerCarry = 4;
+
+        // ---- Farmhands, golden crops, wild plots (docs 15 §7, §12) ----------------------------------
+
+        /// <summary>Farmhands an island can give a bed to, whatever its workers' houses.</summary>
+        public const int MaxCrew = 6;
+        public const int FarmhandMaxLevel = 10;
+        /// <summary>A harvested unit's chance in 100 to be the crop's golden form.</summary>
+        public const int GoldenChancePercent = 1;
+        public const string GoldenPrefix = "golden_";
+        /// <summary>A golden good is worth this many of the plain one.</summary>
+        public const int GoldenPriceFactor = 25;
+        /// <summary>Wild plots on every island that land deeds clear.</summary>
+        public const int WildPlots = 4;
         public const int SchoolCarryBonus = 2;
         /// <summary>A farm worker who carries this many loads in a row must rest at home for <see cref="WorkerRestSeconds"/>.</summary>
         public const int WorkerLoadsBeforeRest = 12;

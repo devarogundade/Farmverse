@@ -1,4 +1,5 @@
 import type { IslandAwayReport } from '@farmverse/contracts';
+import { awardCrewXp, withCrewSave, type Farmhand } from './crew';
 import { AppError, fail } from '../core/errors';
 import { paths } from '../infra/paths';
 import { EngineRefusal, type EngineReport, type ExchangeOp, type IslandEngine, type IslandSave, type IslandSummary } from '../infra/islandEngine';
@@ -105,6 +106,8 @@ export interface IslandDeps {
   readonly onStorageFull?: (uid: string) => Promise<unknown>;
   /** A wake found the workers newly out of food while the player is away (a push, once). */
   readonly onWorkersHungry?: (uid: string) => Promise<unknown>;
+  /** The Farmhands this player holds or rents, from the chain (undefined: unknown, keep the save's). */
+  readonly crewOf?: (uid: string) => Promise<Farmhand[] | undefined>;
 }
 
 /** A wake earlier than this before the island's own nextWake is a stale booking, and is skipped. */
@@ -231,6 +234,14 @@ async function advanceStored(
     const fromDevice = mirror || !before;
     // the Farm Pass's longer offline shift is the server's to grant, not the device's
     save = await withPass(env, uid, save);
+    // so is the crew: whoever holds (or rents) the Farmhands on chain
+    let crew: Farmhand[] | undefined;
+    try {
+      crew = deps.crewOf ? await deps.crewOf(uid) : undefined;
+    } catch (e) {
+      env.log.warn('crew not read; keeping the save\'s', { uid, error: String(e) });
+    }
+    save = withCrewSave(save, crew);
     // Never run backwards (a skewed instance clock): the engine refuses now < simAt.
     const at = Math.max(nowMs, Math.ceil(save.simAt * 1000));
     let out = await run(deps.engine, save, at, fromDevice && adopt !== undefined);
@@ -285,7 +296,14 @@ async function advanceStored(
       }
       return true;
     });
-    if (written) return { doc, before, serverChanged: applied.length > 0 };
+    if (written) {
+      try {
+        await awardCrewXp(env, crew, out.report.workers, out.report.loads);
+      } catch (e) {
+        env.log.warn('crew xp not saved', { uid, error: String(e) });
+      }
+      return { doc, before, serverChanged: applied.length > 0 };
+    }
     env.log.info('island write raced; retrying', { uid, attempt });
   }
   fail('CONFLICT');

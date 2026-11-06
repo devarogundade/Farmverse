@@ -78,7 +78,7 @@ namespace Farmverse.Domain.Gameplay
     public static class IslandSim
     {
         /// <summary>Raise when a rule change would make old saves advance differently.</summary>
-        public const int RulesVersion = 2;
+        public const int RulesVersion = 3;   // 3: Farmhands, golden harvests, wild plots (docs 15)
 
         /// <summary>The longest the server waits before looking at an island again, even if nothing is due.</summary>
         public const double MaxWakeSeconds = 3600;

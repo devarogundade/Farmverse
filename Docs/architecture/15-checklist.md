@@ -32,8 +32,8 @@ an indexer migration, and the Unity panels.
 - [x] B7 Mint fee (2 %, min 5 coins) + lot minimum (10; 1 for golden goods) §6.2
 - [x] B8 `chain-pendingMints` ("Finish minting") §3.5
 - [x] B9 Faucet route: 100 FARM/day + 1 NEAR once, from `faucet.`, rate-limited §6.6
-- [ ] B10 `crew` from owned + rented Farmhands, beds = sum of workers' house levels (max 6) §7.3 §12.1
-- [ ] B11 `worker_stats` XP per token from server island runs §7.4
+- [x] B10 `crew` from owned + rented Farmhands, beds = sum of workers' house levels (max 6) §7.3 §12.1
+- [x] B11 `worker_stats` XP per token from server island runs §7.4
 - [x] B12 Market read API: drops, offers, rentals, worker filters (specialty, rarity, level) §5.4 §7.5 §12
 - [ ] B13 Land deed redeem → `open-plot` exchange op §12.3
 - [ ] B14 Golden crop goods in the catalogue (25× price, mintable) §12.4
@@ -41,10 +41,10 @@ an indexer migration, and the Unity panels.
 
 ## C. Shared C# rules (device + server engine)
 
-- [ ] C1 Farmhands in the work rules: crew, beds, specialty and trait bonuses, level speed §7.3
-- [ ] C2 Golden harvest roll (deterministic hash) §12.4
+- [x] C1 Farmhands in the work rules: crew, beds, specialty and trait bonuses, level speed §7.3
+- [x] C2 Golden harvest roll (deterministic hash) §12.4
 - [ ] C3 Wild plots: `IslandData.wildPlots`, `open-plot` op, buildability §12.3
-- [ ] C4 Engine rebuilt, `rulesVersion` up, engine tests green
+- [x] C4 Engine rebuilt, `rulesVersion` up, engine tests green
 
 ## D. Unity game
 

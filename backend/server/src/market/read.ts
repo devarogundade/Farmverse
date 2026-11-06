@@ -1,5 +1,6 @@
 import { farmNumber, formatFarm, NFT_TYPES, type NftType } from '../chain/items';
 import { Prisma, type PrismaClient } from '../generated/prisma/client';
+import { levelFor } from '../../../game/src/game/crew';
 
 /**
  * The marketplace's reads over the `chain` schema (docs 13 §9). Shapes match the wire schemas in
@@ -63,6 +64,8 @@ interface Row {
   minted_from: string | null;
   minted_at: string;
   price: string | null;
+  /** Farmhands: experience the game counted (workers/{token}). */
+  worker_xp?: number | null;
 }
 
 export const MAX_LIMIT = 60;
@@ -71,10 +74,14 @@ const HISTORY_DAYS = 24;
 const isPrimitive = (v: unknown): v is string | number | boolean => ['string', 'number', 'boolean'].includes(typeof v);
 
 /** The metadata the marketplace renders (web/shared/src/nft/metadata.ts `NftMetadata`). */
-export function metadataOf(r: Pick<Row, 'nft_type' | 'item_id' | 'quantity' | 'props' | 'minted_from' | 'minted_at'>): Record<string, unknown> {
+export function metadataOf(r: Pick<Row, 'nft_type' | 'item_id' | 'quantity' | 'props' | 'minted_from' | 'minted_at' | 'worker_xp'>): Record<string, unknown> {
   const { outfit, traits: nested, ...rest } = r.props ?? {};
   // Farmhands keep speed/carry/stamina under `traits`: shown alongside the flat ones.
   const flat = { ...rest, ...(nested && typeof nested === 'object' && !Array.isArray(nested) ? (nested as Record<string, unknown>) : {}) };
+  if (r.nft_type === 'worker' && typeof r.worker_xp === 'number') {
+    flat['level'] = levelFor(r.worker_xp);
+    flat['xp'] = r.worker_xp;
+  }
   const traits = Object.fromEntries(Object.entries(flat).filter(([, v]) => isPrimitive(v)));
   const quantity = Number(r.quantity);
   const m: Record<string, unknown> = { type: r.nft_type, minted_at: Number(r.minted_at) };
@@ -98,7 +105,8 @@ const wire = (r: Row): TokenWire => ({
 
 const SELECT = Prisma.sql`
   SELECT t.token_id, t.title, t.owner_id, t.nft_type, t.item_id, t.quantity::text AS quantity, t.props, t.minted_from,
-         (extract(epoch FROM t.minted_at) * 1000)::bigint::text AS minted_at, l.price::text AS price`;
+         (extract(epoch FROM t.minted_at) * 1000)::bigint::text AS minted_at, l.price::text AS price,
+         (SELECT (d.data->>'xp')::int FROM documents d WHERE d.path = 'workers/' || t.token_id) AS worker_xp`;
 
 /** A listing only counts while its seller still owns the token (a transfer kills the approval). */
 const LISTING_JOIN = Prisma.sql`l.contract_id = t.contract_id AND l.token_id = t.token_id AND l.seller_id = t.owner_id`;
@@ -383,6 +391,7 @@ export class MarketReaderV2 {
     const rows = await this.prisma.$queryRaw<RentalRow[]>`
       SELECT t.token_id, t.title, t.owner_id, t.nft_type, t.item_id, t.quantity::text AS quantity, t.props, t.minted_from,
              (extract(epoch FROM t.minted_at) * 1000)::bigint::text AS minted_at, NULL::text AS price,
+             (SELECT (d.data->>'xp')::int FROM documents d WHERE d.path = 'workers/' || t.token_id) AS worker_xp,
              r.lender_id, r.price_per_day::text, r.max_days, r.renter_id,
              (extract(epoch FROM r.rented_until) * 1000)::bigint::text AS rented_until, r.earned::text
       FROM chain.rentals r JOIN chain.tokens t ON t.contract_id = r.contract_id AND t.token_id = r.token_id

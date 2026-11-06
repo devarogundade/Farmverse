@@ -248,7 +248,7 @@ namespace Farmverse.Domain.Gameplay
         {
             if (!_plots.TryGetValue(uid, out var plot)) return GatherResult.Nothing;
             if (plot.State(now) != PlotState.Ripe || plot.Crop == null) return GatherResult.NotReady;
-            if (Basket.Add(plot.Crop, 1) == 0) return GatherResult.BasketFull;
+            if (Basket.Add(HarvestItem(uid, plot.PlantedAt, plot.Left, plot.Crop), 1) == 0) return GatherResult.BasketFull;
             Count("harvested");
             plot.Left--;
             if (plot.Left <= 0) plot.Reset();
@@ -478,7 +478,7 @@ namespace Farmverse.Domain.Gameplay
         {
             if (!_plots.TryGetValue(uid, out var plot) || plot.State(now) != PlotState.Ripe || plot.Crop == null) return 0;
             var n = Math.Min(max, plot.Left);
-            for (var i = 0; i < n; i++) into.Add(plot.Crop);
+            for (var i = 0; i < n; i++) into.Add(HarvestItem(uid, plot.PlantedAt, plot.Left - i, plot.Crop));
             plot.Left -= n;
             Count("harvested", n);
             if (plot.Left <= 0) plot.Reset();
@@ -686,7 +686,7 @@ namespace Farmverse.Domain.Gameplay
         }
 
         /// <summary>How much a farm worker carries (a school teaches them to carry more).</summary>
-        public int WorkerCarry => GameplayRules.WorkerCarry + (Has("school") ? GameplayRules.SchoolCarryBonus : 0);
+        public int WorkerCarry => GameplayRules.WorkerCarry + (Has("school") ? GameplayRules.SchoolCarryBonus : 0) + CrewCarryBonus;
 
         /// <summary>Seconds of warning before raiders land (a police station watches the sea).</summary>
         public double RaidWarning => Has("police_station") ? 60 : 30;
@@ -1140,6 +1140,7 @@ namespace Farmverse.Domain.Gameplay
             s.fertUntil = FertUntil;
             s.extraBuilders = ExtraBuilders;
             s.basketExtra = BasketExtra;
+            SaveCrew(s);
             if (Order != null) { s.orderItem = Order.Item; s.orderCount = Order.Count; s.orderGiven = Order.Given; s.orderReward = Order.Reward; s.orderExpires = Order.Expires; }
             foreach (var o in _delivery) s.orders.Add(new EconomySave.OrderSave { item = o.Item, count = o.Count, given = o.Given, reward = o.Reward, expires = o.Expires });
             s.nextOrderAt = _nextOrderAt;
@@ -1220,6 +1221,7 @@ namespace Farmverse.Domain.Gameplay
             FertUntil = s.fertUntil;
             ExtraBuilders = Math.Max(0, Math.Min(3, s.extraBuilders));
             BasketExtra = Math.Max(0, s.basketExtra);
+            LoadCrew(s);
             _delivery.Clear();
             if (s.orders.Count > 0)
                 foreach (var o in s.orders) _delivery.Add(new DeliveryOrder(o.item, o.count, o.reward, o.expires) { Given = o.given });
@@ -1810,6 +1812,10 @@ namespace Farmverse.Domain.Gameplay
         public int extraBuilders;
         /// <summary>Basket slots from Bigger Basket boosts.</summary>
         public int basketExtra;
+        /// <summary>Farmhands the player holds (written by the server from the chain).</summary>
+        public List<Farmhand> crew = new List<Farmhand>();
+        /// <summary>Wild plots cleared with land deeds.</summary>
+        public int wildPlotsOpen;
 
         [Serializable] public sealed class Count { public string item = ""; public int n; }
         [Serializable] public sealed class Amount { public string item = ""; public double v; }

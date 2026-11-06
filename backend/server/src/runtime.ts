@@ -20,6 +20,7 @@ import { queryDocuments } from './store/query';
 import { nearFaucetSender } from './chain/faucet';
 import { reconcile } from './chain/reconcile';
 import { unclaimedRedeems } from './chain/unclaimed';
+import { crewOf } from './chain/crew';
 
 export interface Services {
   readonly rt: Runtime;
@@ -120,6 +121,7 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             scheduleExpiry: bullMintExpiry(queues.mintExpiry),
             accountOf: async (uid: string) => (await prisma.account.findUnique({ where: { uid }, select: { accountId: true } }))?.accountId ?? null,
             unclaimedRedeems: unclaimedRedeems(prisma, config.NEAR_ITEMS_CONTRACT),
+            crewOf: crewOf(prisma, store, config.NEAR_ITEMS_CONTRACT),
             reconcile: () => reconcile(prisma, store, config.NEAR_ITEMS_CONTRACT, Date.now(), log.with({ job: 'chain-reconcile' })),
             ...(config.NEAR_NETWORK === 'testnet' && config.FAUCET_ACCOUNT && config.FAUCET_PRIVATE_KEY
               ? {

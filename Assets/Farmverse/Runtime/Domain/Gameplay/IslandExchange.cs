@@ -12,7 +12,8 @@ namespace Farmverse.Domain.Gameplay
         /// <summary>
         /// <c>take</c> goods, <c>give</c> goods, <c>pickUp</c> a placed building, <c>hold</c> an unplaced one,
         /// <c>fee</c>: spend <see cref="bps"/> of the value the earlier ops moved, at least <see cref="n"/> coins,
-        /// <c>credit</c>: add <see cref="n"/> coins (a fee given back).
+        /// <c>credit</c>: add <see cref="n"/> coins (a fee given back), <c>openPlot</c>: clear the next wild plot
+        /// (a land deed), <c>crew</c>: set the Farmhands from the chain.
         /// </summary>
         public string op = "";
         public string item = "";
@@ -25,6 +26,8 @@ namespace Farmverse.Domain.Gameplay
         public int price;
         /// <summary>For <c>fee</c>: basis points of the value moved so far.</summary>
         public int bps;
+        /// <summary>For <c>crew</c>: the Farmhands the player holds now (replaces the island's crew).</summary>
+        public List<Farmhand>? crew;
     }
 
     /// <summary>What an op did: the goods moved with their market value, or the building picked up.</summary>
@@ -110,6 +113,14 @@ namespace Farmverse.Domain.Gameplay
                         done.Add(new ExchangeDone { op = "fee", n = fee });
                         break;
                     }
+                    case "openPlot":
+                        if (!e.OpenWildPlot()) throw new ExchangeRefusal("all_open", "every wild plot is open already");
+                        done.Add(new ExchangeDone { op = "openPlot", n = e.WildPlotsOpen });
+                        break;
+                    case "crew":
+                        e.SetCrew(op.crew ?? new List<Farmhand>());
+                        done.Add(new ExchangeDone { op = "crew", n = e.Crew.Count });
+                        break;
                     case "credit":
                         if (op.n < 1 || op.n > 1_000_000_000) throw new ExchangeRefusal("bad_op", "n must be 1..1e9");
                         e.AddCoins(op.n);

@@ -1,4 +1,5 @@
 import { CALLABLES, type CallableSpec } from '@farmverse/contracts';
+import type { Farmhand } from '../../game/src/game/crew';
 import type { CallableDefinition } from '../../game/src/core/callable';
 import type { Clock } from '../../game/src/core/clock';
 import type { Logger } from '../../game/src/core/logger';
@@ -38,6 +39,8 @@ export interface ChainRuntime {
   readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
   /** The NEAR account behind a game uid. */
   readonly accountOf: (uid: string) => Promise<string | null>;
+  /** The Farmhands a player holds or rents (chain tokens + rentals, levels from workers/{token}). */
+  readonly crewOf?: (uid: string) => Promise<Farmhand[] | undefined>;
   /** The nightly game ⇄ chain check (writes ops/reconcile). */
   readonly reconcile?: () => Promise<unknown>;
   /** Redeems on chain that no `chain-redeem` call credited (the backstop job). */
@@ -90,6 +93,7 @@ export function islandDeps(rt: Runtime, log: Logger): IslandDeps {
     wakes: rt.wakes,
     onStorageFull: (uid) => storageFull(booking, uid),
     onWorkersHungry: (uid) => workersHungry(booking, uid),
+    ...(rt.chain?.crewOf ? { crewOf: rt.chain.crewOf } : {}),
   };
 }
 
