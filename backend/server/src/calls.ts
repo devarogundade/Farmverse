@@ -35,6 +35,9 @@ export interface ChainRuntime {
   readonly reader: ChainReader;
   readonly signer: VoucherSigner;
   readonly itemsContract: string;
+  /** FARM and the market (sent to the game in /v1/config). */
+  readonly farmContract?: string;
+  readonly marketContract?: string;
   readonly limits: MintLimits;
   readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
   /** The NEAR account behind a game uid. */

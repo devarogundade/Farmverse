@@ -648,6 +648,12 @@ export const ChainPendingMintsResponse = named(
   z.object({
     /** Newest first; each can be signed in the wallet until `expiresAtMs`, then its items come back. */
     mints: z.array(PendingMint).max(20),
+    /** Market value minted today (UTC) and the day's limit, for the mint sheet's allowance bar. */
+    spentToday: z.number().int().min(0),
+    dailyCap: z.number().int().min(0),
+    /** The mint fee: this many basis points of the value, at least `feeMin` coins. */
+    feeBps: z.number().int().min(0),
+    feeMin: z.number().int().min(0),
   }),
 );
 

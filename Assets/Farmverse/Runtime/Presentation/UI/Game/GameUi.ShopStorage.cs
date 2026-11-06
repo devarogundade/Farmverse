@@ -292,7 +292,7 @@ namespace Farmverse.Presentation.UI.Game
                 {
                     // the goods become one NFT the player can trade on the marketplace (docs 13 §7)
                     var qty = _shopQty;
-                    var mint = PK.Btn(side, p, "purple", "Mint " + PK.Num(qty) + " as NFT", sideW - 60, 64, 26, () => ChainMintGoods(entry.id, qty));
+                    var mint = PK.Btn(side, p, "purple", "Mint as NFT", sideW - 60, 64, 26, () => MintOpenGoods(entry.id, entry.count, boost: false));
                     mint.style.marginTop = p.P(10);
                     var buy = PK.Btn(side, p, "blue", "Buy more on the market", sideW - 60, 52, 20, () => GameLinks.Open(MarketBuy(entry.id), "Open the market"));
                     buy.style.marginTop = p.P(8);
@@ -306,6 +306,11 @@ namespace Farmverse.Presentation.UI.Game
                     ShopUseBoost(id);
                     MarkDirty();
                 });
+                if (ChainReady)
+                {
+                    var held = it.count;
+                    PK.Btn(side, p, "purple", "Mint as NFT", sideW - 60, 60, 24, () => MintOpenGoods(id, held, boost: true)).style.marginTop = p.P(10);
+                }
             }
         }
 

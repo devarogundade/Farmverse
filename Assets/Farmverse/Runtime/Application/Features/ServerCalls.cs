@@ -45,6 +45,14 @@ namespace Farmverse.Application.Features
         public Task<Result<ChainMintResponse>> ChainMint(MintKind kind, string? item, int? quantity, long? buildingUid, string key, CancellationToken cancellation = default) =>
             _client.Call(Callables.ChainMint, new ChainMintRequest { Meta = _meta(), Kind = kind, Item = item, Quantity = quantity, BuildingUid = buildingUid, Key = key }, cancellation);
 
+        /// <summary>Mint vouchers the wallet can still sign, today's mint allowance and the fee (docs 15 §4.1).</summary>
+        public Task<Result<ChainPendingMintsResponse>> ChainPendingMints(CancellationToken cancellation = default) =>
+            _client.Call(Callables.ChainPendingMints, new ChainPendingMintsRequest { Meta = _meta() }, cancellation);
+
+        /// <summary>Today's test FARM (testnet only, docs 15 §6.6).</summary>
+        public Task<Result<ChainFaucetResponse>> ChainFaucet(CancellationToken cancellation = default) =>
+            _client.Call(Callables.ChainFaucet, new ChainFaucetRequest { Meta = _meta() }, cancellation);
+
         /// <summary>Credit the items of an NFT this wallet redeemed on chain (safe to repeat).</summary>
         public Task<Result<ChainRedeemResponse>> ChainRedeem(string txHash, CancellationToken cancellation = default) =>
             _client.Call(Callables.ChainRedeem, new ChainRedeemRequest { Meta = _meta(), TxHash = txHash }, cancellation);

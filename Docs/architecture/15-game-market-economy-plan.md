@@ -524,6 +524,19 @@ at launch.
 
 ### 13.2 Social login
 
-The game page uses `near-connect`, which lists the wallets that support the network. Check which offer email or
-social sign-in on testnet and put them first in the picker. If none does on testnet, record it and switch them on
-with mainnet. Mint, redeem and buy stay one approval each.
+**Decided (2026-11-06): a Privy wallet in our own near-connect manifest.** `near-connect` (already on the game page
+and the market) accepts a dApp manifest (`new NearConnector({ manifest: '/manifest.json' })`). The
+`@peerfolio/privy-near-connect` package (repo `beneviolabs/privy-near-connect`) builds a NEAR wallet on Privy's
+embedded wallets with email / phone / Google login; its manifest declares `signMessage`, `signAndSendTransaction` and
+`testnet`, so the NEP-413 sign-in and every flow stay as they are.
+
+- **Needs from the team:** a Privy app (App ID + Client ID). Signing up is the team's step.
+- **We build:** a hosted `/sign` page (`initSigningPage`, `allowedOrigins` = our sites, `debug: false`), a
+  `manifest.json` with the Privy wallet first ("Continue with email or Google"), the executor URL pinned to a commit.
+- **Server:** a Privy wallet is likely an implicit account (64-hex id from its key) that doesn't exist on chain until
+  it holds NEAR, so the NEP-413 check can't find its key with `view_access_key`. Accept an implicit account when its id
+  is the hex of the signing key; the faucet then gives it its first test NEAR.
+
+**Considered:** NEAR Auth / FastAuth (`@fast-auth-near/*`, Auth0 + MPC keys): signs transactions but not NEP-413
+messages, needs approved Auth0 credentials on mainnet and has no documented testnet setup: the mainnet option, not the
+hackathon one. A studio-held key per player would break principle 3 (the studio never moves player assets).

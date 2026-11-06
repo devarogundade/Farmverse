@@ -95,7 +95,15 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
       maintenance: ops().maintenance,
       ...(ops().message ? { maintenance_message: ops().message } : {}),
       island_shadow: true,
-      ...(o.rt.chain ? { items_contract: o.rt.chain.itemsContract, mint_min_hours: Math.ceil(ops().mintMinAccountHours) } : {}),
+      ...(o.rt.chain
+        ? {
+            items_contract: o.rt.chain.itemsContract,
+            mint_min_hours: Math.ceil(ops().mintMinAccountHours),
+            ...(o.rt.chain.farmContract ? { farm_contract: o.rt.chain.farmContract } : {}),
+            ...(o.rt.chain.marketContract ? { market_contract: o.rt.chain.marketContract } : {}),
+            faucet: Boolean(o.rt.chain.faucet),
+          }
+        : {}),
     },
   }));
 

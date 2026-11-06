@@ -237,6 +237,9 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>Hours a new farm waits before minting (remote config, set by GameRoot).</summary>
         public static long MintMinHours { get; set; } = 24;
 
+        /// <summary>The server's testnet faucet is open (Get FARM sheet).</summary>
+        public static System.Func<bool> FaucetOpen { get; set; } = () => false;
+
         /// <summary>"New farms can mint after …" in days when it's whole days, else hours.</summary>
         internal static string MintTooSoonText(long hours)
         {

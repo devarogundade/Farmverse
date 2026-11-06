@@ -109,6 +109,8 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             reader: rpcChainReader(config.NEAR_RPC_URL, config.NEAR_ITEMS_CONTRACT),
             signer: new VoucherSigner(Buffer.from(config.MINT_SIGNER_SEED, 'base64')),
             itemsContract: config.NEAR_ITEMS_CONTRACT,
+            farmContract: config.NEAR_FARM_CONTRACT,
+            marketContract: config.NEAR_MARKET_CONTRACT,
             // read on every mint, so an admin change applies at once
             limits: {
               get dailyValueCap() {

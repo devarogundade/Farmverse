@@ -18,6 +18,11 @@ namespace Farmverse.Application.Config
 
         /// <summary>Hours a new farm waits before it may mint (the admin web sets it).</summary>
         public const string MintMinHours = "mint_min_hours";
+        /// <summary>The FARM token and market contracts (drops, offers; docs 15).</summary>
+        public const string FarmContract = "farm_contract";
+        public const string MarketContract = "market_contract";
+        /// <summary>The testnet faucet is open (docs 15 §6.6).</summary>
+        public const string Faucet = "faucet";
         public const long MintMinHoursDefault = 24;
 
         public const string MinClientVersion = "min_client_version";

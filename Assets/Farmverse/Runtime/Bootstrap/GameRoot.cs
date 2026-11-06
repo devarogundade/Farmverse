@@ -229,6 +229,8 @@ namespace Farmverse.Bootstrap
 #endif
             _chain = new ChainService(_server, wallet, IslandServerState.Load, () => remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.ItemsContract, ""));
             GameUi.Chain = _chain;
+            _chain.FarmContract = () => remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.FarmContract, "");
+            GameUi.FaucetOpen = () => remoteConfig.GetBool(Farmverse.Application.Config.RemoteKeys.Faucet, false);
             // what the wallet holds and what the studio sells, from the market API (docs 15 §3.1)
             GameUi.Nfts = new NftService(new WebMarketReader(api), () => auth.User.Value?.AccountId, () => clock.NowMs);
             GameUi.Account = _account;

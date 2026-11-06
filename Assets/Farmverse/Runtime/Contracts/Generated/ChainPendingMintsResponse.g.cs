@@ -11,10 +11,22 @@ namespace Farmverse.Contracts
     {
         public List<PendingMint> Mints { get; set; } = new List<PendingMint>();
 
+        public long SpentToday { get; set; }
+
+        public long DailyCap { get; set; }
+
+        public long FeeBps { get; set; }
+
+        public long FeeMin { get; set; }
+
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(1);
+            var map = new Dictionary<string, object>(5);
             map["mints"] = Wire.ListToWire(Mints, item => (object)item.ToWire());
+            map["spentToday"] = SpentToday;
+            map["dailyCap"] = DailyCap;
+            map["feeBps"] = FeeBps;
+            map["feeMin"] = FeeMin;
             return map;
         }
 
@@ -24,6 +36,10 @@ namespace Farmverse.Contracts
             return new ChainPendingMintsResponse
             {
                 Mints = Wire.Required(map, "mints", "ChainPendingMintsResponse.mints", (v, path) => Wire.AsList(v, path, (v, path) => PendingMint.FromWire(v))),
+                SpentToday = Wire.Required(map, "spentToday", "ChainPendingMintsResponse.spentToday", Wire.AsLong),
+                DailyCap = Wire.Required(map, "dailyCap", "ChainPendingMintsResponse.dailyCap", Wire.AsLong),
+                FeeBps = Wire.Required(map, "feeBps", "ChainPendingMintsResponse.feeBps", Wire.AsLong),
+                FeeMin = Wire.Required(map, "feeMin", "ChainPendingMintsResponse.feeMin", Wire.AsLong),
             };
         }
     }
