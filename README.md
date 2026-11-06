@@ -27,7 +27,7 @@ Built for **NEAR HACKATHON**, track **`games` — Games With Real Economies**. R
 6. [Architecture](#architecture)
 7. [Run it yourself](#run-it-yourself)
 8. [What was built during the hackathon](#what-was-built-during-the-hackathon)
-9. [Known limits and next steps](#known-limits-and-next-steps)
+9. [Next steps](#next-steps)
 
 ---
 
@@ -241,15 +241,13 @@ paid assets and are **not in the repository**; the deployed game and sites inclu
 
 ---
 
-## Known limits and next steps
+## Next steps
 
-Accepted for testnet; each blocks a mainnet launch:
-
-- The island is still simulated on the player's device, with an upload guard and server-run mint/redeem moments;
-  the next step is server-authoritative island actions.
-- The contracts are unaudited and owned by one account, not a multisig.
-- Server keys (voucher signer, relayer, faucet, merchants) are in an env file, not a KMS.
-- NEAR Intents orders need mainnet; testnet shows quotes only.
-
-Next: a **NEP-245** contract for goods (fungible, splittable stacks), merchants that can go broke and be invested in,
-a fast-forward view of the economy, then mainnet (audit, multisig owner, live Intents orders).
+- **NEP-245 for goods:** one multi-token contract, so stacks of wheat are fungible and can be split or merged.
+- **Merchants that can go broke:** a merchant out of FARM closes its stall until players invest in it, and earns
+  them a share when it trades again.
+- **Fast-forward view:** replay a week of merchant trading in about a minute, to watch prices react.
+- **Server-authoritative islands:** every island action checked by the server's island engine, not only mints
+  and redeems.
+- **Mainnet:** a contract audit, a multisig owner, server keys in a KMS, then live *Get FARM with any token*
+  orders through NEAR Intents.
