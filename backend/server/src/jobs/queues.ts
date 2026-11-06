@@ -12,12 +12,15 @@ export const QUEUES = {
   newsFanout: 'news-fanout',
   /** Weekly and other clock jobs (was Cloud Scheduler). */
   cron: 'cron',
+  /** After a mint voucher expires: confirm it was minted, or give the items back. */
+  mintExpiry: 'mint-expiry',
 } as const;
 
 export type IslandWakeJob = { uid: string };
 export type PushTaskJob = PushTask & { uid: string };
 export type NewsFanoutJob = { newsId: string };
 export type CronJob = { name: 'leaderboard-pay-week' };
+export type MintExpiryJob = { uid: string; tokenId: string };
 
 const RETRY = { attempts: 3, backoff: { type: 'exponential', delay: 30_000 } } as const;
 /** Finished jobs are kept briefly for the admin board, then dropped. */
@@ -28,6 +31,7 @@ export interface JobQueues {
   readonly pushTask: Queue<PushTaskJob>;
   readonly newsFanout: Queue<NewsFanoutJob>;
   readonly cron: Queue<CronJob>;
+  readonly mintExpiry: Queue<MintExpiryJob>;
   close(): Promise<void>;
 }
 
@@ -39,6 +43,8 @@ export function jobQueues(connection: ConnectionOptions, prefix?: string): JobQu
     pushTask: new Queue<PushTaskJob>(QUEUES.pushTask, opts),
     newsFanout: new Queue<NewsFanoutJob>(QUEUES.newsFanout, opts),
     cron: new Queue<CronJob>(QUEUES.cron, opts),
+    // the chain may be slow to answer: keep trying for a while
+    mintExpiry: new Queue<MintExpiryJob>(QUEUES.mintExpiry, { ...opts, defaultJobOptions: { ...CLEANUP, attempts: 8, backoff: { type: 'exponential', delay: 60_000 } } }),
   };
   return { ...q, close: async () => void (await Promise.all(Object.values(q).map((x) => x.close()))) };
 }
@@ -74,4 +80,11 @@ export async function scheduleCron(queue: Queue<CronJob>): Promise<void> {
     name: 'leaderboard-pay-week',
     data: { name: 'leaderboard-pay-week' },
   });
+}
+
+/** One refund check per voucher, after it expired (a repeat booking is a no-op). */
+export function bullMintExpiry(queue: Queue<MintExpiryJob>, now: () => number = Date.now) {
+  return async (uid: string, tokenId: string, atMs: number): Promise<void> => {
+    await queue.add('expire', { uid, tokenId }, { jobId: safeId(['mint', tokenId]), delay: Math.max(0, atMs - now()) });
+  };
 }

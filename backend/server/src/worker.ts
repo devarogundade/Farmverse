@@ -6,10 +6,11 @@ import { wake as wakeIsland } from '../../functions/src/game/islands';
 import { payWeek } from '../../functions/src/game/leaderboard';
 import { fanOutNews } from '../../functions/src/game/news';
 import { raidTask } from '../../functions/src/game/raids';
-import { bookingDeps, envOf, islandDeps, type Runtime } from './calls';
+import { bookingDeps, envOf, islandDeps, mintDeps, type Runtime } from './calls';
+import { expireMint } from './mint/mint';
 import { loadConfig } from './config';
 import { redisClient } from './infra/redis';
-import { QUEUES, scheduleCron, type CronJob, type IslandWakeJob, type NewsFanoutJob, type PushTaskJob } from './jobs/queues';
+import { QUEUES, scheduleCron, type CronJob, type IslandWakeJob, type MintExpiryJob, type NewsFanoutJob, type PushTaskJob } from './jobs/queues';
 import { buildServices } from './runtime';
 
 /** What each queue does — the bodies of the old Cloud Tasks handlers, scheduler and trigger. */
@@ -35,6 +36,14 @@ export function processors(rt: Runtime, log: Logger) {
       const players = await fanOutNews(bookingDeps(rt, l), job.data.newsId, doc.data);
       l.info('news fan-out', { players });
       return players;
+    },
+    [QUEUES.mintExpiry]: async (job: Job<MintExpiryJob>) => {
+      const l = log.with({ job: 'mint-expiry', uid: job.data.uid, tokenId: job.data.tokenId });
+      const outcome = await expireMint(mintDeps(rt, l), job.data.uid, job.data.tokenId, l);
+      // Booked a little early (clock skew): look again shortly.
+      if (outcome === 'early') throw new Error('voucher not expired yet');
+      l.info('mint expiry', { outcome });
+      return outcome;
     },
     [QUEUES.cron]: async (job: Job<CronJob>) => {
       const l = log.with({ job: job.data.name });

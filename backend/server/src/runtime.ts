@@ -10,7 +10,9 @@ import { webMessenger, type Runtime } from './calls';
 import type { Config } from './config';
 import { PrismaClient } from './generated/prisma/client';
 import { redisChangeBus, redisClient, redisNonces, redisRateLimiter, type ChangeBus, type RateLimiter } from './infra/redis';
-import { bullTasks, bullWakes, jobQueues, type JobQueues } from './jobs/queues';
+import { bullMintExpiry, bullTasks, bullWakes, jobQueues, type JobQueues } from './jobs/queues';
+import { rpcChainReader } from './mint/nearChain';
+import { VoucherSigner } from './mint/voucher';
 import type { DocReader } from './live';
 import { prismaStore, type DocChange } from './store/prismaStore';
 import { queryDocuments } from './store/query';
@@ -88,6 +90,18 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
       await sessions.signOutEverywhere(uid);
       l.info('account deleted', { documents: removed.count });
     },
+    ...(config.MINT_SIGNER_SEED
+      ? {
+          chain: {
+            reader: rpcChainReader(config.NEAR_RPC_URL, config.NEAR_ITEMS_CONTRACT),
+            signer: new VoucherSigner(Buffer.from(config.MINT_SIGNER_SEED, 'base64')),
+            itemsContract: config.NEAR_ITEMS_CONTRACT,
+            limits: { dailyValueCap: config.MINT_DAILY_VALUE_CAP, minAccountHours: config.MINT_MIN_ACCOUNT_HOURS },
+            scheduleExpiry: bullMintExpiry(queues.mintExpiry),
+            accountOf: async (uid: string) => (await prisma.account.findUnique({ where: { uid }, select: { accountId: true } }))?.accountId ?? null,
+          },
+        }
+      : {}),
   };
 
   return {

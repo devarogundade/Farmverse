@@ -46,6 +46,8 @@ namespace Farmverse.Contracts
         public static readonly CallableSpec<GoalsClaimAchievementRequest, GoalsClaimAchievementResponse> GoalsClaimAchievement = new CallableSpec<GoalsClaimAchievementRequest, GoalsClaimAchievementResponse>("goals-claimAchievement", GoalsClaimAchievementResponse.FromWire);
         public static readonly CallableSpec<SessionPingRequest, SessionPingResponse> SessionPing = new CallableSpec<SessionPingRequest, SessionPingResponse>("session-ping", SessionPingResponse.FromWire);
         public static readonly CallableSpec<RaidFinishRequest, RaidFinishResponse> RaidFinish = new CallableSpec<RaidFinishRequest, RaidFinishResponse>("raid-finish", RaidFinishResponse.FromWire);
+        public static readonly CallableSpec<ChainMintRequest, ChainMintResponse> ChainMint = new CallableSpec<ChainMintRequest, ChainMintResponse>("chain-mint", ChainMintResponse.FromWire);
+        public static readonly CallableSpec<ChainRedeemRequest, ChainRedeemResponse> ChainRedeem = new CallableSpec<ChainRedeemRequest, ChainRedeemResponse>("chain-redeem", ChainRedeemResponse.FromWire);
     }
 
     /// <summary>The localization parameters each error code carries.</summary>
@@ -93,6 +95,13 @@ namespace Farmverse.Contracts
                 [ErrorCode.CouponUnknown] = Array.Empty<string>(),
                 [ErrorCode.CouponUsed] = Array.Empty<string>(),
                 [ErrorCode.VisitsClosed] = Array.Empty<string>(),
+                [ErrorCode.MintLocked] = Array.Empty<string>(),
+                [ErrorCode.MintLimit] = new[] { "limit", "left" },
+                [ErrorCode.MintTooSoon] = new[] { "hours" },
+                [ErrorCode.MintNotEnough] = new[] { "have" },
+                [ErrorCode.MintBuildingBusy] = new[] { "reason" },
+                [ErrorCode.MintNotAllowed] = Array.Empty<string>(),
+                [ErrorCode.RedeemNotFound] = Array.Empty<string>(),
             };
 
         public static IReadOnlyList<string> ParamsOf(ErrorCode code) =>

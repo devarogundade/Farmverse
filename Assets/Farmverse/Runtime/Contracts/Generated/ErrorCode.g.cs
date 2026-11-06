@@ -51,6 +51,13 @@ namespace Farmverse.Contracts
         CouponUnknown = 37,
         CouponUsed = 38,
         VisitsClosed = 39,
+        MintLocked = 40,
+        MintLimit = 41,
+        MintTooSoon = 42,
+        MintNotEnough = 43,
+        MintBuildingBusy = 44,
+        MintNotAllowed = 45,
+        RedeemNotFound = 46,
     }
 
     /// <summary>Wire strings for <see cref="ErrorCode"/>.</summary>
@@ -99,6 +106,13 @@ namespace Farmverse.Contracts
                 case ErrorCode.CouponUnknown: return "COUPON_UNKNOWN";
                 case ErrorCode.CouponUsed: return "COUPON_USED";
                 case ErrorCode.VisitsClosed: return "VISITS_CLOSED";
+                case ErrorCode.MintLocked: return "MINT_LOCKED";
+                case ErrorCode.MintLimit: return "MINT_LIMIT";
+                case ErrorCode.MintTooSoon: return "MINT_TOO_SOON";
+                case ErrorCode.MintNotEnough: return "MINT_NOT_ENOUGH";
+                case ErrorCode.MintBuildingBusy: return "MINT_BUILDING_BUSY";
+                case ErrorCode.MintNotAllowed: return "MINT_NOT_ALLOWED";
+                case ErrorCode.RedeemNotFound: return "REDEEM_NOT_FOUND";
                 default: throw new WireFormatException("ErrorCode", "cannot send an unknown value");
             }
         }
@@ -146,6 +160,13 @@ namespace Farmverse.Contracts
                 case "COUPON_UNKNOWN": return ErrorCode.CouponUnknown;
                 case "COUPON_USED": return ErrorCode.CouponUsed;
                 case "VISITS_CLOSED": return ErrorCode.VisitsClosed;
+                case "MINT_LOCKED": return ErrorCode.MintLocked;
+                case "MINT_LIMIT": return ErrorCode.MintLimit;
+                case "MINT_TOO_SOON": return ErrorCode.MintTooSoon;
+                case "MINT_NOT_ENOUGH": return ErrorCode.MintNotEnough;
+                case "MINT_BUILDING_BUSY": return ErrorCode.MintBuildingBusy;
+                case "MINT_NOT_ALLOWED": return ErrorCode.MintNotAllowed;
+                case "REDEEM_NOT_FOUND": return ErrorCode.RedeemNotFound;
                 default: return ErrorCode.Unknown;
             }
         }

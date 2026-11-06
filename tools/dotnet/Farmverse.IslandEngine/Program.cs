@@ -42,6 +42,7 @@ namespace Farmverse.IslandEngine
             app.MapGet("/v1/version", () => Results.Ok(new VersionResponse { rulesVersion = IslandSim.RulesVersion }));
             app.MapPost("/v1/advance", (AdvanceRequest req) => Engine.Advance(req));
             app.MapPost("/v1/raid", (RaidRequest req) => Engine.Raid(req));
+            app.MapPost("/v1/exchange", (ExchangeRequest req) => Engine.Exchange(req));
             app.Run();
         }
     }
@@ -77,6 +78,34 @@ namespace Farmverse.IslandEngine
             }
         }
 
+        /// <summary>Goods and buildings to or from the chain: advance to now, apply every op or none.</summary>
+        public static IResult Exchange(ExchangeRequest req)
+        {
+            if (req.state == null) return Results.BadRequest(new ErrorResponse { error = "state missing" });
+            var now = req.now > 0 ? req.now : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+            if (req.state.simAt > 0 && now < req.state.simAt)
+                return Results.BadRequest(new ErrorResponse { error = "now is before the island's simAt" });
+            try
+            {
+                var (a, done) = IslandExchange.Apply(req.state, now, req.ops);
+                return Results.Ok(new ExchangeResponse
+                {
+                    state = a.State,
+                    nextWake = a.NextWake,
+                    summary = new SummaryDto { netWorth = a.Economy.NetWorth, level = a.Economy.IslandLevel, xp = a.Economy.Xp },
+                    done = done,
+                });
+            }
+            catch (ExchangeRefusal ex)
+            {
+                return Results.Json(new RefusalResponse { error = ex.Message, code = ex.Code }, statusCode: StatusCodes.Status422UnprocessableEntity);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.Json(new ErrorResponse { error = ex.Message }, statusCode: StatusCodes.Status409Conflict);
+            }
+        }
+
         public static IResult Raid(RaidRequest req)
         {
             if (req.state == null) return Results.BadRequest(new ErrorResponse { error = "state missing" });
@@ -98,6 +127,28 @@ namespace Farmverse.IslandEngine
                 return Results.Json(new ErrorResponse { error = ex.Message }, statusCode: StatusCodes.Status409Conflict);
             }
         }
+    }
+
+    public sealed class ExchangeRequest
+    {
+        public IslandState? state;
+        public double now;
+        public List<ExchangeOp> ops = new List<ExchangeOp>();
+    }
+
+    public sealed class ExchangeResponse
+    {
+        public IslandState state = new IslandState();
+        public double nextWake;
+        public SummaryDto summary = new SummaryDto();
+        public List<ExchangeDone> done = new List<ExchangeDone>();
+    }
+
+    /// <summary>422: the island can't do it (not enough goods, building busy); <c>code</c> says why.</summary>
+    public sealed class RefusalResponse
+    {
+        public string error = "";
+        public string code = "";
     }
 
     public sealed class RaidRequest

@@ -452,6 +452,11 @@ export const IslandSyncResponse = named(
     report: IslandAwayReport,
     /** When the server will next look at this island by itself. */
     nextWakeMs: EpochMs,
+    /**
+     * The server changed the island itself (a redeem, a mint refund): the client must load `state`
+     * in place of its own, even in shadow mode, or the change is lost on its next upload.
+     */
+    serverChanged: z.boolean().optional(),
   }),
 );
 
@@ -539,6 +544,86 @@ export interface CallableSpec<Req extends z.ZodType = z.ZodType, Res extends z.Z
   readonly response: Res;
 }
 
+// ---- chain: mint (island → NFT) and redeem (NFT → island) — docs 13 §7 --------------------------
+
+/** What leaves the island: goods from the farmhouses, boosts held, or a placed building / field. */
+export const MintKind = named('MintKind', z.enum(['good', 'boost', 'building', 'land']), 'What a mint takes off the island.');
+
+export const ChainMintRequest = named(
+  'ChainMintRequest',
+  z.object({
+    meta: RequestMeta,
+    kind: MintKind,
+    /** Goods or boost id (`wheat`, `fert`); ignored for buildings. */
+    item: z.string().regex(/^[a-z][a-z0-9_]{0,39}$/).optional(),
+    /** How many goods or boosts; ignored for buildings (always 1). */
+    quantity: z.number().int().min(1).max(1_000_000).optional(),
+    /** The placed building (or field) to pick up. */
+    buildingUid: z.number().int().min(0).optional(),
+    /** Retrying with the same key returns the same voucher and never takes twice. */
+    key: OpKey,
+  }),
+  'Take items off the island and get a signed voucher to mint them as an NFT from the wallet.',
+);
+
+/** Every kind of Farmverse token, in the items contract's order. */
+export const TokenKind = named('TokenKind', z.enum(['good', 'boost', 'building', 'land', 'tool', 'pack', 'worker']), 'What a Farmverse token holds.');
+
+/** The voucher exactly as `items.mint_with_voucher` takes it (field names as in the contract). */
+export const MintVoucher = named(
+  'MintVoucher',
+  z.object({
+    contract_id: z.string(),
+    token_id: z.string(),
+    receiver_id: z.string(),
+    kind: TokenKind,
+    item_id: z.string(),
+    quantity: z.number().int(),
+    props: z.string(),
+    title: z.string(),
+    media: z.string(),
+    expires_at_ms: z.number().int(),
+  }),
+);
+
+export const ChainMintResponse = named(
+  'ChainMintResponse',
+  z.object({
+    tokenId: z.string(),
+    voucher: MintVoucher,
+    /** The game signer's public key (`ed25519:…`). */
+    signer: z.string(),
+    /** Base64 ed25519 signature over the voucher. */
+    signature: z.string(),
+    /** Submit before this (epoch ms); afterwards the items come back to the island. */
+    expiresAtMs: EpochMs,
+    /** The island without the items (load it in place of the device's). Absent for boosts. */
+    state: z.string().optional(),
+    rulesVersion: z.number().int().min(1).optional(),
+  }),
+);
+
+export const ChainRedeemRequest = named(
+  'ChainRedeemRequest',
+  z.object({ meta: RequestMeta, txHash: z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{43,44}$/) }),
+  'Credit the items of an NFT this wallet redeemed (burned) on chain.',
+);
+
+export const ChainRedeemResponse = named(
+  'ChainRedeemResponse',
+  z.object({
+    tokenId: z.string(),
+    kind: z.string(),
+    item: z.string(),
+    quantity: z.number().int(),
+    /** False when this token was credited before (the call is safe to repeat). */
+    fresh: z.boolean(),
+    /** The island with the items added (load it in place of the device's). Absent for boosts and packs. */
+    state: z.string().optional(),
+    rulesVersion: z.number().int().min(1).optional(),
+  }),
+);
+
 function callable<Req extends z.ZodType, Res extends z.ZodType>(
   name: string,
   request: Req,
@@ -581,6 +666,8 @@ export const CALLABLES = {
   goalsClaimAchievement: callable('goals-claimAchievement', GoalsClaimAchievementRequest, GoalsClaimAchievementResponse),
   sessionPing: callable('session-ping', SessionPingRequest, SessionPingResponse),
   raidFinish: callable('raid-finish', RaidFinishRequest, RaidFinishResponse),
+  chainMint: callable('chain-mint', ChainMintRequest, ChainMintResponse),
+  chainRedeem: callable('chain-redeem', ChainRedeemRequest, ChainRedeemResponse),
 } as const;
 
 export type PlatformContent = z.infer<typeof PlatformContent>;

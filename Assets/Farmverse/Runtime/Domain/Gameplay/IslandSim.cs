@@ -24,6 +24,20 @@ namespace Farmverse.Domain.Gameplay
         public List<Placed> buildings = new List<Placed>();
         /// <summary>The economy's own save (null on a brand-new island).</summary>
         public EconomySave? economy;
+        /// <summary>
+        /// Buildings the player owns but hasn't placed: redeemed from an NFT (IslandExchange). The build
+        /// flow places one like a shop purchase, keeping its level.
+        /// </summary>
+        public List<Held> held = new List<Held>();
+
+        /// <summary>An unplaced building: its catalogue id, level and what it cost.</summary>
+        [Serializable]
+        public sealed class Held
+        {
+            public string id = "";
+            public int level = 1;
+            public int price;
+        }
 
         /// <summary>A building on the grid: catalogue id, the game's uid, its cells and what it cost.</summary>
         [Serializable]
@@ -109,6 +123,7 @@ namespace Farmverse.Domain.Gameplay
                 seed = state.seed,
                 startCoins = state.startCoins,
                 buildings = state.buildings.Select(Copy).ToList(),
+                held = state.held.Select(CopyHeld).ToList(),
                 economy = e.ToSave(),
             };
             return new IslandAdvance(next, report, NextWake(e, now), e);
@@ -133,6 +148,7 @@ namespace Farmverse.Domain.Gameplay
                 seed = state.seed,
                 startCoins = state.startCoins,
                 buildings = state.buildings.Select(Copy).ToList(),
+                held = state.held.Select(CopyHeld).ToList(),
                 economy = e.ToSave(),
             };
             return (new IslandAdvance(next, report, NextWake(e, now), e), raid);
@@ -150,7 +166,9 @@ namespace Farmverse.Domain.Gameplay
             return next;
         }
 
-        private static IslandState.Placed Copy(IslandState.Placed b) => new IslandState.Placed
+        internal static IslandState.Held CopyHeld(IslandState.Held h) => new IslandState.Held { id = h.id, level = h.level, price = h.price };
+
+        internal static IslandState.Placed Copy(IslandState.Placed b) => new IslandState.Placed
         {
             id = b.id, uid = b.uid, x = b.x, z = b.z, w = b.w, d = b.d, price = b.price, buildWork = 0,
         };

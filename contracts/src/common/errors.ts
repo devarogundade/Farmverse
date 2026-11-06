@@ -69,6 +69,21 @@ export const ERROR_CATALOGUE = {
   // ---- visits -----------------------------------------------------------------
   /** The owner doesn't take visitors (settings) or has no island on the server yet. */
   VISITS_CLOSED: [],
+  // ---- chain (mint / redeem) ----------------------------------------------------
+  /** Minting is locked for this account (an implausible island upload is under review). */
+  MINT_LOCKED: [],
+  /** Today's mint value limit is reached (coins of market value). */
+  MINT_LIMIT: ['limit', 'left'],
+  /** The account is too new to mint (hours since it started). */
+  MINT_TOO_SOON: ['hours'],
+  /** Not enough of the goods in store (or boosts held). */
+  MINT_NOT_ENOUGH: ['have'],
+  /** The building can't be picked up: `reason` is not_empty, busy, core_building, under_construction, ruined. */
+  MINT_BUILDING_BUSY: ['reason'],
+  /** That item can't be minted. */
+  MINT_NOT_ALLOWED: [],
+  /** The transaction isn't a successful redeem by this wallet (yet, or at all). */
+  REDEEM_NOT_FOUND: [],
 } as const satisfies Record<string, readonly string[]>;
 
 export type ErrorCodeName = keyof typeof ERROR_CATALOGUE;

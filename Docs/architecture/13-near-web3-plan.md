@@ -312,6 +312,37 @@ in-game coins, or small FARM), catalogue `mintable` flag per item, ledger rows f
 crossing, a nightly reconciliation (issued − refunded = on-chain minted; burned = redeemed).
 Bot protection is Turnstile plus Redis rate limits (Firebase App Check is gone).
 
+### 7.4 As built (2026-11-06): shadow mode and the guard
+
+**Finding.** The island is still device-authoritative ("rollout phase 1"): every mirrored
+`island-sync` replaces the server's copy with the device's upload. Minting from that copy would
+mint whatever a modified client claims. Decision (2026-11-06): **guarded mirror for testnet,
+server-authoritative island actions before mainnet.**
+
+* **Mint and redeem are server-authoritative moments.** `chain-mint` runs the engine's new
+  `/v1/exchange` (`IslandExchange` in the shared C# domain: `take`, `give`, `pickUp`, `hold`) on
+  the server's copy and returns the new island; the client must load it. Server-side changes made
+  while the player is away (mint refunds) and redeems become **grants** (`players/{uid}/state/grants`),
+  applied on the player's next `island-sync`, which then answers `serverChanged: true`: the client
+  must load that state even in shadow mode, or the change is lost on its next upload.
+* **Upload guard.** Each mirrored upload's net worth is compared with the server's previous copy:
+  growth beyond 20,000 coins/hour plus 50 %/day of the previous worth (or a first upload above
+  25,000) sets `audit` on the island: play continues, minting is locked (`MINT_LOCKED`) for review.
+* **Caps.** Per-player daily mint value (default 5,000 coins of market price), minimum account
+  age (24 h), vouchers live 30 minutes; an unused voucher is refunded by the `mint-expiry` job once
+  the chain can no longer accept it (checked on RPC: `nft_token` / `is_burned`).
+* **Redeem** is checked on a NEAR RPC node (`tx`: success, signed by the wallet, `item_redeem`
+  from the items contract) and credited once per token (`redemptions/{tokenId}`): goods → farmhouse,
+  buildings/land/tools → `held` (placed later with their level), boosts → inventory, packs →
+  entitlements (`gems_<n>`, `farm_pass`, `builder_pass`, `starter_pack`).
+* **Picking up** a building never destroys goods: it must be empty (eggs collected, machines
+  idle, no crop); farmhouse and market stay.
+* The voucher encoding is pinned by one shared byte vector in the Rust and TypeScript tests.
+
+**Residual risk (testnet only):** a cheater who stays under the growth bound can still inflate
+goods slowly, and a client that ignores `serverChanged` can re-upload minted goods (bounded by
+the same guard). Both end when the island moves to server-authoritative actions.
+
 ## 8. Workers as NFTs ("NPC agents with wallets")
 
 **Recommendation:** yes — but as the second chain feature, after goods mint/redeem works.

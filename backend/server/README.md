@@ -71,9 +71,18 @@ weekly `leaderboard-pay-week` (Monday 00:10 UTC).
 release step. Both are stateless; scale them separately. Needs `DATABASE_URL`, `REDIS_URL`,
 `JWT_SEED`, `NEAR_NETWORK`, `NEAR_RPC_URL`, `AUTH_RECIPIENT`, `ALLOWED_ORIGINS`, `ISLAND_ENGINE_URL`.
 
+## Mint and redeem
+
+`chain-mint` and `chain-redeem` (docs 13 §7.4) need `MINT_SIGNER_SEED` (its public key registered
+on the items contract with `add_signer`) and the island engine with `/v1/exchange`. The
+`mint-expiry` job refunds unused vouchers. `npm run test:db` runs them end to end against the
+real engine at `ISLAND_ENGINE_URL` (start it with `dotnet tools/dotnet/Farmverse.IslandEngine/bin/Release/net8.0/Farmverse.IslandEngine.dll`).
+
 ## Not done yet
 
-* Mint / redeem calls and the mint voucher signer (step 3b).
 * The Unity client's web adapters (step 4); until then the shipped client still talks to Firebase.
+  The client must load the island returned by `chain-mint`, `chain-redeem` and any
+  `island-sync` that answers `serverChanged: true`, and place `held` buildings.
+* Server-authoritative island actions (needed before mainnet; see docs 13 §7.4).
 * `content-manifest` returns no bundles for `webgl` until WebGL Addressables are published.
 * Turnstile on sign-in (rate limits are in place).

@@ -70,16 +70,47 @@ export interface EngineRaidRun {
   readonly summary?: IslandSummary;
 }
 
+/** One change to an island's contents for the chain (the engine's ExchangeOp). */
+export type ExchangeOp =
+  | { readonly op: 'take' | 'give'; readonly item: string; readonly n: number }
+  | { readonly op: 'pickUp'; readonly uid: number }
+  | { readonly op: 'hold'; readonly id: string; readonly level: number; readonly price: number };
+
+/** What an op did (the engine's ExchangeDone). */
+export interface ExchangeDone {
+  readonly op: string;
+  readonly item: string;
+  readonly n: number;
+  /** Market price of one unit (goods) or the building's price. */
+  readonly unitValue: number;
+  readonly uid: number;
+  readonly id: string;
+  readonly level: number;
+  readonly price: number;
+}
+
+export interface EngineExchange {
+  readonly state: IslandSave;
+  readonly nextWake: number;
+  readonly summary: IslandSummary;
+  readonly done: readonly ExchangeDone[];
+}
+
 export interface IslandEngine {
   /** Run the island from its simAt to `nowSeconds`. Throws EngineRefusal when the engine says no. */
   advance(state: IslandSave, nowSeconds: number): Promise<EngineAdvance>;
+  /**
+   * Run it to `nowSeconds`, then apply every op or none (mint takes, redeem gives). A refusal
+   * (not enough goods, building busy …) throws EngineRefusal with status 422 and a `code`.
+   */
+  exchange?(state: IslandSave, nowSeconds: number, ops: readonly ExchangeOp[]): Promise<EngineExchange>;
   /** Run it to `nowSeconds`, then the day's raid (`salt`: the day number). */
   raid?(state: IslandSave, nowSeconds: number, salt: number): Promise<EngineRaidRun>;
 }
 
 /** The engine refused the island (409: newer rules; 400: bad save or clock). Not worth retrying. */
 export class EngineRefusal extends Error {
-  constructor(readonly status: number, message: string) {
+  constructor(readonly status: number, message: string, readonly code: string = '') {
     super(message);
     this.name = 'EngineRefusal';
   }
@@ -119,9 +150,9 @@ export function httpEngine(baseUrl: string, options: { fetch?: Fetch; token?: ()
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(options.timeoutMs ?? 10_000),
     });
-    if (res.status === 400 || res.status === 409) {
-      const err = (await res.json().catch(() => ({}))) as { error?: string };
-      throw new EngineRefusal(res.status, err.error ?? `HTTP ${res.status}`);
+    if (res.status === 400 || res.status === 409 || res.status === 422) {
+      const err = (await res.json().catch(() => ({}))) as { error?: string; code?: string };
+      throw new EngineRefusal(res.status, err.error ?? `HTTP ${res.status}`, err.code ?? '');
     }
     if (!res.ok) throw new Error(`island engine: HTTP ${res.status}`);
     return (await res.json()) as T;
@@ -129,5 +160,6 @@ export function httpEngine(baseUrl: string, options: { fetch?: Fetch; token?: ()
   return {
     advance: (state, nowSeconds) => post<EngineAdvance>('/v1/advance', { state, now: nowSeconds }),
     raid: (state, nowSeconds, salt) => post<EngineRaidRun>('/v1/raid', { state, now: nowSeconds, salt }),
+    exchange: (state, nowSeconds, ops) => post<EngineExchange>('/v1/exchange', { state, now: nowSeconds, ops }),
   };
 }

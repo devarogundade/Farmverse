@@ -393,3 +393,24 @@ fn voucher_message_is_domain_plus_borsh() {
     assert!(bytes.starts_with(MINT_DOMAIN));
     assert_eq!(&bytes[MINT_DOMAIN.len()..], borsh::to_vec(&v).unwrap().as_slice());
 }
+
+/// The game server (backend/server/src/mint/voucher.ts) signs these exact bytes for this voucher:
+/// the same hex is pinned in its tests, so a change on either side fails one of them.
+#[test]
+fn voucher_bytes_match_the_game_server() {
+    let v = MintVoucher {
+        contract_id: "items.farmverse.near".parse().unwrap(),
+        token_id: "g-1".into(),
+        receiver_id: "alice.near".parse().unwrap(),
+        kind: ItemKind::Building,
+        item_id: "chicken_coop".into(),
+        quantity: 1,
+        props: "{\"level\":3}".into(),
+        title: "Chicken coop".into(),
+        media: "items/chicken_coop.png".into(),
+        expires_at_ms: 1_800_000_060_000,
+    };
+    let expected = "6661726d76657273653a6974656d733a6d696e743a7631140000006974656d732e6661726d76657273652e6e65617203000000672d310a000000616c6963652e6e656172020c000000636869636b656e5f636f6f7001000000000000000b0000007b226c6576656c223a337d0c000000436869636b656e20636f6f70160000006974656d732f636869636b656e5f636f6f702e706e67603a5d18a3010000";
+    let hex: String = voucher_signing_bytes(&v).iter().map(|b| format!("{b:02x}")).collect();
+    assert_eq!(hex, expected);
+}

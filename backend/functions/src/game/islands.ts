@@ -1,7 +1,7 @@
 import type { IslandAwayReport } from '@farmverse/contracts';
 import { AppError, fail } from '../core/errors';
 import { paths } from '../infra/paths';
-import { EngineRefusal, type EngineReport, type IslandEngine, type IslandSave, type IslandSummary } from '../infra/islandEngine';
+import { EngineRefusal, type EngineReport, type ExchangeOp, type IslandEngine, type IslandSave, type IslandSummary } from '../infra/islandEngine';
 import { postToBoard } from './leaderboard';
 import type { Env } from './services';
 
@@ -28,7 +28,50 @@ export interface IslandDoc {
   summary?: IslandSummary;
   /** The device's own save files from the last mirror (cloud save: restored on a new phone). */
   deviceSave?: string;
+  /** Set (and kept) when an upload looked implausible: minting stays locked until reviewed. */
+  audit?: IslandAudit;
   updatedAt: number;
+}
+
+/** Why an upload was flagged (docs 13 §7.3). */
+export interface IslandAudit {
+  readonly flaggedAtMs: number;
+  readonly reason: 'worth_jump' | 'first_upload_too_rich';
+  readonly fromWorth: number;
+  readonly toWorth: number;
+  readonly allowedWorth: number;
+  readonly hours: number;
+}
+
+/** Island changes the server owes the player (redeems, mint refunds), applied on their next sync. */
+export interface GrantsDoc {
+  items: { id: string; ops: ExchangeOp[]; at: number }[];
+  updatedAt: number;
+}
+
+/**
+ * The upload guard while the device is still authoritative (shadow mode). An honest island grows
+ * by what its buildings make; a forged save jumps. Allowed growth per hour: a flat amount plus a
+ * share of what the island was already worth (generous: honest play reaches ~6k coins/hour at
+ * level 20). A flag never blocks play; it locks minting until someone looks.
+ */
+export const AUDIT_BASE_PER_HOUR = 20_000;
+export const AUDIT_SHARE_PER_DAY = 0.5;
+export const AUDIT_MIN_HOURS = 0.25;
+export const AUDIT_MAX_HOURS = 72;
+/** A brand-new island uploaded for the first time can't already be worth more than this. */
+export const AUDIT_FIRST_WORTH = 25_000;
+
+/** Pure: the audit of one upload, or undefined when it's plausible. */
+export function auditUpload(fromWorth: number | undefined, toWorth: number, elapsedMs: number, nowMs: number): IslandAudit | undefined {
+  const hours = Math.min(AUDIT_MAX_HOURS, Math.max(AUDIT_MIN_HOURS, elapsedMs / 3_600_000));
+  if (fromWorth === undefined) {
+    return toWorth > AUDIT_FIRST_WORTH
+      ? { flaggedAtMs: nowMs, reason: 'first_upload_too_rich', fromWorth: 0, toWorth, allowedWorth: AUDIT_FIRST_WORTH, hours }
+      : undefined;
+  }
+  const allowedWorth = Math.round(fromWorth + AUDIT_BASE_PER_HOUR * hours + fromWorth * AUDIT_SHARE_PER_DAY * (hours / 24));
+  return toWorth > allowedWorth ? { flaggedAtMs: nowMs, reason: 'worth_jump', fromWorth, toWorth, allowedWorth, hours } : undefined;
 }
 
 interface PendingReport {
@@ -172,7 +215,8 @@ async function advanceStored(
   mirror: boolean,
   device: string | undefined,
   finish: (before: IslandDoc | undefined, run: EngineReport, nowMs: number) => Pick<IslandDoc, 'pending' | 'lastSyncMs'>,
-): Promise<{ doc: IslandDoc; before: IslandDoc | undefined } | undefined> {
+  applyGrants = false,
+): Promise<{ doc: IslandDoc; before: IslandDoc | undefined; serverChanged: boolean } | undefined> {
   const { env } = deps;
   const path = paths.island(uid);
   for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
@@ -189,7 +233,32 @@ async function advanceStored(
     save = await withPass(env, uid, save);
     // Never run backwards (a skewed instance clock): the engine refuses now < simAt.
     const at = Math.max(nowMs, Math.ceil(save.simAt * 1000));
-    const out = await run(deps.engine, save, at, fromDevice && adopt !== undefined);
+    let out = await run(deps.engine, save, at, fromDevice && adopt !== undefined);
+
+    // Shadow-mode guard: compare what the device uploaded with what the server last held.
+    let audit = before?.audit;
+    if (fromDevice && adopt !== undefined && out.summary && !audit) {
+      const elapsed = before ? at - before.updatedAt : 0;
+      audit = auditUpload(before?.summary?.netWorth, out.summary.netWorth, elapsed, at);
+      if (audit) env.log.warn('island upload flagged', { uid, ...audit });
+    }
+
+    // What the server owes the island (redeems, refunds): only while the player is here to load it.
+    let applied: string[] = [];
+    if (applyGrants && deps.engine.exchange) {
+      const grants = await env.store.read(paths.grants(uid));
+      const items = grants.exists ? ((grants.data as unknown as GrantsDoc).items ?? []) : [];
+      if (items.length > 0) {
+        try {
+          const ex = await deps.engine.exchange(out.state, at / 1000, items.flatMap((g) => g.ops));
+          out = { ...out, state: ex.state, nextWake: ex.nextWake, summary: ex.summary };
+          applied = items.map((g) => g.id);
+        } catch (e) {
+          // e.g. no farmhouse to store goods in: they stay owed until the island can take them
+          env.log.warn('grants not applied', { uid, error: String(e) });
+        }
+      }
+    }
 
     const doc: IslandDoc = {
       rev: (before?.rev ?? 0) + 1,
@@ -198,18 +267,25 @@ async function advanceStored(
       state: JSON.stringify(out.state),
       nextWakeMs: Math.round(out.nextWake * 1000),
       ...(out.summary ? { summary: out.summary } : {}),
+      ...(audit ? { audit } : {}),
       ...(mirror && device !== undefined ? { deviceSave: device } : before?.deviceSave ? { deviceSave: before.deviceSave } : {}),
       ...finish(before, out.report, at),
       updatedAt: at,
     };
     const written = await env.store.runTransaction(async (tx) => {
       const now = await tx.get(path);
+      const owed = applied.length > 0 ? await tx.get(paths.grants(uid)) : undefined;
       const rev = now.exists ? Number((now.data as unknown as IslandDoc).rev) : 0;
       if (rev !== (before?.rev ?? 0)) return false;
       tx.set(path, doc as unknown as Record<string, unknown>);
+      if (owed?.exists) {
+        // drop exactly what was applied (a grant added meanwhile stays owed)
+        const left = ((owed.data as unknown as GrantsDoc).items ?? []).filter((g) => !applied.includes(g.id));
+        tx.set(paths.grants(uid), { items: left, updatedAt: at });
+      }
       return true;
     });
-    if (written) return { doc, before };
+    if (written) return { doc, before, serverChanged: applied.length > 0 };
     env.log.info('island write raced; retrying', { uid, attempt });
   }
   fail('CONFLICT');
@@ -250,14 +326,22 @@ async function book(deps: IslandDeps, uid: string, doc: IslandDoc): Promise<void
 export async function sync(deps: IslandDeps, uid: string, adopt?: string, mirror = false, device?: string) {
   const mirroring = mirror && adopt !== undefined;
   let ranSeconds = 0;
-  const result = await advanceStored(deps, uid, adopt, mirroring, device, (before, report, nowMs) => {
-    ranSeconds = report.seconds;
-    return {
-      // a mirrored run reports only its own span: the device's copy replaced whatever wakes did
-      pending: fold(mirroring ? emptyPending() : before?.pending ?? emptyPending(), report),
-      lastSyncMs: nowMs,
-    };
-  });
+  const result = await advanceStored(
+    deps,
+    uid,
+    adopt,
+    mirroring,
+    device,
+    (before, report, nowMs) => {
+      ranSeconds = report.seconds;
+      return {
+        // a mirrored run reports only its own span: the device's copy replaced whatever wakes did
+        pending: fold(mirroring ? emptyPending() : before?.pending ?? emptyPending(), report),
+        lastSyncMs: nowMs,
+      };
+    },
+    true,
+  );
   if (!result) fail('NOT_FOUND');
   const { doc, before } = result;
   // Shadow islands are replaced on every sync, so waking them would be wasted work.
@@ -269,6 +353,7 @@ export async function sync(deps: IslandDeps, uid: string, adopt?: string, mirror
     rulesVersion: doc.rulesVersion,
     report: toReport(doc.pending, awayMs),
     nextWakeMs: doc.nextWakeMs,
+    ...(result.serverChanged ? { serverChanged: true } : {}),
   };
   // The report is delivered: clear it without another engine run (a rev-checked write;
   // losing the race just means the next sync shows it again).

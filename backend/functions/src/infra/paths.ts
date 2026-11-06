@@ -7,6 +7,14 @@ export const paths = {
   settings: (uid: string) => `players/${uid}/private/settings`,
   /** The island save the engine runs (IslandDoc), server-owned. */
   island: (uid: string) => `players/${uid}/state/island`,
+  /** Island changes the server owes the player (redeems, mint refunds), applied on the next sync. */
+  grants: (uid: string) => `players/${uid}/state/grants`,
+  /** Today's mint total (value) for the daily cap. */
+  mintDay: (uid: string) => `players/${uid}/state/mintDay`,
+  /** One mint: its voucher and what happened to it. */
+  mint: (uid: string, tokenId: string) => `players/${uid}/mints/${tokenId}`,
+  /** A redeemed token, credited once (keyed by token id, across players). */
+  redemption: (tokenId: string) => `redemptions/${tokenId}`,
   /** The player's gems (WalletDoc): server-written, client-read. */
   wallet: (uid: string) => `players/${uid}/state/wallet`,
   /** Today's gem earnings per source and purchases per offer (server only, for the daily limits). */

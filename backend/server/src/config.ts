@@ -5,6 +5,9 @@ const csv = z
   .default('')
   .transform((s) => s.split(',').map((v) => v.trim()).filter((v) => v.length > 0));
 
+/** An empty value (`KEY=` in .env) counts as unset. */
+const optional = <T extends z.ZodType>(t: T) => z.preprocess((v) => (v === '' ? undefined : v), t.optional());
+
 /** Every setting the server reads, validated once at start (a bad value stops the boot). */
 const Schema = z.object({
   DATABASE_URL: z.string().url(),
@@ -20,6 +23,26 @@ const Schema = z.object({
   NEAR_RPC_URL: z.string().url().default('https://rpc.testnet.near.org'),
   AUTH_RECIPIENT: z.string().min(1).default('play.farmverse.world'),
   ADMIN_ACCOUNTS: csv,
+  /** The contracts the indexer follows and the marketplace API serves. */
+  NEAR_ITEMS_CONTRACT: z.string().min(2).default('items.farmverse.testnet'),
+  NEAR_MARKET_CONTRACT: z.string().min(2).default('market.farmverse.testnet'),
+  /** Block feed for the indexer; defaults to neardata.xyz for NEAR_NETWORK. */
+  NEARDATA_URL: optional(z.string().url()),
+  /** FastNEAR subscription key for neardata (the free tier allows 180 requests a minute). */
+  NEARDATA_API_KEY: optional(z.string().min(8)),
+  /** Requests a minute the indexer makes to neardata; raise it with an API key. */
+  NEARDATA_RPM: optional(z.coerce.number().int().min(10).max(100_000)),
+  /** First block the indexer reads on its very first run: the contracts' deploy block. Default: now. */
+  INDEXER_START_BLOCK: optional(z.coerce.number().int().positive()),
+  /**
+   * Base64 of the 32-byte Ed25519 seed that signs mint vouchers; its public key must be registered
+   * on the items contract (`add_signer`). Unset: chain-mint is refused. Production: keep it in a KMS.
+   */
+  MINT_SIGNER_SEED: optional(z.string().refine((s) => Buffer.from(s, 'base64').length === 32, 'MINT_SIGNER_SEED must be base64 of 32 bytes')),
+  /** Market value (coins) one player may mint per UTC day. */
+  MINT_DAILY_VALUE_CAP: z.coerce.number().int().min(0).default(5_000),
+  /** Hours since a player started before they may mint. */
+  MINT_MIN_ACCOUNT_HOURS: z.coerce.number().min(0).default(24),
 });
 
 export type Config = z.infer<typeof Schema>;

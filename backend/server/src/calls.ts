@@ -23,6 +23,21 @@ import { earnGems, spendGems } from '../../functions/src/game/wallet';
 import { contentFor } from '../../functions/src/game/content';
 import type { IslandEngine } from '../../functions/src/infra/islandEngine';
 import type { Store } from '../../functions/src/infra/store';
+import { fail } from '../../functions/src/core/errors';
+import { mint, redeem, type MintDeps, type MintLimits } from './mint/mint';
+import type { ChainReader } from './mint/nearChain';
+import type { VoucherSigner } from './mint/voucher';
+
+/** Mint and redeem (absent when no voucher signer is configured: the calls are then refused). */
+export interface ChainRuntime {
+  readonly reader: ChainReader;
+  readonly signer: VoucherSigner;
+  readonly itemsContract: string;
+  readonly limits: MintLimits;
+  readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
+  /** The NEAR account behind a game uid. */
+  readonly accountOf: (uid: string) => Promise<string | null>;
+}
 
 /** Everything the game handlers need, built once per process (main.ts / worker.ts / tests). */
 export interface Runtime {
@@ -35,6 +50,26 @@ export interface Runtime {
   readonly messenger: Messenger;
   /** Removes every trace of a player (documents, name, sessions). */
   readonly deleteAccount: (uid: string, log: Logger) => Promise<void>;
+  readonly chain?: ChainRuntime;
+}
+
+export function mintDeps(rt: Runtime, log: Logger): MintDeps {
+  const c = rt.chain;
+  if (!c) fail('MAINTENANCE');
+  return {
+    env: envOf(rt, log),
+    island: islandDeps(rt, log),
+    chain: c.reader,
+    signer: c.signer,
+    itemsContract: c.itemsContract,
+    limits: c.limits,
+    scheduleExpiry: c.scheduleExpiry,
+  };
+}
+
+async function walletOf(rt: Runtime, uid: string): Promise<string> {
+  const accountId = rt.chain ? await rt.chain.accountOf(uid) : null;
+  return accountId ?? fail('UNAUTHENTICATED');
 }
 
 export const envOf = (rt: Runtime, log: Logger): Env => ({ store: rt.store, clock: rt.clock, log });
@@ -123,6 +158,16 @@ export function callDefinitions(rt: Runtime): ReadonlyMap<string, AnyDefinition>
       },
     }),
     def({ spec: CALLABLES.inboxDelete, auth: 'required', handler: async ({ uid, data, log }) => deleteMessages(env(log), uid, data.ids) }),
+    def({
+      spec: CALLABLES.chainMint,
+      auth: 'required',
+      handler: async ({ uid, data, log }) => mint(mintDeps(rt, log), uid, await walletOf(rt, uid), data, log),
+    }),
+    def({
+      spec: CALLABLES.chainRedeem,
+      auth: 'required',
+      handler: async ({ uid, data, log }) => redeem(mintDeps(rt, log), uid, await walletOf(rt, uid), data.txHash, log),
+    }),
   ];
   return new Map(list.map((d) => [d.spec.name, d]));
 }

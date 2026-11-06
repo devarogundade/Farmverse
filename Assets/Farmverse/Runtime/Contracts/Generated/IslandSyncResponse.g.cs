@@ -17,13 +17,16 @@ namespace Farmverse.Contracts
 
         public long NextWakeMs { get; set; }
 
+        public bool? ServerChanged { get; set; }
+
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(4);
+            var map = new Dictionary<string, object>(5);
             map["state"] = State;
             map["rulesVersion"] = RulesVersion;
             map["report"] = Report.ToWire();
             map["nextWakeMs"] = NextWakeMs;
+            if (ServerChanged != null) map["serverChanged"] = ServerChanged.Value;
             return map;
         }
 
@@ -36,6 +39,7 @@ namespace Farmverse.Contracts
                 RulesVersion = Wire.Required(map, "rulesVersion", "IslandSyncResponse.rulesVersion", Wire.AsLong),
                 Report = Wire.Required(map, "report", "IslandSyncResponse.report", (v, path) => IslandAwayReport.FromWire(v)),
                 NextWakeMs = Wire.Required(map, "nextWakeMs", "IslandSyncResponse.nextWakeMs", Wire.AsLong),
+                ServerChanged = Wire.OptionalValue(map, "serverChanged", "IslandSyncResponse.serverChanged", Wire.AsBool),
             };
         }
     }
