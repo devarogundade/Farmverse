@@ -64,6 +64,8 @@ namespace Farmverse.Editor
             {
                 t.GetSourceTextureWidthAndHeight(out var w, out var h);
                 if (w * h < 1_500_000 || t.DoesSourceTextureHaveAlpha()) return false;
+                // block compression needs sides in 4s, or the texture silently stays uncompressed
+                if (w % 4 != 0 || h % 4 != 0) PadToFour(path, w, h);
             }
             var current = t.GetPlatformTextureSettings(Web);
             var want = new TextureImporterPlatformSettings
@@ -83,6 +85,29 @@ namespace Farmverse.Editor
             t.SetPlatformTextureSettings(want);
             t.SaveAndReimport();
             return true;
+        }
+
+        /// <summary>
+        /// Grows a picture to the next multiple of 4 on each side by repeating its edge pixels (2048×1143 becomes
+        /// 2048×1144). The full-screen backgrounds are drawn cropped to cover, so the extra row never shows.
+        /// </summary>
+        private static void PadToFour(string path, int w, int h)
+        {
+            var src = new Texture2D(2, 2, TextureFormat.RGB24, false);
+            src.LoadImage(File.ReadAllBytes(path)); // decodes at the file's own size
+            int pw = (w + 3) / 4 * 4, ph = (h + 3) / 4 * 4;
+            var from = src.GetPixels32();
+            var to = new Color32[pw * ph];
+            for (var y = 0; y < ph; y++)
+                for (var x = 0; x < pw; x++)
+                    to[y * pw + x] = from[Mathf.Min(y, h - 1) * w + Mathf.Min(x, w - 1)];
+            var dst = new Texture2D(pw, ph, TextureFormat.RGB24, false);
+            dst.SetPixels32(to);
+            File.WriteAllBytes(path, dst.EncodeToPNG());
+            Object.DestroyImmediate(src);
+            Object.DestroyImmediate(dst);
+            AssetDatabase.ImportAsset(path);
+            Debug.Log($"Farmverse: {path} padded {w}×{h} → {pw}×{ph} so it can be compressed.");
         }
 
         /// <summary>Music at a lower bit rate (the browser decodes it; format and load type stay); effects as they are. True when changed.</summary>
