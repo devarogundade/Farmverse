@@ -9,7 +9,11 @@ namespace Farmverse.Domain.Gameplay
     [Serializable]
     public sealed class ExchangeOp
     {
-        /// <summary><c>take</c> goods, <c>give</c> goods, <c>pickUp</c> a placed building, <c>hold</c> an unplaced one.</summary>
+        /// <summary>
+        /// <c>take</c> goods, <c>give</c> goods, <c>pickUp</c> a placed building, <c>hold</c> an unplaced one,
+        /// <c>fee</c>: spend <see cref="bps"/> of the value the earlier ops moved, at least <see cref="n"/> coins,
+        /// <c>credit</c>: add <see cref="n"/> coins (a fee given back).
+        /// </summary>
         public string op = "";
         public string item = "";
         public int n;
@@ -19,6 +23,8 @@ namespace Farmverse.Domain.Gameplay
         public string id = "";
         public int level = 1;
         public int price;
+        /// <summary>For <c>fee</c>: basis points of the value moved so far.</summary>
+        public int bps;
     }
 
     /// <summary>What an op did: the goods moved with their market value, or the building picked up.</summary>
@@ -41,7 +47,7 @@ namespace Farmverse.Domain.Gameplay
     {
         public ExchangeRefusal(string code, string message) : base(message) { Code = code; }
 
-        /// <summary><c>not_enough</c>, <c>no_building</c>, <c>not_empty</c>, <c>busy</c>, <c>core_building</c>, <c>no_farmhouse</c>, <c>bad_op</c> …</summary>
+        /// <summary><c>not_enough</c>, <c>no_coins</c>, <c>no_building</c>, <c>not_empty</c>, <c>busy</c>, <c>core_building</c>, <c>no_farmhouse</c>, <c>bad_op</c> …</summary>
         public string Code { get; }
     }
 
@@ -94,6 +100,20 @@ namespace Farmverse.Domain.Gameplay
                         if (string.IsNullOrEmpty(op.id) || op.level < 1 || op.price < 0) throw new ExchangeRefusal("bad_op", "hold needs id, level ≥ 1, price ≥ 0");
                         held.Add(new IslandState.Held { id = op.id, level = op.level, price = op.price });
                         done.Add(new ExchangeDone { op = "hold", id = op.id, level = op.level, price = op.price, item = op.id, n = 1, unitValue = op.price });
+                        break;
+                    case "fee":
+                    {
+                        if (op.n < 0 || op.bps < 0 || op.bps > 10_000) throw new ExchangeRefusal("bad_op", "fee needs n ≥ 0 and bps 0..10000");
+                        long moved = done.Sum(d => (long)d.unitValue * d.n);
+                        var fee = (int)Math.Max(op.n, moved * op.bps / 10_000);
+                        if (!e.SpendCoins(fee)) throw new ExchangeRefusal("no_coins", $"only {e.Coins} coins for a fee of {fee}");
+                        done.Add(new ExchangeDone { op = "fee", n = fee });
+                        break;
+                    }
+                    case "credit":
+                        if (op.n < 1 || op.n > 1_000_000_000) throw new ExchangeRefusal("bad_op", "n must be 1..1e9");
+                        e.AddCoins(op.n);
+                        done.Add(new ExchangeDone { op = "credit", n = op.n });
                         break;
                     default:
                         throw new ExchangeRefusal("bad_op", $"unknown op '{op.op}'");

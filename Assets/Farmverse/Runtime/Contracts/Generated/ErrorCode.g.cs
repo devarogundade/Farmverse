@@ -58,6 +58,11 @@ namespace Farmverse.Contracts
         MintBuildingBusy = 44,
         MintNotAllowed = 45,
         RedeemNotFound = 46,
+        MintLotTooSmall = 47,
+        MintNoCoins = 48,
+        DeedAllOpen = 49,
+        FaucetWait = 50,
+        FaucetClosed = 51,
     }
 
     /// <summary>Wire strings for <see cref="ErrorCode"/>.</summary>
@@ -113,6 +118,11 @@ namespace Farmverse.Contracts
                 case ErrorCode.MintBuildingBusy: return "MINT_BUILDING_BUSY";
                 case ErrorCode.MintNotAllowed: return "MINT_NOT_ALLOWED";
                 case ErrorCode.RedeemNotFound: return "REDEEM_NOT_FOUND";
+                case ErrorCode.MintLotTooSmall: return "MINT_LOT_TOO_SMALL";
+                case ErrorCode.MintNoCoins: return "MINT_NO_COINS";
+                case ErrorCode.DeedAllOpen: return "DEED_ALL_OPEN";
+                case ErrorCode.FaucetWait: return "FAUCET_WAIT";
+                case ErrorCode.FaucetClosed: return "FAUCET_CLOSED";
                 default: throw new WireFormatException("ErrorCode", "cannot send an unknown value");
             }
         }
@@ -167,6 +177,11 @@ namespace Farmverse.Contracts
                 case "MINT_BUILDING_BUSY": return ErrorCode.MintBuildingBusy;
                 case "MINT_NOT_ALLOWED": return ErrorCode.MintNotAllowed;
                 case "REDEEM_NOT_FOUND": return ErrorCode.RedeemNotFound;
+                case "MINT_LOT_TOO_SMALL": return ErrorCode.MintLotTooSmall;
+                case "MINT_NO_COINS": return ErrorCode.MintNoCoins;
+                case "DEED_ALL_OPEN": return ErrorCode.DeedAllOpen;
+                case "FAUCET_WAIT": return ErrorCode.FaucetWait;
+                case "FAUCET_CLOSED": return ErrorCode.FaucetClosed;
                 default: return ErrorCode.Unknown;
             }
         }

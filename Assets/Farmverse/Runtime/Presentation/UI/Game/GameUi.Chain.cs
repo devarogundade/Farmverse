@@ -102,6 +102,8 @@ namespace Farmverse.Presentation.UI.Game
                         _ => "This building can't be minted right now.",
                     };
                 case ErrorCode.MintNotAllowed: return "That can't be minted.";
+                case ErrorCode.MintLotTooSmall: return $"Mint at least {P("min")} at a time.";
+                case ErrorCode.MintNoCoins: return $"Minting this costs {P("fee")} coins. Sell a few goods first.";
                 case ErrorCode.Unsupported: return "Minting needs the web version with a NEAR wallet.";
                 case ErrorCode.NetworkRequired: return "You're offline. Try again when connected.";
                 default: return "Couldn't mint right now. Please try again.";

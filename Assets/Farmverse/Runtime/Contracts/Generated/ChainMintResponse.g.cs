@@ -23,9 +23,11 @@ namespace Farmverse.Contracts
 
         public long? RulesVersion { get; set; }
 
+        public long? Fee { get; set; }
+
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(7);
+            var map = new Dictionary<string, object>(8);
             map["tokenId"] = TokenId;
             map["voucher"] = Voucher.ToWire();
             map["signer"] = Signer;
@@ -33,6 +35,7 @@ namespace Farmverse.Contracts
             map["expiresAtMs"] = ExpiresAtMs;
             if (State != null) map["state"] = State;
             if (RulesVersion != null) map["rulesVersion"] = RulesVersion.Value;
+            if (Fee != null) map["fee"] = Fee.Value;
             return map;
         }
 
@@ -48,6 +51,7 @@ namespace Farmverse.Contracts
                 ExpiresAtMs = Wire.Required(map, "expiresAtMs", "ChainMintResponse.expiresAtMs", Wire.AsLong),
                 State = Wire.OptionalRef(map, "state", "ChainMintResponse.state", Wire.AsString),
                 RulesVersion = Wire.OptionalValue(map, "rulesVersion", "ChainMintResponse.rulesVersion", Wire.AsLong),
+                Fee = Wire.OptionalValue(map, "fee", "ChainMintResponse.fee", Wire.AsLong),
             };
         }
     }

@@ -14,6 +14,12 @@ export const VOUCHER_TTL_MS = 30 * 60_000;
 export const EXPIRY_GRACE_MS = 2 * 60_000;
 const ATTEMPTS = 3;
 const BOOSTS = new Set(['shield', 'fert', 'rush', 'instant', 'basket', 'nightshift', 'lunch']);
+/** The mint fee: this share of the value minted, in island coins (a coin sink; plan 15 §9 D10). */
+export const MINT_FEE_BPS = 200;
+export const MINT_FEE_MIN = 5;
+/** Goods mint in lots of at least this many units; golden goods (rare) one at a time. */
+export const MINT_LOT_MIN = 10;
+export const isGolden = (item: string) => item.startsWith('golden_');
 
 export interface MintLimits {
   /** Market value (coins) a player may mint per UTC day. */
@@ -48,8 +54,9 @@ export interface MintDoc {
   voucher: MintVoucher;
   signer: string;
   signature: string;
-  /** What gives the items back if the voucher is never used. */
+  /** What gives the items back (and the fee) if the voucher is never used. */
   refund: { ops: ExchangeOp[]; boosts?: Record<string, number> };
+  fee?: number;
   value: number;
   createdAt: number;
   updatedAt: number;
@@ -63,6 +70,7 @@ export interface MintResponse {
   expiresAtMs: number;
   state?: string;
   rulesVersion?: number;
+  fee?: number;
 }
 
 /** A deterministic token id per player and request key: a retried request can never take twice. */
@@ -81,6 +89,7 @@ const utcDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 
 function refusalToError(e: EngineRefusal): AppError {
   if (e.code === 'not_enough') return new AppError('MINT_NOT_ENOUGH', { have: Number(/only (\d+)/.exec(e.message)?.[1] ?? 0) });
+  if (e.code === 'no_coins') return new AppError('MINT_NO_COINS', { fee: Number(/fee of (\d+)/.exec(e.message)?.[1] ?? 0) });
   if (['not_empty', 'busy', 'core_building', 'under_construction', 'ruined'].includes(e.code)) {
     return new AppError('MINT_BUILDING_BUSY', { reason: e.code });
   }
@@ -117,7 +126,7 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
     if (existing.exists) {
       // The same request again (a lost reply): same voucher, and the island as it is now.
       const m = existing.data as unknown as MintDoc;
-      return { tokenId, voucher: m.voucher, signer: m.signer, signature: m.signature, expiresAtMs: m.voucher.expires_at_ms, ...(island ? { state: island.state, rulesVersion: island.rulesVersion } : {}) };
+      return { tokenId, voucher: m.voucher, signer: m.signer, signature: m.signature, expiresAtMs: m.voucher.expires_at_ms, fee: m.fee ?? 0, ...(island ? { state: island.state, rulesVersion: island.rulesVersion } : {}) };
     }
     if (!island) fail('NOT_FOUND');
     if (island.audit) fail('MINT_LOCKED');
@@ -136,6 +145,7 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
     let refund: MintDoc['refund'];
     let next: { state: IslandSave; nextWake: number; summary: IslandDoc['summary'] } | undefined;
     let boostsAfter: Record<string, number> | undefined;
+    let fee = 0;
 
     if (req.kind === 'boost') {
       if (!req.item || !BOOSTS.has(req.item) || !req.quantity) fail('MINT_NOT_ALLOWED');
@@ -152,14 +162,20 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
       refund = { ops: [], boosts: { [req.item]: req.quantity } };
     } else {
       if (!deps.island.engine.exchange) throw new Error('island engine has no exchange');
-      const ops: ExchangeOp[] =
+      if (req.kind === 'good' && req.item && req.quantity) {
+        const min = isGolden(req.item) ? 1 : MINT_LOT_MIN;
+        if (req.quantity < min) fail('MINT_LOT_TOO_SMALL', { min });
+      }
+      const ops: ExchangeOp[] = [
         req.kind === 'good'
           ? req.item && req.quantity
-            ? [{ op: 'take', item: req.item, n: req.quantity }]
+            ? { op: 'take', item: req.item, n: req.quantity }
             : fail('INVALID_ARGUMENT')
           : req.buildingUid !== undefined
-            ? [{ op: 'pickUp', uid: req.buildingUid }]
-            : fail('INVALID_ARGUMENT');
+            ? { op: 'pickUp', uid: req.buildingUid }
+            : fail('INVALID_ARGUMENT'),
+        { op: 'fee', n: MINT_FEE_MIN, bps: MINT_FEE_BPS },
+      ];
       let ex;
       try {
         ex = await deps.island.engine.exchange(JSON.parse(island.state) as IslandSave, Math.max(nowMs, island.simAtMs) / 1000, ops);
@@ -168,12 +184,14 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
         throw e;
       }
       const done = ex.done[0]!;
+      fee = ex.done.find((d) => d.op === 'fee')?.n ?? 0;
+      const giveFeeBack: ExchangeOp[] = fee > 0 ? [{ op: 'credit', n: fee }] : [];
       if (req.kind === 'good') {
         kind = 'good';
         itemId = done.item;
         quantity = done.n;
         value = done.n * done.unitValue;
-        refund = { ops: [{ op: 'give', item: done.item, n: done.n }] };
+        refund = { ops: [{ op: 'give', item: done.item, n: done.n }, ...giveFeeBack] };
       } else {
         kind = done.id === 'field' ? 'land' : 'building';
         if (kind !== req.kind) fail('MINT_NOT_ALLOWED');
@@ -181,7 +199,7 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
         quantity = 1;
         props = JSON.stringify({ level: done.level, price: done.price });
         value = done.price;
-        refund = { ops: [{ op: 'hold', id: done.id, level: done.level, price: done.price }] };
+        refund = { ops: [{ op: 'hold', id: done.id, level: done.level, price: done.price }, ...giveFeeBack] };
       }
       next = { state: ex.state, nextWake: ex.nextWake, summary: ex.summary };
     }
@@ -200,7 +218,7 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
       expires_at_ms: nowMs + VOUCHER_TTL_MS,
     };
     const signature = deps.signer.sign(voucher);
-    const record: MintDoc = { tokenId, status: 'issued', voucher, signer: deps.signer.publicKey, signature, refund, value, createdAt: nowMs, updatedAt: nowMs };
+    const record: MintDoc = { tokenId, status: 'issued', voucher, signer: deps.signer.publicKey, signature, refund, value, fee, createdAt: nowMs, updatedAt: nowMs };
     const newIsland = next ? islandDocFrom(island, next.state, next.nextWake, next.summary, nowMs) : undefined;
 
     const outcome = await env.store.runTransaction(async (tx) => {
@@ -232,13 +250,14 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
     if (outcome !== 'ok') fail('MINT_LIMIT', outcome);
 
     await deps.scheduleExpiry(uid, tokenId, voucher.expires_at_ms + EXPIRY_GRACE_MS);
-    log.info('mint voucher issued', { uid, tokenId, kind, itemId, quantity, value });
+    log.info('mint voucher issued', { uid, tokenId, kind, itemId, quantity, value, fee });
     return {
       tokenId,
       voucher,
       signer: deps.signer.publicKey,
       signature,
       expiresAtMs: voucher.expires_at_ms,
+      fee,
       ...(newIsland ? { state: newIsland.state, rulesVersion: newIsland.rulesVersion } : {}),
     };
   }

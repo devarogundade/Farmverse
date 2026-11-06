@@ -56,6 +56,52 @@ namespace Farmverse.Tests.Domain.Gameplay
             Assert.AreEqual(10, Wheat(state));
         }
 
+        private static int Coins(IslandState s) => IslandSim.Load(s).Coins;
+
+        [Test]
+        public void Fee_takes_a_share_of_the_value_moved_with_a_minimum()
+        {
+            var state = WithWheat(1000);
+            var before = Coins(state);
+            var (a, done) = IslandExchange.Apply(state, T0 + 1, new[]
+            {
+                new ExchangeOp { op = "take", item = "wheat", n = 1000 },
+                new ExchangeOp { op = "fee", n = 5, bps = 200 },
+            });
+            var expected = System.Math.Max(5, 1000 * GameplayRules.PriceOf("wheat") * 200 / 10_000);
+            Assert.AreEqual(expected, done.Last().n);
+            Assert.AreEqual(before - expected, Coins(a.State));
+
+            var (small, smallDone) = IslandExchange.Apply(WithWheat(10), T0 + 1, new[]
+            {
+                new ExchangeOp { op = "take", item = "wheat", n = 1 },
+                new ExchangeOp { op = "fee", n = 5, bps = 200 },
+            });
+            Assert.AreEqual(5, smallDone.Last().n, "the minimum applies to small mints");
+            Assert.AreEqual(Coins(WithWheat(10)) - 5, Coins(small.State));
+        }
+
+        [Test]
+        public void A_fee_the_island_cannot_pay_changes_nothing()
+        {
+            var state = WithWheat(10);
+            var e = Assert.Throws<ExchangeRefusal>(() => IslandExchange.Apply(state, T0 + 1, new[]
+            {
+                new ExchangeOp { op = "take", item = "wheat", n = 10 },
+                new ExchangeOp { op = "fee", n = 1_000_000_000, bps = 0 },
+            }));
+            Assert.AreEqual("no_coins", e!.Code);
+            Assert.AreEqual(10, Wheat(state));
+        }
+
+        [Test]
+        public void Credit_gives_coins_back()
+        {
+            var state = WithWheat(10);
+            var (a, _) = IslandExchange.Apply(state, T0 + 1, new[] { new ExchangeOp { op = "credit", n = 42 } });
+            Assert.AreEqual(Coins(state) + 42, Coins(a.State));
+        }
+
         [Test]
         public void Ops_are_all_or_nothing()
         {

@@ -74,7 +74,11 @@ export interface EngineRaidRun {
 export type ExchangeOp =
   | { readonly op: 'take' | 'give'; readonly item: string; readonly n: number }
   | { readonly op: 'pickUp'; readonly uid: number }
-  | { readonly op: 'hold'; readonly id: string; readonly level: number; readonly price: number };
+  | { readonly op: 'hold'; readonly id: string; readonly level: number; readonly price: number }
+  /** Spend `bps` of the value the earlier ops moved, at least `n` coins (the mint fee). */
+  | { readonly op: 'fee'; readonly n: number; readonly bps: number }
+  /** Add `n` coins (a mint fee given back). */
+  | { readonly op: 'credit'; readonly n: number };
 
 /** What an op did (the engine's ExchangeDone). */
 export interface ExchangeDone {

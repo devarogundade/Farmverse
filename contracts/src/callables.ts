@@ -600,6 +600,8 @@ export const ChainMintResponse = named(
     /** The island without the items (load it in place of the device's). Absent for boosts. */
     state: z.string().optional(),
     rulesVersion: z.number().int().min(1).optional(),
+    /** Coins the mint fee took from the island (0 for boosts). */
+    fee: z.number().int().min(0).optional(),
   }),
 );
 

@@ -102,6 +102,11 @@ namespace Farmverse.Contracts
                 [ErrorCode.MintBuildingBusy] = new[] { "reason" },
                 [ErrorCode.MintNotAllowed] = Array.Empty<string>(),
                 [ErrorCode.RedeemNotFound] = Array.Empty<string>(),
+                [ErrorCode.MintLotTooSmall] = new[] { "min" },
+                [ErrorCode.MintNoCoins] = new[] { "fee" },
+                [ErrorCode.DeedAllOpen] = Array.Empty<string>(),
+                [ErrorCode.FaucetWait] = new[] { "nextAt" },
+                [ErrorCode.FaucetClosed] = Array.Empty<string>(),
             };
 
         public static IReadOnlyList<string> ParamsOf(ErrorCode code) =>

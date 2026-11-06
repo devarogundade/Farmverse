@@ -84,6 +84,17 @@ export const ERROR_CATALOGUE = {
   MINT_NOT_ALLOWED: [],
   /** The transaction isn't a successful redeem by this wallet (yet, or at all). */
   REDEEM_NOT_FOUND: [],
+  /** Goods mint in lots of at least `min` units (golden goods: 1). */
+  MINT_LOT_TOO_SMALL: ['min'],
+  /** The island hasn't the coins for the mint fee. */
+  MINT_NO_COINS: ['fee'],
+  /** A land deed can't be used: every wild plot on the island is open already. */
+  DEED_ALL_OPEN: [],
+  // ---- faucet (testnet) ---------------------------------------------------------
+  /** Today's test FARM was claimed; `nextAt` is when the next claim opens (epoch ms). */
+  FAUCET_WAIT: ['nextAt'],
+  /** The faucet is empty or switched off. */
+  FAUCET_CLOSED: [],
 } as const satisfies Record<string, readonly string[]>;
 
 export type ErrorCodeName = keyof typeof ERROR_CATALOGUE;
