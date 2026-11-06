@@ -1,6 +1,6 @@
 import { createPublicKey, verify } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { AUDIT_BASE_PER_HOUR, AUDIT_FIRST_WORTH, auditUpload } from '../../functions/src/game/islands';
+import { AUDIT_BASE_PER_HOUR, AUDIT_FIRST_WORTH, auditUpload } from '../../game/src/game/islands';
 import { base58Decode } from '../src/auth/nep413';
 import { packEntitlement, redeemOps, titleOf, tokenIdFor } from '../src/mint/mint';
 import { parseRedeems, type TxStatus } from '../src/mint/nearChain';

@@ -1,6 +1,6 @@
 # Farmverse Unity project structure
 
-**Related:** [`navigation.md`](navigation.md) · [`production-model.md`](production-model.md) · [`backend-architecture.md`](backend-architecture.md) · [`metrics-and-analytics.md`](metrics-and-analytics.md)
+**Related:** [`navigation.md`](navigation.md) · [`production-model.md`](production-model.md) · [`metrics-and-analytics.md`](metrics-and-analytics.md)
 
 How the Unity project is organised so that **the 2D field can be replaced by 3D
 scenes without touching the game logic, the UI, or the server contract**. This is

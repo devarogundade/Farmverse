@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import { Worker, type Job } from 'bullmq';
-import { cloudLogger, type Logger } from '../../functions/src/core/logger';
-import { nudgeTask } from '../../functions/src/game/engagement';
-import { wake as wakeIsland } from '../../functions/src/game/islands';
-import { payWeek } from '../../functions/src/game/leaderboard';
-import { fanOutNews } from '../../functions/src/game/news';
-import { raidTask } from '../../functions/src/game/raids';
+import { cloudLogger, type Logger } from '../../game/src/core/logger';
+import { nudgeTask } from '../../game/src/game/engagement';
+import { wake as wakeIsland } from '../../game/src/game/islands';
+import { payWeek } from '../../game/src/game/leaderboard';
+import { fanOutNews } from '../../game/src/game/news';
+import { raidTask } from '../../game/src/game/raids';
 import { bookingDeps, envOf, islandDeps, mintDeps, type Runtime } from './calls';
 import { expireMint } from './mint/mint';
 import { loadConfig } from './config';

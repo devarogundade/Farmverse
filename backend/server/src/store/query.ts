@@ -1,4 +1,4 @@
-import type { DocData, QueryRow } from '../../../functions/src/infra/store';
+import type { DocData, QueryRow } from '../../../game/src/infra/store';
 import { Prisma, type PrismaClient } from '../generated/prisma/client';
 
 export type FilterOp = '==' | '<' | '<=' | '>' | '>=' | 'in';

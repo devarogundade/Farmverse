@@ -1,6 +1,6 @@
 import { createHash, createPrivateKey, createPublicKey, randomBytes, randomUUID, type KeyObject } from 'node:crypto';
 import { SignJWT, jwtVerify } from 'jose';
-import { AppError } from '../../../functions/src/core/errors';
+import { AppError } from '../../../game/src/core/errors';
 import type { PrismaClient } from '../generated/prisma/client';
 import type { NearRpc } from './nearRpc';
 import { ACCOUNT_ID, verifyNep413 } from './nep413';

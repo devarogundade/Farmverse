@@ -1,7 +1,7 @@
 #nullable enable
 namespace Farmverse.Application.Documents
 {
-    /// <summary>Document paths the client reads (04 §1), mirroring backend/functions/src/infra/paths.ts.</summary>
+    /// <summary>Document paths the client reads (04 §1), mirroring backend/game/src/infra/paths.ts.</summary>
     public static class Paths
     {
         public static string Player(string uid) => "players/" + uid;

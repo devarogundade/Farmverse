@@ -1,4 +1,4 @@
-import { AppError } from '../../../functions/src/core/errors';
+import { AppError } from '../../../game/src/core/errors';
 import {
   assertDocumentPath,
   type DocData,
@@ -7,7 +7,7 @@ import {
   type QueryRow,
   type Store,
   type TransactionPort,
-} from '../../../functions/src/infra/store';
+} from '../../../game/src/infra/store';
 import { Prisma, type PrismaClient } from '../generated/prisma/client';
 import { queryDocuments } from './query';
 

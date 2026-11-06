@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto';
-import { AppError, fail } from '../../../functions/src/core/errors';
-import type { Logger } from '../../../functions/src/core/logger';
-import { grantEntitlement, type Entitlement } from '../../../functions/src/game/entitlements';
-import { sync as syncIsland, type GrantsDoc, type IslandDeps, type IslandDoc } from '../../../functions/src/game/islands';
-import type { Env } from '../../../functions/src/game/services';
-import { EngineRefusal, type ExchangeOp, type IslandSave } from '../../../functions/src/infra/islandEngine';
-import { paths } from '../../../functions/src/infra/paths';
+import { AppError, fail } from '../../../game/src/core/errors';
+import type { Logger } from '../../../game/src/core/logger';
+import { grantEntitlement, type Entitlement } from '../../../game/src/game/entitlements';
+import { sync as syncIsland, type GrantsDoc, type IslandDeps, type IslandDoc } from '../../../game/src/game/islands';
+import type { Env } from '../../../game/src/game/services';
+import { EngineRefusal, type ExchangeOp, type IslandSave } from '../../../game/src/infra/islandEngine';
+import { paths } from '../../../game/src/infra/paths';
 import type { ChainItem, ChainReader } from './nearChain';
 import type { MintVoucher, TokenKind, VoucherSigner } from './voucher';
 

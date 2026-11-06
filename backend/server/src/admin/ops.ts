@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { Logger } from '../../../functions/src/core/logger';
-import type { Store } from '../../../functions/src/infra/store';
+import type { Logger } from '../../../game/src/core/logger';
+import type { Store } from '../../../game/src/infra/store';
 
 /** `config/ops` (server only): the switches the admin web changes without a deploy. */
 export const OPS_PATH = 'config/ops';

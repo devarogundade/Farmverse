@@ -1,9 +1,9 @@
 import { CatalogueDoc, CouponTask, CouponType, DEFAULT_CATALOGUE } from '@farmverse/contracts';
 import { z } from 'zod';
-import { AppError } from '../../../functions/src/core/errors';
-import { resetCatalogueCache } from '../../../functions/src/game/catalogue';
-import type { Env } from '../../../functions/src/game/services';
-import { paths } from '../../../functions/src/infra/paths';
+import { AppError } from '../../../game/src/core/errors';
+import { resetCatalogueCache } from '../../../game/src/game/catalogue';
+import type { Env } from '../../../game/src/game/services';
+import { paths } from '../../../game/src/infra/paths';
 import { Prisma, type PrismaClient } from '../generated/prisma/client';
 
 const Id = z.string().regex(/^[a-z0-9_]{1,24}$/, 'lowercase letters, digits and _');

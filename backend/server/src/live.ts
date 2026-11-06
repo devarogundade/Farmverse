@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { Logger } from '../../functions/src/core/logger';
-import type { DocData, QueryRow } from '../../functions/src/infra/store';
+import type { Logger } from '../../game/src/core/logger';
+import type { DocData, QueryRow } from '../../game/src/infra/store';
 import { canRead, listLimit } from './access';
 import type { Caller } from './auth/sessions';
 import type { ChangeBus } from './infra/redis';

@@ -1,9 +1,9 @@
 import { createPublicKey, verify } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { runCallable, type CallableDeps } from '../../../functions/src/core/callable';
-import { memoryLogger } from '../../../functions/src/core/logger';
-import { httpEngine } from '../../../functions/src/infra/islandEngine';
-import { paths } from '../../../functions/src/infra/paths';
+import { runCallable, type CallableDeps } from '../../../game/src/core/callable';
+import { memoryLogger } from '../../../game/src/core/logger';
+import { httpEngine } from '../../../game/src/infra/islandEngine';
+import { paths } from '../../../game/src/infra/paths';
 import { base58Decode } from '../../src/auth/nep413';
 import { uidFor } from '../../src/auth/sessions';
 import { callDefinitions, webMessenger, type Runtime } from '../../src/calls';

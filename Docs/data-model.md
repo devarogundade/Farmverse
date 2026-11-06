@@ -1,6 +1,6 @@
 # Farmverse data model
 
-**Related:** [`production-model.md`](production-model.md) · [`backend-architecture.md`](backend-architecture.md)
+**Related:** [`production-model.md`](production-model.md)
 
 The tables, fields and relationships needed to power every screen in
 `navigation.md` and every game state behind them. Derived from the specification

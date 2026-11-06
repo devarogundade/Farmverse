@@ -46,7 +46,7 @@ export function renderPush(locale: string, kind: Kind, params: Readonly<Record<s
  * Pushes the server sends straight to the phone, with no inbox row: timely nudges about the island
  * (raids, storage), rewards waiting, a player who drifted away, an offer about to end. Every one of
  * them goes through the same gate on the server (opt-in, topic switch, quiet hours, not while
- * playing, a daily cap); see backend/functions/src/game/notify.ts.
+ * playing, a daily cap); see backend/game/src/game/notify.ts.
  */
 export const PushKind = named(
   'PushKind',

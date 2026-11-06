@@ -1,12 +1,11 @@
 {
   "name": "farmverse",
   "private": true,
-  "description": "Farmverse monorepo: shared contracts, Firebase backend, tooling. The Unity project lives at the repository root.",
+  "description": "Farmverse monorepo: shared contracts, game rules, game server, tooling. The Unity project lives at the repository root.",
   "workspaces": [
     "contracts",
-    "backend/functions",
-    "backend/server",
-    "backend/rules-tests"
+    "backend/game",
+    "backend/server"
   ],
   "engines": {
     "node": ">=22"
@@ -17,8 +16,5 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
-  },
-  "dependencies": {
-    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector"
   }
 }

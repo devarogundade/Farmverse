@@ -13,7 +13,7 @@ decisions themselves. The detail lives in the numbered documents beside it.
 | 00 | **Master plan** (this file) | What, why, the principles, the decisions |
 | 01 | [Repository & module map](01-repository-and-modules.md) | Where every file lives, which layer may depend on which |
 | 02 | [Unity client architecture](02-client-architecture.md) | Layers, assemblies, state, UI, 3D world, boot |
-| 03 | [Backend architecture](03-backend-architecture.md) | Cloud Functions structure, transactions, jobs, triggers |
+| 03 | Backend architecture (removed) | Replaced by 13: `backend/server` running `backend/game` |
 | 04 | [Firestore data model](04-data-model.md) | Every collection, document shape, index, TTL, cost |
 | 05 | [API contract](05-api-contract.md) | The envelope, every action, every error code, codegen |
 | 06 | [Lists: paging, filtering, sorting, search, refresh](06-lists-and-queries.md) | One engine for every list in the game |
@@ -21,7 +21,6 @@ decisions themselves. The detail lives in the numbered documents beside it.
 | 08 | [Security & anti-abuse](08-security.md) | Rules, App Check, rate limits, market abuse |
 | 09 | [Quality, delivery & operations](09-quality-and-operations.md) | Tests, CI/CD, environments, observability, performance |
 | 10 | [Roadmap & migration](10-roadmap-and-migration.md) | Phases, gates, what gets deleted and when |
-| 11 | [Using every Firebase advantage](11-firebase-leverage-plan.md) | Each Firebase product: settings, owner, phase, check — and the gaps we fill ourselves |
 
 ---
 

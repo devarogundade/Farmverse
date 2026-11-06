@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NotificationId } from '@farmverse/contracts';
 import { newId } from '../src/core/ids';
-import { asContention } from '../src/infra/firestoreStore';
 import { compareVersions } from '../src/core/version';
 import { MemoryStore } from '../src/infra/memoryStore';
 import { UnitOfWork } from '../src/infra/unitOfWork';
@@ -59,14 +58,3 @@ describe('unit of work and memory store', () => {
   });
 });
 
-describe('transaction contention', () => {
-  it('turns exhausted contention into a retryable CONFLICT and leaves other errors alone', () => {
-    const conflict = asContention({ code: 10, message: 'ABORTED: Transaction lock timeout.' }, () => 0.5) as { code: string; retryAfterMs?: number };
-    expect(conflict.code).toBe('CONFLICT');
-    expect(conflict.retryAfterMs).toBe(625);
-    expect((asContention({ code: 4 }) as { code: string }).code).toBe('CONFLICT');
-    const other = new Error('boom');
-    expect(asContention(other)).toBe(other);
-    expect(asContention({ code: 7 })).toEqual({ code: 7 });
-  });
-});

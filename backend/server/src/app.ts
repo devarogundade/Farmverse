@@ -1,8 +1,8 @@
 import websocket from '@fastify/websocket';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { runCallable, type CallableDeps } from '../../functions/src/core/callable';
-import { AppError } from '../../functions/src/core/errors';
+import { runCallable, type CallableDeps } from '../../game/src/core/callable';
+import { AppError } from '../../game/src/core/errors';
 import { canRead, checkUpdate, listLimit } from './access';
 import type { Caller, Sessions } from './auth/sessions';
 import { callDefinitions, type Runtime } from './calls';
@@ -83,7 +83,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
 
   app.get('/healthz', async () => ({ ok: true }));
 
-  // The client's remote config (Firebase Remote Config keys, backend/remoteconfig.template.json defaults).
+  // The client's remote config: maintenance switch, minimum client version and feature values.
   const ops = () => o.ops?.current ?? { maintenance: false, message: '', minClientVersion: o.minClientVersion };
 
   app.get('/v1/config', async () => ({

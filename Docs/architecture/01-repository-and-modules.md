@@ -142,7 +142,7 @@ Namespace = assembly + folder: `Farmverse.Domain.Farming`,
 `Farmverse.Core.Lists`, `Farmverse.Presentation.UI.Screens.Market`.
 One public type per file, file name = type name.
 
-## 3. Backend: `backend/functions/src`
+## 3. Backend: `backend/game/src`
 
 ```
 src/

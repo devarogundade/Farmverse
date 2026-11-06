@@ -1,0 +1,19 @@
+{
+  "name": "@farmverse/game",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Farmverse game rules (core, game, infra, domain): pure TypeScript over a Store, run by backend/server and tested in memory.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@farmverse/contracts": "0.1.0",
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

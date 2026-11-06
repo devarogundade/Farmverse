@@ -1,20 +1,26 @@
 # Farmverse
 
-A cosy multiplayer farming and trading game: Unity 6 client, Firebase backend.
+A cosy multiplayer farming and trading game: Unity 6 WebGL client, a Node game server and NEAR
+contracts for items and the marketplace.
 
 | Path | What |
 |---|---|
 | `Assets/Farmverse` | the game client (see its README) |
-| `contracts/` | the single source of the client/server contract (zod → generated C#), the economy (`economy/economy.json`) and conformance vectors |
-| `backend/` | Cloud Functions game server (`functions/`), security rules and their tests, indexes, Remote Config template, `firebase.json` |
-| `tools/` | `codegen` (C# command wrappers, string-table and Remote Config checks), `dotnet` (headless C# tests, Unity compile check), `art` (UI art generator), `ci` |
-| `Docs/architecture` | the design: 00 master plan … 12 IAP |
-| `ArtSource/` | Blender sources |
+| `contracts/` | the single source of the client/server contract (zod → generated C#), the economy and conformance vectors |
+| `backend/game` | the game rules, shared by the server and its tests |
+| `backend/server` | the game server: API, WebSocket, jobs, chain indexer |
+| `chain/` | the NEAR contracts (items, market, farm token) and their deploy scripts |
+| `web/` | the marketplace, admin and landing sites |
+| `deployment/` | the EC2 setup and deploy script |
+| `tools/` | `codegen` (C# command wrappers, string-table and secrets checks), `dotnet` (headless C# tests, island engine), `art` |
+| `Docs/architecture` | the design (13 covers the web and NEAR version) |
 
 ```bash
-npm ci && npm test                                   # contracts + backend
-npm run test:emulator --workspace backend/rules-tests # security rules (needs Java)
+npm ci && npm test                                   # contracts, game rules, server
 dotnet build tools/dotnet/Farmverse.TestHost -c Release && dotnet tools/dotnet/Farmverse.TestHost/bin/Release/net8.0/Farmverse.TestHost.dll
 ```
 
 In Unity: **Farmverse ▸ Set Up Boot Scene**, then Play.
+
+Store packs (ithappy and others) and the content built from them are not in git: see
+[Assets/Farmverse/README.md](Assets/Farmverse/README.md) for what to import and which editor menus rebuild it.

@@ -1,18 +1,14 @@
-# Farmverse backend (Firebase)
+# Farmverse backend
 
-`functions/` is the new Cloud Functions codebase (Docs/architecture/03). It is built
-beside the legacy `functions/` folder at the repository root and replaces it in
-Phase 3, when `firebase.json` switches over.
+| Folder | What |
+|---|---|
+| `game/` | The game rules (`core/`, `game/`, `infra/`, `domain/`): plain TypeScript over a `Store`, no database or framework. Tested in memory. |
+| `server/` | The game server that runs them: Fastify (HTTP + WebSocket), Postgres through Prisma, Redis, BullMQ jobs and the NEAR chain indexer. See its README. |
 
 ```bash
-npm test --workspace backend/functions        # pipeline, callable, core
-npm run build --workspace backend/functions   # typecheck + esbuild bundle → lib/index.js
+npm test --workspace backend/game      # game rules, in memory
+npm test --workspace backend/server    # server unit tests
+npm run test:db --workspace backend/server   # against Postgres + Redis
 ```
 
-Layout: `core/` (errors, clock, logger, ids, cursors, rate limit, callable pipeline),
-`infra/` (store port, unit of work, Firestore + memory stores, paths, idempotency,
-aggregate gateway), `actions/` (registry + the batch pipeline), `api/` (deployed
-functions). Game verbs (`domain/`, `modules/`) arrive in Phases 2–3.
-
-The bundle inlines `@farmverse/contracts` and zod, so the deployed package only
-depends on `firebase-admin` and `firebase-functions`.
+Deployment: [deployment/README.md](../deployment/README.md).

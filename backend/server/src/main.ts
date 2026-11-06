@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { cloudLogger } from '../../functions/src/core/logger';
+import { cloudLogger } from '../../game/src/core/logger';
 import { OpsConfig } from './admin/ops';
 import { buildApp } from './app';
 import { loadConfig } from './config';

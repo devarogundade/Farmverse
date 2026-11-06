@@ -1,11 +1,10 @@
 # Farmverse metrics and analytics
 
-> **Superseded in part.** This document describes the NestJS + Prisma backend.
-> The backend is now Firebase — see `firebase-backend.md` for what replaced what,
-> where each golden rule is enforced, and the three design consequences. The
-> reasoning below still holds; the mechanism does not.
+> **Superseded in part.** The backend is now `backend/server` (Fastify, Postgres, Redis,
+> BullMQ) running the rules in `backend/game`; see `architecture/13-near-web3-plan.md`.
+> The reasoning below still holds; the mechanism does not.
 
-**Related:** [`backend-architecture.md`](backend-architecture.md) · [`realtime.md`](realtime.md) · [`admin-and-config.md`](admin-and-config.md) · [`navigation.md`](navigation.md)
+**Related:** [`realtime.md`](realtime.md) · [`admin-and-config.md`](admin-and-config.md) · [`navigation.md`](navigation.md)
 
 Live counters, game analytics and operational telemetry — kept apart, because
 conflating them is how a game ends up with a dashboard nobody trusts.

@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { z } from 'zod';
-import type { Logger } from '../../../functions/src/core/logger';
+import type { Logger } from '../../../game/src/core/logger';
 import { NFT_TYPES } from '../chain/items';
 import type { MarketMessage } from '../chain/project';
 import type { MarketBus, RateLimiter } from '../infra/redis';

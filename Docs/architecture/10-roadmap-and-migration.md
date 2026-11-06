@@ -12,8 +12,8 @@ gate. This keeps the project runnable every day.
 
 | # | Phase | Deliverables | Gate |
 |---|---|---|---|
-| **1** | **Foundation** | These documents · `contracts/` (zod, envelope, errors, paging, codegen to C#) · `backend/functions` skeleton (callable pipeline, errors, logging, clock, cursors, idempotency, unit of work, action registry) · Unity `Farmverse.Core` + `Farmverse.Contracts` assemblies (Result/Error, clock, reactive state, paging engine, text search) + EditMode tests | `npm test` and `dotnet test` green; Unity compiles with the new asmdefs beside the old code |
-| 2 | Domain & catalogue | `economy.json` moved + schema + validator · `Farmverse.Domain` (catalogue, inventory, farming, production, market, economy) · TS mirror in `backend/functions/src/domain` · conformance vectors for every formula in 07 | both suites pass the same vectors; catalogue validator passes |
+| **1** | **Foundation** | These documents · `contracts/` (zod, envelope, errors, paging, codegen to C#) · `backend/game` skeleton (callable pipeline, errors, logging, clock, cursors, idempotency, unit of work, action registry) · Unity `Farmverse.Core` + `Farmverse.Contracts` assemblies (Result/Error, clock, reactive state, paging engine, text search) + EditMode tests | `npm test` and `dotnet test` green; Unity compiles with the new asmdefs beside the old code |
+| 2 | Domain & catalogue | `economy.json` moved + schema + validator · `Farmverse.Domain` (catalogue, inventory, farming, production, market, economy) · TS mirror in `backend/game/src/domain` · conformance vectors for every formula in 07 | both suites pass the same vectors; catalogue validator passes |
 | 3 | Backend game server | Firestore model + converters + repositories · all actions in 05 · jobs + triggers · rules + rules tests · indexes generated from 06 · emulator integration suite · `firebase.json` → `backend/` | full emulator suite green; old `functions/` deleted |
 | 4 | Client application & infrastructure | ports · stores with optimistic overlay · ActionQueue · ServerClock · SessionService · Firebase adapters (Auth, App Check, Firestore, Functions, RC, Crashlytics, FCM) · list sources · `GameRoot` composition | a headless PlayMode "bot" boots against the emulator, plays plant → harvest → sell → buy, and survives kill/retry |
 | 5 | UI rebuild (launch screens, §3) | shell, navigation, component library, `PagedListView`, MVP presenters + UXML for every launch screen, localization tables, accessibility pass | every launch screen renders in the capture tool in all states; presenter tests green |
@@ -59,7 +59,7 @@ cosmetics shop, events.
 | `UI/Shell/UiRouter`, `UI/Composition/*`, `UI/Declarations/*` | `Presentation/UI/Navigation` + MVP screens with UXML | 5 |
 | `UI/Rows/*`, `UI/Components/*` | `Presentation/UI/Components` (`PagedListView`, …) | 5 |
 | `Scene/World3D/*` | `Presentation/World` | 6 |
-| `functions/src/**` | `backend/functions/src/**` | 3 |
+| `functions/src/**` | `backend/game/src/**` | 3 |
 | `Tools/art_gen` generators of C# | deleted; art scripts → `tools/art` | 1 (stop using), 3 (delete) |
 
 ## 5. Decisions needed from you
@@ -94,7 +94,7 @@ cosmetics shop, events.
 | Contracts | `contracts/`: primitives, ids, 60 error codes with parameters, envelope, paging, 34 game actions (request + result + role + exclusivity), 7 callables, C# code generator, shared wire fixtures | 21 Vitest tests; `contracts:check` |
 | Generated C# | `Assets/Farmverse/Runtime/Contracts/Generated` (98 files) + `Runtime/` (`Wire`, `WireJson`, `CallableSpec`, `GameActionInfo`) | compiles as .NET Standard 2.1 / C# 9 with warnings as errors |
 | Unity Core | `Assets/Farmverse/Runtime/Core`: `Result`/`AppError`/`Guard`, `IClock`/`ServerClock`, `ReactiveProperty`, `CompositeDisposable`, `EventBus`, `IScheduler`, logging, `RequestIds`, the list engine (`PagedCollection`, `LocalListSource`, `LocalQuery`), `SearchIndex` | 52 EditMode tests, run headless by `tools/dotnet` |
-| Backend | `backend/functions`: callable pipeline, `AppError`, clock, structured logger, ids, signed cursors, token bucket, store port (Firestore + in-memory), `UnitOfWork`, idempotency, aggregate gateway, action registry, the batch pipeline, `actions-submit` | 25 Vitest tests; esbuild bundle loads |
+| Backend | `backend/game`: callable pipeline, `AppError`, clock, structured logger, ids, signed cursors, token bucket, store port (Firestore + in-memory), `UnitOfWork`, idempotency, aggregate gateway, action registry, the batch pipeline, `actions-submit` | 25 Vitest tests; esbuild bundle loads |
 | CI | `.github/workflows/ci.yml` | — |
 
 Nothing in the legacy code was changed or deleted.
@@ -106,7 +106,7 @@ Nothing in the legacy code was changed or deleted.
 | Catalogue contract | `contracts/src/catalogue`: `CatalogueDoc` and every rule type, `STAT_KEYS`, well-known ids, `validateCatalogue` (cross-references, contiguous ladders, sorted titles, unknown stats) | Vitest; `economy:check` |
 | Economy data | `contracts/economy/economy.json` v1: 26 items, 7 crops, 2 animals, 2 trees, 15 objects with level ladders, 8 recipes, plot/market/post/order rules, titles, starter packs, 7-day bonus | `economy:check` in CI |
 | Actions | 32 (livestock water/clean removed; `livestock.feed` settles production) | contract tests |
-| TS reference domain | `backend/functions/src/domain`: basis-point math, FNV-1a + xorshift32, UTC days, `Catalogue`, crop/soil/well/livestock/tree rules, production queue, warehouse shelves, market fee/reference/band, Trading Post, level requirements, net worth & titles, NPC order board, daily streak | 34 hand-verified Vitest cases |
+| TS reference domain | `backend/game/src/domain`: basis-point math, FNV-1a + xorshift32, UTC days, `Catalogue`, crop/soil/well/livestock/tree rules, production queue, warehouse shelves, market fee/reference/band, Trading Post, level requirements, net worth & titles, NPC order board, daily streak | 34 hand-verified Vitest cases |
 | Conformance vectors | `contracts/vectors/*.json`: 11 modules, 1,174 seeded cases from `tools/vectors.ts` | `vectors:check` + backend test |
 | C# domain | `Assets/Farmverse/Runtime/Domain` (`Farmverse.Domain`, engine-free): the same rules, `GameCatalogue` over the generated `CatalogueDoc` | `ConformanceVectorTests` replays all 1,174 cases byte-for-byte (a 1 ms drift fails 117 livestock cases) |
 | Firebase config | `Assets/Farmverse/Content/Config/Firebase` (dev/staging project `farmverse-8deb6`), `.firebaserc` | — |

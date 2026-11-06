@@ -1,6 +1,6 @@
 import { Queue, type ConnectionOptions } from 'bullmq';
-import type { WakeScheduler } from '../../../functions/src/game/islands';
-import type { PushTask, TaskScheduler } from '../../../functions/src/game/raids';
+import type { WakeScheduler } from '../../../game/src/game/islands';
+import type { PushTask, TaskScheduler } from '../../../game/src/game/raids';
 
 /** The queues that replace Cloud Tasks, Cloud Scheduler and Firestore triggers. */
 export const QUEUES = {

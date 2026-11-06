@@ -1,15 +1,14 @@
 # Farmverse realtime — WebSockets
 
-> **Superseded in part.** This document describes the NestJS + Prisma backend.
-> The backend is now Firebase — see `firebase-backend.md` for what replaced what,
-> where each golden rule is enforced, and the three design consequences. The
-> reasoning below still holds; the mechanism does not.
+> **Superseded in part.** The backend is now `backend/server` (Fastify, Postgres, Redis,
+> BullMQ) running the rules in `backend/game`; see `architecture/13-near-web3-plan.md`.
+> The reasoning below still holds; the mechanism does not.
 
-**Related:** [`backend-architecture.md`](backend-architecture.md) · [`push-notifications.md`](push-notifications.md)
+**Related:** 
 
 What is live, what is deliberately not, and how the socket stays an optimisation
-rather than a dependency. Reads with `backend-architecture.md` (services, queues,
-Redis) and `push-notifications.md` (the same events also go to FCM when the
+rather than a dependency. Reads with `architecture/13-near-web3-plan.md` (services, queues,
+Redis); the same events also go out as push notifications when the
 player is away).
 
 ---
@@ -135,7 +134,7 @@ flowchart LR
 - **Fan-out** goes through Redis pub/sub, so any api pod can deliver an event
   published by any worker. No sticky sessions required for correctness.
 - **Post-commit only.** Publishers are the same post-commit side effects already
-  listed in `backend-architecture.md` §3, so a socket event can never announce
+  listed in the server's call registry, so a socket event can never announce
   something that rolled back.
 
 ---

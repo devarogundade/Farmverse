@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { cloudLogger } from '../../functions/src/core/logger';
+import { cloudLogger } from '../../game/src/core/logger';
 import { ChainIndexer } from './chain/indexer';
 import { NEARDATA_URL, neardataSource } from './chain/neardata';
 import { loadConfig } from './config';

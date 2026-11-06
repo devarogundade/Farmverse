@@ -1,18 +1,16 @@
 # Farmverse admin, configuration and live-ops
 
-> **Superseded in part.** This document describes the NestJS + Prisma backend.
-> The backend is now Firebase — see `firebase-backend.md` for what replaced what,
-> where each golden rule is enforced, and the three design consequences. The
-> reasoning below still holds; the mechanism does not.
+> **Superseded in part.** The backend is now `backend/server` (Fastify, Postgres, Redis,
+> BullMQ) running the rules in `backend/game`; see `architecture/13-near-web3-plan.md`.
+> The reasoning below still holds; the mechanism does not.
 
-**Related:** [`backend-architecture.md`](backend-architecture.md) · [`data-model.md`](data-model.md) · [`push-notifications.md`](push-notifications.md) · [`navigation.md`](navigation.md)
+**Related:** [`data-model.md`](data-model.md) · [`navigation.md`](navigation.md)
 
 How the game is run after launch: layered configuration, the admin surface, the
 approval and audit model, and the guardrails that stop a fat-fingered economy
 edit from becoming a live incident.
 
-Reads with `backend-architecture.md` (services, queues, Prisma) and
-`push-notifications.md` (announcements, the ops status endpoint).
+Reads with `architecture/13-near-web3-plan.md` (the server, queues, Prisma).
 
 ---
 
@@ -256,7 +254,7 @@ accounts for it. Support never edits a balance directly.
 | `admin` | `mass-grant`, `data-export`, `purge-deleted`, `rebuild-player-cache` | admin action; batch with progress and a dry-run count |
 | `config` | `publish-scheduled`, `invalidate-caches`, `broadcast-config-version`, `validate-catalogue` | scheduler + publish |
 | `moderation` | `scan-self-trades`, `flag-multi-account`, `expire-listings` | on trade + repeatable |
-| `push` | `announce` | announcement send (see `push-notifications.md`) |
+| `push` | `announce` | announcement send |
 
 A mass grant is **always** a job, never a request: 10k players is a batch with a
 progress bar, a dry-run count, and an audit row per player. It is idempotent on

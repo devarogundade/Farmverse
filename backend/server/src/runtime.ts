@@ -1,9 +1,9 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import { systemClock } from '../../functions/src/core/clock';
-import { cloudLogger, type Logger } from '../../functions/src/core/logger';
-import { usernameKey } from '../../functions/src/game/onboarding';
-import { httpEngine } from '../../functions/src/infra/islandEngine';
-import { paths } from '../../functions/src/infra/paths';
+import { systemClock } from '../../game/src/core/clock';
+import { cloudLogger, type Logger } from '../../game/src/core/logger';
+import { usernameKey } from '../../game/src/game/onboarding';
+import { httpEngine } from '../../game/src/infra/islandEngine';
+import { paths } from '../../game/src/infra/paths';
 import { httpNearRpc } from './auth/nearRpc';
 import { Sessions } from './auth/sessions';
 import { webMessenger, type Runtime } from './calls';

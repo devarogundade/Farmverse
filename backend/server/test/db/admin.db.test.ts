@@ -1,9 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { systemClock } from '../../../functions/src/core/clock';
-import { memoryLogger } from '../../../functions/src/core/logger';
-import { resetCatalogueCache } from '../../../functions/src/game/catalogue';
-import { paths } from '../../../functions/src/infra/paths';
+import { systemClock } from '../../../game/src/core/clock';
+import { memoryLogger } from '../../../game/src/core/logger';
+import { resetCatalogueCache } from '../../../game/src/game/catalogue';
+import { paths } from '../../../game/src/infra/paths';
 import { OpsConfig } from '../../src/admin/ops';
 import { buildApp } from '../../src/app';
 import { Sessions, uidFor, type NonceStore } from '../../src/auth/sessions';

@@ -1,5 +1,5 @@
 // The Farmverse game database. Game state keeps the document model the game code was written
-// for (path → JSON), so backend/functions/src/game runs unchanged; accounts and sessions are
+// for (path → JSON), so backend/game/src/game runs unchanged; accounts and sessions are
 // ordinary tables. Chain data (Goldsky, schema `chain`) is written by the indexer and is not
 // managed here.
 

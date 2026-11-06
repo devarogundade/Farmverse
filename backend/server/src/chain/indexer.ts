@@ -1,4 +1,4 @@
-import type { Logger } from '../../../functions/src/core/logger';
+import type { Logger } from '../../../game/src/core/logger';
 import type { PrismaClient } from '../generated/prisma/client';
 import type { BlockSource } from './neardata';
 import { eventsIn, type ChainEvent, type NearBlock, type Watched } from './parse';

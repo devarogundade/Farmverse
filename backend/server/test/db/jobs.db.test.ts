@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { QueueEvents, Worker, type Job } from 'bullmq';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { systemClock } from '../../../functions/src/core/clock';
-import { memoryLogger } from '../../../functions/src/core/logger';
+import { systemClock } from '../../../game/src/core/clock';
+import { memoryLogger } from '../../../game/src/core/logger';
 import { webMessenger, type Runtime } from '../../src/calls';
 import { redisClient } from '../../src/infra/redis';
 import { bullTasks, bullWakes, jobQueues, QUEUES, type JobQueues } from '../../src/jobs/queues';

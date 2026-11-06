@@ -2,7 +2,7 @@
   "name": "@farmverse/server",
   "version": "0.1.0",
   "private": true,
-  "description": "The Farmverse game server: Fastify + Postgres (Prisma) + Redis + BullMQ. Runs the game logic shared with backend/functions/src/{core,game,infra}.",
+  "description": "The Farmverse game server: Fastify + Postgres (Prisma) + Redis + BullMQ. Runs the game logic shared with backend/game/src/{core,game,infra}.",
   "type": "module",
   "engines": {
     "node": ">=22"

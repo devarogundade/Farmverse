@@ -3,7 +3,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import WebSocket from 'ws';
-import { memoryLogger } from '../../../functions/src/core/logger';
+import { memoryLogger } from '../../../game/src/core/logger';
 import { ChainIndexer } from '../../src/chain/indexer';
 import type { BlockSource } from '../../src/chain/neardata';
 import { eventsIn, type NearBlock } from '../../src/chain/parse';

@@ -1,6 +1,6 @@
 # Farmverse production model — role-generic plots, units, states and properties
 
-**Related:** [`data-model.md`](data-model.md) · [`backend-architecture.md`](backend-architecture.md)
+**Related:** [`data-model.md`](data-model.md)
 
 This replaces the flat `plot_tile` design in `data-model.md`. That version baked
 the farmer's lifecycle (`empty → tilled → seeded → growing → ripe`) into an enum,

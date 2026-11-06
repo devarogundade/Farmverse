@@ -2,7 +2,7 @@
 
 Node 22 + TypeScript: **Fastify** (HTTP + WebSocket), **Postgres** through **Prisma 7**,
 **Redis** (sessions, rate limits, live fan-out) and **BullMQ** (jobs). It replaces the Firebase
-backend; the game rules themselves are shared, unchanged, from `backend/functions/src/{core,game,infra}`.
+backend; the game rules themselves are shared, unchanged, from `backend/game/src/{core,game,infra}`.
 Design: [Docs/architecture/13-near-web3-plan.md](../../Docs/architecture/13-near-web3-plan.md) §5.
 
 ## Run locally

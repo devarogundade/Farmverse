@@ -1,10 +1,10 @@
 # The world model
 
 > The world is hexagonal lands, each with typed slots, and every object's state is
-> derived rather than stored. This is the design; `firebase-backend.md` says where
+> derived rather than stored. This is the design; `architecture/13-near-web3-plan.md` says where
 > the values come from, and `unity-project-structure.md` says which layer holds what.
 
-**Related:** [`unity-project-structure.md`](unity-project-structure.md) · [`navigation.md`](navigation.md) · [`firebase-integration-plan.md`](firebase-integration-plan.md)
+**Related:** [`unity-project-structure.md`](unity-project-structure.md) · [`navigation.md`](navigation.md)
 
 ---
 

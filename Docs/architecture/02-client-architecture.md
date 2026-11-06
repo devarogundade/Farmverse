@@ -81,7 +81,7 @@ public sealed record CropFacts(string CropType, int Slot, long PlantedAt,
 
 public static class CropGrowth
 {
-    // Same formula as backend/functions/src/domain/farming/cropGrowth.ts,
+    // Same formula as backend/game/src/domain/farming/cropGrowth.ts,
     // proven by contracts/vectors/farming/crop-growth.json
     public static CropStatus Evaluate(CropFacts facts, CropRules rules, long now) { ... }
 }

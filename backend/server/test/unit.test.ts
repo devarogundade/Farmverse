@@ -1,9 +1,9 @@
 import { generateKeyPairSync, sign } from 'node:crypto';
 import { CALLABLES } from '@farmverse/contracts';
 import { describe, expect, it } from 'vitest';
-import { FixedClock } from '../../functions/src/core/clock';
-import { memoryLogger } from '../../functions/src/core/logger';
-import { MemoryStore } from '../../functions/src/infra/memoryStore';
+import { FixedClock } from '../../game/src/core/clock';
+import { memoryLogger } from '../../game/src/core/logger';
+import { MemoryStore } from '../../game/src/infra/memoryStore';
 import { canRead, checkUpdate, listLimit } from '../src/access';
 import { base58Decode, base58Encode, nep413Bytes, nep413Hash, verifyNep413 } from '../src/auth/nep413';
 import { accountOnNetwork } from '../src/auth/sessions';

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Store } from '../../functions/src/infra/store';
+import type { Store } from '../../game/src/infra/store';
 
 /**
  * What every {@link Store} must do, run against the in-memory store (that the game tests use) and
