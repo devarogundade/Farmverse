@@ -8,7 +8,8 @@ Outputs (web/shared/public/models, served by both websites):
                          plus a few animation clips. The web renderer shows only the parts an NFT's
                          `outfit` names, so one download covers every worker.
     character.parts.json slot -> [part ids] (what `outfit.<slot>` may contain)
-    items/<id>.glb       one static model per item NFT type (tractor, building, land, goods, animals)
+    items/<id>.glb       one static model per item: the game's goods and buildings (by game id, the model
+                         the island shows) and the studio's tractors, land and animals
 """
 
 import json
@@ -55,6 +56,30 @@ ITEMS = {
     "cow": "Animals/Cow_01", "chicken": "Animals/Chicken_01",
     "sheep": "Animals/Sheep_01", "pig": "Animals/Pig_01",
 }
+
+# What the game mints, by its own item ids, with the model the game itself shows (goods: the pack
+# prefab behind Content/Art/Goods/good_<id>; buildings: the main model in Editor/Ithappy/IthappyArt.cs).
+# "Food:" models come from the Food pack. These win over ITEMS where both name an id.
+GAME_ITEMS = {
+    # goods
+    "wheat": "plant_011", "maize": "plant_001", "pumpkin": "plant_002", "tomato": "plant_003", "cabbage": "plant_004",
+    "beans": "plant_009", "sunflower": "plant_008", "flowers": "plant_007", "wood": "firewood_005", "planks": "firewood_011",
+    "stone": "stone_fence_006", "flour": "bag_002", "feed": "bag_001", "oil": "barrel_007", "veg_box": "case_003",
+    "egg": "Food:Egg_002", "milk": "Food:Yogurt_002", "meat": "Food:Sasuage_003", "croissant": "Food:Croissant_001",
+    "juice": "Food:Bottle_002", "mushroom": "Food:Mushroom_002", "fish": "Food:Fish_004", "yogurt": "Food:Coffee_005",
+    # buildings
+    "farmhouse": "house_007", "barn": "hangar_002", "chicken_coop": "coop_001", "pigsty": "coop_001", "stable": "hangar_005",
+    "grain_silos": "tower_002", "windmill": "tower_001", "greenhouse": "greenhouse_004", "potting_shed": "tower_011",
+    "packing_shed": "hangar_013", "cider_press": "hangar_011", "dairy_factory": "hangar_007", "bakery_factory": "house_001",
+    "sugar_mill": "hangar_029", "feed_mill": "tower_010", "lumber_yard": "hangar_010", "fishing_shed": "house_031",
+    "mine_entrance": "mountain_001", "market_stall": "stall_002", "grocer_shop": "stall_001", "bakery_shop": "house_027",
+    "fish_market": "stall_001", "workers_house": "house_009", "army_house": "house_011", "builders_hut": "house_028",
+    "police_station": "house_008", "fire_station": "hangar_004", "clinic": "house_010", "school": "house_023",
+    "library": "house_013", "chapel": "house_024", "community_hall": "house_005", "post_office": "house_017",
+    "bank": "house_018", "town_hall": "house_006", "facility_well": "tower_004", "facility_warehouse": "hangar_008",
+}
+ITEMS = {**ITEMS, **GAME_ITEMS}
+FOOD = os.path.join(REPO, "Assets", "ithappy", "Food_Free")
 
 
 def reset():
@@ -177,12 +202,20 @@ def export_character():
 
 
 def export_items():
-    atlas = os.path.join(FARM, "Textures", "Main_Texture.png")
     os.makedirs(os.path.join(OUT, "items"), exist_ok=True)
+    only = set(filter(None, os.environ.get("ONLY", "").split(",")))
     for item_id, src in ITEMS.items():
+        if only and item_id not in only:
+            continue
         reset()
-        mat = textured_material("Farm", atlas)
-        objs = import_fbx(os.path.join(FARM, "Meshes", src + ".fbx"))
+        # each pack paints every model from one texture
+        if src.startswith("Food:"):
+            mat = textured_material("Food", os.path.join(FOOD, "Textures", "Textures_4.png"))
+            path = os.path.join(FOOD, "Meshes", src[5:] + ".fbx")
+        else:
+            mat = textured_material("Farm", os.path.join(FARM, "Textures", "Main_Texture.png"))
+            path = os.path.join(FARM, "Meshes", src + ".fbx")
+        objs = import_fbx(path)
         for o in objs:
             if o.type == "MESH":
                 if not o.data.materials:
@@ -200,5 +233,7 @@ def export_items():
         print("ITEM", item_id, src)
 
 
-export_character()
+# ITEMS_ONLY=1 skips the character (slow); ONLY=wood,barn exports just those items
+if not os.environ.get("ITEMS_ONLY"):
+    export_character()
 export_items()
