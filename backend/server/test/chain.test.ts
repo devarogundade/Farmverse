@@ -53,7 +53,10 @@ describe('item helpers', () => {
     expect(nftTypeOf('good', 'cow')).toBe('animal');
     expect(nftTypeOf('good', 'wheat')).toBe('good');
     expect(nftTypeOf('worker', 'worker')).toBe('worker');
-    expect(nftTypeOf('pack', 'gems_100')).toBeNull();
+    expect(nftTypeOf('pack', 'gems_100')).toBe('pack');
+    expect(nftTypeOf('land', 'deed')).toBe('deed');
+    expect(nftTypeOf('land', 'field')).toBe('land');
+    expect(nftTypeOf('boost', 'fert')).toBeNull();
   });
 
   it('formats FARM', () => {

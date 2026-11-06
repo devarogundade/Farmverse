@@ -6,8 +6,8 @@
  */
 const ANIMALS = new Set(['cow', 'chicken', 'sheep', 'pig']);
 
-export type NftType = 'worker' | 'tractor' | 'building' | 'land' | 'good' | 'animal';
-export const NFT_TYPES: readonly NftType[] = ['worker', 'tractor', 'building', 'land', 'good', 'animal'];
+export type NftType = 'worker' | 'tractor' | 'building' | 'land' | 'good' | 'animal' | 'pack' | 'deed';
+export const NFT_TYPES: readonly NftType[] = ['worker', 'tractor', 'building', 'land', 'good', 'animal', 'pack', 'deed'];
 
 export function nftTypeOf(kind: string, itemId: string): NftType | null {
   switch (kind) {
@@ -16,13 +16,15 @@ export function nftTypeOf(kind: string, itemId: string): NftType | null {
     case 'building':
       return 'building';
     case 'land':
-      return 'land';
+      return itemId === 'deed' ? 'deed' : 'land';
+    case 'pack':
+      return 'pack'; // passes and gem packs: flat art on the market
     case 'tool':
       return 'tractor';
     case 'good':
       return ANIMALS.has(itemId) ? 'animal' : 'good';
     default:
-      return null; // boosts and packs have no marketplace renderer yet
+      return null; // boosts have no marketplace renderer yet
   }
 }
 

@@ -36,6 +36,36 @@ export interface Stats {
     indexer: { blockHeight: number; updatedAt: number } | null;
   } | null;
   days: DayPoint[];
+  /** The studio's drops (plan 15 §5): editions sold and FARM taken. */
+  drops: DropStat[];
+  /** The last nightly game ⇄ chain check (`ops/reconcile`, written by the chain-reconcile job), or null before its first run. */
+  reconcile: ReconcileStat | null;
+}
+
+export interface DropStat {
+  id: string;
+  title: string;
+  sold: number;
+  cap: number | null;
+  /** FARM per edition. */
+  price: number;
+  /** FARM taken (sold × price). */
+  takings: number;
+  paused: boolean;
+}
+
+export interface ReconcileStat {
+  at: number;
+  ok: boolean;
+  vouchersIssued: number;
+  vouchersMinted: number;
+  vouchersRefunded: number;
+  voucherTokensOnChain: number;
+  refundedButMinted: number;
+  mintedNotRecorded: number;
+  redeemsOnChain: number;
+  redeemsCredited: number;
+  redeemsUncredited: number;
 }
 
 const n = (v: unknown) => Number(v ?? 0);
@@ -135,6 +165,26 @@ export async function stats(prisma: PrismaClient, itemsContract: string, nowMs: 
     });
   }
 
+  // Drops and the reconcile come from newer tables/jobs; a server without them still shows the rest.
+  let drops: DropStat[] = [];
+  try {
+    const rows = await prisma.$queryRaw<{ drop_id: string; title: string; sold: bigint; cap: bigint | null; price: string; paused: boolean }[]>`
+      SELECT drop_id, title, sold, cap, price::text AS price, paused FROM chain.drops WHERE contract_id = ${itemsContract} ORDER BY price ASC`;
+    drops = rows.map((r) => {
+      const price = farmNumber(r.price.split('.')[0]!);
+      return { id: r.drop_id, title: r.title, sold: n(r.sold), cap: r.cap === null ? null : n(r.cap), price, takings: price * n(r.sold), paused: r.paused };
+    });
+  } catch {
+    drops = [];
+  }
+  let reconcile: ReconcileStat | null = null;
+  try {
+    const doc = await prisma.document.findUnique({ where: { path: 'ops/reconcile' }, select: { data: true } });
+    if (doc?.data && typeof doc.data === 'object') reconcile = doc.data as unknown as ReconcileStat;
+  } catch {
+    reconcile = null;
+  }
+
   const p = players[0]!;
   const a = activity[0]!;
   const c = coupons[0]!;
@@ -157,5 +207,7 @@ export async function stats(prisma: PrismaClient, itemsContract: string, nowMs: 
     },
     chain,
     days,
+    drops,
+    reconcile,
   };
 }
