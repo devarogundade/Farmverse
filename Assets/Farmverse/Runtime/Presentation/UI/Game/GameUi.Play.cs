@@ -165,14 +165,18 @@ namespace Farmverse.Presentation.UI.Game
             if (cardUid != _playFullUid) _playFullUid = -1;
             var card = cardUid >= 0 && _playFullUid != cardUid;
             if (cardUid < 0) _playCardShown = -1;
-            var bottom = view.Length == 0 || card;
+            // a tapped field, animal house or machine takes tools: its card is a panel along the bottom and the
+            // view stays clear (standing at one keeps the small card, so the stick stays to walk off)
+            var toolPanel = card && view.StartsWith("b:") && PlayTakesTools(cardUid);
+            var bottom = view.Length == 0 || (card && !toolPanel);
 
             PlayWorld(c, !s.Inside);
             PlayTopHud(c, false);
             if (bottom) PlayStick(c, riding);
             if (bottom && !riding) PlayButtons(c);
 
-            if (card) PlayCard(c, cardUid, view.StartsWith("b:"));
+            if (toolPanel) PlayToolBand(c, cardUid, view.StartsWith("b:"));
+            else if (card) PlayCard(c, cardUid, view.StartsWith("b:"));
             else if (view.StartsWith("room:")) PlayRoom(c);
             else if (view.StartsWith("place:")) PlayPlace(c);
             else if (view.StartsWith("build:")) PlayBuildMenu(c);

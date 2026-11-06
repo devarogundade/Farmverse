@@ -440,8 +440,6 @@ namespace Farmverse.Presentation.UI.Game
             }
             var st = PK.N(cardEl, p, "", 16, GameTheme.T("#bfe6ff"), wrap: true);
             c.Live(() => st.text = Loc.Of(PlayStatus(uid)));
-            c.Watch(() => PlayToolsKey(uid));
-            PlayToolTray(cardEl, p, uid);
 
             // two quick actions at most, the rest behind More
             var acts = new List<(string colour, string label, Action act)>();

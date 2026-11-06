@@ -14,7 +14,7 @@ namespace Farmverse.Presentation.UI.Game
     // Drag and drop from the panels into the world, wherever the camera is looking:
     //  - a build card dragged up out of the build band becomes the building under the finger, put down
     //    where it's let go (with an Undo for a few seconds);
-    //  - the tools on a building's card (seeds, sickle, feed, a machine's inputs, the hand that collects)
+    //  - the tools on a building's panel (seeds, sickle, feed, a machine's inputs, the hand that collects)
     //    work with a tap, or drag one and sweep it over the buildings: every one it passes that takes it
     //    gets it (sowing a row of fields in one stroke), the ones that don't say why when let go.
     // The pointer is read from the Input System each frame, so a drag goes on after the panel it began
@@ -215,48 +215,116 @@ namespace Farmverse.Presentation.UI.Game
             return host == null ? "" : string.Join(",", host.ToolsFor(uid).Select(t => t.Kind + ":" + t.Item));
         }
 
-        /// <summary>The tool tray on a building's floating card: tap one to use it here, drag it over buildings to spray.</summary>
-        private void PlayToolTray(VisualElement cardEl, Pt p, int uid)
+        /// <summary>Buildings whose card is the tool panel: fields, animal houses, machines.</summary>
+        private bool PlayTakesTools(int uid)
         {
-            var host = Host;
-            if (host == null) return;
-            var tools = host.ToolsFor(uid);
-            if (tools.Count == 0) return;
-            var tray = PK.Row(cardEl, p.P(8));
-            tray.style.marginTop = p.P(4);
-            tray.style.flexWrap = Wrap.Wrap;
-            foreach (var tool in tools.Take(6))
+            var eco = Economy;
+            return eco != null && eco.IsBuilt(uid) && (eco.Plots.ContainsKey(uid) || eco.Animals.ContainsKey(uid) || eco.Machines.ContainsKey(uid));
+        }
+
+        /// <summary>
+        /// A building that takes tools, as a panel along the bottom (the view above stays clear): its name and
+        /// state, its buttons, and the tools it takes now, big enough to grab. Tap one to use it here, or drag
+        /// it over the fields and buildings.
+        /// </summary>
+        private void PlayToolBand(Ctx c, int uid, bool tapped)
+        {
+            var p = c.P;
+            var s = Sandbox!;
+            var eco = Economy!;
+            var host = Host!;
+            var building = host.Building(uid) ?? s.Selected;
+            if (building == null) return;
+            c.Watch(() => PlayToolsKey(uid));
+
+            var band = PK.Box(c.Root);
+            band.pickingMode = PickingMode.Position;
+            PK.Abs(band, left: 0, right: 0, bottom: 0);
+            band.style.backgroundColor = GameTheme.T("#0b2a52");
+            Kit.Nine(band, GameArt.Get("Popup_FullWidth03_Single_Navy"), 4, 20, 4, 20, p.U(14) / 20f);
+            PK.Pad(band, p.L + p.P(20), p.P(14), p.R + p.P(20), p.B + p.P(12));
+
+            var head = PK.Row(band, p.P(10));
+            head.style.minHeight = p.P(58);
+            head.style.flexShrink = 0;
+            head.style.alignItems = Align.Center;
+            var info = PK.Col(head);
+            info.style.flexShrink = 1;
+            var title = PK.Row(info, p.P(8));
+            PK.T(title, p, IslandEconomyHost.NameOf(building.id), 24);
+            var lvl = PlayLevelOf(uid);
+            if (lvl > 0) PlayTag(title, p, "Lv " + lvl, 14, GameTheme.C("#ffd23a"), PK.Ink).style.alignSelf = Align.Center;
+            var st = PK.N(info, p, "", 16, GameTheme.T("#bfe6ff"));
+            c.Live(() => st.text = Loc.Of(PlayStatus(uid)));
+            PK.Grow(head);
+
+            if (eco.CanLevel(uid) || eco.UpgradeCost(uid) != null) PK.Btn(head, p, "yellow", "Upgrade", 0, 50, 18, () => Open("upgrade", uid));
+            if (eco.WorkJobs(uid).Count > 0) PK.Btn(head, p, "blue", "Workers", 0, 50, 18, () => Open("workjobs", uid));
+            PK.Btn(head, p, "gray", "More", 0, 50, 18, () =>
             {
-                var chip = PK.Col(tray);
-                chip.style.alignItems = Align.Center;
-                PK.Size(chip, p.P(68), p.P(78));
-                chip.style.paddingTop = p.P(4);
-                chip.style.backgroundColor = GameTheme.Light(.12f);
-                Kit.Round(chip, p.U(14));
-                Kit.Border(chip, p.U(2), GameTheme.Light(.3f));
-                var item = host.ToolItem(uid, tool);
-                var icon = tool.Kind == ToolKind.Sickle && item.Length == 0
-                    ? PK.Img(null, "Icon_Shovel", p.P(44))
-                    : ShopGoodIcon(p, item, p.P(44));
-                icon.pickingMode = PickingMode.Ignore;
-                chip.Add(icon);
-                var cap = PK.T(chip, p, ToolLabel(tool), 13, align: TextAnchor.MiddleCenter);
-                cap.pickingMode = PickingMode.Ignore;
-                var t = tool;
-                chip.RegisterCallback<PointerDownEvent>(_ =>
-                {
-                    PointerNow(out var at);
-                    _toolPress = (uid, t);
-                    _toolPressAt = at;
-                }, TrickleDown.TrickleDown);
-                PK.Tap(chip, p, () =>
-                {
-                    if (_toolDrag != null) return;
-                    UseOne(uid, t, true);
-                }, "");
+                _playFullUid = uid;
+                MarkDirty();
+            });
+            if (tapped) PlayClose(head, p, 56, 60, () => { s.Deselect(); MarkDirty(); });
+
+            var tools = host.ToolsFor(uid);
+            if (tools.Count == 0)
+            {
+                var none = PK.N(band, p, "Nothing to do here right now.", 18, GameTheme.T("#bfe6ff"));
+                none.style.marginTop = p.P(10);
+                none.style.marginBottom = p.P(6);
+                return;
             }
-            var hint = PK.N(cardEl, p, "Tap a tool, or drag it onto fields and buildings", 13, GameTheme.T("#bfe6ff"), wrap: true);
-            hint.style.marginTop = p.P(2);
+
+            var scroll = new ScrollView(ScrollViewMode.Horizontal);
+            scroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+            scroll.verticalScrollerVisibility = ScrollerVisibility.Hidden;
+            scroll.style.marginTop = p.P(10);
+            scroll.style.height = p.P(124);
+            scroll.style.flexShrink = 0;
+            scroll.contentContainer.style.flexDirection = FlexDirection.Row;
+            band.Add(scroll);
+            var first = true;
+            foreach (var tool in tools)
+            {
+                var chip = PlayToolChip(scroll.contentContainer, p, uid, tool);
+                if (!first) chip.style.marginLeft = p.P(12);
+                first = false;
+            }
+            var hint = PK.N(band, p, "Tap to use here, or drag onto fields and buildings", 15, GameTheme.T("#bfe6ff"));
+            hint.style.marginTop = p.P(6);
+        }
+
+        private VisualElement PlayToolChip(VisualElement parent, Pt p, int uid, Tool tool)
+        {
+            var host = Host!;
+            var chip = PK.Col(parent);
+            chip.style.alignItems = Align.Center;
+            chip.style.justifyContent = Justify.Center;
+            PK.Size(chip, p.P(110), p.P(120));
+            Kit.Nine(chip, GameArt.Get("CardFrame06_Bg_Blue"), 28, 40, 28, 20, p.U(14) / 40f);
+            var item = host.ToolItem(uid, tool);
+            var icon = tool.Kind == ToolKind.Sickle && item.Length == 0
+                ? PK.Img(null, "Icon_Shovel", p.P(60))
+                : ShopGoodIcon(p, item, p.P(60));
+            icon.pickingMode = PickingMode.Ignore;
+            foreach (var child in icon.Query<VisualElement>().ToList()) child.pickingMode = PickingMode.Ignore;
+            chip.Add(icon);
+            var cap = PK.T(chip, p, ToolLabel(tool), 16, align: TextAnchor.MiddleCenter);
+            cap.pickingMode = PickingMode.Ignore;
+            cap.style.marginTop = p.P(4);
+            chip.RegisterCallback<PointerDownEvent>(_ =>
+            {
+                PointerNow(out var at);
+                _toolPress = (uid, tool);
+                _toolPressAt = at;
+            }, TrickleDown.TrickleDown);
+            PK.Tap(chip, p, () =>
+            {
+                if (_toolDrag != null) return;
+                UseOne(uid, tool, true);
+            }, "");
+            return chip;
         }
 
         private static string ToolLabel(Tool t) => t.Kind switch
