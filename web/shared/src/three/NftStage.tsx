@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
+import { Bounds, ContactShadows, OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Component, Suspense, useRef, type ReactNode } from 'react';
 import type { Group } from 'three';
@@ -84,8 +84,13 @@ export function NftStage({ meta, className, interactive = false, framing = 'card
       <directionalLight position={[-4, 2, -3]} intensity={0.45} color="#bfe6ff" />
       <ModelBoundary resetKey={JSON.stringify(meta)}>
         <Suspense fallback={null}>
-          {worker || interactive ? (
+          {worker ? (
             <NftModel meta={meta} clip={clip} playing={animate} />
+          ) : interactive ? (
+            // Items vary in shape (a wide tractor, a tall silo) and stages vary in aspect: fit each one.
+            <Bounds fit clip observe margin={1.15}>
+              <NftModel meta={meta} clip={clip} playing={animate} />
+            </Bounds>
           ) : (
             <Turntable speed={0.6} active={animate}>
               <NftModel meta={meta} clip={clip} playing={animate} />

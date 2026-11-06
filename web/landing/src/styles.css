@@ -165,17 +165,61 @@
   .split, .workers { grid-template-columns: 1fr; }
   .nav-links { display: none; }
 }
+/* ---------- phones ---------- */
 @media (max-width: 600px) {
-  .nav-logo img { height: 38px; }
-  .hero-card.main { width: 260px; height: 420px; margin-right: -130px; }
-  .hero-card.small { width: 150px; height: 140px; }
-  .hero-art { height: 440px; }
-  .steps { grid-template-columns: 1fr; }
-  .bag { grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 14px; }
-  .worker-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .nav { gap: 12px; padding: 10px 16px; }
+  .nav-logo img { height: 34px; }
+  .nav-ctas .fv-btn { --h: 38px; }
+
+  .hero { min-height: 0; }
+  .hero-inner { padding: 28px 16px 36px; gap: 18px; }
+  .hero-logo { width: min(320px, 90%); }
+  .hero-lead { font-size: 16px; margin-bottom: 20px; }
+  .hero-ctas .fv-btn { --h: 54px; flex: 1 1 100%; }
+  .hero-art { height: 380px; }
+  .hero-card.main { width: 230px; height: 360px; margin-right: -115px; }
+  .hero-card.small { width: 132px; height: 124px; }
+  .hero-card.a { bottom: 0; }
+  .hero-card.b { top: 16px; }
+
+  .section { padding: 44px 16px 8px; }
+  .section-title { margin-bottom: 20px; }
+  .section p { font-size: 16px; }
+
+  /* Steps: compact rows, icon on the left. */
+  .steps { grid-template-columns: 1fr; gap: 10px; }
+  .step {
+    display: grid; grid-template-columns: 76px 1fr; grid-template-areas: 'icon title' 'icon text';
+    column-gap: 14px; align-items: center; text-align: left; padding: 16px 18px;
+  }
+  .step img { grid-area: icon; width: 72px; height: 72px; }
+  .step h3 { grid-area: title; margin: 0; font-size: 22px; align-self: end; }
+  .step p { grid-area: text; align-self: start; font-size: 14px; }
+  .step-no { top: 8px; left: 8px; width: 26px; height: 26px; font-size: 14px; box-shadow: 0 0 0 2px var(--ink); }
+
+  .split { gap: 24px; }
+  .bag { gap: 6px; padding: 12px; }
+  .bag .slot b { font-size: 14px; right: 9px; bottom: 7px; }
+
+  /* Workers: three across, names under the cards (a scrolling row would let the 3D spill past
+     the panel, since WebGL ignores CSS overflow clipping). */
+  .workers { padding: 22px 18px; gap: 20px; }
+  .worker-row { gap: 8px; }
+  .worker { aspect-ratio: 0.62; }
+  .worker-label {
+    top: 100%; bottom: auto; left: 0; right: 0; margin-top: 6px;
+    padding: 0; background: none; backdrop-filter: none; text-align: center;
+  }
   .worker-label b { font-size: 14px; }
   .worker-label span { display: none; }
-  .cta { flex-direction: column; text-align: center; }
+  .worker-row { padding-bottom: 26px; }
+  .coin svg { width: 140px; height: 140px; }
+  .faq details { padding: 14px 18px; }
+  .faq summary { font-size: 18px; }
+
+  .cta { flex-direction: column; text-align: center; min-height: 0; padding: 36px 16px 44px; margin-top: 48px; }
   .cta-copy { align-items: center; }
-  .cta-npc { height: 220px; }
+  .cta-npc { height: 170px; }
+  .footer { gap: 14px 20px; }
+  .footer small { margin-left: 0; flex-basis: 100%; }
 }

@@ -44,7 +44,7 @@ export function AccountAvatar({ account, size = 28 }: { account: string; size?: 
   );
 }
 
-const PILL: Record<EventKind, string> = { minted: 'Minted', listed: 'Listed', bought: 'Bought', delisted: 'Delisted', redeemed: 'Redeemed' };
+const PILL: Record<EventKind, string> = { minted: 'Minted', listed: 'Listed', bought: 'Bought', delisted: 'Delisted', redeemed: 'Used in game', sent: 'Sent', offer: 'Offer' };
 export function EventPill({ kind }: { kind: EventKind }) {
   return <span className={`pill pill-${kind}`}>{PILL[kind]}</span>;
 }

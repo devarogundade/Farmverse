@@ -7,7 +7,7 @@ import { displayNo } from '@farmverse/shared/nft/metadata';
 import { FRAME, Price, fmt } from './ui';
 
 /** Tile with a live 3D model, name chip and arrow, as in the "related" row of the design. */
-export function NftCard({ token, showPrice = true }: { token: Token; showPrice?: boolean }) {
+export function NftCard({ token, showPrice = true, badge }: { token: Token; showPrice?: boolean; badge?: string }) {
   const m = token.metadata;
   // Still until the pointer (or keyboard focus) is on the card.
   const [live, setLive] = useState(false);
@@ -23,6 +23,7 @@ export function NftCard({ token, showPrice = true }: { token: Token; showPrice?:
     >
       <NftStage meta={m} className="nft-card-stage" animate={live} />
       {m.quantity != null && <span className="qty-badge">×{fmt(m.quantity)}</span>}
+      {badge && <span className="card-ribbon fv-title">{badge}</span>}
       <div className="nft-card-foot">
         <div className="nft-card-text">
           <strong className="fv-title">{token.title}</strong>

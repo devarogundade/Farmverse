@@ -12,6 +12,18 @@ npm install
 npm run dev:market
 ```
 
+## Data modes (marketplace)
+
+Copy `marketplace/.env.example` to `marketplace/.env.local`.
+
+- **Mock (default):** leave `VITE_API_URL` empty. Everything runs in the browser: demo wallet, fake latency,
+  cursor pages, and a simulated live feed (a price change or a new offer every ~45 s).
+- **Live:** set `VITE_API_URL` (read API + offers), `VITE_WS_URL` (realtime) and the contract ids. Wallets
+  connect through NEAR Connect; sells, buys, delists, sends and redeems are real transactions on
+  `VITE_NEAR_NETWORK` (testnet by default).
+
+Layers, libraries and the contract-call table are in `Docs/architecture/14-web-client.md`.
+
 ## Assets
 
 - **3D models** (`shared/public/models/**/*.glb`) are exported from the ithappy Asset Store packs, whose licence

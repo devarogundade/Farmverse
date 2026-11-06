@@ -4,7 +4,7 @@
  */
 import type { NftMetadata } from '@farmverse/shared/nft/metadata';
 
-export type EventKind = 'minted' | 'listed' | 'bought' | 'delisted' | 'redeemed';
+export type EventKind = 'minted' | 'listed' | 'bought' | 'delisted' | 'redeemed' | 'sent' | 'offer';
 
 export interface TokenEvent {
   kind: EventKind;
@@ -120,7 +120,21 @@ export const TOKENS: Token[] = [
   token(16, 's-0231', 'Hen', { type: 'animal', item_id: 'chicken', props: { yield: 'egg' } }, 7.5),
   token(17, 's-0250', 'Blue Tractor', { type: 'tractor', item_id: 'tractor_blue', props: { speed: 4 } }, 52.0),
   token(18, 'g-01JD7T4B6E', 'Honey ×30', { type: 'good', item_id: 'honey', quantity: 30, minted_from: 'kofi.near' }),
+  token(19, 'g-01JD8A2W9Q', 'Flour ×60', { type: 'good', item_id: 'flour', quantity: 60, minted_from: 'tilly.near' }),
+  token(20, 's-0310', 'Garden Bed', { type: 'land', item_id: 'garden_bed', props: { size: '2×3' } }),
+  token(21, 's-0262', 'Sheep', { type: 'animal', item_id: 'sheep', props: { yield: 'wool' } }, 11.0),
 ];
 
 /** The signed-in account in the mock (wallet sign-in comes later). */
 export const ME = 'tilly.near';
+
+/** What the signed-in mock account holds at start: two listed, three not. */
+for (const id of ['w-0981', 'g-01JD7Q3K8M', 'g-01JD8A2W9Q', 's-0310', 'g-01JD7T4B6E']) {
+  const t = TOKENS.find((x) => x.token_id === id)!;
+  t.owner_id = ME;
+  if (t.events[0]?.kind === 'listed') t.events[0].account = ME;
+  if (id === 'g-01JD8A2W9Q' || id === 's-0310' || id === 'g-01JD7T4B6E') t.price = undefined;
+}
+
+/** FARM in the mock wallet at start. */
+export const START_BALANCE = 140;

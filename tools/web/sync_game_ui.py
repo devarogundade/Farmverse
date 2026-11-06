@@ -40,6 +40,8 @@ Isl_g_wheat Isl_g_milk Isl_g_egg Isl_g_flour Isl_g_tomato
 Paint_crop_wheat Paint_animal_cow Paint_animal_chicken Paint_animal_sheep Paint_good_flour Paint_good_bread
 Paint_prod_egg Paint_prod_milk Paint_mach_mill Paint_plot_field Paint_tool_watering_can Paint_tool_shovel
 Paint_seed_wheat Paint_fac_farmhouse_l1 Paint_fac_chicken_coop_l1 Paint_land_hex
+Loading_Rotate Icon_ImageIcon_ClearStamp_l Icon_ImageIcon_Info Icon_Mail Icon_PictoIcon_Edit Icon_PictoIcon_Delete
+Icon_ImageIcon_Lock01_s Icon_Hourglass
 """.split()
 
 # The blue chrome each theme replaces (Resources/GameUi/Themes/<id>/).

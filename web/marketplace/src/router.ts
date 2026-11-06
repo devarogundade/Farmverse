@@ -29,7 +29,7 @@ export function useRoute(): Route {
 
 export const href = {
   explore: (type?: string) => (type ? `#/?type=${type}` : '#/'),
-  mine: () => '#/mine',
+  mine: (type?: string) => (type ? `#/mine?type=${type}` : '#/mine'),
   token: (id: string) => `#/token/${encodeURIComponent(id)}`,
   studio: () => '#/studio',
 };

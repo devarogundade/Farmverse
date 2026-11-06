@@ -5,12 +5,16 @@ import {
 } from '@farmverse/shared/nft/metadata';
 import { NftStage } from '@farmverse/shared/three/NftStage';
 import { sprite } from '@farmverse/shared/gameTheme';
+import { Select } from '../components/Select';
 import { FRAME, TYPE_ICON } from '../components/ui';
 
 const START: NftMetadata = {
   type: 'worker',
   outfit: { hair: 'Hairstyle_Male_005', face: 'Male_emotion_happy_002', top: 'Outwear_043', bottom: 'Pants_010', glove: 'Gloves_006', shoes: 'Shoe_Sneakers_009' },
 };
+
+/** Radix Select reserves '' for "no value", so an empty slot needs its own value. */
+const NONE = '__none';
 
 const firstItem = (type: NftType) => Object.keys(ITEM_MODELS).find((k) => ITEM_MODELS[k].type === type);
 
@@ -79,33 +83,32 @@ export function Studio() {
                 </button>
               </div>
               {OUTFIT_SLOTS.map((s) => (
-                <label key={s} className="slot">
+                <div key={s} className="slot">
                   <span>{SLOT_LABEL[s]}</span>
-                  <select value={meta.outfit?.[s] ?? ''} onChange={(e) => setSlot(s, e.target.value)}>
-                    <option value="">None</option>
-                    {OUTFIT_PARTS[s].map((p) => (
-                      <option key={p} value={p}>
-                        {partLabel(p)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                  <Select
+                    size="sm"
+                    label={SLOT_LABEL[s]}
+                    value={meta.outfit?.[s] ?? NONE}
+                    onChange={(v) => setSlot(s, v === NONE ? '' : v)}
+                    options={[{ value: NONE, label: 'None' }, ...OUTFIT_PARTS[s].map((p) => ({ value: p, label: partLabel(p) }))]}
+                  />
+                </div>
               ))}
             </div>
           ) : (
             <div className="slots">
-              <label className="slot">
+              <div className="slot">
                 <span>Item</span>
-                <select value={meta.item_id} onChange={(e) => setMeta({ ...meta, item_id: e.target.value })}>
-                  {Object.entries(ITEM_MODELS)
+                <Select
+                  size="sm"
+                  label="Item"
+                  value={meta.item_id ?? ''}
+                  onChange={(v) => setMeta({ ...meta, item_id: v })}
+                  options={Object.entries(ITEM_MODELS)
                     .filter(([, v]) => v.type === meta.type)
-                    .map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v.label}
-                      </option>
-                    ))}
-                </select>
-              </label>
+                    .map(([k, v]) => ({ value: k, label: v.label, icon: TYPE_ICON[v.type] }))}
+                />
+              </div>
               {meta.type === 'good' && (
                 <label className="slot">
                   <span>Amount</span>

@@ -1,14 +1,17 @@
 import { THEMES, sprite, useGameTheme } from '@farmverse/shared/gameTheme';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ME } from '../data/mock';
+import { useBalance, useNotes } from '../api/queries';
+import { useWallet } from '../chain/wallet';
+import { useLiveStatus } from '../realtime/socket';
+import { useFlow } from './Flows';
 import { href, type Route } from '../router';
-import { AccountAvatar } from './ui';
+import { AccountAvatar, fmt } from './ui';
 
 const NAV = [
   { key: 'home', icon: 'Icon_Shop', label: 'Explore', to: href.explore() },
   { key: 'token', icon: 'Icon_Crown', label: 'Featured', to: href.token('w-1245') },
   { key: 'mine', icon: 'Icon_MenuIcon02_Inventory', label: 'My items', to: href.mine() },
-  { key: 'studio', icon: 'Icon_PictoIcon_Cloth', label: 'Dressing room', to: href.studio() },
+  { key: 'studio', icon: 'Icon_PictoIcon_Cloth', label: 'Wardrobe', to: href.studio() },
 ] as const;
 
 function activeKey(route: Route) {
@@ -35,8 +38,11 @@ function ThemePicker() {
   }, [open]);
   return (
     <div className="theme-picker" ref={box}>
-      <button className="fv-chip rail-btn" aria-label="Settings" aria-expanded={open} title="Settings" onClick={() => setOpen((o) => !o)}>
-        <img className="fv-icon" src={sprite('Icon_PictoIcon_Setting')} alt="" />
+      <button className="rail-item" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+        <span className="fv-chip rail-btn">
+          <img className="fv-icon" src={sprite('Icon_PictoIcon_Setting')} alt="" />
+        </span>
+        <span className="rail-label">Theme</span>
       </button>
       {open && (
         <div className="theme-pop fv-panel" role="dialog" aria-label="Theme">
@@ -56,6 +62,11 @@ function ThemePicker() {
 export function Shell({ route, children, search, onSearch }: { route: Route; children: ReactNode; search: string; onSearch: (q: string) => void }) {
   const active = activeKey(route);
   const mine = route.name === 'explore' && route.mine;
+  const open = useFlow();
+  const { accountId: account, ready } = useWallet();
+  const { data: balance } = useBalance();
+  const unread = (useNotes().data ?? []).filter((n) => !n.read).length;
+  const live = useLiveStatus();
   return (
     <div className="frame">
       <aside className="rail">
@@ -64,15 +75,11 @@ export function Shell({ route, children, search, onSearch }: { route: Route; chi
         </a>
         <nav className="rail-nav" aria-label="Main">
           {NAV.map(({ key, icon, label, to }) => (
-            <a
-              key={key}
-              href={to}
-              className={`rail-btn${active === key ? ' active' : ' fv-chip'}`}
-              aria-label={label}
-              aria-current={active === key ? 'page' : undefined}
-              title={label}
-            >
-              <img className="fv-icon" src={sprite(icon)} alt="" />
+            <a key={key} href={to} className={`rail-item${active === key ? ' on' : ''}`} aria-current={active === key ? 'page' : undefined}>
+              <span className={`rail-btn${active === key ? ' active' : ' fv-chip'}`}>
+                <img className="fv-icon" src={sprite(icon)} alt="" />
+              </span>
+              <span className="rail-label">{label}</span>
             </a>
           ))}
         </nav>
@@ -84,7 +91,6 @@ export function Shell({ route, children, search, onSearch }: { route: Route; chi
       <header className="topbar">
         <a className="wordmark" href={href.explore()} aria-label="Farmverse Market">
           <img src={sprite('Home_Logo')} alt="Farmverse" />
-          <span className="fv-title">Market</span>
         </a>
         <form
           className="search"
@@ -108,14 +114,27 @@ export function Shell({ route, children, search, onSearch }: { route: Route; chi
           </a>
         </div>
         <div className="top-actions">
-          <button className="fv-chip has-dot" aria-label="Notifications">
+          <button
+            className={`fv-chip${unread && account ? ' has-dot' : ''}`}
+            aria-label={unread && account ? `Notifications, ${unread} new` : 'Notifications'}
+            onClick={() => open({ kind: 'notes' })}
+          >
             <img className="fv-icon" src={sprite('Icon_PictoIcon_Bell')} alt="" />
           </button>
-          <button className="wallet-btn" title="Your wallet">
-            <img className="fv-icon" src={sprite('ResourceBar_Icon_Gold')} alt="" />
-            <span>{ME}</span>
-            <AccountAvatar account={ME} size={30} />
-          </button>
+          {!ready ? (
+            <span className="wallet-btn sk-wallet" aria-label="Checking wallet" />
+          ) : account ? (
+            <button className="wallet-btn" title={account} onClick={() => open({ kind: 'wallet' })}>
+              <img className="fv-icon" src={sprite('ResourceBar_Icon_Gold')} alt="" />
+              <b className="wallet-bal-sm">{balance == null ? '…' : fmt(balance)}</b>
+              <AccountAvatar account={account} size={30} />
+              <i className={`live-dot ${live}`} title={live === 'live' ? 'Live updates on' : live === 'connecting' ? 'Connecting…' : 'Live updates paused'} />
+            </button>
+          ) : (
+            <button className="fv-btn green sm" onClick={() => open({ kind: 'wallet' })}>
+              Connect
+            </button>
+          )}
         </div>
       </header>
 
