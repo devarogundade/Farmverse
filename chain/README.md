@@ -111,6 +111,21 @@ Events (`standard: "farmverse_market"`): `market_list`, `market_delist {reason}`
 
 ## Deploy order (testnet first)
 
+**Testnet, scripted.** `chain/scripts/deploy-testnet.sh` follows the steps below. It runs in WSL/Linux
+with near CLI and needs MASTER's key in the keychain and about 13 testnet NEAR on MASTER:
+
+```bash
+MASTER=farmverse.testnet chain/scripts/deploy-testnet.sh
+```
+
+It creates the five sub-accounts, then deploys and initialises FARM, items and market. Unless
+OWNER is set, MASTER is the owner. If `backend/server/.env` has no `MINT_SIGNER_SEED`, the script
+generates one there and registers its public key on items. It then registers the market with
+FARM and writes `chain/deploy/testnet.env`: the account names, the block to start indexing from
+and the signer key. Re-running it skips whatever already exists.
+
+To give a tester FARM from the treasury: `MASTER=… chain/scripts/fund-tester.sh friend.testnet 500`.
+
 1. Create `farm.`, `items.`, `market.`, `treasury.`, `studio.` sub-accounts of the team account,
    and the owner multisig (Sputnik DAO / Trezu).
 2. Deploy and `new` FARM → items (owner = multisig, minter = studio, signers = the game server's
