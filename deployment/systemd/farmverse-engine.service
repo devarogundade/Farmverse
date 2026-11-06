@@ -1,0 +1,16 @@
+[Unit]
+Description=Farmverse island engine (C#, 127.0.0.1:8080 behind ufw)
+After=network-online.target docker.service 
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/farmverse/engine
+Environment=PORT=8080 DOTNET_ROLL_FORWARD=Major
+ExecStart=/usr/bin/dotnet /opt/farmverse/engine/Farmverse.IslandEngine.dll
+Restart=always
+RestartSec=3
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

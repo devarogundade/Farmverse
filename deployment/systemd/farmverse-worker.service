@@ -1,0 +1,17 @@
+[Unit]
+Description=Farmverse job worker (BullMQ)
+After=network-online.target docker.service farmverse-engine.service
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/farmverse/server
+EnvironmentFile=/etc/farmverse/server.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --enable-source-maps dist/worker.js
+Restart=always
+RestartSec=3
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
