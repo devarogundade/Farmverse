@@ -14,14 +14,23 @@ function token(payload: object, alg = 'ES256') {
 }
 const cfg = { appId: 'app_1', appSecret: 'secret_123456', verificationKey: pem, nowMs: () => 1_800_000_000_000 };
 const good = { sub: 'did:privy:abc', aud: 'app_1', iss: 'privy.io', exp: 1_800_000_100 };
-const code = (f: () => unknown) => { try { f(); return 'ok'; } catch (e) { return e instanceof AppError ? e.code : String(e); } };
+const code = (p: Promise<unknown>) => p.then(() => 'ok', (e: unknown) => (e instanceof AppError ? e.code : String(e)));
 
 describe('privy social login', () => {
-  it('accepts a valid access token and refuses others', () => {
-    expect(privyUserOf(cfg, token(good))).toBe('did:privy:abc');
-    expect(code(() => privyUserOf(cfg, token({ ...good, aud: 'other' })))).toBe('UNAUTHENTICATED');
-    expect(code(() => privyUserOf(cfg, token({ ...good, exp: 1 })))).toBe('UNAUTHENTICATED');
-    expect(code(() => privyUserOf(cfg, token(good).slice(0, -4) + 'AAAA'))).toBe('UNAUTHENTICATED');
+  it('accepts a valid access token and refuses others', async () => {
+    expect(await privyUserOf(cfg, token(good))).toBe('did:privy:abc');
+    expect(await code(privyUserOf(cfg, token({ ...good, aud: 'other' })))).toBe('UNAUTHENTICATED');
+    expect(await code(privyUserOf(cfg, token({ ...good, exp: 1 })))).toBe('UNAUTHENTICATED');
+    expect(await code(privyUserOf(cfg, token(good).slice(0, -4) + 'AAAA'))).toBe('UNAUTHENTICATED');
+  });
+
+  it("uses the app's published keys when no key is configured", async () => {
+    const jwk = { ...publicKey.export({ format: 'jwk' }), kid: 'k1' };
+    const fetchImpl = (async () => new Response(JSON.stringify({ keys: [jwk] }))) as unknown as typeof fetch;
+    const h = b64u(JSON.stringify({ alg: 'ES256', kid: 'k1' }));
+    const p = b64u(JSON.stringify(good));
+    const s = b64u(sign('sha256', Buffer.from(`${h}.${p}`), { key: privateKey, dsaEncoding: 'ieee-p1363' }));
+    expect(await privyUserOf({ appId: 'app_1', appSecret: 'x'.repeat(12), fetchImpl, nowMs: cfg.nowMs }, `${h}.${p}.${s}`)).toBe('did:privy:abc');
   });
 
   it('creates a NEAR wallet only when the user has none', async () => {
