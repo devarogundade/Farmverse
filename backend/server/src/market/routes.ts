@@ -15,6 +15,11 @@ export interface NoteMarks {
 export interface MarketOptions {
   readonly reader: MarketReader;
   readonly readerV2?: MarketReaderV2;
+  /** Buy FARM with any token (plan 15 §13.3). */
+  readonly intents?: {
+    tokens: () => Promise<unknown>;
+    quote: (asset: string, amount: string, refundTo: string, account: string | null) => Promise<unknown>;
+  };
   /** Market Town merchants' last logs (plan 15 §13.1). */
   readonly merchants?: () => Promise<unknown[]>;
   readonly marks: NoteMarks;
@@ -102,6 +107,18 @@ export function marketRoutes(o: MarketOptions) {
     });
     app.get('/drops', async () => (v2 ? v2.drops() : []));
     app.get('/merchants', async () => (o.merchants ? o.merchants() : []));
+    app.get('/intents/tokens', async (_req, reply) => (o.intents ? o.intents.tokens() : fail(reply, 404, 'not_found', 'Not available.')));
+    app.post<{ Body: { asset?: string; amount?: string; refundTo?: string; account?: string } }>('/intents/quote', async (req, reply) => {
+      if (!o.intents) return fail(reply, 404, 'not_found', 'Not available.');
+      const b = req.body ?? {};
+      if (!b.asset || !b.amount || !/^\d{1,40}$/.test(b.amount)) return fail(reply, 400, 'bad_query', 'Pass asset and amount (base units).');
+      const account = b.account && Account.safeParse(b.account).success ? b.account : null;
+      try {
+        return await o.intents.quote(b.asset, b.amount, b.refundTo ?? '', account);
+      } catch {
+        return fail(reply, 502, 'no_quote', 'No quote right now. Try another amount or token.');
+      }
+    });
     app.get('/rentals', async () => (v2 ? v2.rentals({ nowMs: now() }) : []));
     app.get<{ Params: { account: string } }>('/accounts/:account/rentals', async (req, reply) => {
       const account = Account.safeParse(req.params.account);

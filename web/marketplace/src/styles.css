@@ -729,3 +729,10 @@
 @media (max-width: 720px) {
   .merchant-goods th:nth-child(5), .merchant-goods td:nth-child(5), .merchant-goods th:nth-child(6), .merchant-goods td:nth-child(6) { display: none; }
 }
+
+/* Get FARM with any token (plan 15 §13.3) */
+.buy-farm { max-width: 560px; display: grid; gap: 14px; padding: 20px; }
+.buy-farm .fv-input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 0; font-size: 18px; }
+.buy-farm-out { display: flex; align-items: center; gap: 10px; font-size: 1.2em; }
+.buy-farm-out .fv-icon { width: 40px; height: 40px; }
+.buy-farm .deposit { display: block; word-break: break-all; padding: 10px; background: rgba(0, 0, 0, 0.25); border-radius: 8px; }

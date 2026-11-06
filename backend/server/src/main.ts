@@ -7,6 +7,7 @@ import { LiveHub } from './live';
 import { redisNoteMarks } from './market/marks';
 import { MarketReader, MarketReaderV2 } from './market/read';
 import { merchantsPage } from './chain/merchants';
+import { farmQuote, intentsTokens } from './chain/intents';
 import { MarketHub } from './market/routes';
 import { buildServices } from './runtime';
 
@@ -60,6 +61,23 @@ async function main(): Promise<void> {
       reader: new MarketReader(services.prisma, config.NEAR_ITEMS_CONTRACT),
       readerV2: new MarketReaderV2(services.prisma, config.NEAR_ITEMS_CONTRACT),
       merchants: () => merchantsPage(services.rt.store),
+      intents: (() => {
+        const cfg = {
+          live: config.INTENTS_LIVE === 'on' && config.NEAR_NETWORK === 'mainnet',
+          ...(config.ONECLICK_API_KEY ? { apiKey: config.ONECLICK_API_KEY } : {}),
+          treasury: config.NEAR_TREASURY,
+          farmPerNear: config.FARM_PER_NEAR,
+        };
+        let tokens: { at: number; data: unknown } | null = null;
+        return {
+          tokens: async () => {
+            if (!tokens || Date.now() - tokens.at > 600_000) tokens = { at: Date.now(), data: await intentsTokens(cfg) };
+            return tokens.data;
+          },
+          quote: (asset: string, amount: string, refundTo: string, account: string | null) =>
+            farmQuote(cfg, services.rt.store, account, asset, amount, refundTo, Date.now()),
+        };
+      })(),
       marks: redisNoteMarks(marketRedis),
       limiter: services.limiter,
       hub: marketHub,

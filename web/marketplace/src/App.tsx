@@ -6,6 +6,7 @@ import { ToastHost, toast } from './components/Dialog';
 import { FlowHost } from './components/Flows';
 import { Shell } from './components/Shell';
 import { Explore } from './pages/Explore';
+import { BuyFarm } from './pages/BuyFarm';
 import { Merchants } from './pages/Merchants';
 import { Rent } from './pages/Rent';
 import { Shop } from './pages/Shop';
@@ -69,6 +70,7 @@ function Routes() {
       {route.name === 'shop' && <Shop />}
       {route.name === 'rent' && <Rent />}
       {route.name === 'merchants' && <Merchants />}
+      {route.name === 'buyfarm' && <BuyFarm />}
       {route.name === 'explore' && <Explore type={route.type} mine={route.mine} search={q} item={route.item} sort={route.sort} />}
     </Shell>
   );

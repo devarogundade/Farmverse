@@ -25,6 +25,7 @@ function activeKey(route: Route) {
   if (route.name === 'shop') return 'shop';
   if (route.name === 'rent') return 'rent';
   if (route.name === 'merchants') return 'town';
+  if (route.name === 'buyfarm') return 'shop';
   return route.mine ? 'mine' : 'home';
 }
 

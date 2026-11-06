@@ -21,6 +21,7 @@ import { nearFaucetSender } from './chain/faucet';
 import { nearRelayer, welcome } from './chain/relay';
 import { reconcile } from './chain/reconcile';
 import { merchantTick, nearMerchantWallet } from './chain/merchants';
+import { settleIntents } from './chain/intents';
 import { unclaimedRedeems } from './chain/unclaimed';
 import { crewOf } from './chain/crew';
 
@@ -138,6 +139,18 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             scheduleExpiry: bullMintExpiry(queues.mintExpiry),
             accountOf: async (uid: string) => (await prisma.account.findUnique({ where: { uid }, select: { accountId: true } }))?.accountId ?? null,
             unclaimedRedeems: unclaimedRedeems(prisma, config.NEAR_ITEMS_CONTRACT),
+            ...(config.INTENTS_LIVE === 'on' && config.NEAR_NETWORK === 'mainnet' && config.SALES_ACCOUNT && config.SALES_PRIVATE_KEY
+              ? {
+                  intentsSettle: () =>
+                    settleIntents(
+                      { live: true, ...(config.ONECLICK_API_KEY ? { apiKey: config.ONECLICK_API_KEY } : {}), treasury: config.NEAR_TREASURY, farmPerNear: config.FARM_PER_NEAR },
+                      store,
+                      nearFaucetSender(config.NEAR_RPC_URL, config.SALES_ACCOUNT!, config.SALES_PRIVATE_KEY!, config.NEAR_FARM_CONTRACT),
+                      log.with({ job: 'intents-settle' }),
+                      Date.now(),
+                    ),
+                }
+              : {}),
             ...(config.MERCHANTS?.length
               ? {
                   merchantTick: () =>

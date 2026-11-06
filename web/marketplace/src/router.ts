@@ -7,6 +7,7 @@ export type Route =
   | { name: 'shop' }
   | { name: 'rent' }
   | { name: 'merchants' }
+  | { name: 'buyfarm' }
   | { name: 'studio' };
 
 function parse(hash: string): Route {
@@ -18,6 +19,7 @@ function parse(hash: string): Route {
   if (parts[0] === 'shop') return { name: 'shop' };
   if (parts[0] === 'rent') return { name: 'rent' };
   if (parts[0] === 'town') return { name: 'merchants' };
+  if (parts[0] === 'buy-farm') return { name: 'buyfarm' };
   return {
     name: 'explore',
     type: params.get('type') ?? undefined,
@@ -49,5 +51,6 @@ export const href = {
   shop: () => '#/shop',
   rent: () => '#/rent',
   merchants: () => '#/town',
+  buyFarm: () => '#/buy-farm',
   studio: () => '#/studio',
 };

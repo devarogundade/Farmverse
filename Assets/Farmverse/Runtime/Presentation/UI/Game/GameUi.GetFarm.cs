@@ -48,6 +48,7 @@ namespace Farmverse.Presentation.UI.Game
             PK.T(col, p, "Earn FARM", 24).style.marginTop = p.P(10);
             PK.Btn(col, p, "purple", "Mint goods and sell them", 560, 60, 22, () => { _shopCat = "all"; Go("storage"); });
             PK.Btn(col, p, "yellow", "Sell or rent on the market", 560, 60, 22, () => GameLinks.Open(GameLinks.Market, "Open the market"));
+            PK.Btn(col, p, "blue", "Pay with any token (USDC, ETH, SOL…)", 560, 60, 20, () => GameLinks.Open(GameLinks.Market + "/#/buy-farm", "Get FARM"));
             if (n.NearYocto != null)
                 PK.N(col, p, "Fees are on us: you don't need NEAR to mint or redeem.", 15, GameTheme.T("#9fd0ff"), TextAnchor.MiddleCenter, true).style.marginTop = p.P(6);
         }

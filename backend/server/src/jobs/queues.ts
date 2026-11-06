@@ -19,7 +19,7 @@ export const QUEUES = {
 export type IslandWakeJob = { uid: string };
 export type PushTaskJob = PushTask & { uid: string };
 export type NewsFanoutJob = { newsId: string };
-export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' | 'chain-reconcile' | 'merchant-tick' };
+export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' | 'chain-reconcile' | 'merchant-tick' | 'intents-settle' };
 export type MintExpiryJob = { uid: string; tokenId: string };
 
 const RETRY = { attempts: 3, backoff: { type: 'exponential', delay: 30_000 } } as const;
@@ -94,6 +94,11 @@ export async function scheduleCron(queue: Queue<CronJob>): Promise<void> {
   await queue.upsertJobScheduler('merchant-tick', { every: 10 * 60_000 }, {
     name: 'merchant-tick',
     data: { name: 'merchant-tick' },
+  });
+  // Buy FARM with any token: deliver FARM for finished swaps (does nothing unless live, on mainnet)
+  await queue.upsertJobScheduler('intents-settle', { every: 60_000 }, {
+    name: 'intents-settle',
+    data: { name: 'intents-settle' },
   });
 }
 

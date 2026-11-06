@@ -80,7 +80,7 @@ an indexer migration, and the Unity panels.
 - [x] G4 Market site: Merchants page (stock, prices over time, why)
 - [x] G5 Social login built: Privy wallet registered in near-connect (market + game, switch `VITE_PRIVY_APP_ID` / `SOCIAL_LOGIN=on`), `sign.html` (email code → NEAR wallet via `/v1/auth/privy/near-wallet` → sign), implicit accounts sign in (§13.2). **Goes live when the team adds the Privy App ID, Client ID, app secret and verification key**
 - [ ] G6 README: NEP-245 for goods as the next step; what intents do on mainnet
-- [ ] G7 Buy FARM with any token (1Click → NEAR to the treasury → FARM from `sales.`), behind a mainnet switch; live quotes on testnet (§13.3)
+- [x] G7 Buy FARM with any token (1Click → NEAR to the treasury → FARM from `sales.`), behind a mainnet switch; live quotes on testnet (§13.3)
 
 ## H. Sponsored fees (plan §14)
 

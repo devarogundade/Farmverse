@@ -910,6 +910,9 @@ function FaucetRow() {
       >
         {state.busy ? 'Sending…' : 'Get FARM'}
       </button>
+      <a className="muted" href="#/buy-farm">
+        Or pay with any token
+      </a>
     </div>
   );
 }

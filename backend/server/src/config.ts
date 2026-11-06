@@ -63,6 +63,15 @@ const Schema = z.object({
   /** The app's verification key (SPKI PEM; 
  for newlines in .env). */
   PRIVY_VERIFICATION_KEY: optional(z.string().min(40)),
+  /** Buy FARM with any token (plan 15 §13.3): live orders need mainnet and INTENTS_LIVE=on; else dry quotes. */
+  INTENTS_LIVE: z.enum(['on', 'off']).default('off'),
+  ONECLICK_API_KEY: optional(z.string().min(8)),
+  /** Whole FARM the studio sells per whole NEAR. */
+  FARM_PER_NEAR: z.coerce.number().positive().default(100),
+  /** Sends the FARM for finished intents orders (its own float, never the treasury key). */
+  SALES_ACCOUNT: optional(z.string().min(2)),
+  SALES_PRIVATE_KEY: optional(z.string().regex(/^ed25519:[1-9A-HJ-NP-Za-km-z]+$/)),
+  NEAR_TREASURY: z.string().min(2).default('treasury.farmverse.testnet'),
   /** Market Town merchants (plan 15 §13.1): JSON [{"name":"bea","account":"bea.x.testnet","key":"ed25519:…"}] (chain/scripts/merchants.sh). */
   MERCHANTS: optional(
     z.string().transform((s, ctx) => {
