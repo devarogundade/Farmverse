@@ -47,6 +47,7 @@ namespace NUnit.Framework
         public static void IsFalse(bool condition, string? message = null) { if (condition) Fail("Expected: False" + Suffix(message)); }
         public static void IsNull(object? value, string? message = null) { if (value != null) Fail($"Expected: null but was {Show(value)}" + Suffix(message)); }
         public static void IsNotNull(object? value, string? message = null) { if (value == null) Fail("Expected: not null" + Suffix(message)); }
+        public static void IsEmpty(System.Collections.IEnumerable? values, string? message = null) { if (values == null || values.GetEnumerator().MoveNext()) Fail("Expected: empty" + Suffix(message)); }
 
         public static T Throws<T>(TestDelegate code, string? message = null) where T : Exception
         {
