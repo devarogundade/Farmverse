@@ -38,6 +38,8 @@ export interface ChainRuntime {
   readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
   /** The NEAR account behind a game uid. */
   readonly accountOf: (uid: string) => Promise<string | null>;
+  /** The nightly game ⇄ chain check (writes ops/reconcile). */
+  readonly reconcile?: () => Promise<unknown>;
   /** Redeems on chain that no `chain-redeem` call credited (the backstop job). */
   readonly unclaimedRedeems?: () => Promise<UnclaimedRedeem[]>;
   /** Testnet only: who pays faucet claims and how much. */

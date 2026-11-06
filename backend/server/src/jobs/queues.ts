@@ -19,7 +19,7 @@ export const QUEUES = {
 export type IslandWakeJob = { uid: string };
 export type PushTaskJob = PushTask & { uid: string };
 export type NewsFanoutJob = { newsId: string };
-export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' };
+export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' | 'chain-reconcile' };
 export type MintExpiryJob = { uid: string; tokenId: string };
 
 const RETRY = { attempts: 3, backoff: { type: 'exponential', delay: 30_000 } } as const;
@@ -84,6 +84,11 @@ export async function scheduleCron(queue: Queue<CronJob>): Promise<void> {
   await queue.upsertJobScheduler('redeem-backstop', { every: 60_000 }, {
     name: 'redeem-backstop',
     data: { name: 'redeem-backstop' },
+  });
+  // The game's mints and redeems against the chain, nightly (UTC).
+  await queue.upsertJobScheduler('chain-reconcile', { pattern: '30 3 * * *', tz: 'Etc/UTC' }, {
+    name: 'chain-reconcile',
+    data: { name: 'chain-reconcile' },
   });
 }
 
