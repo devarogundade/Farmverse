@@ -155,9 +155,10 @@ async function main() {
   const have = BigInt(await view(market, 'storage_balance_of', { account_id: studio }));
   const need = 10n ** 22n * BigInt(batch.length);
   if (have < need) {
-    const more = need - have;
+    // at least one listing's worth, in yoctoNEAR (a float would print as 3e-17 and the CLI refuses it)
+    const more = need - have < 10n ** 22n ? 10n ** 22n : need - have;
     console.log(`• studio storage deposit on the market: +${Number(more) / 1e24} NEAR`);
-    call(market, 'storage_deposit', {}, `${Number(more) / 1e24} NEAR`, studio);
+    call(market, 'storage_deposit', {}, `${more} yoctoNEAR`, studio);
   }
 
   for (const f of batch) {
