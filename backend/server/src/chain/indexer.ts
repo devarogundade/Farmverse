@@ -3,10 +3,12 @@ import type { PrismaClient } from '../generated/prisma/client';
 import type { BlockSource } from './neardata';
 import { eventsIn, type ChainEvent, type NearBlock, type Watched } from './parse';
 import { project, type MarketMessage } from './project';
+import type { RangeSource } from './txsource';
 
 export interface IndexerOptions {
   readonly prisma: PrismaClient;
-  readonly source: BlockSource;
+  /** txSource (the watched contracts' transactions), or blockRange(neardataSource) (every block). */
+  readonly source: RangeSource;
   readonly watched: Watched;
   readonly log: Logger;
   /** Cursor name; one per network/contract set. */
@@ -15,8 +17,8 @@ export interface IndexerOptions {
   readonly startHeight?: number;
   /** Blocks per transaction. */
   readonly batch?: number;
-  /** Blocks fetched at once. */
-  readonly concurrency?: number;
+  /** Wait until at least this many new final blocks before reading (the tx source: one look per poll, not per block). */
+  readonly minSpan?: number;
   /** Called after each commit with what changed (never inside the transaction). */
   readonly publish?: (messages: MarketMessage[]) => void;
 }
@@ -27,18 +29,24 @@ const sleep = (ms: number, signal?: AbortSignal) =>
     signal?.addEventListener('abort', () => (clearTimeout(t), resolve()), { once: true });
   });
 
-/** Fetches `heights` with at most `n` requests in flight, keeping their order. */
-async function fetchAll(source: BlockSource, heights: number[], n: number): Promise<(NearBlock | null)[]> {
-  const out: (NearBlock | null)[] = new Array(heights.length);
-  let next = 0;
-  const worker = async () => {
-    while (next < heights.length) {
-      const i = next++;
-      out[i] = await source.block(heights[i]!);
-    }
+/** Every block of a range from a per-block source, `n` requests in flight, in order (skipped heights left out). */
+export function blockRange(source: BlockSource, n: number): RangeSource {
+  return {
+    finalHeight: () => source.finalHeight(),
+    async blocks(from, to) {
+      const heights = Array.from({ length: to - from + 1 }, (_, i) => from + i);
+      const out: (NearBlock | null)[] = new Array(heights.length);
+      let next = 0;
+      const worker = async () => {
+        while (next < heights.length) {
+          const i = next++;
+          out[i] = await source.block(heights[i]!);
+        }
+      };
+      await Promise.all(Array.from({ length: Math.min(n, heights.length) }, worker));
+      return out.filter((b): b is NearBlock => b !== null);
+    },
   };
-  await Promise.all(Array.from({ length: Math.min(n, heights.length) }, worker));
-  return out;
 }
 
 /**
@@ -52,13 +60,11 @@ async function fetchAll(source: BlockSource, heights: number[], n: number): Prom
 export class ChainIndexer {
   private readonly name: string;
   private readonly batch: number;
-  private readonly concurrency: number;
   private head = 0;
 
   constructor(private readonly o: IndexerOptions) {
     this.name = o.name ?? `items:${o.watched.items}|market:${o.watched.market}`;
     this.batch = o.batch ?? 100;
-    this.concurrency = o.concurrency ?? 12;
   }
 
   /** The last fully applied block, creating the cursor on first run. */
@@ -75,13 +81,13 @@ export class ChainIndexer {
   /** Applies the next batch of final blocks. Returns how many heights it covered (0 = caught up). */
   async step(): Promise<number> {
     const from = (await this.cursor()) + 1;
-    if (from > this.head) this.head = await this.o.source.finalHeight();
+    const minSpan = this.o.minSpan ?? 1;
+    if (this.head - from + 1 < minSpan) this.head = await this.o.source.finalHeight();
     const to = Math.min(from + this.batch - 1, this.head);
-    if (to < from) return 0;
+    if (to - from + 1 < minSpan) return 0;
 
-    const heights = Array.from({ length: to - from + 1 }, (_, i) => from + i);
-    const blocks = await fetchAll(this.o.source, heights, this.concurrency);
-    const events = blocks.flatMap((b) => (b ? eventsIn(b, this.o.watched) : []));
+    const blocks = await this.o.source.blocks(from, to);
+    const events = blocks.flatMap((b) => eventsIn(b, this.o.watched));
     const messages = await this.apply(events, from - 1, to);
     if (events.length) this.o.log.info('indexed', { from, to, events: events.length, messages: messages.length });
     if (messages.length) this.o.publish?.(messages);

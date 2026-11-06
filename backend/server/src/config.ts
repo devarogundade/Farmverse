@@ -34,6 +34,12 @@ const Schema = z.object({
   NEARDATA_RPM: optional(z.coerce.number().int().min(10).max(100_000)),
   /** First block the indexer reads on its very first run: the contracts' deploy block. Default: now. */
   INDEXER_START_BLOCK: optional(z.coerce.number().int().positive()),
+  /** tx: the watched contracts' transactions (FastNEAR's transactions API, a few requests a minute); blocks: every block from neardata. */
+  INDEXER_SOURCE: z.enum(['tx', 'blocks']).default('tx'),
+  /** FastNEAR's transactions API. Default: tx.test / tx.main.fastnear.com by network. */
+  TX_API_URL: optional(z.string().url()),
+  /** Seconds between looks at the chain once caught up (tx source). */
+  INDEXER_POLL_SECONDS: z.coerce.number().min(1).max(300).default(10),
   /**
    * Base64 of the 32-byte Ed25519 seed that signs mint vouchers; its public key must be registered
    * on the items contract (`add_signer`). Unset: chain-mint is refused. Production: keep it in a KMS.

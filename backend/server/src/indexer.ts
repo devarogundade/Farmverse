@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { cloudLogger } from '../../game/src/core/logger';
-import { ChainIndexer } from './chain/indexer';
+import { blockRange, ChainIndexer } from './chain/indexer';
 import { NEARDATA_URL, neardataSource } from './chain/neardata';
+import { TX_API_URL, txSource } from './chain/txsource';
 import { loadConfig } from './config';
 import { PrismaClient } from './generated/prisma/client';
 import { redisClient, redisMarketBus } from './infra/redis';
@@ -19,16 +20,25 @@ async function main(): Promise<void> {
   const bus = redisMarketBus(redis, config.REDIS_URL, (error) => log.error('market bus', { error: String(error) }));
 
   const watched = { items: config.NEAR_ITEMS_CONTRACT, market: config.NEAR_MARKET_CONTRACT };
+  // tx: only the watched contracts' transactions (a few requests a minute, any range in one go);
+  // blocks: every final block from neardata (one request a block, ~1 a second just to keep up)
+  const tx = config.INDEXER_SOURCE === 'tx';
+  const source = tx
+    ? txSource({ accounts: [watched.items, watched.market], txApiUrl: config.TX_API_URL ?? TX_API_URL[config.NEAR_NETWORK], rpcUrl: config.NEAR_RPC_URL })
+    : blockRange(
+        neardataSource(config.NEARDATA_URL ?? NEARDATA_URL[config.NEAR_NETWORK], {
+          apiKey: config.NEARDATA_API_KEY,
+          requestsPerMinute: config.NEARDATA_RPM,
+          onRateLimited: (path, waitMs) => log.warn('neardata rate limit hit; lower NEARDATA_RPM if this repeats', { path, waitMs }),
+        }),
+        // a request in flight per ~second of pacing keeps the pacer, not the network, the bottleneck
+        Math.max(2, Math.ceil((config.NEARDATA_RPM ?? 170) / 60)),
+      );
   const indexer = new ChainIndexer({
     prisma,
-    source: neardataSource(config.NEARDATA_URL ?? NEARDATA_URL[config.NEAR_NETWORK], {
-      apiKey: config.NEARDATA_API_KEY,
-      requestsPerMinute: config.NEARDATA_RPM,
-      onRateLimited: (path, waitMs) => log.warn('neardata rate limit hit; lower NEARDATA_RPM if this repeats', { path, waitMs }),
-    }),
-    // A request in flight per ~second of pacing keeps the pacer, not the network, the bottleneck.
-    concurrency: Math.max(2, Math.ceil((config.NEARDATA_RPM ?? 170) / 60)),
-    batch: 60,
+    source,
+    batch: tx ? 1_000_000 : 60,
+    minSpan: tx ? config.INDEXER_POLL_SECONDS : 1, // ~a block a second
     watched,
     log,
     startHeight: config.INDEXER_START_BLOCK,
@@ -43,8 +53,8 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('SIGINT', () => shutdown('SIGINT'));
 
-  log.info('indexer started', { network: config.NEAR_NETWORK, ...watched, from: (await indexer.cursor()) + 1 });
-  await indexer.run(stop.signal);
+  log.info('indexer started', { network: config.NEAR_NETWORK, ...watched, source: config.INDEXER_SOURCE, from: (await indexer.cursor()) + 1 });
+  await indexer.run(stop.signal, tx ? config.INDEXER_POLL_SECONDS * 1000 : 1_000);
   await redis.quit();
   await prisma.$disconnect();
   process.exit(0);

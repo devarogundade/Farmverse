@@ -4,7 +4,7 @@ import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import WebSocket from 'ws';
 import { memoryLogger } from '../../../game/src/core/logger';
-import { ChainIndexer } from '../../src/chain/indexer';
+import { ChainIndexer, blockRange } from '../../src/chain/indexer';
 import type { BlockSource } from '../../src/chain/neardata';
 import { eventsIn, type NearBlock } from '../../src/chain/parse';
 import type { MarketMessage } from '../../src/chain/project';
@@ -57,7 +57,7 @@ beforeAll(async () => {
   for (const table of ['events', 'tokens', 'listings', 'sales', 'activity']) {
     await prisma.$executeRawUnsafe(`DELETE FROM chain.${table} WHERE contract_id IN ($1, $2)`, ITEMS, MARKET);
   }
-  indexer = new ChainIndexer({ prisma, source, watched: WATCHED, log, name: 'test', startHeight: 10, batch: 3, concurrency: 2, publish: (m) => (published.push(...m), bus.publish(m)) });
+  indexer = new ChainIndexer({ prisma, source: blockRange(source, 2), watched: WATCHED, log, name: 'test', startHeight: 10, batch: 3, publish: (m) => (published.push(...m), bus.publish(m)) });
 
   hub = new MarketHub(log);
   await hub.start(bus);
