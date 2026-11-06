@@ -6,6 +6,7 @@ import { redisClient, redisMarketBus } from './infra/redis';
 import { LiveHub } from './live';
 import { redisNoteMarks } from './market/marks';
 import { MarketReader, MarketReaderV2 } from './market/read';
+import { merchantsPage } from './chain/merchants';
 import { MarketHub } from './market/routes';
 import { buildServices } from './runtime';
 
@@ -55,6 +56,7 @@ async function main(): Promise<void> {
     market: {
       reader: new MarketReader(services.prisma, config.NEAR_ITEMS_CONTRACT),
       readerV2: new MarketReaderV2(services.prisma, config.NEAR_ITEMS_CONTRACT),
+      merchants: () => merchantsPage(services.rt.store),
       marks: redisNoteMarks(marketRedis),
       limiter: services.limiter,
       hub: marketHub,

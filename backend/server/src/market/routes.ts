@@ -15,6 +15,8 @@ export interface NoteMarks {
 export interface MarketOptions {
   readonly reader: MarketReader;
   readonly readerV2?: MarketReaderV2;
+  /** Market Town merchants' last logs (plan 15 §13.1). */
+  readonly merchants?: () => Promise<unknown[]>;
   readonly marks: NoteMarks;
   readonly limiter: RateLimiter;
   readonly hub: MarketHub;
@@ -99,6 +101,7 @@ export function marketRoutes(o: MarketOptions) {
       return v2 ? v2.offersBy(account.data) : [];
     });
     app.get('/drops', async () => (v2 ? v2.drops() : []));
+    app.get('/merchants', async () => (o.merchants ? o.merchants() : []));
     app.get('/rentals', async () => (v2 ? v2.rentals({ nowMs: now() }) : []));
     app.get<{ Params: { account: string } }>('/accounts/:account/rentals', async (req, reply) => {
       const account = Account.safeParse(req.params.account);

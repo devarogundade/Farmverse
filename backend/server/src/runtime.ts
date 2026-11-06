@@ -20,6 +20,7 @@ import { queryDocuments } from './store/query';
 import { nearFaucetSender } from './chain/faucet';
 import { nearRelayer, welcome } from './chain/relay';
 import { reconcile } from './chain/reconcile';
+import { merchantTick, nearMerchantWallet } from './chain/merchants';
 import { unclaimedRedeems } from './chain/unclaimed';
 import { crewOf } from './chain/crew';
 
@@ -137,6 +138,26 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             scheduleExpiry: bullMintExpiry(queues.mintExpiry),
             accountOf: async (uid: string) => (await prisma.account.findUnique({ where: { uid }, select: { accountId: true } }))?.accountId ?? null,
             unclaimedRedeems: unclaimedRedeems(prisma, config.NEAR_ITEMS_CONTRACT),
+            ...(config.MERCHANTS?.length
+              ? {
+                  merchantTick: () =>
+                    merchantTick(
+                      {
+                        prisma,
+                        store,
+                        itemsContract: config.NEAR_ITEMS_CONTRACT,
+                        wallets: new Map(
+                          config.MERCHANTS!.map((m) => [
+                            m.name,
+                            nearMerchantWallet(config.NEAR_RPC_URL, m.account, m.key, config.NEAR_FARM_CONTRACT, config.NEAR_ITEMS_CONTRACT, config.NEAR_MARKET_CONTRACT),
+                          ]),
+                        ),
+                        nowMs: () => Date.now(),
+                      },
+                      log.with({ job: 'merchant-tick' }),
+                    ),
+                }
+              : {}),
             crewOf: crewOf(prisma, store, config.NEAR_ITEMS_CONTRACT),
             reconcile: () => reconcile(prisma, store, config.NEAR_ITEMS_CONTRACT, Date.now(), log.with({ job: 'chain-reconcile' })),
             ...(relayer

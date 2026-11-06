@@ -19,7 +19,7 @@ export const QUEUES = {
 export type IslandWakeJob = { uid: string };
 export type PushTaskJob = PushTask & { uid: string };
 export type NewsFanoutJob = { newsId: string };
-export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' | 'chain-reconcile' };
+export type CronJob = { name: 'leaderboard-pay-week' | 'redeem-backstop' | 'chain-reconcile' | 'merchant-tick' };
 export type MintExpiryJob = { uid: string; tokenId: string };
 
 const RETRY = { attempts: 3, backoff: { type: 'exponential', delay: 30_000 } } as const;
@@ -89,6 +89,11 @@ export async function scheduleCron(queue: Queue<CronJob>): Promise<void> {
   await queue.upsertJobScheduler('chain-reconcile', { pattern: '30 3 * * *', tz: 'Etc/UTC' }, {
     name: 'chain-reconcile',
     data: { name: 'chain-reconcile' },
+  });
+  // Market Town merchants look at their stock and the market (plan 15 §13.1)
+  await queue.upsertJobScheduler('merchant-tick', { every: 10 * 60_000 }, {
+    name: 'merchant-tick',
+    data: { name: 'merchant-tick' },
   });
 }
 

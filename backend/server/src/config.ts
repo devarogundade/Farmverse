@@ -57,6 +57,17 @@ const Schema = z.object({
   /** NEAR a new account gets once at sign-in when it holds less than WELCOME_BELOW_NEAR (0 = off). */
   WELCOME_NEAR: z.coerce.number().min(0).max(1).default(0.05),
   WELCOME_BELOW_NEAR: z.coerce.number().min(0).max(1).default(0.02),
+  /** Market Town merchants (plan 15 §13.1): JSON [{"name":"bea","account":"bea.x.testnet","key":"ed25519:…"}] (chain/scripts/merchants.sh). */
+  MERCHANTS: optional(
+    z.string().transform((s, ctx) => {
+      try {
+        return z.array(z.object({ name: z.string(), account: z.string(), key: z.string().startsWith('ed25519:') })).parse(JSON.parse(s));
+      } catch {
+        ctx.addIssue({ code: 'custom', message: 'MERCHANTS must be a JSON array of {name, account, key}' });
+        return z.NEVER;
+      }
+    }),
+  ),
 });
 
 export type Config = z.infer<typeof Schema>;

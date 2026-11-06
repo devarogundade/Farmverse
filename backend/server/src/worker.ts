@@ -49,6 +49,7 @@ export function processors(rt: Runtime, log: Logger) {
       const l = log.with({ job: job.data.name });
       if (job.data.name === 'leaderboard-pay-week') await payWeek(envOf(rt, l));
       if (job.data.name === 'chain-reconcile' && rt.chain?.reconcile) await rt.chain.reconcile();
+      if (job.data.name === 'merchant-tick' && rt.chain?.merchantTick) await rt.chain.merchantTick();
       if (job.data.name === 'redeem-backstop' && rt.chain?.unclaimedRedeems) await backstopRedeems(envOf(rt, l), rt.chain.unclaimedRedeems, l);
     },
   };

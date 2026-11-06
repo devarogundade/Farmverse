@@ -49,6 +49,8 @@ export interface ChainRuntime {
   readonly reconcile?: () => Promise<unknown>;
   /** Redeems on chain that no `chain-redeem` call credited (the backstop job). */
   readonly unclaimedRedeems?: () => Promise<UnclaimedRedeem[]>;
+  /** Market Town merchants' agent loop (plan 15 §13.1). */
+  readonly merchantTick?: () => Promise<number>;
   /** Sponsored calls: the relayer and the per-account limit (plan 15 §14). */
   readonly relay?: { readonly relayer: Relayer; readonly allow: (accountId: string) => Promise<boolean> };
   /** Testnet only: who pays faucet claims and how much. */
