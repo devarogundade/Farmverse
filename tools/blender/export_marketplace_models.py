@@ -171,7 +171,7 @@ def export_character():
         export_apply=False,
         export_yup=True,
     )
-    with open(os.path.join(OUT, "character.parts.json"), "w") as f:
+    with open(os.path.join(OUT, "character.parts.json"), "w", newline="\n") as f:
         json.dump({"slots": parts, "clips": CLIPS}, f, indent=2)
     print("CHARACTER", {k: len(v) for k, v in parts.items()})
 
