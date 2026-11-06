@@ -4,7 +4,7 @@ import type { Logger } from '../../../game/src/core/logger';
 import { NFT_TYPES } from '../chain/items';
 import type { MarketMessage } from '../chain/project';
 import type { MarketBus, RateLimiter } from '../infra/redis';
-import type { MarketReader } from './read';
+import type { MarketReader, MarketReaderV2 } from './read';
 
 /** When each account last opened its notifications (epoch ms). */
 export interface NoteMarks {
@@ -14,6 +14,7 @@ export interface NoteMarks {
 
 export interface MarketOptions {
   readonly reader: MarketReader;
+  readonly readerV2?: MarketReaderV2;
   readonly marks: NoteMarks;
   readonly limiter: RateLimiter;
   readonly hub: MarketHub;
@@ -25,7 +26,10 @@ const TokenId = z.string().min(1).max(64);
 const Browse = z.object({
   kind: z.enum(NFT_TYPES as [string, ...string[]]).optional(),
   q: z.string().max(64).optional(),
-  sort: z.enum(['newest', 'price_asc', 'price_desc']).optional(),
+  sort: z.enum(['newest', 'price_asc', 'price_desc', 'unit_price']).optional(),
+  specialty: z.enum(['fields', 'animals', 'machines', 'freight']).optional(),
+  rarity: z.enum(['common', 'rare', 'epic', 'legendary']).optional(),
+  item: z.string().regex(/^[a-z][a-z0-9_]{0,39}$/).optional(),
   cursor: z.string().max(16).optional(),
   limit: z.coerce.number().int().min(1).max(60).optional(),
 });
@@ -76,12 +80,38 @@ export function marketRoutes(o: MarketOptions) {
     });
 
     // Offers are off-chain (docs 14 §3) and not built yet: none to show, none to make.
-    app.get('/tokens/:id/offers', async () => []);
-    const noOffers = async (_req: unknown, reply: FastifyReply) => fail(reply, 501, 'offers_closed', 'Offers aren’t open yet. You can buy listed items now.');
-    app.post('/tokens/:id/offers', noOffers);
-    app.delete('/offers/:id', noOffers);
-    app.post('/offers/:id/decline', noOffers);
-    app.post('/offers/:id/accept', noOffers);
+    // Offers, rentals and drops are made on chain from the wallet; these are their reads (plan 15 §12).
+    const ItemId = z.string().regex(/^[a-z][a-z0-9_]{0,39}$/);
+    const v2 = o.readerV2;
+    app.get<{ Params: { id: string } }>('/tokens/:id/offers', async (req, reply) => {
+      const id = TokenId.safeParse(req.params.id);
+      if (!id.success) return fail(reply, 404, 'not_found', 'That item doesn’t exist.');
+      return v2 ? v2.offersForToken(id.data, now()) : [];
+    });
+    app.get<{ Querystring: { item?: string } }>('/offers', async (req, reply) => {
+      const item = ItemId.safeParse(req.query.item);
+      if (!item.success) return fail(reply, 400, 'bad_query', 'Pass item=<id>');
+      return v2 ? v2.offersForItem(item.data, now()) : [];
+    });
+    app.get<{ Params: { account: string } }>('/accounts/:account/offers', async (req, reply) => {
+      const account = Account.safeParse(req.params.account);
+      if (!account.success) return fail(reply, 400, 'bad_account', 'That isn’t a NEAR account.');
+      return v2 ? v2.offersBy(account.data) : [];
+    });
+    app.get('/drops', async () => (v2 ? v2.drops() : []));
+    app.get('/rentals', async () => (v2 ? v2.rentals({ nowMs: now() }) : []));
+    app.get<{ Params: { account: string } }>('/accounts/:account/rentals', async (req, reply) => {
+      const account = Account.safeParse(req.params.account);
+      if (!account.success) return fail(reply, 400, 'bad_account', 'That isn’t a NEAR account.');
+      if (!v2) return { lent: [], renting: [] };
+      const [lent, renting] = await Promise.all([v2.rentals({ lender: account.data, nowMs: now() }), v2.rentals({ renter: account.data, nowMs: now() })]);
+      return { lent, renting };
+    });
+    app.get<{ Params: { item: string } }>('/items/:item/stats', async (req, reply) => {
+      const item = ItemId.safeParse(req.params.item);
+      if (!item.success) return fail(reply, 404, 'not_found', 'No such item.');
+      return v2 ? v2.itemStats(item.data, now()) : null;
+    });
 
     app.get<{ Params: { account: string } }>('/accounts/:account/notifications', async (req, reply) => {
       const account = Account.safeParse(req.params.account);

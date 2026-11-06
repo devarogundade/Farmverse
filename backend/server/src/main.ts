@@ -5,7 +5,7 @@ import { loadConfig } from './config';
 import { redisClient, redisMarketBus } from './infra/redis';
 import { LiveHub } from './live';
 import { redisNoteMarks } from './market/marks';
-import { MarketReader } from './market/read';
+import { MarketReader, MarketReaderV2 } from './market/read';
 import { MarketHub } from './market/routes';
 import { buildServices } from './runtime';
 
@@ -53,6 +53,7 @@ async function main(): Promise<void> {
     environment: config.FARMVERSE_ENV,
     market: {
       reader: new MarketReader(services.prisma, config.NEAR_ITEMS_CONTRACT),
+      readerV2: new MarketReaderV2(services.prisma, config.NEAR_ITEMS_CONTRACT),
       marks: redisNoteMarks(marketRedis),
       limiter: services.limiter,
       hub: marketHub,
