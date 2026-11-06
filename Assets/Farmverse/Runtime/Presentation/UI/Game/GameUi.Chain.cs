@@ -164,6 +164,7 @@ namespace Farmverse.Presentation.UI.Game
         // ------------------------------------------------------------------ Farmhands (docs 15 §7)
 
         private float _crewNext;
+        private int _goldenSeen = -1;
 
         /// <summary>The wallet's Farmhands (held and rented) onto the island, with their outfits; the server does the same on sync.</summary>
         private void CrewTick()
@@ -172,6 +173,13 @@ namespace Farmverse.Presentation.UI.Game
             _crewNext = Time.unscaledTime + 3f;
             var eco = Economy;
             if (eco != null) IslandData.WildOpen = eco.WildPlotsOpen;   // land deeds: wild plots become buildable
+            if (eco != null)
+            {
+                // a golden unit came up in the farmer's own harvest (docs 15 §12.4)
+                var golden = eco.Stat("golden");
+                if (_goldenSeen >= 0 && golden > _goldenSeen) Say("A golden harvest! It's worth " + Farmverse.Domain.Gameplay.GameplayRules.GoldenPriceFactor + "× and you can mint it.", 3.5f);
+                _goldenSeen = golden;
+            }
             var n = Nfts;
             if (eco == null || n == null || !n.OwnedLoaded || n.OwnedFailed) return;
             var crew = n.Owned.Where(t => t.Kind == "worker" && t.Price == null).Select(CrewOf).ToList();

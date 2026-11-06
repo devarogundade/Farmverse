@@ -56,7 +56,7 @@ an indexer migration, and the Unity panels.
 - [x] D6 Pass "Get Premium · 250 FARM" (buy-and-use), "Use your Farm Pass"; shop: starter pack, Builder's Pass, gem packs, land deeds with counts left §5.3
 - [x] D7 Farmhands on the island in their outfits; Workers panel Farmhands section, "No bed free", "Rented · n days left", Hire on market §7.3 §12.1
 - [x] D8 Wild plots: locked signs, "Use a land deed", clearing §12.3
-- [ ] D9 Golden goods: gold frame in storage, harvest pop §12.4
+- [x] D9 Golden goods: gold frame in storage, harvest pop §12.4
 - [ ] D10 Market live socket → toasts + Inbox (sold, offer, rented) §3.4
 - [ ] D11 WebGL build (prod config) passes a smoke run
 

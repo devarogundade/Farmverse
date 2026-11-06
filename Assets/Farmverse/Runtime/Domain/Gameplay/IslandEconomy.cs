@@ -248,8 +248,10 @@ namespace Farmverse.Domain.Gameplay
         {
             if (!_plots.TryGetValue(uid, out var plot)) return GatherResult.Nothing;
             if (plot.State(now) != PlotState.Ripe || plot.Crop == null) return GatherResult.NotReady;
-            if (Basket.Add(HarvestItem(uid, plot.PlantedAt, plot.Left, plot.Crop), 1) == 0) return GatherResult.BasketFull;
+            var unit = HarvestItem(uid, plot.PlantedAt, plot.Left, plot.Crop);
+            if (Basket.Add(unit, 1) == 0) return GatherResult.BasketFull;
             Count("harvested");
+            if (unit != plot.Crop) Count("golden");
             plot.Left--;
             if (plot.Left <= 0) plot.Reset();
             return GatherResult.Took;

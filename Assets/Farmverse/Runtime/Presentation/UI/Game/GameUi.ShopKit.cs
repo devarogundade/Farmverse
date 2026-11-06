@@ -42,6 +42,17 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>A good's picture: the pack icon, or a round badge in the good's colour with its first letter.</summary>
         private static VisualElement ShopGoodIcon(Pt p, string item, float size)
         {
+            // golden goods (docs 15 §12.4): the crop's picture on a gold ring
+            if (item.StartsWith(GameplayRules.GoldenPrefix, System.StringComparison.Ordinal))
+            {
+                var ring = PK.Centre(PK.Box());
+                PK.Size(ring, size, size);
+                ring.style.backgroundColor = GameTheme.C("#ffd23a");
+                Kit.Round(ring, size);
+                Kit.Border(ring, Mathf.Max(2, size * .06f), GameTheme.C("#b8860b"));
+                ring.Add(ShopGoodIcon(p, item.Substring(GameplayRules.GoldenPrefix.Length), size * .8f));
+                return ring;
+            }
             var art = ShopGoodArt(item);
             if (art != null) return PK.Fit(null, art, size, size);
             var b = PK.Centre(PK.Box());
@@ -57,17 +68,21 @@ namespace Farmverse.Presentation.UI.Game
             return b;
         }
 
-        private static string ShopGoodName(string item) => IslandEconomyHost.PrettyOf(item);
+        private static string ShopGoodName(string item) =>
+            item.StartsWith(GameplayRules.GoldenPrefix, System.StringComparison.Ordinal)
+                ? "Golden " + IslandEconomyHost.PrettyOf(item.Substring(GameplayRules.GoldenPrefix.Length)).ToLowerInvariant()
+                : IslandEconomyHost.PrettyOf(item);
 
         /// <summary>Storage kind of a good: crops, animal, mat (or boost for the local boosts).</summary>
         private static string ShopKindOf(string item) =>
-            GameplayRules.IsCrop(item) ? "crops"
+            item.StartsWith(GameplayRules.GoldenPrefix, System.StringComparison.Ordinal) ? "crops"
+            : GameplayRules.IsCrop(item) ? "crops"
             : item is "egg" or "milk" or "meat" or "fish" or "yogurt" ? "animal"
             : "mat";
 
         private static string ShopSlotColour(string item) => ShopKindOf(item) switch
         {
-            "crops" => item is "mushroom" or "flowers" ? "Green" : "Yellow",
+            "crops" => item.StartsWith(GameplayRules.GoldenPrefix, System.StringComparison.Ordinal) ? "Purple" : item is "mushroom" or "flowers" ? "Green" : "Yellow",
             "animal" => item is "meat" ? "Brown" : "Blue",
             _ => item is "flour" or "croissant" ? "Yellow" : item == "water" ? "Blue" : "Brown",
         };
