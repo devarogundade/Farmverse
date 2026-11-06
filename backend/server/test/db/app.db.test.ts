@@ -149,6 +149,8 @@ describe('wallet sign-in', () => {
     const ok = await app.inject({ method: 'OPTIONS', url: '/v1/call/player-create', headers: { origin: 'https://play.farmverse.world' } });
     expect(ok.statusCode).toBe(204);
     expect(ok.headers['access-control-allow-origin']).toBe('https://play.farmverse.world');
+    // the admin web saves its settings and coupons with PUT
+    expect(String(ok.headers['access-control-allow-methods']).split(', ')).toEqual(expect.arrayContaining(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']));
     const other = await app.inject({ method: 'OPTIONS', url: '/v1/call/player-create', headers: { origin: 'https://evil.example' } });
     expect(other.headers['access-control-allow-origin']).toBeUndefined();
   });

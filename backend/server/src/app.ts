@@ -71,7 +71,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
       reply.header('access-control-allow-origin', origin);
       reply.header('vary', 'origin');
       reply.header('access-control-allow-headers', 'authorization, content-type');
-      reply.header('access-control-allow-methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+      reply.header('access-control-allow-methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
       reply.header('access-control-max-age', '600');
     }
     if (req.method === 'OPTIONS') return reply.status(204).send();
