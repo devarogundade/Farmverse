@@ -52,6 +52,7 @@ namespace Farmverse.Editor
         private static void Build(string environment, string apiBaseUrl, string network, string marketplaceUrl, string siteUrl)
         {
             Configure(apiBaseUrl, network, marketplaceUrl, siteUrl);
+            FarmverseWebSize.Apply(); // compressed textures, lighter music and meshes: the download stays well under 100 MB
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0)
             {

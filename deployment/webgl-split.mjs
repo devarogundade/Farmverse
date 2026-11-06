@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Vercel refuses files over 100 MB, and the game's Brotli data file is bigger. This splits it, in a copy of the
+// Vercel refuses files over 100 MB. When the game's Brotli data file is bigger, this splits it, in a copy of the
 // WebGL build, into parts that each compress to well under the limit (Build/<name>.data.part<i>.br), and changes the
 // page to download the parts (the browser unpacks each one), join them, and hand Unity the joined data.
 //
@@ -16,6 +16,11 @@ if (!dataFile) throw new Error(`no .data.br in ${build}`);
 const LIMIT = 90 * 1024 * 1024; // under Vercel's 100 MB, with room to spare
 
 const packed = readFileSync(join(build, dataFile));
+if (packed.length < LIMIT) {
+  // fits as it is: Unity loads (and caches) it the usual way
+  console.log(`• ${dataFile} (${(packed.length / 2 ** 20).toFixed(1)} MB) fits: not split`);
+  process.exit(0);
+}
 const raw = brotliDecompressSync(packed);
 const pack = (buf) =>
   brotliCompressSync(buf, {

@@ -58,7 +58,9 @@ game() {
   local src="$ROOT/Builds/WebGL-testnet" out="$STAGE/farmverse-play"
   [[ -d "$src" ]] || { echo "no Builds/WebGL-testnet (Farmverse ▸ Web ▸ Build (testnet on farmverse.world))"; return 1; }
   cp -r "$src" "$out"
-  # Vercel takes files up to 100 MB: the data file goes up in parts the page joins
+  # the page's own script and styles from the template, so page fixes ship without a Unity rebuild
+  cp "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.js" "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.css" "$out/"
+  # Vercel takes files up to 100 MB: a bigger data file goes up in parts the page joins (a smaller one as it is)
   node "$ROOT/deployment/webgl-split.mjs" "$out"
   # the page settings the game reads (no Unity rebuild needed)
   sed -i -e "s#apiBaseUrl: \"[^\"]*\"#apiBaseUrl: \"$API\"#" \

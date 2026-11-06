@@ -30,7 +30,8 @@ if (config.socialLogin && config.marketplaceUrl) {
 let session = null; // { accessToken, accessExpiresAt, uid, accountId }
 
 // ---- sponsored calls (docs 15 §14): a session key signs mints and redeems, our relayer pays the gas ----
-const RPC = config.rpcUrl || (config.network === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://rpc.testnet.near.org');
+// FastNEAR on testnet: rpc.testnet.near.org rate-limits (429) after a few calls
+const RPC = config.rpcUrl || (config.network === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://test.rpc.fastnear.com');
 const SPONSORED = ['mint_with_voucher', 'redeem'];
 const KEY_ALLOWANCE = '250000000000000000000000'; // 0.25 NEAR of gas the key could spend itself (the relayer pays, so ~none)
 let sponsorOff = config.sponsored === false;
@@ -42,8 +43,15 @@ async function rpc(method, params) {
   return json.result ?? null;
 }
 
-const accessKeyOf = (accountId, publicKey) =>
-  rpc('query', { request_type: 'view_access_key', finality: 'final', account_id: accountId, public_key: publicKey });
+/** The key's access key, or null. A missing key still comes back as a `result`, with an `error` in it and no nonce. */
+async function accessKeyOf(accountId, publicKey) {
+  try {
+    const ak = await rpc('query', { request_type: 'view_access_key', finality: 'final', account_id: accountId, public_key: publicKey });
+    return ak && !ak.error && ak.nonce !== undefined ? ak : null;
+  } catch {
+    return null; // busy or offline RPC: treated as "not there yet" (the caller adds it or waits)
+  }
+}
 
 function sessionKey(accountId) {
   const slot = `fv_session_key:${config.network}:${accountId}`;
@@ -220,15 +228,19 @@ function signInWithWallet() {
  * popup and block: then a small card offers the link itself, which opens on the player's own click.
  */
 function openTab(url, label) {
-  const opened = window.open(url, '_blank', 'noopener');
-  if (opened !== null) return;
+  // no 'noopener' feature: with it window.open always returns null, and the card would show though the tab opened
+  const opened = window.open(url, '_blank');
+  if (opened) {
+    try { opened.opener = null; } catch { /* already cut off */ }
+    return;
+  }
   document.getElementById('fv-link')?.remove();
   const layer = document.createElement('div');
   layer.id = 'fv-link';
   const card = document.createElement('div');
   card.className = 'fv-card';
   const text = document.createElement('p');
-  text.textContent = label ? `Open ${label} in a new tab.` : 'Open the link in a new tab.';
+  text.textContent = `${label || 'Open the link'} in a new tab.`; // the game's labels read 'Open the market'
   const link = document.createElement('a');
   link.className = 'fv-button';
   link.href = url;
