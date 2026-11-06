@@ -107,6 +107,48 @@ if ! "${SSH[@]}" 'sudo test -f /etc/farmverse/server.env'; then
   "'
 fi
 
+# Settings added since the first deploy (plan 15): set from backend/server/.env and chain/deploy/testnet.env on every
+# deploy, so the box follows the testnet contracts and keys here. Everything else in server.env is left as it is.
+# ALLOWED_ORIGINS gains the web sites' origins (the farmverse.world ones and the Vercel ones, plus EXTRA_ORIGINS).
+say "server settings"
+node -e '
+  const fs = require("fs");
+  const read = (f) => fs.existsSync(f) ? Object.fromEntries(fs.readFileSync(f, "utf8").split(/\r?\n/)
+    .filter((l) => /^[A-Z_]+=/.test(l)).map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1)])) : {};
+  const local = read(process.argv[1]), chain = read(process.argv[2]);
+  const out = {};
+  for (const k of ["NEAR_ITEMS_CONTRACT", "NEAR_MARKET_CONTRACT", "NEAR_FARM_CONTRACT", "NEAR_TREASURY"]) if (chain[k]) out[k] = chain[k];
+  // (no PRIVY_VERIFICATION_KEY: a multi-line PEM; unset, the server checks tokens with the app published keys)
+  for (const k of ["PRIVY_APP_ID", "PRIVY_APP_SECRET", "FAUCET_ACCOUNT", "FAUCET_PRIVATE_KEY",
+    "FAUCET_FARM", "FAUCET_NEAR", "FAUCET_DAILY_CAP", "RELAYER_ACCOUNT", "RELAYER_PRIVATE_KEY", "WELCOME_NEAR",
+    "WELCOME_BELOW_NEAR", "MERCHANTS", "FARM_PER_NEAR", "INTENTS_LIVE", "ONECLICK_API_KEY"]) if (local[k]) out[k] = local[k];
+  if (!out.FAUCET_NEAR) out.FAUCET_NEAR = "0.2";
+  out.ADD_ORIGINS = ["https://play.farmverse.world", "https://marketplace.farmverse.world", "https://admin.farmverse.world",
+    "https://farmverse.world", "https://farmverse-play.vercel.app", "https://farmverse-market.vercel.app",
+    "https://farmverse-admin.vercel.app", "https://farmverse-site.vercel.app", ...(process.env.EXTRA_ORIGINS || "").split(",")]
+    .filter(Boolean).join(",");
+  process.stdout.write(Object.entries(out).map(([k, v]) => k + "=" + v).join("\n") + "\n");
+' "$ROOT/backend/server/.env" "$ROOT/chain/deploy/testnet.env" | "${SSH[@]}" 'sudo python3 -c "
+import sys, os
+f = \"/etc/farmverse/server.env\"
+new = dict(l.split(\"=\", 1) for l in sys.stdin.read().splitlines() if \"=\" in l)
+add = [o for o in new.pop(\"ADD_ORIGINS\", \"\").split(\",\") if o]
+lines = open(f).read().splitlines()
+cur = dict(l.split(\"=\", 1) for l in lines if \"=\" in l and not l.startswith(\"#\"))
+origins = [o for o in cur.get(\"ALLOWED_ORIGINS\", \"\").split(\",\") if o]
+new[\"ALLOWED_ORIGINS\"] = \",\".join(origins + [o for o in add if o not in origins])
+out, seen = [], set()
+for l in lines:
+    k = l.split(\"=\", 1)[0]
+    if \"=\" in l and k in new: out.append(k + \"=\" + new[k]); seen.add(k)
+    else: out.append(l)
+out += [k + \"=\" + v for k, v in new.items() if k not in seen]
+os.umask(0o077)
+open(f + \".new\", \"w\").write(\"\\n\".join(out) + \"\\n\")
+os.replace(f + \".new\", f)
+print(\"server.env:\", \", \".join(sorted(new)))
+"'
+
 say "install, migrate, restart"
 "${SSH[@]}" 'set -euo pipefail
   rm -rf /opt/farmverse/server/dist /opt/farmverse/server/prisma /opt/farmverse/engine/*

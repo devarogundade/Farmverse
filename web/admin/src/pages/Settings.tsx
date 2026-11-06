@@ -74,6 +74,9 @@ export function Settings() {
         <Field label="Oldest game version allowed" hint={`Older games are asked to update. Leave empty for the usual ${data.fallbackMinClientVersion}. Now: ${data.minClientVersion}.`} error={versionOk ? undefined : 'Use a version like 1.4.0.'}>
           <Input value={version} onChange={(e) => setVersion(e.target.value.trim())} placeholder={data.fallbackMinClientVersion} aria-invalid={!versionOk} />
         </Field>
+        {/* older servers don't report the mint limits: their fields stay hidden until the server is updated */}
+        {data.mintDefaults && (
+          <>
         <Field
           label="Hours before a new farm can mint"
           hint={`Leave empty for the usual ${data.mintDefaults.minAccountHours}. Now: ${data.mintMinAccountHours}. 0 lets new farms mint at once.`}
@@ -88,6 +91,8 @@ export function Settings() {
         >
           <Input value={mintCap} inputMode="numeric" onChange={(e) => setMintCap(e.target.value.trim())} placeholder={String(data.mintDefaults.dailyValueCap)} aria-invalid={!capOk} />
         </Field>
+          </>
+        )}
         <div className="dlg-actions">
           <button className="fv-btn gray" disabled={!dirty} onClick={undo}>
             Undo

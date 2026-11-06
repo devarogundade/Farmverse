@@ -162,7 +162,8 @@ export interface Ops {
   mintMinAccountHours: number;
   mintDailyValueCap: number;
   /** The server's own limits, used while the fields below are empty. */
-  mintDefaults: { minAccountHours: number; dailyValueCap: number };
+  /** Missing on servers older than the mint limits. */
+  mintDefaults?: { minAccountHours: number; dailyValueCap: number };
   stored: {
     maintenance: boolean;
     message: string;
