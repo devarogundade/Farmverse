@@ -1,0 +1,29 @@
+{
+  "name": "@farmverse/admin",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "admin.farmverse.world: the team's console for players, coupons, live switches and news. Admin wallets only.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@farmverse/shared": "*",
+    "@hot-labs/near-connect": "^0.12.0",
+    "@radix-ui/react-select": "^2.4.1",
+    "@tanstack/react-query": "^5.106.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sonner": "^2.0.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  }
+}

@@ -9,6 +9,8 @@ import { callDefinitions, type Runtime } from './calls';
 import type { RateLimiter } from './infra/redis';
 import { QuerySpec, type DocReader, type LiveHub, type LiveSocket } from './live';
 import { marketRoutes, type MarketOptions } from './market/routes';
+import { adminRoutes, type AdminOptions } from './admin/routes';
+import type { OpsConfig } from './admin/ops';
 
 export interface AppOptions {
   readonly rt: Runtime;
@@ -22,6 +24,10 @@ export interface AppOptions {
   readonly environment: string;
   /** The marketplace read API and live socket under /v1/market (off when absent). */
   readonly market?: MarketOptions;
+  /** Live maintenance and min-version switches (`config/ops`); the env values when absent. */
+  readonly ops?: OpsConfig;
+  /** The admin web's API under /v1/admin (off when absent). */
+  readonly admin?: AdminOptions;
 }
 
 const STATUS: Record<string, number> = {
@@ -78,13 +84,16 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
   app.get('/healthz', async () => ({ ok: true }));
 
   // The client's remote config (Firebase Remote Config keys, backend/remoteconfig.template.json defaults).
+  const ops = () => o.ops?.current ?? { maintenance: false, message: '', minClientVersion: o.minClientVersion };
+
   app.get('/v1/config', async () => ({
-    minClientVersion: o.minClientVersion,
+    minClientVersion: ops().minClientVersion,
     environment: o.environment,
     serverTimeMs: o.rt.clock.nowMs(),
     values: {
-      min_client_version: o.minClientVersion,
-      maintenance: false,
+      min_client_version: ops().minClientVersion,
+      maintenance: ops().maintenance,
+      ...(ops().message ? { maintenance_message: ops().message } : {}),
       island_shadow: true,
       ...(o.rt.chain ? { items_contract: o.rt.chain.itemsContract } : {}),
     },
@@ -149,6 +158,10 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
     if (!definition) return refuse(reply, 'NOT_FOUND', req.id);
     const who = await caller(req);
     if (who && (await limited(`call:${who.uid}`, 600, 60))) return refuse(reply, 'RATE_LIMITED', req.id);
+    // Maintenance (admin web → config/ops): the game shows its maintenance screen; admins still play.
+    if (ops().maintenance && who?.isAdmin !== true) {
+      return { ok: false, error: { code: 'MAINTENANCE', params: {}, retryAfterMs: 60_000 }, serverTimeMs: Date.now(), requestId: req.id };
+    }
     // The envelope carries success or refusal, like a callable: always HTTP 200 once routed.
     return runCallable(
       definition,
@@ -206,6 +219,10 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
   // ---------------------------------------------------------------- marketplace (docs 13 §9)
 
   if (o.market) await app.register(marketRoutes(o.market), { prefix: '/v1/market' });
+
+  // ---------------------------------------------------------------- admin web
+
+  if (o.admin) await app.register(adminRoutes(o.admin, log), { prefix: '/v1/admin' });
 
   // ---------------------------------------------------------------- live
 

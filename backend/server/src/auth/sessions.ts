@@ -101,11 +101,12 @@ export class Sessions {
     if (!valid) throw new AppError('UNAUTHENTICATED');
     if (!(await this.rpc.isFullAccessKey(accountId, publicKey))) throw new AppError('UNAUTHENTICATED');
 
-    await this.prisma.account.upsert({
+    const account = await this.prisma.account.upsert({
       where: { accountId },
       create: { accountId, uid: uidFor(accountId), lastKey: publicKey },
       update: { lastLoginAt: new Date(this.now()), lastKey: publicKey },
     });
+    if (account.bannedAt) throw new AppError('PERMISSION_DENIED');
     return this.issue(accountId, randomUUID(), input.userAgent);
   }
 
@@ -116,18 +117,23 @@ export class Sessions {
   async devSignIn(accountId: string, userAgent?: string): Promise<SessionTokens> {
     if (!this.config.allowDevSignIn) throw new AppError('PERMISSION_DENIED');
     if (!accountOnNetwork(accountId, this.config.network)) throw new AppError('INVALID_ARGUMENT');
-    await this.prisma.account.upsert({
+    const account = await this.prisma.account.upsert({
       where: { accountId },
       create: { accountId, uid: uidFor(accountId), lastKey: 'dev' },
       update: { lastLoginAt: new Date(this.now()), lastKey: 'dev' },
     });
+    if (account.bannedAt) throw new AppError('PERMISSION_DENIED');
     return this.issue(accountId, randomUUID(), userAgent);
   }
 
   /** Swaps a refresh token for new tokens. Presenting a rotated token revokes the whole sign-in. */
   async refresh(refreshToken: string, userAgent?: string): Promise<SessionTokens> {
-    const row = await this.prisma.refreshToken.findUnique({ where: { tokenHash: hash(refreshToken) } });
+    const row = await this.prisma.refreshToken.findUnique({
+      where: { tokenHash: hash(refreshToken) },
+      include: { account: { select: { bannedAt: true } } },
+    });
     if (!row) throw new AppError('UNAUTHENTICATED');
+    if (row.account.bannedAt) throw new AppError('PERMISSION_DENIED');
     if (row.revokedAt) {
       await this.revokeFamily(row.family);
       throw new AppError('UNAUTHENTICATED');

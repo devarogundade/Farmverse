@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { cloudLogger } from '../../functions/src/core/logger';
+import { OpsConfig } from './admin/ops';
 import { buildApp } from './app';
 import { loadConfig } from './config';
 import { redisClient, redisMarketBus } from './infra/redis';
@@ -22,16 +23,30 @@ async function main(): Promise<void> {
   const marketHub = new MarketHub(log);
   await marketHub.start(redisMarketBus(marketRedis, config.REDIS_URL, (error) => log.error('market bus', { error: String(error) })));
 
+  // Maintenance and min version, changed live from the admin web.
+  const ops = new OpsConfig(services.rt.store, config.MIN_CLIENT_VERSION, log);
+  await ops.start();
+
   const app = await buildApp({
     rt: services.rt,
     sessions: services.sessions,
     reader: services.reader,
     hub,
     limiter: services.limiter,
+    ops,
+    admin: {
+      prisma: services.prisma,
+      env: { store: services.rt.store, clock: services.rt.clock, log },
+      sessions: services.sessions,
+      ops,
+      limiter: services.limiter,
+      itemsContract: config.NEAR_ITEMS_CONTRACT,
+      adminAccounts: config.ADMIN_ACCOUNTS,
+    },
     callDeps: {
       clock: services.rt.clock,
       log,
-      minClientVersion: () => config.MIN_CLIENT_VERSION,
+      minClientVersion: () => ops.current.minClientVersion,
       exposeIssues: config.FARMVERSE_ENV !== 'prod',
     },
     allowedOrigins: config.ALLOWED_ORIGINS,
@@ -49,6 +64,7 @@ async function main(): Promise<void> {
     log.info('shutting down', { signal });
     await hub.stop();
     await marketHub.stop();
+    ops.stop();
     await app.close();
     await marketRedis.quit();
     await services.close();

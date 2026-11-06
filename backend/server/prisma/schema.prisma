@@ -42,6 +42,9 @@ model Account {
   lastLoginAt DateTime       @default(now()) @map("last_login_at")
   /// The key the last sign-in was signed with ("ed25519:…").
   lastKey     String?        @map("last_key")
+  /// Set while an admin has banned the account: sign-in and refresh are refused.
+  bannedAt    DateTime?      @map("banned_at")
+  banReason   String?        @map("ban_reason")
   sessions    RefreshToken[]
 
   @@map("accounts")
@@ -65,4 +68,24 @@ model RefreshToken {
   @@index([accountId])
   @@index([family])
   @@map("refresh_tokens")
+}
+
+/// Every change an admin made from the admin web: who, what, to whom, and why.
+model AdminAudit {
+  id        String   @id @default(uuid())
+  /// The admin's NEAR account.
+  actor     String
+  /// What was done ("player.grant", "coupon.redeem", "ops.update", …).
+  action    String
+  /// What it was done to: "player", "coupon", "catalogue", "ops", "news".
+  targetType String  @map("target_type")
+  targetId  String   @map("target_id")
+  reason    String
+  /// What changed (amounts, before and after).
+  details   Json     @default("{}")
+  at        DateTime @default(now())
+
+  @@index([at])
+  @@index([targetType, targetId, at])
+  @@map("admin_audit")
 }
