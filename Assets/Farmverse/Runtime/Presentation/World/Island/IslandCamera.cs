@@ -29,6 +29,8 @@ namespace Farmverse.Presentation.World.Island
         /// <summary>False when WASD/arrows walk the player instead of panning.</summary>
         public bool KeysPan { get; set; } = true;
         public bool PointerOverUi { get; set; }
+        /// <summary>Something is being dragged out of the UI (a building card, a tool): the view stays put.</summary>
+        public bool Held { get; set; }
 
         private Vector2 _lastPointer;
         private bool _dragging;
@@ -72,7 +74,7 @@ namespace Farmverse.Presentation.World.Island
                 return;
             }
             _lastPinch = 0;
-            if (touches.Count == 1 && PanEnabled && DragPans && !PointerOverUi)
+            if (touches.Count == 1 && PanEnabled && DragPans && !PointerOverUi && !Held)
             {
                 var t = touches[0];
                 if (t.phase == UnityEngine.InputSystem.TouchPhase.Moved)
@@ -86,7 +88,7 @@ namespace Farmverse.Presentation.World.Island
             if (mouse != null && Touch.activeTouches.Count == 0)
             {
                 var pos = mouse.position.ReadValue();
-                if (mouse.leftButton.wasPressedThisFrame) { _dragging = PanEnabled && DragPans && !PointerOverUi; _lastPointer = pos; }
+                if (mouse.leftButton.wasPressedThisFrame) { _dragging = PanEnabled && DragPans && !PointerOverUi && !Held; _lastPointer = pos; }
                 if (mouse.leftButton.wasReleasedThisFrame) _dragging = false;
                 if (_dragging && mouse.leftButton.isPressed)
                 {

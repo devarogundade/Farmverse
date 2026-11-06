@@ -53,6 +53,7 @@ namespace Farmverse.Presentation.UI.Game
             var eco = Economy!;
             var host = Host!;
             if (s.Inside) return $"room:{s.InsideUid}:{s.RoomShown}";
+            if (s.Placer != null && s.Placer.IsPlacing && DraggingBuild) return "drag:";   // a card carried into the world: nothing over it
             if (s.Placer != null && s.Placer.IsPlacing) return $"place:{s.Placer.Current?.id}:{s.Placer.Moving}";
             if (_playBuildMenu) return "build:" + _playBuildCat;
             if (s.Selected is { } b)
