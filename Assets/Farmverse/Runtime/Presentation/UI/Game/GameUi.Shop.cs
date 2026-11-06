@@ -367,8 +367,14 @@ namespace Farmverse.Presentation.UI.Game
 
             if (it.sub != null)
             {
-                var sub = PK.N(inn, p, it.sub, 1, GameTheme.Light(.92f), TextAnchor.MiddleCenter);
+                // wraps inside the card (a long line used to run out over the cards next to it)
+                var sub = PK.N(inn, p, it.sub, 1, GameTheme.Light(.92f), TextAnchor.MiddleCenter, wrap: true);
                 sub.style.fontSize = U(nfs * .42f);
+                sub.style.whiteSpace = WhiteSpace.Normal;
+                sub.style.maxWidth = new Length(100, LengthUnit.Percent);
+                sub.style.flexShrink = 0;
+                sub.style.paddingLeft = U(bw * .3f);
+                sub.style.paddingRight = U(bw * .3f);
                 sub.style.marginTop = U(2);
                 sub.style.textShadow = new TextShadow { offset = new Vector2(0, U(1)), color = GameTheme.Shade(.35f) };
             }

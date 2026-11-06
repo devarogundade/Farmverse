@@ -207,6 +207,7 @@ namespace Farmverse.Presentation.UI.Game
 
             // ---------------------------------------------------------------- menu grid
             c.Watch(() => NewsUnread);   // news arriving while home is up lights the badge
+            c.Watch(() => InboxUnread);  // so does a new message
             var cols = p.Phone ? 3 : 2;
             float tileS = P(112), gap = P(14), gridTop = P(150);
             c.Watch(() => CpSpinsLeft);
@@ -231,9 +232,12 @@ namespace Farmverse.Presentation.UI.Game
                 PK.Img(t, tiles[i].icon, P(64)).style.marginTop = -P(6);
                 HomeTS(t, p, tiles[i].label, 19, 3.5f).style.marginTop = P(4);
                 PK.Tap(t, p, tiles[i].go);
-                if (newPlayer) continue;
+                // unread counts show even during the first steps: a message or news is worth knowing about
+                if (i == 4 && InboxUnread > 0)
+                    PK.Abs(PK.Badge(t, p, InboxUnread >= 50 ? "50+" : InboxUnread.ToString(), false, 30), right: -P(8), top: -P(8));
                 if (i == 5 && NewsUnread > 0)
                     PK.Abs(PK.Badge(t, p, NewsUnread.ToString(), false, 30), right: -P(8), top: -P(8));
+                if (newPlayer) continue;
                 if (i == 1 && HomeDailyReady)
                     PK.Abs(PK.Badge(t, p, "1", true, 30), right: -P(8), top: -P(8));
                 if (i == 2 && spinsLeft > 0)
@@ -431,5 +435,8 @@ namespace Farmverse.Presentation.UI.Game
             c.Live(() => nx.style.translate = new Translate((1f - Mathf.Cos(Time.unscaledTime / .8f * Mathf.PI * 2f)) / 2f * P(5), 0));
             PK.Tap(speech, p, () => Next(false));
         }
+
+        /// <summary>Unread inbox messages (the server's notifications not yet read; 50 at most).</summary>
+        private static int InboxUnread => Notifications?.Unread.Value ?? 0;
     }
 }
