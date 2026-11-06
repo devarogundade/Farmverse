@@ -13,7 +13,7 @@ namespace Farmverse.Presentation.UI.Game
         private static readonly bool RegSettings = Register("settings", UiLayer.Popup, (ui, c) => ui.SettingsPopup(c));
         private static readonly bool RegLanguage = Register("language", UiLayer.Popup, (ui, c) => ui.LanguagePopup(c));
 
-        private const string PushPref = "fv_push", HapticPref = "fv_haptic", LangPref = "fv_lang";
+        private const string HapticPref = "fv_haptic", LangPref = "fv_lang";
 
         public static readonly string[] Flags = { "Eng", "Kor", "Chn", "Rus", "Deu", "Twn", "Esp", "Jpn", "Prt", "Gre", "Swe", "Ukr", "Fra", "Ita", "Tur", "Pol", "Pra", "Tha", "Rou", "Ina" };
 
@@ -65,30 +65,24 @@ namespace Farmverse.Presentation.UI.Game
             var r = c.R;
             var body = Kit.Popup(c.Root, r, 2200, 1000, "Settings", Back);
 
-            // left: four rows, each an icon, a name and a switch or a slider, with a line under the first three
+            // left: three rows (sound, music, vibration), each an icon, a name and a switch or a slider, with a line under the first two
             var musicNow = IslandAudio.MusicOn ? IslandAudio.MusicVolume : 0f;
             VisualElement? musicIcon = null;
-            for (var i = 0; i < 4; i++)
+            for (var i = 1; i < 4; i++)
             {
-                var yc = 271 + i * 190;
+                var yc = 271 + 95 + (i - 1) * 190;
                 var icon = i switch
                 {
-                    0 => "Icon_PictoIcon_Bell",
                     1 => "Icon_PictoIcon_Sound_on",
                     2 => musicNow > 0 ? "Icon_PictoIcon_Music_on" : "Icon_PictoIcon_Music_off",
                     _ => "Icon_PictoIcon_Haptic",
                 };
                 var ic = Kit.Image(body, r, icon, 139 - 36, yc - 36, 72, 72);
                 if (i == 2) musicIcon = ic;
-                Kit.TextAt(body, r, 210, yc - 30, i switch { 0 => "Push Alarm", 1 => "Sound Fx", 2 => "Music", _ => "Vibration" }, 52);
+                Kit.TextAt(body, r, 210, yc - 30, i switch { 1 => "Sound Fx", 2 => "Music", _ => "Vibration" }, 52);
 
                 switch (i)
                 {
-                    case 0:
-                        Kit.Switch(body, r, 826, yc, PlayerPrefs.GetInt(PushPref, 0) == 1, on => SettingsPush(on));
-                        // which pushes: raids, island, rewards, offers
-                        Kit.Button(body, r, "Blue", 560, yc - 42, 150, 84, () => Open("pushtopics"), "Edit", 40);
-                        break;
                     case 1:
                         Kit.TickSlider(body, r, 657, yc, IslandAudio.Muted ? 0f : IslandAudio.SoundVolume, v =>
                         {
@@ -134,31 +128,11 @@ namespace Farmverse.Presentation.UI.Game
             Kit.Contain(flag, GameArt.Get("Icon_Flag_" + Flags[lang]));
 
             B(1, 0, "Blue", "Profile", () => Open("profile"));
-            B(0, 1, "Blue", "Save Farm", () => Open("savefarm"));
             B(1, 1, "Blue", "Rate", () => Open("rate"));
-            B(0, 2, "Blue", "Theme", () => Open("theme"));
+            B(0, 1, "Blue", "Theme", () => Open("theme"));
             B(1, 2, "Blue", "Support", () => GameLinks.EmailSupport(Profile?.Player?.ShortId ?? ""));
-            B(0, 3, "BlueGray", "Delete Account", AccountDeleteAsk);
-            B(1, 3, "Blue", "Privacy", () =>
-            {
-                // the ad consent choices where the law asks for them, else the privacy policy
-                if (Ads is { PrivacyOptionsRequired: true } ads) ads.ShowPrivacyOptions();
-                else GameLinks.Open(GameLinks.Privacy);
-            });
-        }
-
-        /// <summary>The push switch: on asks for permission and opts in on the server; off opts out.</summary>
-        private async void SettingsPush(bool on)
-        {
-            Pref(PushPref, on);
-            if (on && LocalNotifications is { } local) await local.RequestPermission();
-            var n = Notifications;
-            if (n == null) return;
-            var result = await n.SetPushEnabled(on);
-            if (result.IsOk) return;
-            Pref(PushPref, false);
-            Say(on ? "Notifications are off for Farmverse in your phone's settings" : "Couldn't change it — check your connection");
-            MarkDirty();
+            B(0, 2, "BlueGray", "Delete Account", AccountDeleteAsk);
+            B(1, 3, "Blue", "Privacy", () => GameLinks.Open(GameLinks.Privacy));
         }
 
         private void LanguagePopup(Ctx c)

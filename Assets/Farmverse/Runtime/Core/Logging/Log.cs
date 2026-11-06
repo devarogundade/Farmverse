@@ -37,7 +37,7 @@ namespace Farmverse.Core.Logging
         public Exception? Exception { get; }
     }
 
-    /// <summary>Where log entries go: the Unity console, Crashlytics breadcrumbs, a test list.</summary>
+    /// <summary>Where log entries go: the Unity console, crash-report breadcrumbs, a test list.</summary>
     public interface ILogSink
     {
         void Write(LogEntry entry);

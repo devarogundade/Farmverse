@@ -103,45 +103,19 @@ r = await call('daily-claimLogin', { key: key() });
 ok(r.ok && r.data.day === 1 && r.data.coins === 500, 'daily login day 1 (500 coins)', r.data ?? r.error);
 r = await call('daily-claimLogin', { key: key() });
 ok(!r.ok && r.error.code === 'DAILY_CLAIMED', 'login once a day', r.error);
-// each spin is paid by one rewarded ad (its key; the emulator skips AdMob's verification), five a day
+// five spins a day; a key spins once (retries are safe)
 let left = 5, spun = true, firstKey = key(), first;
 for (let i = 0; i < 5; i++) {
   r = await call('wheel-spin', { key: i === 0 ? firstKey : key() });
   if (i === 0) first = r.data;
   spun = spun && r.ok && r.data.spinsLeft === --left && r.data.segment >= 0 && r.data.segment <= 7;
 }
-ok(spun, 'five spins, one ad each, server-rolled');
+ok(spun, 'five spins, server-rolled');
 r = await call('wheel-spin', { key: firstKey });
-ok(r.ok && !r.data.fresh && r.data.segment === first.segment, 'the same ad never spins twice', r.data ?? r.error);
+ok(r.ok && !r.data.fresh && r.data.segment === first.segment, 'the same key never spins twice', r.data ?? r.error);
 r = await call('wheel-spin', { key: key() });
-ok(!r.ok && r.error.code === 'WHEEL_NO_SPINS', 'no sixth spin, even with another ad', r.error);
+ok(!r.ok && r.error.code === 'WHEEL_NO_SPINS', 'no sixth spin', r.error);
 
-
-// ---- rewarded ads (the emulator accepts the game's word; live needs AdMob's signed callback) ----------
-r = await call('ads-claim', { placement: 'free_coins', key: key() });
-ok(r.ok && r.data.coins === 25 && r.data.fresh, 'ad: free coins', r.data ?? r.error);
-r = await call('ads-claim', { placement: 'daily_double', key: key() });
-ok(r.ok && r.data.coins === 500, 'ad: daily bonus doubled (day 1 again)', r.data ?? r.error);
-r = await call('ads-claim', { placement: 'daily_double', key: key() });
-ok(!r.ok && r.error.code === 'AD_LIMIT', 'ad: double once a day', r.error);
-r = await call('ads-claim', { placement: 'wheel_spin', key: key() });
-ok(!r.ok, 'no ad placement for extra spins', r.error);
-
-// ---- purchases and the account (the emulator accepts the editor's fake store and skips the link check) ----
-r = await call('iap-verify', { store: 'fake', productId: 'gems_500', transactionId: 'fake-' + key(), receipt: 'fake' });
-ok(r.ok && r.data.gems === 500 && r.data.fresh && !r.data.pending, 'IAP: 500 gems from a (fake) store purchase', r.data ?? r.error);
-const txId = 'fake-' + key();
-r = await call('iap-verify', { store: 'fake', productId: 'no_ads', transactionId: txId, receipt: 'fake' });
-ok(r.ok && r.data.fresh, 'IAP: No Ads', r.data ?? r.error);
-r = await call('iap-verify', { store: 'fake', productId: 'no_ads', transactionId: txId, receipt: 'fake' });
-ok(r.ok && !r.data.fresh, 'IAP: the same transaction pays once', r.data ?? r.error);
-ok((await doc(`players/${uid}/state/purchases`))?.fields?.noAds?.booleanValue === true, 'No Ads unlocked on state/purchases');
-r = await call('iap-verify', { store: 'fake', productId: 'nope', transactionId: 'fake-' + key(), receipt: 'fake' });
-ok(!r.ok && r.error.code === 'IAP_UNKNOWN', 'IAP: unknown product refused', r.error);
-r = await call('player-claimLinkReward', {});
-ok(r.ok && r.data.gems === 20, 'link reward: 20 gems', r.data ?? r.error);
-r = await call('player-claimLinkReward', {});
-ok(!r.ok && r.error.code === 'ALREADY_CLAIMED', 'link reward once', r.error);
 const w = await doc(`players/${uid}/state/wallet`);
 ok(Number(w?.fields?.bought?.mapValue?.fields?.deal_daily?.integerValue) === 1, 'daily deal: bought today is on the wallet doc (the shop shows "Bought")', w?.fields);
 

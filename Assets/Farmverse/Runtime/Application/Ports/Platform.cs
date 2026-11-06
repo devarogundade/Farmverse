@@ -38,7 +38,7 @@ namespace Farmverse.Application.Ports
         void Delete(string key);
     }
 
-    /// <summary>Crashlytics behind a port: non-fatals, breadcrumbs and keys, never personal data.</summary>
+    /// <summary>Crash and error reporting behind a port: non-fatals, breadcrumbs and keys, never personal data.</summary>
     public interface ICrashReporter
     {
         void SetUser(string uid);
@@ -54,15 +54,7 @@ namespace Farmverse.Application.Ports
         void SetUserProperty(string name, string value);
     }
 
-    /// <summary>Push notifications: permission, token, and taps that open a route.</summary>
-    public interface IPushService
-    {
-        Task<Result<string>> RequestPermissionAndToken(CancellationToken cancellation);
-        /// <summary>A notification was tapped: its route and its data payload (args as <c>arg_*</c>).</summary>
-        event Action<string, IReadOnlyDictionary<string, string>>? Opened;
-    }
-
-    /// <summary>A stable id for this install (the device document's key for push tokens).</summary>
+    /// <summary>A stable id for this install.</summary>
     public interface IInstallationId
     {
         Task<string> Get(CancellationToken cancellation);

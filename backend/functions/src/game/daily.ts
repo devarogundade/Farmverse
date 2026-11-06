@@ -68,12 +68,11 @@ export function sliceFor(cat: CatalogueDoc, roll: number): number {
 }
 
 /**
- * `wheel-spin`: one spin per watched rewarded ad, at most `spinsPerDay` per UTC day — no free spins, no
- * extra spins. `key` is the ad's key: on live backends AdMob's verification for it must have arrived
- * (`adViews/{uid}_{key}`), and a key spins once. The server rolls the slice and pays it.
+ * `wheel-spin`: at most `spinsPerDay` spins per UTC day, no extra spins. `key` makes a retry safe: a
+ * key spins once. The server rolls the slice and pays it.
  */
 export async function spinWheel(
-  env: Env, uid: string, key: string, requireVerification: boolean, random: Random = cryptoRandom,
+  env: Env, uid: string, key: string, random: Random = cryptoRandom,
 ): Promise<PrizePaid & { segment: number; spinsLeft: number; fresh: boolean }> {
   const cat = await catalogue(env);
   type Spin = PrizePaid & { segment: number; spinsLeft: number; fresh: boolean };
@@ -83,10 +82,7 @@ export async function spinWheel(
     const ledgerPath = paths.ledger(uid, 'w_' + key);
     const seen = await replay<Spin>(uow, ledgerPath);
     if (seen) return seen;
-    const [dailySnap, view, bought] = await uow.readAll([paths.daily(uid), paths.adView(uid, key), paths.purchases(uid)]);
-    // No Ads: the spin is paid without watching an ad
-    if (requireVerification && !view?.exists && bought?.data?.['noAds'] !== true) throw new AppError('AD_NOT_VERIFIED');
-    const daily = readDaily(dailySnap?.data, nowMs);
+    const daily = readDaily((await uow.read(paths.daily(uid))).data, nowMs);
     const today = utcDay(nowMs);
     const used = daily.wheelOn === today ? daily.wheelUsed : 0;
     if (used >= cat.wheel.spinsPerDay) throw new AppError('WHEEL_NO_SPINS');
@@ -96,7 +92,7 @@ export async function spinWheel(
     const result: Spin = { ...pay.paid, segment, spinsLeft: Math.max(0, cat.wheel.spinsPerDay - used - 1), fresh: true };
     uow.set(paths.daily(uid), { ...daily, wheelOn: today, wheelUsed: used + 1, updatedAt: nowMs });
     pay.apply();
-    uow.set(ledgerPath, { kind: 'wheel', ref: String(segment), verified: view?.exists === true, at: nowMs, result });
+    uow.set(ledgerPath, { kind: 'wheel', ref: String(segment), at: nowMs, result });
     uow.commit();
     return result;
   });

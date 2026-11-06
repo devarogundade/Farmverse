@@ -20,8 +20,6 @@
         "Firebase.AppCheck.dll",
         "Firebase.Firestore.dll",
         "Firebase.RemoteConfig.dll",
-        "Firebase.Crashlytics.dll",
-        "Firebase.Messaging.dll",
         "Firebase.Installations.dll"
     ],
     "autoReferenced": false,

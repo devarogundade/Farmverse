@@ -116,7 +116,7 @@ export const WheelSegment = named(
 export const WheelDef = named(
   'WheelDef',
   z.object({
-    /** Spins per UTC day; each one is paid for by watching a rewarded ad (no extra spins beyond this). */
+    /** Spins per UTC day (no extra spins beyond this). */
     spinsPerDay: z.number().int().min(0).max(50),
     /** Exactly eight slices, clockwise from the top (the wheel art has eight). */
     segments: z.array(WheelSegment).length(8),
@@ -209,16 +209,6 @@ export const RankPrize = named(
   'A weekly prize band.',
 );
 
-/**
- * A rewarded-ad placement: what one watched ad pays and how many a player may watch per UTC day.
- * `daily_double` pays today's login prize again instead of `prize`.
- */
-export const AdPlacement = named(
-  'AdPlacement',
-  z.object({ prize: Bundle, perDay: z.number().int().min(1).max(100) }),
-  'A rewarded-ad placement.',
-);
-
 /** A farm's title by its net worth (the highest `minWorth` reached wins). */
 export const FarmTitle = named('FarmTitle', z.object({ minWorth: z.number().int().min(0), title: z.string().min(1).max(30) }), 'A farm title.');
 
@@ -236,31 +226,6 @@ export const ProfileRules = named(
 
 /** The friend referral: both players get `reward` when the new one reaches `level`. */
 export const ReferralRules = named('ReferralRules', z.object({ level: z.number().int().min(1).max(100), reward: Bundle }), 'The referral reward.');
-
-export const IapKind = named(
-  'IapKind',
-  z.enum(['gems', 'starter', 'pass', 'builder', 'noads']),
-  'What a store product unlocks: gems or a bundle (consumable), the season pass, an extra builder or no ads (for good).',
-);
-
-/** A real-money product of the app stores (the id is the store product id on both stores). */
-export const IapProduct = named(
-  'IapProduct',
-  z.object({
-    kind: IapKind,
-    /** What it pays (gem packs: gems; the starter pack: its bundle; others: nothing extra). */
-    contents: Bundle,
-    /** Shown until the store's own localised price has loaded. */
-    usd: z.number().min(0).max(1000),
-    title: z.string().min(1).max(40),
-    subtitle: z.string().max(48).optional(),
-    ribbon: z.string().max(20).optional(),
-    art: z.string().max(64),
-    /** Shop order within its kind. */
-    order: z.number().int(),
-  }),
-  'A store product.',
-);
 
 export const CatalogueDoc = named(
   'CatalogueDoc',
@@ -293,15 +258,9 @@ export const CatalogueDoc = named(
     couponTasks: z.record(z.string(), CouponTask),
     /** World board weekly prizes, best ranks first (empty = no prizes). */
     leaderboardPrizes: z.array(RankPrize).max(20),
-    /** Placement id → rewarded ad (free_coins, daily_double, …). */
-    ads: z.record(z.string(), AdPlacement),
     starterPack: StarterPack,
-    /** Paid once when an account is first linked to Google or Apple (Save Farm). */
-    linkReward: Bundle,
     referral: ReferralRules,
     profile: ProfileRules,
-    /** Store product id → product. */
-    iap: z.record(z.string(), IapProduct),
   }),
   'The live tuning data (config/catalogue).',
 );
@@ -396,11 +355,6 @@ export const DEFAULT_CATALOGUE: CatalogueDoc = {
     bundle(0, 20),
     { ...bundle(1_000, 50, { fert: 2, shield: 1 }), art: 'ShopItem_SpecialChest_Purple', label: 'Big chest' },
   ],
-  ads: {
-    free_coins: { prize: bundle(25, 0), perDay: 10 },
-    daily_double: { prize: bundle(0, 0), perDay: 1 },
-    night_shift: { prize: bundle(0, 0, { nightshift: 1 }), perDay: 1 },
-  },
   leaderboardPrizes: [
     { rankTo: 1, coins: 20_000, gems: 100 },
     { rankTo: 3, coins: 10_000, gems: 50 },
@@ -472,7 +426,6 @@ export const DEFAULT_CATALOGUE: CatalogueDoc = {
     ],
   },
   starterPack: { windowHours: 48, contents: bundle(5_000, 300, { shield: 1 }) },
-  linkReward: bundle(0, 20),
   referral: { level: 5, reward: bundle(600, 5) },
   profile: {
     avatarUnlockLevel: 10,
@@ -483,17 +436,6 @@ export const DEFAULT_CATALOGUE: CatalogueDoc = {
       { minWorth: 100_000, title: 'Manor Lord' },
       { minWorth: 1_000_000, title: 'Golden Barn' },
     ],
-  },
-  iap: {
-    gems_80: { kind: 'gems', contents: bundle(0, 80), usd: 0.99, title: '80 gems', art: 'ShopItem_Gem_Purple_1', order: 1 },
-    gems_500: { kind: 'gems', contents: bundle(0, 500), usd: 4.99, title: '500 gems', art: 'ShopItem_Gem_Purple_2', order: 2 },
-    gems_1200: { kind: 'gems', contents: bundle(0, 1_200), usd: 9.99, title: '1,200 gems', art: 'ShopItem_Gem_Purple_3', order: 3 },
-    gems_2500: { kind: 'gems', contents: bundle(0, 2_500), usd: 19.99, title: '2,500 gems', art: 'ShopItem_Gem_Purple_4', order: 4 },
-    gems_6500: { kind: 'gems', contents: bundle(0, 6_500), usd: 49.99, title: '6,500 gems', ribbon: 'Best Value', art: 'ShopItem_Gem_Purple_5', order: 5 },
-    starter_pack: { kind: 'starter', contents: bundle(5_000, 300, { shield: 1 }), usd: 1.99, title: 'Starter Pack', ribbon: '5x Value', art: 'ShopItem_SpecialChest_Purple', order: 1 },
-    farm_pass: { kind: 'pass', contents: bundle(0, 0), usd: 4.99, title: 'Farm Pass', art: 'ShopItem_SpecialChest_Green', order: 2 },
-    builder_pass: { kind: 'builder', contents: bundle(0, 0), usd: 4.99, title: "Builder's Pass", subtitle: '+1 builder forever', art: 'Icon_Hammer', order: 3 },
-    no_ads: { kind: 'noads', contents: bundle(0, 0), usd: 3.99, title: 'No Ads', subtitle: 'Ad rewards without the ads', art: 'Icon_ImageIcon_AdRemove_l', order: 4 },
   },
 };
 
@@ -514,22 +456,17 @@ export const WalletDoc = named(
 );
 export type WalletDoc = z.infer<typeof WalletDoc>;
 
-/** `players/{uid}/state/purchases`: what real-money purchases unlocked for good (server-written). */
+/** `players/{uid}/state/purchases`: lasting unlocks (server-written; granted by game/entitlements.ts). */
 export const PurchasesDoc = named(
   'PurchasesDoc',
   z.object({
-    /** Ad rewards are paid without watching the ad. */
-    noAds: z.boolean(),
-    /** Builders added by Builder's Passes. */
+    /** Extra builders granted for good (capped by the server). */
     extraBuilders: z.number().int().min(0).max(10),
-    /** Account linked to Google or Apple and the link reward paid. */
-    linkRewarded: z.boolean(),
     updatedAt: EpochMs,
   }),
-  'Lasting purchases.',
+  'Lasting unlocks.',
 );
 export type PurchasesDoc = z.infer<typeof PurchasesDoc>;
-export type IapProduct = z.infer<typeof IapProduct>;
 
 /** `players/{uid}/state/inventory`: boosts held and running (server-written). */
 export const InventoryDoc = named(

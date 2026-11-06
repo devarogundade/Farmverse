@@ -104,15 +104,15 @@ namespace Farmverse.Application.Features
         }
 
         /// <summary>
-        /// A Lucky Wheel spin, paid for by the rewarded ad watched under <paramref name="adKey"/> (one spin per ad, the
-        /// catalogue's spinsPerDay a day): the server rolls the slice and pays it (coins are the game's to add).
+        /// A Lucky Wheel spin under <paramref name="key"/> (one spin per key, the catalogue's spinsPerDay a day):
+        /// the server rolls the slice and pays it (coins are the game's to add).
         /// </summary>
-        public async Task<Result<WheelSpinResponse>> Spin(string adKey, CancellationToken cancellation = default)
+        public async Task<Result<WheelSpinResponse>> Spin(string key, CancellationToken cancellation = default)
         {
             if (!Online) return Result<WheelSpinResponse>.Fail(ErrorCode.NetworkRequired);
-            var result = await _server.WheelSpin(adKey, cancellation);
+            var result = await _server.WheelSpin(key, cancellation);
             if (result.IsFailure && (result.Error.Code == ErrorCode.Timeout || result.Error.Code == ErrorCode.Internal))
-                result = await _server.WheelSpin(adKey, cancellation);   // the same key repeats a lost answer
+                result = await _server.WheelSpin(key, cancellation);   // the same key repeats a lost answer
             return result;
         }
 

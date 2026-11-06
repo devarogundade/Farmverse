@@ -8,7 +8,7 @@ namespace Farmverse.Infrastructure.Firebase
 {
     /// <summary>
     /// Analytics until the Firebase Analytics package is added (decision D6): events
-    /// are logged and left as Crashlytics breadcrumbs, so call sites and the event
+    /// are logged and left as crash-report breadcrumbs, so call sites and the event
     /// taxonomy are final today and only this adapter changes.
     /// </summary>
     public sealed class LogAnalytics : IAnalytics

@@ -27,9 +27,6 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>Visiting other islands (set by GameRoot: the server calls).</summary>
         public static Farmverse.Application.Features.ServerCalls? Visits { get; set; }
 
-        /// <summary>Rewarded ads (set by GameRoot).</summary>
-        public static AdsService? Ads { get; set; }
-
         /// <summary>The inbox (set by GameRoot).</summary>
         public static InboxService? Inbox { get; set; }
 

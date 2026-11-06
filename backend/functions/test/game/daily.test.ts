@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_CATALOGUE } from '@farmverse/contracts';
 import { AppError } from '../../src/core/errors';
 import { resetCatalogueCache } from '../../src/game/catalogue';
-import { recordAdView } from '../../src/game/ads';
 import { claimLogin, sliceFor, spinWheel } from '../../src/game/daily';
 import { paths } from '../../src/infra/paths';
 import { DAY, FARMER, World } from './world';
@@ -48,24 +47,21 @@ describe('lucky wheel', () => {
     expect(sliceFor(DEFAULT_CATALOGUE, total - 1)).toBe(7);
   });
 
-  it('spins once per watched ad, five a day, no extra spins', async () => {
+  it('spins once per key, five a day, no extra spins', async () => {
     const w = await player();
     const start = gems(w);
     const total = DEFAULT_CATALOGUE.wheel.segments.reduce((s, x) => s + x.weight, 0);
     const jackpot = () => total - 1;   // the last slice: 25 gems
     const spins = DEFAULT_CATALOGUE.wheel.spinsPerDay;
-    // live backends need AdMob's verification of the ad first
-    expect(await code(spinWheel(w.env, FARMER, 'k_spin_0000', true, jackpot))).toBe('AD_NOT_VERIFIED');
-    await recordAdView(w.env, { uid: FARMER, key: 'k_spin_0000', transactionId: 't', adUnit: 'u', rewardItem: 'spin', rewardAmount: 1 });
-    expect(await spinWheel(w.env, FARMER, 'k_spin_0000', true, jackpot)).toMatchObject({ segment: 7, gems: 25, spinsLeft: spins - 1, fresh: true });
-    expect((await spinWheel(w.env, FARMER, 'k_spin_0000', true, jackpot)).fresh).toBe(false);   // one spin per ad
+    expect(await spinWheel(w.env, FARMER, 'k_spin_0000', jackpot)).toMatchObject({ segment: 7, gems: 25, spinsLeft: spins - 1, fresh: true });
+    expect((await spinWheel(w.env, FARMER, 'k_spin_0000', jackpot)).fresh).toBe(false);   // one spin per key
     for (let i = 1; i < spins; i++) {
-      const r = await spinWheel(w.env, FARMER, `k_spin_000${i}`, false, jackpot);
+      const r = await spinWheel(w.env, FARMER, `k_spin_000${i}`, jackpot);
       expect(r.spinsLeft).toBe(spins - i - 1);
     }
     expect(gems(w)).toBe(start + 25 * spins);
-    expect(await code(spinWheel(w.env, FARMER, 'k_spin_0100', false, jackpot))).toBe('WHEEL_NO_SPINS');
+    expect(await code(spinWheel(w.env, FARMER, 'k_spin_0100', jackpot))).toBe('WHEEL_NO_SPINS');
     w.clock.advance(DAY);
-    expect((await spinWheel(w.env, FARMER, 'k_spin_0200', false, () => 0)).spinsLeft).toBe(spins - 1);
+    expect((await spinWheel(w.env, FARMER, 'k_spin_0200', () => 0)).spinsLeft).toBe(spins - 1);
   });
 });

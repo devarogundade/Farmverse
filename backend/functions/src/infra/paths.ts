@@ -35,16 +35,10 @@ export const paths = {
   visits: (ownerUid: string) => `visits/${ownerUid}`,
   /** The day a visitor last liked the island (server only). */
   visitLike: (ownerUid: string, visitorUid: string) => `visits/${ownerUid}/likes/${visitorUid}`,
-  /** Today's watched ads per placement (server only). */
-  adsDay: (uid: string) => `players/${uid}/state/adsDay`,
-  /** AdMob's server-side verification of one watched ad, keyed by player and the game's ad key (server only). */
-  adView: (uid: string, key: string) => `adViews/${uid}_${key}`,
   /** One gem movement, keyed by the client's operation key (server only; makes retries safe). */
   ledger: (uid: string, id: string) => `players/${uid}/ledger/${id}`,
-  /** Lasting purchases and unlocks (PurchasesDoc): server-written, client-read. */
+  /** Lasting unlocks (PurchasesDoc, game/entitlements.ts): server-written, client-read. */
   purchases: (uid: string) => `players/${uid}/state/purchases`,
-  /** A store transaction, bound to the player who verified it (server only). */
-  iapTransaction: (key: string) => `iapTransactions/${key}`,
   /** When the game was last open, its UTC offset and the hours the player usually plays (server only). */
   presence: (uid: string) => `players/${uid}/state/presence`,
   /** Today's direct pushes: how many, and when each kind last went (server only). */

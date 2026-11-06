@@ -268,7 +268,7 @@ export const DailyClaimLoginResponse = named(
 export const WheelSpinRequest = named(
   'WheelSpinRequest',
   z.object({ meta: RequestMeta, key: OpKey }),
-  'Spin the Lucky Wheel after watching a rewarded ad: `key` is the ad\'s key (its server-side verification), one spin per ad, spinsPerDay a day.',
+  'Spin the Lucky Wheel: `key` makes a retry safe (one spin per key), at most spinsPerDay spins a UTC day.',
 );
 export const WheelSpinResponse = named(
   'WheelSpinResponse',
@@ -363,15 +363,6 @@ export const InboxDeleteRequest = named(
 );
 export const InboxDeleteResponse = named('InboxDeleteResponse', z.object({ deleted: z.number().int().min(0) }));
 
-// ---- rewarded ads ---------------------------------------------------------------------------
-
-export const AdsClaimRequest = named(
-  'AdsClaimRequest',
-  z.object({ meta: RequestMeta, placement: z.string().regex(/^[a-z][a-z0-9_]{1,39}$/), key: OpKey }),
-  "A watched rewarded ad's prize. Live backends pay only after AdMob's server-side verification for this key arrived.",
-);
-export const AdsClaimResponse = named('AdsClaimResponse', z.object({ ...PrizePaid }));
-
 /** One kind of good and how many (a raid's haul). */
 export const ItemCount = named('ItemCount', z.object({ item: z.string().min(1).max(32), n: z.number().int().min(0) }), 'A good and how many.');
 
@@ -450,38 +441,6 @@ export const RaidFinishRequest = named(
   "The game ran (or skipped) today's raid while the player was there.",
 );
 export const RaidFinishResponse = named('RaidFinishResponse', z.object({ raid: RaidPlan }));
-
-export const PlayerClaimLinkRewardRequest = named(
-  'PlayerClaimLinkRewardRequest',
-  z.object({ meta: RequestMeta }),
-  "Collect the catalogue's thank-you for linking Google or Apple (once per account).",
-);
-export const PlayerClaimLinkRewardResponse = named('PlayerClaimLinkRewardResponse', z.object({ ...PrizePaid }));
-
-export const IapStore = named('IapStore', z.enum(['google', 'apple', 'fake']), 'Where a purchase was made (fake: the editor and test builds).');
-
-export const IapVerifyRequest = named(
-  'IapVerifyRequest',
-  z.object({
-    meta: RequestMeta,
-    store: IapStore,
-    /** The store product id (a catalogue `iap` key). */
-    productId: z.string().min(1).max(64),
-    /** The store's transaction id (Google: orderId; Apple: transactionId). */
-    transactionId: z.string().min(1).max(256),
-    /** Google: the purchase token; Apple: the signed transaction (JWS); fake: anything. */
-    receipt: z.string().min(1).max(20_000),
-  }),
-  'Check a store purchase and pay it (once per transaction; a repeat returns the first answer).',
-);
-export const IapVerifyResponse = named(
-  'IapVerifyResponse',
-  z.object({
-    ...PrizePaid,
-    /** True when the store says the purchase is still pending (paid later, nothing given yet). */
-    pending: z.boolean(),
-  }),
-);
 
 export const IslandSyncResponse = named(
   'IslandSyncResponse',
@@ -619,9 +578,6 @@ export const CALLABLES = {
   visitsGet: callable('visits-get', VisitsGetRequest, VisitsGetResponse),
   visitsLike: callable('visits-like', VisitsLikeRequest, VisitsLikeResponse),
   inboxDelete: callable('inbox-delete', InboxDeleteRequest, InboxDeleteResponse),
-  adsClaim: callable('ads-claim', AdsClaimRequest, AdsClaimResponse),
-  playerClaimLinkReward: callable('player-claimLinkReward', PlayerClaimLinkRewardRequest, PlayerClaimLinkRewardResponse),
-  iapVerify: callable('iap-verify', IapVerifyRequest, IapVerifyResponse),
   goalsClaimAchievement: callable('goals-claimAchievement', GoalsClaimAchievementRequest, GoalsClaimAchievementResponse),
   sessionPing: callable('session-ping', SessionPingRequest, SessionPingResponse),
   raidFinish: callable('raid-finish', RaidFinishRequest, RaidFinishResponse),

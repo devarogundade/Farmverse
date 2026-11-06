@@ -20,8 +20,6 @@ import * as coupons from './api/coupons';
 import * as leaderboardApi from './api/leaderboard';
 import * as visits from './api/visits';
 import * as inboxApi from './api/inbox';
-import * as ads from './api/ads';
-import * as purchasesApi from './api/purchases';
 import * as sessionApi from './api/session';
 
 const accountFns = { delete: account.remove, export: account.exportData };
@@ -35,9 +33,8 @@ const daily = { claimLogin: dailyApi.claimLoginFn };
 const leaderboard = { payWeek: leaderboardApi.payWeekJob };
 const inbox = { delete: inboxApi.remove };
 const wheel = { spin: dailyApi.spin };
-const iap = { verify: purchasesApi.verify };
 const session = { ping: sessionApi.ping };
 const raid = { finish: sessionApi.finish };
 const pushFns = { ...push, task: sessionApi.task, onNewsCreated: sessionApi.onNewsCreated };
 
-export { player, pushFns as push, session, raid, accountFns as account, friends, content, island, referral, rewards, wallet, boost, shop, goals, daily, wheel, pass, coupons, leaderboard, visits, inbox, ads, iap };
+export { player, pushFns as push, session, raid, accountFns as account, friends, content, island, referral, rewards, wallet, boost, shop, goals, daily, wheel, pass, coupons, leaderboard, visits, inbox };

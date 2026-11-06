@@ -135,7 +135,6 @@ namespace Farmverse.Presentation.UI.Game
             IslandBoosts.Running = ShopBoostRunning;
             IslandLife.Words = Loc.Of;
             Loc.Use(LanguageIso);
-            Instance = this;
             _doc = GetComponent<UIDocument>();
             _root = _doc.rootVisualElement;
             _root.pickingMode = PickingMode.Ignore;
@@ -171,7 +170,6 @@ namespace Farmverse.Presentation.UI.Game
             BoostSync();
             SystemTick();
             RouteTick();
-            PushAskTick();
             TrainTick();
             ReferralTick();
             ProfileTick();

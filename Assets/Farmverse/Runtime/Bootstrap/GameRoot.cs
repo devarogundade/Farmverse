@@ -19,7 +19,7 @@ namespace Farmverse.Bootstrap
 {
     /// <summary>
     /// The composition root (02 §3): the only place that knows every concrete type. Lives in the boot
-    /// scene, builds the server-side services once (Firebase, sign-in, Remote Config, push, analytics),
+    /// scene, builds the server-side services once (Firebase, sign-in, Remote Config, analytics),
     /// opens the Island scene (the game and its own UI, playable offline) and starts the session.
     /// Server features attach when the session is Ready.
     /// </summary>
@@ -46,9 +46,7 @@ namespace Farmverse.Bootstrap
         private ProfileService _profile = null!;
         private LeaderboardService _board = null!;
         private InboxService _inbox = null!;
-        private AdsService _ads = null!;
         private AccountService _account = null!;
-        private PurchaseService _purchases = null!;
         private GameAnalytics? _gameAnalytics;
         private bool _composed;
 
@@ -122,12 +120,9 @@ namespace Farmverse.Bootstrap
             if (GameUi.Profile == _profile) GameUi.Profile = null;
             if (GameUi.Board == _board) GameUi.Board = null;
             if (GameUi.Inbox == _inbox) GameUi.Inbox = null;
-            if (GameUi.Ads == _ads) GameUi.Ads = null;
             if (GameUi.Account == _account) GameUi.Account = null;
             GameUi.RetrySession = null;
             GameUi.SystemNotice = null;
-            if (GameUi.Purchases == _purchases) GameUi.Purchases = null;
-            _purchases?.Dispose();
             if (GameUi.Visits == _server) GameUi.Visits = null;
             _friends?.Dispose();
             _rewards?.Dispose();
@@ -144,8 +139,8 @@ namespace Farmverse.Bootstrap
         private void Compose(EnvironmentConfig config)
         {
             var firebase = config.ToFirebase();
-            var crash = new CrashlyticsReporter();
             _log = new Farmverse.Core.Logging.Logger(new ILogSink[] { new UnityLogSink() }, config.MinimumLog);
+            var crash = new LogCrashReporter(_log);
 
             // engine services
             var main = gameObject.AddComponent<UnityMainThread>();
@@ -159,14 +154,7 @@ namespace Farmverse.Bootstrap
             var documents = new DeferredDocumentStore();
             var auth = new DeferredAuth();
             var remoteConfig = new DeferredRemoteConfig();
-            var push = new FcmPushService(main);
-            // a tapped notification opens its screen (the inbox when the route isn't one)
-            push.Opened += (route, _) => GameUi.PendingRoute = route;
-            var platform = new FirebaseComposition(firebase, main, _log, documents, auth, remoteConfig, afterBoot: () =>
-            {
-                crash.Enable();
-                push.Start();
-            });
+            var platform = new FirebaseComposition(firebase, main, _log, documents, auth, remoteConfig);
             var analytics = new LogAnalytics(crash, _log);
 
             // application
@@ -185,11 +173,11 @@ namespace Farmverse.Bootstrap
                 Scheduler = scheduler,
                 Log = _log,
             });
-            _notifications = new NotificationService(documents, callables, push, clock, meta, new FirebaseInstallationId(local, _log), local);
+            _notifications = new NotificationService(documents, clock);
             _flags = new FeatureFlags(remoteConfig);
             _server = new ServerCalls(callables, meta);
             _friends = new FriendsService(documents, _server);
-            GameUi.Notifications = _notifications;   // the push switch in Settings
+            GameUi.Notifications = _notifications;   // the inbox badge and the server copy's language
             GameUi.Friends = _friends;   // the game's Friends screen (Island scene) reaches the server through this
             _rewards = new RewardsService(documents, _server);
             GameUi.Rewards = _rewards;
@@ -209,19 +197,13 @@ namespace Farmverse.Bootstrap
             GameUi.Visits = _server;        // visits-get / visits-like
             _inbox = new InboxService(documents, _server, () => clock.NowMs);
             GameUi.Inbox = _inbox;          // mail and notifications, with rewards to collect
-            _purchases = new PurchaseService(new UnityAppStore(), _server, _catalogue, documents);
-            GameUi.Purchases = _purchases;  // real money: the store sells, iap-verify checks and pays
-            _ads = new AdsService(new AdMobRewardedAds(config.RewardedAdUnitId), _server, () => _purchases.Unlocked.NoAds);
             _account = new AccountService(auth, _server, Restart, () => { PlayerPrefs.DeleteAll(); PlayerPrefs.Save(); });
             GameUi.Account = _account;
-            GameUi.RetrySession = () => _ = _session.Start(_life.Token);      // Save Farm (Google / Apple), switching farms, deleting the account
-            GameUi.Ads = _ads;              // rewarded ads: AdMob shows, ads-claim pays (verified by AdMob's callback when live)
+            GameUi.RetrySession = () => _ = _session.Start(_life.Token);      // deleting the account restarts on a new guest
             Wallet.Shop = _shop;            // boosts, free gift, starter pack, daily chests: server-owned
-            // one raid a day, presence for the server's pushes, the island's own reminders on the phone
-            var localNotes = new UnityLocalNotifications();
-            GameUi.LocalNotifications = localNotes;
+            // one raid a day, and presence (the game is open)
             var pinger = GetComponent<SessionPinger>() ?? gameObject.AddComponent<SessionPinger>();
-            pinger.Init(_server, () => _session.State.Value == SessionState.Ready && _session.Uid != null, localNotes, _shop);
+            pinger.Init(_server, () => _session.State.Value == SessionState.Ready && _session.Uid != null);
             var launchedAt = Time.realtimeSinceStartup;
             _gameAnalytics = new GameAnalytics(analytics, _session, () => (long)((Time.realtimeSinceStartup - launchedAt) * 1000));
 
@@ -232,7 +214,6 @@ namespace Farmverse.Bootstrap
                     GameUi.SystemNotice = null;
                     _flags.Refresh(); // the session just fetched Remote Config
                     _notifications.Attach(_session.Uid);
-                    _ = _notifications.RefreshRegistration(_life.Token);
                     _friends.Attach(_session.Uid);
                     _rewards.Attach(_session.Uid);
                     _news.Attach();
@@ -243,8 +224,6 @@ namespace Farmverse.Bootstrap
                     _profile.Attach(_session.Uid);
                     _board.Attach(_session.Uid, GameUi.LanguageIso);
                     _inbox.Attach(_session.Uid);
-                    _ads.Attach(_session.Uid);
-                    _purchases.Attach(_session.Uid);
                     // cloud save (and rollout phase 1: mirror the island to the server engine and compare the runs)
                     var uid = _session.Uid;
                     IslandShadow.Attach(_server, uid, async () =>

@@ -15,7 +15,7 @@ describe('the deployed surface', () => {
 
   it('exports nothing outside the documented inventory (03 §1)', () => {
     const callables = Object.values(CALLABLES).map((s) => s.name);
-    const jobsAndTriggers = ['push-onNotificationCreated', 'push-task', 'push-onNewsCreated', 'island-wake', 'leaderboard-payWeek', 'ads-ssv'];
+    const jobsAndTriggers = ['push-onNotificationCreated', 'push-task', 'push-onNewsCreated', 'island-wake', 'leaderboard-payWeek'];
     expect(deployedNames()).toEqual([...callables, ...jobsAndTriggers].sort());
   });
 });

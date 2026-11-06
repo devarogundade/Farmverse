@@ -193,10 +193,6 @@
             "v": "A press this many rims from the centre still grabs the stick (a little forgiving for thumbs)."
         },
         {
-            "k": "A purchase is already on its way",
-            "v": "A purchase is already on its way"
-        },
-        {
             "k": "A raider knocked you down — {0} goods spilled!",
             "v": "A raider knocked you down — {0} goods spilled!"
         },
@@ -553,10 +549,6 @@
             "v": "Big chest"
         },
         {
-            "k": "Big updates and events on Farmverse",
-            "v": "Big updates and events on Farmverse"
-        },
-        {
             "k": "Bigger Basket",
             "v": "Bigger Basket"
         },
@@ -587,10 +579,6 @@
         {
             "k": "Bought",
             "v": "Bought"
-        },
-        {
-            "k": "Bought before on this Apple ID",
-            "v": "Bought before on this Apple ID"
         },
         {
             "k": "Bread",
@@ -1041,10 +1029,6 @@
             "v": "Community hall"
         },
         {
-            "k": "Connect to the internet to buy",
-            "v": "Connect to the internet to buy"
-        },
-        {
             "k": "Connect to the internet to buy with gems",
             "v": "Connect to the internet to buy with gems"
         },
@@ -1073,10 +1057,6 @@
             "v": "Connect to the internet to open the chest"
         },
         {
-            "k": "Connect to the internet to save your farm.",
-            "v": "Connect to the internet to save your farm."
-        },
-        {
             "k": "Connect to the internet to spin",
             "v": "Connect to the internet to spin"
         },
@@ -1087,10 +1067,6 @@
         {
             "k": "Connect to the internet to visit farms",
             "v": "Connect to the internet to visit farms"
-        },
-        {
-            "k": "Connect to the internet to watch ads",
-            "v": "Connect to the internet to watch ads"
         },
         {
             "k": "Connecting to the farm network…<br>Friends appear once you're online.",
@@ -1137,20 +1113,12 @@
             "v": "Couldn't buy it — check your connection and try again"
         },
         {
-            "k": "Couldn't change it — check your connection",
-            "v": "Couldn't change it — check your connection"
-        },
-        {
             "k": "Couldn't change your name — check your connection",
             "v": "Couldn't change your name — check your connection"
         },
         {
             "k": "Couldn't collect it — check your connection and try again",
             "v": "Couldn't collect it — check your connection and try again"
-        },
-        {
-            "k": "Couldn't collect the reward — check your connection",
-            "v": "Couldn't collect the reward — check your connection"
         },
         {
             "k": "Couldn't delete the account — check your connection and try again",
@@ -1165,10 +1133,6 @@
             "v": "Couldn't get a code — check your connection and try again"
         },
         {
-            "k": "Couldn't link the account — check your connection and try again",
-            "v": "Couldn't link the account — check your connection and try again"
-        },
-        {
             "k": "Couldn't open it — check your connection and try again",
             "v": "Couldn't open it — check your connection and try again"
         },
@@ -1177,20 +1141,8 @@
             "v": "Couldn't reach that farm — check your connection"
         },
         {
-            "k": "Couldn't restore purchases — try again",
-            "v": "Couldn't restore purchases — try again"
-        },
-        {
-            "k": "Couldn't save it — check your connection",
-            "v": "Couldn't save it — check your connection"
-        },
-        {
             "k": "Couldn't send the like — check your connection",
             "v": "Couldn't send the like — check your connection"
-        },
-        {
-            "k": "Couldn't sign in — try again",
-            "v": "Couldn't sign in — try again"
         },
         {
             "k": "Couldn't spin — check your connection and try again",
@@ -1283,10 +1235,6 @@
         {
             "k": "Daily Bonus",
             "v": "Daily Bonus"
-        },
-        {
-            "k": "Daily gifts, free coins and welcome-back gifts",
-            "v": "Daily gifts, free coins and welcome-back gifts"
         },
         {
             "k": "Daily tasks",
@@ -1641,14 +1589,6 @@
             "v": "Farm Pass: Lumberjack"
         },
         {
-            "k": "Farm found",
-            "v": "Farm found"
-        },
-        {
-            "k": "Farm saved!",
-            "v": "Farm saved!"
-        },
-        {
             "k": "Farm saved! +{0} gems",
             "v": "Farm saved! +{0} gems"
         },
@@ -1925,16 +1865,8 @@
             "v": "Fountain"
         },
         {
-            "k": "Free Coins",
-            "v": "Free Coins"
-        },
-        {
             "k": "Free Gift",
             "v": "Free Gift"
-        },
-        {
-            "k": "Free gift ready",
-            "v": "Free gift ready"
         },
         {
             "k": "Freight Train",
@@ -1943,10 +1875,6 @@
         {
             "k": "French",
             "v": "French"
-        },
-        {
-            "k": "Fresh goods are waiting to be collected and sold.",
-            "v": "Fresh goods are waiting to be collected and sold."
         },
         {
             "k": "Friend's code",
@@ -1989,16 +1917,8 @@
             "v": "From the sheep."
         },
         {
-            "k": "Full storage, likes, crops and workshops done",
-            "v": "Full storage, likes, crops and workshops done"
-        },
-        {
             "k": "Full train: one more crate of materials!",
             "v": "Full train: one more crate of materials!"
-        },
-        {
-            "k": "GEM PACK",
-            "v": "GEM PACK"
         },
         {
             "k": "GEMS",
@@ -2095,10 +2015,6 @@
         {
             "k": "Goods Sold",
             "v": "Goods Sold"
-        },
-        {
-            "k": "Google and Apple sign-in work in the phone builds.",
-            "v": "Google and Apple sign-in work in the phone builds."
         },
         {
             "k": "Grain silos",
@@ -2627,10 +2543,6 @@
         {
             "k": "Loaded",
             "v": "Loaded"
-        },
-        {
-            "k": "Loading ad…",
-            "v": "Loading ad…"
         },
         {
             "k": "Loading...",
@@ -3305,14 +3217,6 @@
             "v": "Net worth"
         },
         {
-            "k": "Never miss a raid",
-            "v": "Never miss a raid"
-        },
-        {
-            "k": "Never while you're playing, never at night, a few a day at most.",
-            "v": "Never while you're playing, never at night, a few a day at most."
-        },
-        {
             "k": "New crop: {x}",
             "v": "New crop: {x}"
         },
@@ -3393,10 +3297,6 @@
             "v": "Night Shift · {0} gems"
         },
         {
-            "k": "Night Shift: watch an ad",
-            "v": "Night Shift: watch an ad"
-        },
-        {
             "k": "No ",
             "v": "No "
         },
@@ -3407,10 +3307,6 @@
         {
             "k": "No Ads — thank you!",
             "v": "No Ads — thank you!"
-        },
-        {
-            "k": "No ad right now — try again in a moment",
-            "v": "No ad right now — try again in a moment"
         },
         {
             "k": "No boosts yet: get them in the Shop.",
@@ -3569,14 +3465,6 @@
             "v": "Notifications"
         },
         {
-            "k": "Notifications are off for Farmverse in your phone's settings",
-            "v": "Notifications are off for Farmverse in your phone's settings"
-        },
-        {
-            "k": "Notifications on: we'll warn you before raids",
-            "v": "Notifications on: we'll warn you before raids"
-        },
-        {
             "k": "OFFERS",
             "v": "OFFERS"
         },
@@ -3647,10 +3535,6 @@
         {
             "k": "Onion opens at island level {0}",
             "v": "Onion opens at island level {0}"
-        },
-        {
-            "k": "Only a few a day, never at night. Change it any time in Settings.",
-            "v": "Only a few a day, never at night. Change it any time in Settings."
         },
         {
             "k": "Open redeem page",
@@ -3755,10 +3639,6 @@
         {
             "k": "Paste your code and tap <color=#ffd23a>Redeem</color>.",
             "v": "Paste your code and tap <color=#ffd23a>Redeem</color>."
-        },
-        {
-            "k": "Payment pending — your items arrive once it goes through",
-            "v": "Payment pending — your items arrive once it goes through"
         },
         {
             "k": "Pays {0}% more for bread, flour, cheese, eggs and milk",
@@ -3997,12 +3877,8 @@
             "v": "Premium rewards on every tier!"
         },
         {
-            "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts.",
-            "v": "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts."
-        },
-        {
-            "k": "Price from the store · rewards already earned this season unlock at once.",
-            "v": "Price from the store · rewards already earned this season unlock at once."
+            "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward.",
+            "v": "Pressing <color=#ffd23a>Claim All</color> collects every reward."
         },
         {
             "k": "Privacy",
@@ -4017,16 +3893,8 @@
             "v": "Pumpkin"
         },
         {
-            "k": "Purchases restored",
-            "v": "Purchases restored"
-        },
-        {
             "k": "Purple",
             "v": "Purple"
-        },
-        {
-            "k": "Push Alarm",
-            "v": "Push Alarm"
         },
         {
             "k": "Quiet as a mouse round here.",
@@ -4055,10 +3923,6 @@
         {
             "k": "Raid Shield",
             "v": "Raid Shield"
-        },
-        {
-            "k": "Raid Shield ends soon",
-            "v": "Raid Shield ends soon"
         },
         {
             "k": "Raid driven off!",
@@ -4281,10 +4145,6 @@
             "v": "Restock food"
         },
         {
-            "k": "Restore purchases",
-            "v": "Restore purchases"
-        },
-        {
             "k": "Retry",
             "v": "Retry"
         },
@@ -4401,16 +4261,8 @@
             "v": "Save"
         },
         {
-            "k": "Save Farm",
-            "v": "Save Farm"
-        },
-        {
             "k": "Save your farm",
             "v": "Save your farm"
-        },
-        {
-            "k": "Save your farm with Google or Apple to get coupons",
-            "v": "Save your farm with Google or Apple to get coupons"
         },
         {
             "k": "Sawn from wood.",
@@ -4585,10 +4437,6 @@
             "v": "Shop"
         },
         {
-            "k": "Shop deals about to end",
-            "v": "Shop deals about to end"
-        },
-        {
             "k": "Short screen side, in pixels, from which a screen counts as large.",
             "v": "Short screen side, in pixels, from which a screen counts as large."
         },
@@ -4611,10 +4459,6 @@
         {
             "k": "Site ring",
             "v": "Site ring"
-        },
-        {
-            "k": "Skip the ads for good?",
-            "v": "Skip the ads for good?"
         },
         {
             "k": "Smelted from ore. Needed to upgrade machines.",
@@ -4953,16 +4797,8 @@
             "v": "That name is taken — try another"
         },
         {
-            "k": "That's all the ads for today — come back tomorrow",
-            "v": "That's all the ads for today — come back tomorrow"
-        },
-        {
             "k": "That's all {0} spins for today.\nCome back tomorrow!",
             "v": "That's all {0} spins for today.\nCome back tomorrow!"
-        },
-        {
-            "k": "The ad is still being checked — try again in a minute",
-            "v": "The ad is still being checked — try again in a minute"
         },
         {
             "k": "The background music clip (Content/Audio/Music), looped under everything.",
@@ -5019,10 +4855,6 @@
         {
             "k": "The farmhouse is nearly full. Sell at the market or upgrade it.",
             "v": "The farmhouse is nearly full. Sell at the market or upgrade it."
-        },
-        {
-            "k": "The fields are ripe. Harvest them before they spoil!",
-            "v": "The fields are ripe. Harvest them before they spoil!"
         },
         {
             "k": "The freight train starts stopping at your station at island level {0}.",
@@ -5205,16 +5037,8 @@
             "v": "The stone crusher opens at {0}"
         },
         {
-            "k": "The store didn't confirm this purchase",
-            "v": "The store didn't confirm this purchase"
-        },
-        {
             "k": "The store has no food at all! Bring in a harvest, or eggs from the coop.",
             "v": "The store has no food at all! Bring in a harvest, or eggs from the coop."
-        },
-        {
-            "k": "The store isn't ready yet — try again in a moment",
-            "v": "The store isn't ready yet — try again in a moment"
         },
         {
             "k": "The stores are empty: bring your harvest in.",
@@ -5673,10 +5497,6 @@
             "v": "Warnings before raiders land, and how it went"
         },
         {
-            "k": "Warnings before the zombies come, and how the night went",
-            "v": "Warnings before the zombies come, and how the night went"
-        },
-        {
             "k": "Warriors",
             "v": "Warriors"
         },
@@ -5699,14 +5519,6 @@
         {
             "k": "Watch a short ad for each spin.\n{0} spins a day, reset at midnight (UTC).",
             "v": "Watch a short ad for each spin.\n{0} spins a day, reset at midnight (UTC)."
-        },
-        {
-            "k": "Watch the ad to the end to get the reward",
-            "v": "Watch the ad to the end to get the reward"
-        },
-        {
-            "k": "Watch the ad to the end to spin",
-            "v": "Watch the ad to the end to spin"
         },
         {
             "k": "We'll see them off.",
@@ -6105,10 +5917,6 @@
             "v": "You're already friends."
         },
         {
-            "k": "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons.",
-            "v": "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons."
-        },
-        {
             "k": "Your Night Shift is already booked for your next absence",
             "v": "Your Night Shift is already booked for your next absence"
         },
@@ -6117,16 +5925,8 @@
             "v": "Your coupon"
         },
         {
-            "k": "Your crops are ready",
-            "v": "Your crops are ready"
-        },
-        {
-            "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.<br>Purchases can't be refunded.",
-            "v": "Your farm, gems, friends and progress will be <b>deleted for good</b>.<br>Purchases can't be refunded."
-        },
-        {
-            "k": "Your free coins are waiting in the shop.",
-            "v": "Your free coins are waiting in the shop."
+            "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.",
+            "v": "Your farm, gems, friends and progress will be <b>deleted for good</b>."
         },
         {
             "k": "Your friends",
@@ -6143,14 +5943,6 @@
         {
             "k": "Your next absence: workers keep going for {0} hours at the normal food price.",
             "v": "Your next absence: workers keep going for {0} hours at the normal food price."
-        },
-        {
-            "k": "Your purchase will arrive as soon as you're back online",
-            "v": "Your purchase will arrive as soon as you're back online"
-        },
-        {
-            "k": "Your reward is on its way — try again in a minute",
-            "v": "Your reward is on its way — try again in a minute"
         },
         {
             "k": "Your shield ends in {n} minutes. Raiders are watching!",
@@ -6183,14 +5975,6 @@
         {
             "k": "Your workers will run out of food in about {0} min — stock their house before you go",
             "v": "Your workers will run out of food in about {0} min — stock their house before you go"
-        },
-        {
-            "k": "Your workshops are done",
-            "v": "Your workshops are done"
-        },
-        {
-            "k": "Yours already!",
-            "v": "Yours already!"
         },
         {
             "k": "Zombies are smashing the packing shed!",

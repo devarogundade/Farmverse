@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Farmverse.Contracts
 {
-    /// <summary>Spin the Lucky Wheel after watching a rewarded ad: `key` is the ad's key (its server-side verification), one spin per ad, spinsPerDay a day.</summary>
+    /// <summary>Spin the Lucky Wheel: `key` makes a retry safe (one spin per key), at most spinsPerDay spins a UTC day.</summary>
     public sealed partial class WheelSpinRequest : IWireObject
     {
         public RequestMeta Meta { get; set; } = new RequestMeta();

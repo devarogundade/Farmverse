@@ -69,20 +69,6 @@ export const ERROR_CATALOGUE = {
   // ---- visits -----------------------------------------------------------------
   /** The owner doesn't take visitors (settings) or has no island on the server yet. */
   VISITS_CLOSED: [],
-  // ---- ads --------------------------------------------------------------------
-  /** Today's ads for this placement are used up. */
-  AD_LIMIT: [],
-  /** AdMob's verification for this ad hasn't arrived (yet): try again in a moment. */
-  AD_NOT_VERIFIED: [],
-  // ---- accounts and purchases -------------------------------------------------
-  /** Needs a Google or Apple sign-in first. */
-  LINK_REQUIRED: [],
-  /** Already collected (the link reward). */
-  ALREADY_CLAIMED: [],
-  /** The store doesn't confirm this purchase (refunded, fake or for another app). */
-  IAP_INVALID: [],
-  /** Not a product the game sells. */
-  IAP_UNKNOWN: [],
 } as const satisfies Record<string, readonly string[]>;
 
 export type ErrorCodeName = keyof typeof ERROR_CATALOGUE;

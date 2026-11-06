@@ -428,7 +428,7 @@ namespace Farmverse.Domain.Gameplay
         public const double OfflineCapPassHours = 24;
         /// <summary>Hours offline work runs by the best workers' house level: 8, 12, 16.</summary>
         public static double OfflineCapHours(int workersHouseLevel) => workersHouseLevel >= 3 ? 16 : workersHouseLevel == 2 ? 12 : AwayWorkCapHours;
-        /// <summary>Gems a Night Shift costs (or one rewarded ad a day).</summary>
+        /// <summary>Gems a Night Shift costs.</summary>
         public const int NightShiftGems = 15;
         /// <summary>Of each good, this many stay in the farmhouse: workers never refill, load or sell them.</summary>
         public const int WorkReserve = 5;

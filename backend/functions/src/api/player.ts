@@ -24,4 +24,3 @@ export const suggestNames = defineCallable({
   auth: 'required',
   handler: async ({ data, log }) => players.suggestNames(await env(log), data.count),
 });
-export { claimLink as claimLinkReward } from './purchases';

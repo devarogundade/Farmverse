@@ -51,12 +51,6 @@ namespace Farmverse.Contracts
         CouponUnknown = 37,
         CouponUsed = 38,
         VisitsClosed = 39,
-        AdLimit = 40,
-        AdNotVerified = 41,
-        LinkRequired = 42,
-        AlreadyClaimed = 43,
-        IapInvalid = 44,
-        IapUnknown = 45,
     }
 
     /// <summary>Wire strings for <see cref="ErrorCode"/>.</summary>
@@ -105,12 +99,6 @@ namespace Farmverse.Contracts
                 case ErrorCode.CouponUnknown: return "COUPON_UNKNOWN";
                 case ErrorCode.CouponUsed: return "COUPON_USED";
                 case ErrorCode.VisitsClosed: return "VISITS_CLOSED";
-                case ErrorCode.AdLimit: return "AD_LIMIT";
-                case ErrorCode.AdNotVerified: return "AD_NOT_VERIFIED";
-                case ErrorCode.LinkRequired: return "LINK_REQUIRED";
-                case ErrorCode.AlreadyClaimed: return "ALREADY_CLAIMED";
-                case ErrorCode.IapInvalid: return "IAP_INVALID";
-                case ErrorCode.IapUnknown: return "IAP_UNKNOWN";
                 default: throw new WireFormatException("ErrorCode", "cannot send an unknown value");
             }
         }
@@ -158,12 +146,6 @@ namespace Farmverse.Contracts
                 case "COUPON_UNKNOWN": return ErrorCode.CouponUnknown;
                 case "COUPON_USED": return ErrorCode.CouponUsed;
                 case "VISITS_CLOSED": return ErrorCode.VisitsClosed;
-                case "AD_LIMIT": return ErrorCode.AdLimit;
-                case "AD_NOT_VERIFIED": return ErrorCode.AdNotVerified;
-                case "LINK_REQUIRED": return ErrorCode.LinkRequired;
-                case "ALREADY_CLAIMED": return ErrorCode.AlreadyClaimed;
-                case "IAP_INVALID": return ErrorCode.IapInvalid;
-                case "IAP_UNKNOWN": return ErrorCode.IapUnknown;
                 default: return ErrorCode.Unknown;
             }
         }

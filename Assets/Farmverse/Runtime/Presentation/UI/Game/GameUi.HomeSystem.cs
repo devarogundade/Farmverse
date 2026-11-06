@@ -1,7 +1,5 @@
 #nullable enable
 using System;
-using Farmverse.Application.Ports;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,8 +29,7 @@ namespace Farmverse.Presentation.UI.Game
 
     /// <summary>
     /// The small shared popups to system.html (Terms, Update / Update required, Maintenance, No connection,
-    /// Confirm, Remove ads, Please wait) and the profile extras to profile.html (Choose avatar, Save your
-    /// farm, Rate us). One frame (Popup03_Single), short text, green = yes, blue/gray = no.
+    /// Confirm, Please wait) and the profile extras to profile.html (Choose avatar, Rate us). One frame (Popup03_Single), short text, green = yes, blue/gray = no.
     /// </summary>
     public sealed partial class GameUi
     {
@@ -46,10 +43,8 @@ namespace Farmverse.Presentation.UI.Game
             var a = c.Args as HomeMessageArgs ?? new HomeMessageArgs();
             ui.HomeSimple(c, a.Title.Length > 0 ? a.Title : "Note", a.Text, new[] { ("green", "OK", (Action)ui.Back) });
         });
-        private static readonly bool RegHome_NoAds = Register("removeads", UiLayer.Popup, (ui, c) => ui.HomeRemoveAds(c));
         private static readonly bool RegHome_Wait = Register("wait", UiLayer.Popup, (ui, c) => ui.HomeWait(c));
         private static readonly bool RegHome_Avatar = Register("avatar", UiLayer.Popup, (ui, c) => ui.HomeAvatar(c), .5f);
-        private static readonly bool RegHome_Save = Register("savefarm", UiLayer.Popup, (ui, c) => ui.HomeSaveFarm(c), .5f);
         private static readonly bool RegHome_Rate = Register("rate", UiLayer.Popup, (ui, c) => ui.HomeRate(c), .5f);
 
         /// <summary>The avatars the player can pick (the last two unlock at the catalogue's island level).</summary>
@@ -196,29 +191,6 @@ namespace Farmverse.Presentation.UI.Game
             });
         }
 
-        private void HomeRemoveAds(Ctx c)
-        {
-            var p = c.P;
-            HomeDim(c.Root, "#030c20", .85f);
-            var col = PK.Col(c.Root, p.P(20));
-            col.style.position = Position.Absolute;
-            col.style.left = new Length(50, LengthUnit.Percent);
-            col.style.top = new Length(50, LengthUnit.Percent);
-            col.style.translate = new Translate(new Length(-50, LengthUnit.Percent), new Length(-50, LengthUnit.Percent));
-            col.style.alignItems = Align.Center;
-            var glow = PK.Centre(PK.Box(col));
-            PK.Size(glow, p.P(260), p.P(220));
-            Kit.Picture(glow, GameArt.Radial("homeadglow", .5f, .5f, .5f, .5f, (0f, GameTheme.T("#3ca0ff", .45f)), (.7f, GameTheme.T("#3ca0ff", 0f)), (1f, new Color(0, 0, 0, 0))));
-            PK.Img(glow, "Icon_ImageIcon_AdRemove_l", p.P(200));
-            var noAdsId = Wallet.Prices.Iap.Where(kv => kv.Value.Kind == Farmverse.Contracts.IapKind.Noads).Select(kv => kv.Key).FirstOrDefault();
-            PK.T(col, p, "Skip the ads for good?", 36);
-            HomeMsg(col, p, "Every ad reward — the Lucky Wheel, Free Coins, the ×2 daily bonus —<br>pays straight away, with no video to watch.", 18);
-            var row = PK.Row(col, p.P(20));
-            PK.Btn(row, p, "blue", "Later", 220, 74, 28, Back);
-            if (Purchases?.Unlocked.NoAds == true) PK.T(row, p, "Yours already!", 30);
-            else if (noAdsId != null) PK.Btn(row, p, "green", ShopIapPrice(noAdsId), 220, 74, 28, () => { Back(); ShopIapBuy(noAdsId); });
-        }
-
         private void HomeWait(Ctx c)
         {
             var p = c.P;
@@ -286,46 +258,6 @@ namespace Farmverse.Presentation.UI.Game
                 _homeAvaPick = null;
                 Back();
             });
-        }
-
-        private void HomeSaveFarm(Ctx c)
-        {
-            var p = c.P;
-            var acc = Account;
-            var pop = PK.Popup(c.Root, p, 600, 0, "Save your farm", Back);
-            var col = PK.Col(pop, p.P(14));
-            col.style.alignItems = Align.Center;
-            PK.Pad(col, 0, p.P(20), 0, p.P(4));
-            if (acc == null || !acc.SignedIn)
-            {
-                HomeMsg(col, p, "Connect to the internet to save your farm.", 18, "#bfe6ff");
-                return;
-            }
-            if (acc.IsLinked)
-            {
-                var with = string.Join(" and ", acc.Linked.Select(l => l.ToString()));
-                HomeMsg(col, p, $"Your farm is saved to your <b>{with}</b> account.<br>Sign in with it on a new phone to get it back.", 18, "#bfe6ff");
-                PK.Btn(col, p, "green", "OK", 220, 70, 28, Back);
-                return;
-            }
-            HomeMsg(col, p, "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons.", 18, "#bfe6ff");
-            var any = false;
-            foreach (var (provider, colour) in new[] { (LinkProvider.Google, "blue"), (LinkProvider.Apple, "gray") })
-            {
-                if (!acc.CanLink(provider)) continue;
-                any = true;
-                var pv = provider;
-                PK.Btn(col, p, colour, "  Continue with " + provider, 420, 74, 26, () => AccountLink(pv));
-            }
-            if (!any) HomeMsg(col, p, "Google and Apple sign-in work in the phone builds.", 16, "#9fd0ff");
-            var reward = Wallet.Prices.LinkReward;
-            if (reward.Gems > 0 || reward.Coins > 0)
-            {
-                var note = PK.Row(col, p.U(8));
-                PK.Img(note, "Toggle01_Check_Green", p.P(24));
-                var what = reward.Gems > 0 ? reward.Gems + "-gem" : PK.Num(reward.Coins) + "-coin";
-                PK.N(note, p, $"Linked accounts get a {what} thank-you.", 15, GameTheme.C("#7dff6a"));
-            }
         }
 
         private void HomeRate(Ctx c)

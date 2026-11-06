@@ -27,7 +27,7 @@ namespace Farmverse.Editor
     public static class FarmversePackages
     {
         /// <summary>
-        /// The four the documents effectively require.
+        /// The three the documents effectively require.
         ///
         /// Addressables: Resources is compiled into the build and cannot be
         ///   updated without a store release, which contradicts a game whose
@@ -36,15 +36,12 @@ namespace Farmverse.Editor
         ///   one, and retrofitting that after 81 screens exist is far dearer.
         /// Test framework: the headless checks should also run as Unity tests, and
         ///   only Unity tests can see a screen's real layout.
-        /// Mobile notifications: a local "crops are ready" notification is the
-        ///   client's job, and it is how an offline player is told nothing was lost.
         /// </summary>
         public static readonly string[] Required =
         {
             "com.unity.addressables",
             "com.unity.localization",
             "com.unity.test-framework",
-            "com.unity.mobile.notifications",
         };
 
         private static Queue<string> _queue = new Queue<string>();

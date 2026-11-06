@@ -6,9 +6,7 @@
         "Farmverse.Core",
         "Farmverse.Application",
         "Unity.InputSystem",
-        "UnityEngine.UI",
-        "Unity.Purchasing",
-        "Unity.Notifications.Unified"
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

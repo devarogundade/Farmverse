@@ -42,21 +42,15 @@ namespace Farmverse.Contracts
 
         public List<RankPrize> LeaderboardPrizes { get; set; } = new List<RankPrize>();
 
-        public Dictionary<string, AdPlacement> Ads { get; set; } = new Dictionary<string, AdPlacement>();
-
         public StarterPack StarterPack { get; set; } = new StarterPack();
-
-        public Bundle LinkReward { get; set; } = new Bundle();
 
         public ReferralRules Referral { get; set; } = new ReferralRules();
 
         public ProfileRules Profile { get; set; } = new ProfileRules();
 
-        public Dictionary<string, IapProduct> Iap { get; set; } = new Dictionary<string, IapProduct>();
-
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(22);
+            var map = new Dictionary<string, object>(19);
             map["version"] = Version;
             map["publishedAt"] = PublishedAt;
             map["startingGems"] = StartingGems;
@@ -73,12 +67,9 @@ namespace Farmverse.Contracts
             map["couponTypes"] = Wire.MapToWire(CouponTypes, item => (object)item.ToWire());
             map["couponTasks"] = Wire.MapToWire(CouponTasks, item => (object)item.ToWire());
             map["leaderboardPrizes"] = Wire.ListToWire(LeaderboardPrizes, item => (object)item.ToWire());
-            map["ads"] = Wire.MapToWire(Ads, item => (object)item.ToWire());
             map["starterPack"] = StarterPack.ToWire();
-            map["linkReward"] = LinkReward.ToWire();
             map["referral"] = Referral.ToWire();
             map["profile"] = Profile.ToWire();
-            map["iap"] = Wire.MapToWire(Iap, item => (object)item.ToWire());
             return map;
         }
 
@@ -103,12 +94,9 @@ namespace Farmverse.Contracts
                 CouponTypes = Wire.Required(map, "couponTypes", "CatalogueDoc.couponTypes", (v, path) => Wire.AsDictionary(v, path, (v, path) => CouponType.FromWire(v))),
                 CouponTasks = Wire.Required(map, "couponTasks", "CatalogueDoc.couponTasks", (v, path) => Wire.AsDictionary(v, path, (v, path) => CouponTask.FromWire(v))),
                 LeaderboardPrizes = Wire.Required(map, "leaderboardPrizes", "CatalogueDoc.leaderboardPrizes", (v, path) => Wire.AsList(v, path, (v, path) => RankPrize.FromWire(v))),
-                Ads = Wire.Required(map, "ads", "CatalogueDoc.ads", (v, path) => Wire.AsDictionary(v, path, (v, path) => AdPlacement.FromWire(v))),
                 StarterPack = Wire.Required(map, "starterPack", "CatalogueDoc.starterPack", (v, path) => StarterPack.FromWire(v)),
-                LinkReward = Wire.Required(map, "linkReward", "CatalogueDoc.linkReward", (v, path) => Bundle.FromWire(v)),
                 Referral = Wire.Required(map, "referral", "CatalogueDoc.referral", (v, path) => ReferralRules.FromWire(v)),
                 Profile = Wire.Required(map, "profile", "CatalogueDoc.profile", (v, path) => ProfileRules.FromWire(v)),
-                Iap = Wire.Required(map, "iap", "CatalogueDoc.iap", (v, path) => Wire.AsDictionary(v, path, (v, path) => IapProduct.FromWire(v))),
             };
         }
     }

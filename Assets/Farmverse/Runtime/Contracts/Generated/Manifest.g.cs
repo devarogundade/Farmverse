@@ -43,9 +43,6 @@ namespace Farmverse.Contracts
         public static readonly CallableSpec<VisitsGetRequest, VisitsGetResponse> VisitsGet = new CallableSpec<VisitsGetRequest, VisitsGetResponse>("visits-get", VisitsGetResponse.FromWire);
         public static readonly CallableSpec<VisitsLikeRequest, VisitsLikeResponse> VisitsLike = new CallableSpec<VisitsLikeRequest, VisitsLikeResponse>("visits-like", VisitsLikeResponse.FromWire);
         public static readonly CallableSpec<InboxDeleteRequest, InboxDeleteResponse> InboxDelete = new CallableSpec<InboxDeleteRequest, InboxDeleteResponse>("inbox-delete", InboxDeleteResponse.FromWire);
-        public static readonly CallableSpec<AdsClaimRequest, AdsClaimResponse> AdsClaim = new CallableSpec<AdsClaimRequest, AdsClaimResponse>("ads-claim", AdsClaimResponse.FromWire);
-        public static readonly CallableSpec<PlayerClaimLinkRewardRequest, PlayerClaimLinkRewardResponse> PlayerClaimLinkReward = new CallableSpec<PlayerClaimLinkRewardRequest, PlayerClaimLinkRewardResponse>("player-claimLinkReward", PlayerClaimLinkRewardResponse.FromWire);
-        public static readonly CallableSpec<IapVerifyRequest, IapVerifyResponse> IapVerify = new CallableSpec<IapVerifyRequest, IapVerifyResponse>("iap-verify", IapVerifyResponse.FromWire);
         public static readonly CallableSpec<GoalsClaimAchievementRequest, GoalsClaimAchievementResponse> GoalsClaimAchievement = new CallableSpec<GoalsClaimAchievementRequest, GoalsClaimAchievementResponse>("goals-claimAchievement", GoalsClaimAchievementResponse.FromWire);
         public static readonly CallableSpec<SessionPingRequest, SessionPingResponse> SessionPing = new CallableSpec<SessionPingRequest, SessionPingResponse>("session-ping", SessionPingResponse.FromWire);
         public static readonly CallableSpec<RaidFinishRequest, RaidFinishResponse> RaidFinish = new CallableSpec<RaidFinishRequest, RaidFinishResponse>("raid-finish", RaidFinishResponse.FromWire);
@@ -96,12 +93,6 @@ namespace Farmverse.Contracts
                 [ErrorCode.CouponUnknown] = Array.Empty<string>(),
                 [ErrorCode.CouponUsed] = Array.Empty<string>(),
                 [ErrorCode.VisitsClosed] = Array.Empty<string>(),
-                [ErrorCode.AdLimit] = Array.Empty<string>(),
-                [ErrorCode.AdNotVerified] = Array.Empty<string>(),
-                [ErrorCode.LinkRequired] = Array.Empty<string>(),
-                [ErrorCode.AlreadyClaimed] = Array.Empty<string>(),
-                [ErrorCode.IapInvalid] = Array.Empty<string>(),
-                [ErrorCode.IapUnknown] = Array.Empty<string>(),
             };
 
         public static IReadOnlyList<string> ParamsOf(ErrorCode code) =>

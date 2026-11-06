@@ -177,10 +177,6 @@
    "v": "A press this many rims from the centre still grabs the stick (a little forgiving for thumbs)."
   },
   {
-   "k": "A purchase is already on its way",
-   "v": "購入処理中です"
-  },
-  {
    "k": "A raider knocked you down — {0} goods spilled!",
    "v": "襲撃者に倒された — {0}個の品物を落とした！"
   },
@@ -477,10 +473,6 @@
    "v": "大きな宝箱"
   },
   {
-   "k": "Big updates and events on Farmverse",
-   "v": "Farmverseの大型アップデートやイベント"
-  },
-  {
    "k": "Bigger Basket",
    "v": "大きなかご"
   },
@@ -507,10 +499,6 @@
   {
    "k": "Bought",
    "v": "購入済み"
-  },
-  {
-   "k": "Bought before on this Apple ID",
-   "v": "このApple IDで購入済み"
   },
   {
    "k": "Bread",
@@ -913,10 +901,6 @@
    "v": "公民館"
   },
   {
-   "k": "Connect to the internet to buy",
-   "v": "購入するにはインターネットに接続してね"
-  },
-  {
    "k": "Connect to the internet to buy with gems",
    "v": "ジェムで購入するにはインターネットに接続してね"
   },
@@ -945,10 +929,6 @@
    "v": "宝箱を開けるにはインターネットに接続してね"
   },
   {
-   "k": "Connect to the internet to save your farm.",
-   "v": "農場をセーブするにはインターネットに接続してね。"
-  },
-  {
    "k": "Connect to the internet to spin",
    "v": "回すにはインターネットに接続してね"
   },
@@ -959,10 +939,6 @@
   {
    "k": "Connect to the internet to visit farms",
    "v": "農場を訪ねるにはインターネットに接続してね"
-  },
-  {
-   "k": "Connect to the internet to watch ads",
-   "v": "広告を見るにはインターネットに接続してね"
   },
   {
    "k": "Connecting to the farm network…<br>Friends appear once you're online.",
@@ -1005,20 +981,12 @@
    "v": "購入できませんでした — 接続を確認してもう一度試してね"
   },
   {
-   "k": "Couldn't change it — check your connection",
-   "v": "変更できませんでした — 接続を確認してね"
-  },
-  {
    "k": "Couldn't change your name — check your connection",
    "v": "名前を変更できませんでした — 接続を確認してね"
   },
   {
    "k": "Couldn't collect it — check your connection and try again",
    "v": "受け取れませんでした — 接続を確認してもう一度試してね"
-  },
-  {
-   "k": "Couldn't collect the reward — check your connection",
-   "v": "報酬を受け取れませんでした — 接続を確認してね"
   },
   {
    "k": "Couldn't delete the account — check your connection and try again",
@@ -1033,10 +1001,6 @@
    "v": "コードを取得できませんでした — 接続を確認してもう一度試してね"
   },
   {
-   "k": "Couldn't link the account — check your connection and try again",
-   "v": "アカウントを連携できませんでした — 接続を確認してもう一度試してね"
-  },
-  {
    "k": "Couldn't open it — check your connection and try again",
    "v": "開けませんでした — 接続を確認してもう一度試してね"
   },
@@ -1045,20 +1009,8 @@
    "v": "その農場に行けませんでした — 接続を確認してね"
   },
   {
-   "k": "Couldn't restore purchases — try again",
-   "v": "購入を復元できませんでした — もう一度試してね"
-  },
-  {
-   "k": "Couldn't save it — check your connection",
-   "v": "保存できませんでした。接続を確認してください"
-  },
-  {
    "k": "Couldn't send the like — check your connection",
    "v": "いいねを送れませんでした — 接続を確認してね"
-  },
-  {
-   "k": "Couldn't sign in — try again",
-   "v": "サインインできませんでした — もう一度試してね"
   },
   {
    "k": "Couldn't spin — check your connection and try again",
@@ -1139,10 +1091,6 @@
   {
    "k": "Daily Bonus",
    "v": "デイリーボーナス"
-  },
-  {
-   "k": "Daily gifts, free coins and welcome-back gifts",
-   "v": "デイリーギフト、無料コイン、おかえりギフト"
   },
   {
    "k": "Daily tasks",
@@ -1413,14 +1361,6 @@
    "v": "ファームパス — ありがとう！"
   },
   {
-   "k": "Farm found",
-   "v": "農場が見つかりました"
-  },
-  {
-   "k": "Farm saved!",
-   "v": "農場をセーブしました！"
-  },
-  {
    "k": "Farm saved! +{0} gems",
    "v": "農場をセーブしました！+{0}ジェム"
   },
@@ -1665,16 +1605,8 @@
    "v": "噴水"
   },
   {
-   "k": "Free Coins",
-   "v": "無料コイン"
-  },
-  {
    "k": "Free Gift",
    "v": "無料ギフト"
-  },
-  {
-   "k": "Free gift ready",
-   "v": "無料ギフトの準備完了"
   },
   {
    "k": "Freight Train",
@@ -1683,10 +1615,6 @@
   {
    "k": "French",
    "v": "フランス語"
-  },
-  {
-   "k": "Fresh goods are waiting to be collected and sold.",
-   "v": "できたての品物が回収と販売を待っています。"
   },
   {
    "k": "Friend's code",
@@ -1721,16 +1649,8 @@
    "v": "羊からとれたもの。"
   },
   {
-   "k": "Full storage, likes, crops and workshops done",
-   "v": "倉庫満杯、いいね、作物や工房の完了"
-  },
-  {
    "k": "Full train: one more crate of materials!",
    "v": "満載ボーナス：資材の木箱がもう1つ！"
-  },
-  {
-   "k": "GEM PACK",
-   "v": "ジェムパック"
   },
   {
    "k": "GEMS",
@@ -1819,10 +1739,6 @@
   {
    "k": "Goods Sold",
    "v": "売った品物"
-  },
-  {
-   "k": "Google and Apple sign-in work in the phone builds.",
-   "v": "GoogleとAppleのサインインはスマホ版で使えます。"
   },
   {
    "k": "Grain silos",
@@ -2289,10 +2205,6 @@
    "v": "積み込み済み"
   },
   {
-   "k": "Loading ad…",
-   "v": "広告を読み込み中…"
-  },
-  {
    "k": "Loading...",
    "v": "読み込み中..."
   },
@@ -2625,14 +2537,6 @@
    "v": "純資産"
   },
   {
-   "k": "Never miss a raid",
-   "v": "襲撃を見逃さない"
-  },
-  {
-   "k": "Never while you're playing, never at night, a few a day at most.",
-   "v": "プレイ中や夜には送らず、多くても1日数回です。"
-  },
-  {
    "k": "New crop: {x}",
    "v": "新しい作物：{x}"
   },
@@ -2701,10 +2605,6 @@
    "v": "夜勤 · {0}ジェム"
   },
   {
-   "k": "Night Shift: watch an ad",
-   "v": "夜勤：広告を見る"
-  },
-  {
    "k": "No ",
    "v": "なし："
   },
@@ -2715,10 +2615,6 @@
   {
    "k": "No Ads — thank you!",
    "v": "広告なし — ありがとう！"
-  },
-  {
-   "k": "No ad right now — try again in a moment",
-   "v": "今は広告がありません — 少ししてからもう一度試してね"
   },
   {
    "k": "No boosts yet: get them in the Shop.",
@@ -2857,14 +2753,6 @@
    "v": "通知"
   },
   {
-   "k": "Notifications are off for Farmverse in your phone's settings",
-   "v": "スマホの設定でFarmverseの通知がオフになっています"
-  },
-  {
-   "k": "Notifications on: we'll warn you before raids",
-   "v": "通知オン：襲撃の前にお知らせします"
-  },
-  {
    "k": "OFFERS",
    "v": "オファー"
   },
@@ -2923,10 +2811,6 @@
   {
    "k": "Onion",
    "v": "タマネギ"
-  },
-  {
-   "k": "Only a few a day, never at night. Change it any time in Settings.",
-   "v": "1日に数回だけ、夜は送りません。設定でいつでも変更できます。"
   },
   {
    "k": "Open redeem page",
@@ -3011,10 +2895,6 @@
   {
    "k": "Paste your code and tap <b>Redeem</b>.",
    "v": "コードを貼り付けて<b>引き換え</b>をタップ。"
-  },
-  {
-   "k": "Payment pending — your items arrive once it goes through",
-   "v": "支払い処理中 — 完了するとアイテムが届きます"
   },
   {
    "k": "Pays {0}% more for bread, flour, cheese, eggs and milk",
@@ -3129,12 +3009,8 @@
    "v": "全ティアにプレミアム報酬！"
   },
   {
-   "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts.",
-   "v": "<color=#ffd23a>すべて受け取る</color>を押すと、広告ギフト以外の報酬をすべて受け取れます。"
-  },
-  {
-   "k": "Price from the store · rewards already earned this season unlock at once.",
-   "v": "ストア価格 · 今シーズンすでに獲得した報酬はすぐに解放されます。"
+   "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward.",
+   "v": "<color=#ffd23a>すべて受け取る</color>を押すと、報酬をすべて受け取れます。"
   },
   {
    "k": "Privacy",
@@ -3149,16 +3025,8 @@
    "v": "カボチャ"
   },
   {
-   "k": "Purchases restored",
-   "v": "購入を復元しました"
-  },
-  {
    "k": "Purple",
    "v": "Purple"
-  },
-  {
-   "k": "Push Alarm",
-   "v": "プッシュ通知"
   },
   {
    "k": "Quiet as a mouse round here.",
@@ -3187,10 +3055,6 @@
   {
    "k": "Raid Shield",
    "v": "襲撃シールド"
-  },
-  {
-   "k": "Raid Shield ends soon",
-   "v": "襲撃シールドまもなく終了"
   },
   {
    "k": "Raid driven off!",
@@ -3369,10 +3233,6 @@
    "v": "食料を補充"
   },
   {
-   "k": "Restore purchases",
-   "v": "購入を復元"
-  },
-  {
    "k": "Retry",
    "v": "再試行"
   },
@@ -3481,16 +3341,8 @@
    "v": "セーブ"
   },
   {
-   "k": "Save Farm",
-   "v": "農場をセーブ"
-  },
-  {
    "k": "Save your farm",
    "v": "農場をセーブ"
-  },
-  {
-   "k": "Save your farm with Google or Apple to get coupons",
-   "v": "GoogleかAppleで農場をセーブしてクーポンをもらおう"
   },
   {
    "k": "Sawn from wood.",
@@ -3625,10 +3477,6 @@
    "v": "ショップ"
   },
   {
-   "k": "Shop deals about to end",
-   "v": "まもなく終わるショップのセール"
-  },
-  {
    "k": "Short screen side, in pixels, from which a screen counts as large.",
    "v": "Short screen side, in pixels, from which a screen counts as large."
   },
@@ -3647,10 +3495,6 @@
   {
    "k": "Site ring",
    "v": "Site ring"
-  },
-  {
-   "k": "Skip the ads for good?",
-   "v": "広告をずっとスキップする？"
   },
   {
    "k": "Smelted from ore. Needed to upgrade machines.",
@@ -3937,16 +3781,8 @@
    "v": "その名前は使われています — 別の名前を試してね"
   },
   {
-   "k": "That's all the ads for today — come back tomorrow",
-   "v": "今日の広告はここまで — また明日来てね"
-  },
-  {
    "k": "That's all {0} spins for today.\nCome back tomorrow!",
    "v": "今日の{0}回分はすべて回しました。\nまた明日来てね！"
-  },
-  {
-   "k": "The ad is still being checked — try again in a minute",
-   "v": "広告を確認中です — 1分ほどしてからもう一度試してね"
   },
   {
    "k": "The background music clip (Content/Audio/Music), looped under everything.",
@@ -4003,10 +3839,6 @@
   {
    "k": "The farmhouse is nearly full. Sell at the market or upgrade it.",
    "v": "農家がいっぱいになりそう。市場で売るか、アップグレードしよう。"
-  },
-  {
-   "k": "The fields are ripe. Harvest them before they spoil!",
-   "v": "畑が実りました。傷む前に収穫しよう！"
   },
   {
    "k": "The freight train starts stopping at your station at island level {0}.",
@@ -4137,16 +3969,8 @@
    "v": "石砕き機はレベル{0}で開放"
   },
   {
-   "k": "The store didn't confirm this purchase",
-   "v": "ストアがこの購入を確認できませんでした"
-  },
-  {
    "k": "The store has no food at all! Bring in a harvest, or eggs from the coop.",
    "v": "倉庫に食料がまったくない！収穫物か鶏小屋の卵を運び込もう。"
-  },
-  {
-   "k": "The store isn't ready yet — try again in a moment",
-   "v": "ストアの準備ができていません — 少ししてからもう一度試してね"
   },
   {
    "k": "The stores are empty: bring your harvest in.",
@@ -4521,14 +4345,6 @@
    "v": "1回ごとに短い広告を見てね。\n1日{0}回、深夜0時（UTC）にリセット。"
   },
   {
-   "k": "Watch the ad to the end to get the reward",
-   "v": "報酬をもらうには広告を最後まで見てね"
-  },
-  {
-   "k": "Watch the ad to the end to spin",
-   "v": "回すには広告を最後まで見てね"
-  },
-  {
    "k": "We'll see them off.",
    "v": "追い払ってやるさ。"
   },
@@ -4809,10 +4625,6 @@
    "v": "もう友だちです。"
   },
   {
-   "k": "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons.",
-   "v": "<b>ゲスト</b>としてプレイ中です。アカウントを連携すると、機種変更しても<br>農場を引き継げて、クーポンも受け取れます。"
-  },
-  {
    "k": "Your Night Shift is already booked for your next absence",
    "v": "次の留守の夜勤はもう予約済みです"
   },
@@ -4821,16 +4633,8 @@
    "v": "あなたのクーポン"
   },
   {
-   "k": "Your crops are ready",
-   "v": "作物が実りました"
-  },
-  {
-   "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.<br>Purchases can't be refunded.",
-   "v": "農場・ジェム・友だち・進行状況が<b>完全に削除</b>されます。<br>購入の返金はできません。"
-  },
-  {
-   "k": "Your free coins are waiting in the shop.",
-   "v": "ショップで無料コインが待っています。"
+   "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.",
+   "v": "農場・ジェム・友だち・進行状況が<b>完全に削除</b>されます。"
   },
   {
    "k": "Your friends",
@@ -4847,14 +4651,6 @@
   {
    "k": "Your next absence: workers keep going for {0} hours at the normal food price.",
    "v": "次の留守：作業員が通常の食料で{0}時間働き続けます。"
-  },
-  {
-   "k": "Your purchase will arrive as soon as you're back online",
-   "v": "オンラインに戻りしだい購入品が届きます"
-  },
-  {
-   "k": "Your reward is on its way — try again in a minute",
-   "v": "報酬は送信中です — 1分ほどしてからもう一度試してね"
   },
   {
    "k": "Your shield ends in {n} minutes. Raiders are watching!",
@@ -4875,14 +4671,6 @@
   {
    "k": "Your workers will run out of food in about {0} min — stock their house before you go",
    "v": "作業員の食料は約{0}分でなくなります。出かける前に家に食料を入れよう"
-  },
-  {
-   "k": "Your workshops are done",
-   "v": "工房の生産が完了"
-  },
-  {
-   "k": "Yours already!",
-   "v": "もう持っています！"
   },
   {
    "k": "a building",
@@ -6035,10 +5823,6 @@
   {
    "k": "Truck",
    "v": "トラック"
-  },
-  {
-   "k": "Warnings before the zombies come, and how the night went",
-   "v": "ゾンビ襲来前の警告と夜の結果"
   },
   {
    "k": "Warriors who fight the zombies",

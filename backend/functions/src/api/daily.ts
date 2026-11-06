@@ -1,7 +1,7 @@
 import { CALLABLES } from '@farmverse/contracts';
 import { claimLogin, spinWheel } from '../game/daily';
 import { env } from './env';
-import { defineCallable, IN_EMULATOR } from './runtime';
+import { defineCallable } from './runtime';
 
 /** `daily-claimLogin`: today's login reward. */
 export const claimLoginFn = defineCallable(
@@ -9,8 +9,8 @@ export const claimLoginFn = defineCallable(
   { replayProtected: true },
 );
 
-/** `wheel-spin`: one spin per watched rewarded ad (verified by AdMob's callback, except in the emulator). */
+/** `wheel-spin`: one Lucky Wheel spin (spinsPerDay a UTC day). */
 export const spin = defineCallable(
-  { spec: CALLABLES.wheelSpin, auth: 'required', handler: async ({ uid, data, log }) => spinWheel(await env(log), uid, data.key, !IN_EMULATOR) },
+  { spec: CALLABLES.wheelSpin, auth: 'required', handler: async ({ uid, data, log }) => spinWheel(await env(log), uid, data.key) },
   { replayProtected: true },
 );

@@ -6,9 +6,8 @@ using UnityEngine;
 namespace Farmverse.Editor
 {
     /// <summary>
-    /// The app id every platform must build with: it has to match the package name in
-    /// google-services.json and the bundle id in GoogleService-Info.plist, or Firebase
-    /// refuses to start on the device. Applied automatically while the project still
+    /// The app id the web and desktop builds use: it has to match the app in the
+    /// Firebase config files, or Firebase refuses to start. Applied automatically while the project still
     /// carries Unity's template ids; the menu item applies it on demand.
     /// </summary>
     [InitializeOnLoad]
@@ -16,7 +15,7 @@ namespace Farmverse.Editor
     {
         public const string AppId = "world.farmverse.mobile";
 
-        private static readonly NamedBuildTarget[] Targets = { NamedBuildTarget.Android, NamedBuildTarget.iOS, NamedBuildTarget.Standalone };
+        private static readonly NamedBuildTarget[] Targets = { NamedBuildTarget.WebGL, NamedBuildTarget.Standalone };
 
         static FarmverseAppIdentity() => EditorApplication.delayCall += () =>
         {
@@ -29,7 +28,7 @@ namespace Farmverse.Editor
         {
             foreach (var target in Targets) PlayerSettings.SetApplicationIdentifier(target, AppId);
             AssetDatabase.SaveAssets();
-            Debug.Log("Farmverse: application id set to " + AppId + " for Android, iOS and desktop (matches the Firebase config files).");
+            Debug.Log("Farmverse: application id set to " + AppId + " for the web and desktop builds (matches the Firebase config files).");
         }
     }
 }

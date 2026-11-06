@@ -43,10 +43,6 @@ namespace Farmverse.Tests.Application
             _user.Value = new AuthUser(ClientRig.Uid, true);
             return Task.FromResult(Result<AuthUser>.Ok(_user.Value));
         }
-        public Task<Result<AuthUser>> Link(LinkProvider provider, CancellationToken cancellation) => Task.FromResult(Result<AuthUser>.Ok(_user.Value!));
-        public bool CanLink(LinkProvider provider) => false;
-        public Task<Result<AuthUser>> SignIn(LinkProvider provider, CancellationToken cancellation) => Task.FromResult(Result<AuthUser>.Ok(_user.Value!));
-        public System.Collections.Generic.IReadOnlyList<LinkProvider> Linked => System.Array.Empty<LinkProvider>();
         public Task SignOut() { _user.Value = null; return Task.CompletedTask; }
     }
 

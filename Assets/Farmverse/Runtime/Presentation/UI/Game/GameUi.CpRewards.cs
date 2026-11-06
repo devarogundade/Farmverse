@@ -46,12 +46,7 @@ namespace Farmverse.Presentation.UI.Game
         private bool _cpClaiming;
 
         /// <summary>Collect today's login reward (daily-claimLogin): the server pays it; coins land on the island.</summary>
-        private void CpDailyClaim() => CpDailyClaimAsync(false);
-
-        /// <summary>Collect it, then watch an ad for the same prize again (ads.daily_double).</summary>
-        private void CpDailyClaimDouble() => CpDailyClaimAsync(true);
-
-        private async void CpDailyClaimAsync(bool doubled)
+        private async void CpDailyClaim()
         {
             var shop = Wallet.Shop;
             if (_cpClaiming || shop == null) return;
@@ -72,21 +67,7 @@ namespace Farmverse.Presentation.UI.Game
             var got = result.Value;
             if (got.Fresh && got.Coins > 0) Economy?.AddCoins((int)got.Coins);
             var day = CpDays.Count >= got.Day ? CpDays[(int)got.Day - 1] : null;
-            if (!doubled)
-            {
-                Replace("reward", CpPrize.Reward(got.Coins, got.Gems, got.Boosts, day?.Art, day?.Label));
-                return;
-            }
-            WatchAd("daily_double",
-                more =>
-                {
-                    var boosts = new System.Collections.Generic.Dictionary<string, long>(got.Boosts);
-                    foreach (var kv in more.Boosts) boosts[kv.Key] = (boosts.TryGetValue(kv.Key, out var n) ? n : 0) + kv.Value;
-                    var r = CpPrize.Reward(got.Coins + more.Coins, got.Gems + more.Gems, boosts, day?.Art, day?.Label);
-                    r.Title = "REWARDS ×2";
-                    Replace("reward", r);
-                },
-                () => Replace("reward", CpPrize.Reward(got.Coins, got.Gems, got.Boosts, day?.Art, day?.Label)));
+            Replace("reward", CpPrize.Reward(got.Coins, got.Gems, got.Boosts, day?.Art, day?.Label));
         }
 
         private void CpDaily(Ctx c)
@@ -183,13 +164,7 @@ namespace Farmverse.Presentation.UI.Game
             btns.style.justifyContent = Justify.Center;
             btns.style.marginTop = P(22);
             if (claimedToday) PK.Btn(btns, p, "gray", "Come back tomorrow", 360, 74, 26);
-            else
-            {
-                PK.Btn(btns, p, "green", "Claim", 240, 74, 30, CpDailyClaim);
-                var x2 = PK.Btn(btns, p, "yellow", null, 260, 74, 30, CpDailyClaimDouble);
-                PK.Img(x2, "Icon_ImageIcon_Ad_00_s", P(74) * .62f).style.marginRight = P(30) * .3f;
-                PK.T(x2, p, "Claim ×2", 30);
-            }
+            else PK.Btn(btns, p, "green", "Claim", 240, 74, 30, CpDailyClaim);
 
             var note = PK.N(pop, p, "Missing a day pauses your streak — it never resets.", 15, GameTheme.T("#9fd0ff"), TextAnchor.MiddleCenter);
             note.style.marginTop = P(10);
@@ -228,7 +203,7 @@ namespace Farmverse.Presentation.UI.Game
             CpWheelWon = null;
         }
 
-        /// <summary>Spins left today (state/daily): each one is paid by watching a rewarded ad.</summary>
+        /// <summary>Spins left today (state/daily): free, up to the catalogue's spinsPerDay.</summary>
         public static int CpSpinsLeft
         {
             get
@@ -240,15 +215,14 @@ namespace Farmverse.Presentation.UI.Game
         }
 
         /// <summary>
-        /// Spin: watch a rewarded ad, then wheel-spin under the ad's key (the server checks the ad, rolls the slice
-        /// and pays it); the wheel then turns to it. No free spins, no extra spins past the day's limit.
+        /// Spin: wheel-spin under a fresh key (the server rolls the slice, pays it and keeps the day's count);
+        /// the wheel then turns to it. No extra spins past the day's limit.
         /// </summary>
         private async void CpSpin()
         {
-            if (CpWheelStart >= 0 || _cpSpinning || _adBusy) return;
+            if (CpWheelStart >= 0 || _cpSpinning) return;
             var shop = Wallet.Shop;
-            var ads = Ads;
-            if (shop == null || !shop.Online || ads == null || !ads.Online)
+            if (shop == null || !shop.Online)
             {
                 Say("Connect to the internet to spin");
                 return;
@@ -259,19 +233,14 @@ namespace Farmverse.Presentation.UI.Game
                 return;
             }
             _cpSpinning = true;
-            _adBusy = true;
             MarkDirty();
-            var result = await ads.WatchThen(key => shop.Spin(key));
+            var result = await shop.Spin(Guid.NewGuid().ToString("N"));
             _cpSpinning = false;
-            _adBusy = false;
             if (result.IsFailure)
             {
                 Say(result.Error.Code switch
                 {
-                    ErrorCode.Cancelled => "Watch the ad to the end to spin",
-                    ErrorCode.Unsupported => "No ad right now — try again in a moment",
                     ErrorCode.WheelNoSpins => "No spins left today — come back tomorrow",
-                    ErrorCode.AdNotVerified => "The ad is still being checked — try again in a minute",
                     _ => "Couldn't spin — check your connection and try again",
                 });
                 MarkDirty();
@@ -369,12 +338,12 @@ namespace Farmverse.Presentation.UI.Game
             pill.style.height = P(70);
             PK.Pad(pill, P(18), 0, P(18), 0);
             PK.Gap(pill, P(10));
-            PK.Img(pill, "Icon_ImageIcon_Ad_00_s", P(46));
+            PK.Img(pill, "Icon_PictoIcon_Timer", P(46));
             var pc = PK.Col(pill, P(4));
             PK.T(pc, p, "Spins today", 18);
             PK.T(pc, p, $"{CpSpinsLeft} / {CpWheelSpinsADay}", 26);
             var n = PK.N(info, p, CpSpinsLeft > 0
-                ? $"Watch a short ad for each spin.\n{CpWheelSpinsADay} spins a day, reset at midnight (UTC)."
+                ? $"{CpWheelSpinsADay} free spins a day,\nreset at midnight (UTC)."
                 : $"That's all {CpWheelSpinsADay} spins for today.\nCome back tomorrow!", 15, GameTheme.T("#dff1ff"), TextAnchor.MiddleCenter, true);
             n.style.maxWidth = P(220);
         }

@@ -226,8 +226,6 @@ namespace Farmverse.Presentation.UI.Game
             if (fert > eco.FertUntil) eco.Fertilize(IslandEconomyHost.Clock, fert);   // crops already growing speed up too
             var rush = (Wallet.Shop?.ActiveUntil("rush") ?? 0) / 1000.0;
             if (rush > eco.RushUntil) eco.RushUntil = rush;
-            var builders = Purchases?.Unlocked.ExtraBuilders ?? 0;
-            if (builders > eco.ExtraBuilders) eco.ExtraBuilders = (int)builders;
         }
 
         // ------------------------------------------------------------------ shop timers

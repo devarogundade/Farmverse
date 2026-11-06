@@ -137,10 +137,11 @@ namespace Farmverse.Presentation.UI.Game
             }
             else
             {
-                var act = PK.Btn(top, p, "green", null, 250, 72, 30, () => Open("passbuy"));
-                var chest = PK.Img(act, "ShopItem_SpecialChest_Green", P(72) * 1.2f);
-                chest.style.marginLeft = -P(30) * .4f;
-                PK.T(act, p, "Activate", 30);
+                // the premium track is locked: it becomes an NFT pass later (the popup only shows what it holds)
+                var act = PK.Btn(top, p, "gray", null, 250, 72, 30, () => Open("passbuy"));
+                var lockIcon = PK.Img(act, "Icon_ImageIcon_Lock01_s", P(44));
+                lockIcon.style.marginRight = P(8);
+                PK.T(act, p, "Premium", 30);
             }
 
             // the track: FARM PASS / FREE PASS labels, then the scrolling tier columns
@@ -335,10 +336,14 @@ namespace Farmverse.Presentation.UI.Game
                 l.style.flexShrink = 1;
             }
 
-            var passId = Wallet.Prices.Iap.Where(kv => kv.Value.Kind == IapKind.Pass).Select(kv => kv.Key).FirstOrDefault();
             if (Wallet.Shop?.Pass is { PremiumActive: true }) PK.T(box, p, "Premium is yours this season!", 28);
-            else if (passId != null) PK.Btn(box, p, "green", ShopIapPrice(passId), 300, 80, 34, () => ShopIapBuy(passId));
-            var note = PK.N(box, p, "Price from the store · rewards already earned this season unlock at once.", 14, GameTheme.C("#e3d0ff"), TextAnchor.MiddleCenter, true);
+            else
+            {
+                var locked = PK.Row(box, P(10));
+                PK.Img(locked, "Icon_ImageIcon_Lock01_s", P(44));
+                PK.T(locked, p, "Locked · coming soon", 28);
+            }
+            var note = PK.N(box, p, "The premium track isn't on sale yet · free-track rewards keep unlocking as you play.", 14, GameTheme.C("#e3d0ff"), TextAnchor.MiddleCenter, true);
             note.style.alignSelf = Align.Stretch;
         }
     }

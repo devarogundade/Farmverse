@@ -19,22 +19,7 @@ namespace Farmverse.Bootstrap
         [SerializeField] private string emulatorHost = string.Empty;
         [SerializeField] private LogLevel minimumLog = LogLevel.Debug;
 
-        [Header("AdMob rewarded ads (Google's test units until the app is live)")]
-        [SerializeField] private string rewardedAdUnitAndroid = "ca-app-pub-3940256099942544/5224354917";
-        [SerializeField] private string rewardedAdUnitIos = "ca-app-pub-3940256099942544/1712485313";
-
         public LogLevel MinimumLog => minimumLog;
-
-        /// <summary>The rewarded ad unit for this platform (the editor uses Android's; its placeholder ads ignore it).</summary>
-        public string RewardedAdUnitId =>
-#if UNITY_IOS
-            rewardedAdUnitIos;
-#else
-            rewardedAdUnitAndroid;
-#endif
-
-        /// <summary>Google's sample ad units: never shipped in a live build.</summary>
-        public bool UsesTestAds => rewardedAdUnitAndroid.StartsWith("ca-app-pub-3940256099942544/") || rewardedAdUnitIos.StartsWith("ca-app-pub-3940256099942544/");
 
         public FirebaseEnvironment ToFirebase() => new FirebaseEnvironment
         {
@@ -70,8 +55,6 @@ namespace Farmverse.Bootstrap
         {
             if (environmentName == "prod" && (appCheck == AppCheckMode.Debug || !string.IsNullOrEmpty(emulatorHost)))
                 Debug.LogError("Environment.prod must use the platform App Check provider and no emulators (08 §3.1).", this);
-            if (environmentName == "prod" && UsesTestAds)
-                Debug.LogError("Environment.prod still uses Google's test ad units: set the real AdMob rewarded ad unit ids.", this);
         }
     }
 }

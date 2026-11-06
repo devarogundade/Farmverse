@@ -149,8 +149,6 @@ namespace Farmverse.Presentation.UI.Game
             grow.style.flexGrow = 1;
             WorkBoostButton(side, p, "nightshift", eco.NightShift ? "Night Shift on" : "Night Shift", "Next absence: normal food price, up to 24 h");
             WorkBoostButton(side, p, "lunch", "Lunch Basket", "+" + Mathf.RoundToInt((float)GameplayRules.LunchEnergy) + " food in every workers' house");
-            var ad = PK.Btn(side, p, "purple", "Night Shift: watch an ad", 330, 56, 18, () => WatchAd("night_shift", _ => ShopUseBoost("nightshift")));
-            ad.style.marginTop = p.P(8);
 
             // right: every building's switches
             var panel = PK.Panel(body, p);

@@ -154,7 +154,7 @@ namespace Farmverse.Domain.Gameplay
             NightShift = false;
         }
 
-        /// <summary>Buy a Night Shift for the next absence (the shop takes the gems or the ad first).</summary>
+        /// <summary>Buy a Night Shift for the next absence (the shop takes the gems first).</summary>
         public void StartNightShift() => NightShift = true;
 
         /// <summary>A Lunch Basket: every workers' house gets a full meal's energy.</summary>

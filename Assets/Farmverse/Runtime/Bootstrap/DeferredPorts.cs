@@ -73,16 +73,6 @@ namespace Farmverse.Bootstrap
         public Task<Result<AuthUser>> SignInAnonymously(CancellationToken cancellation) =>
             _target?.SignInAnonymously(cancellation) ?? Task.FromResult(Result<AuthUser>.Fail(NotReady.Error));
 
-        public Task<Result<AuthUser>> Link(LinkProvider provider, CancellationToken cancellation) =>
-            _target?.Link(provider, cancellation) ?? Task.FromResult(Result<AuthUser>.Fail(NotReady.Error));
-
-        public bool CanLink(LinkProvider provider) => _target?.CanLink(provider) ?? false;
-
-        public Task<Result<AuthUser>> SignIn(LinkProvider provider, CancellationToken cancellation) =>
-            _target?.SignIn(provider, cancellation) ?? Task.FromResult(Result<AuthUser>.Fail(NotReady.Error));
-
-        public System.Collections.Generic.IReadOnlyList<LinkProvider> Linked => _target?.Linked ?? System.Array.Empty<LinkProvider>();
-
         public Task SignOut() => _target?.SignOut() ?? Task.CompletedTask;
     }
 

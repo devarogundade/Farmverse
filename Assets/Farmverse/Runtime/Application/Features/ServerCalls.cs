@@ -53,14 +53,6 @@ namespace Farmverse.Application.Features
         public Task<Result<AccountDeleteResponse>> AccountDelete(CancellationToken cancellation = default) =>
             _client.Call(Callables.AccountDelete, new AccountDeleteRequest { Meta = _meta() }, cancellation);
 
-        /// <summary>The thank-you for linking Google or Apple (once per account).</summary>
-        public Task<Result<PlayerClaimLinkRewardResponse>> ClaimLinkReward(CancellationToken cancellation = default) =>
-            _client.Call(Callables.PlayerClaimLinkReward, new PlayerClaimLinkRewardRequest { Meta = _meta() }, cancellation);
-
-        /// <summary>Have the server check a store purchase and pay it (once per transaction).</summary>
-        public Task<Result<IapVerifyResponse>> IapVerify(IapStore store, string productId, string transactionId, string receipt, CancellationToken cancellation = default) =>
-            _client.Call(Callables.IapVerify, new IapVerifyRequest { Meta = _meta(), Store = store, ProductId = productId, TransactionId = transactionId, Receipt = receipt }, cancellation);
-
         /// <summary>The referral program: this (invited) player's island reached the referral level.</summary>
         public Task<Result<ReferralClaimResponse>> ReferralClaim(CancellationToken cancellation = default) =>
             _client.Call(Callables.ReferralClaim, new ReferralClaimRequest { Meta = _meta() }, cancellation);
@@ -97,9 +89,9 @@ namespace Farmverse.Application.Features
         public Task<Result<DailyClaimLoginResponse>> DailyClaimLogin(string key, CancellationToken cancellation = default) =>
             _client.Call(Callables.DailyClaimLogin, new DailyClaimLoginRequest { Meta = _meta(), Key = key }, cancellation);
 
-        /// <summary>Spin the Lucky Wheel (the server rolls it): <paramref name="adKey"/> is the rewarded ad watched for this spin.</summary>
-        public Task<Result<WheelSpinResponse>> WheelSpin(string adKey, CancellationToken cancellation = default) =>
-            _client.Call(Callables.WheelSpin, new WheelSpinRequest { Meta = _meta(), Key = adKey }, cancellation);
+        /// <summary>Spin the Lucky Wheel (the server rolls it); the same <paramref name="key"/> never spins twice.</summary>
+        public Task<Result<WheelSpinResponse>> WheelSpin(string key, CancellationToken cancellation = default) =>
+            _client.Call(Callables.WheelSpin, new WheelSpinRequest { Meta = _meta(), Key = key }, cancellation);
 
         /// <summary>Join this season's Farm Pass (idempotent).</summary>
         public Task<Result<PassJoinResponse>> PassJoin(CancellationToken cancellation = default) =>
@@ -131,10 +123,6 @@ namespace Farmverse.Application.Features
         /// <summary>Delete inbox messages (not ones with a reward still to collect).</summary>
         public Task<Result<InboxDeleteResponse>> InboxDelete(IReadOnlyList<string> ids, CancellationToken cancellation = default) =>
             _client.Call(Callables.InboxDelete, new InboxDeleteRequest { Meta = _meta(), Ids = new List<string>(ids) }, cancellation);
-
-        /// <summary>A watched rewarded ad's prize (the same key never pays twice).</summary>
-        public Task<Result<AdsClaimResponse>> AdsClaim(string placement, string key, CancellationToken cancellation = default) =>
-            _client.Call(Callables.AdsClaim, new AdsClaimRequest { Meta = _meta(), Placement = placement, Key = key }, cancellation);
 
         public Task<Result<FriendsAcceptResponse>> AcceptInvite(string code, CancellationToken cancellation = default) =>
             _client.Call(Callables.FriendsAccept, new FriendsAcceptRequest { Meta = _meta(), Code = code }, cancellation);

@@ -40,7 +40,7 @@ namespace Farmverse.Presentation.UI.Game
             public string frame = "b";     // y p b g5 p5
             public string? head, name, top, sub, art, qty, price, coin, timer, ribbon, locked;
             public int? gem;
-            public bool glow, render, ad, pop, crown, info, free, brk;
+            public bool glow, render, pop, crown, info, free, brk;
             public Texture2D? picture;
             public (string icon, string value)[]? chips;
             public Action? tap;
@@ -455,7 +455,7 @@ namespace Farmverse.Presentation.UI.Game
             }
 
             // price strip
-            if (it.price != null || it.gem != null || it.coin != null || it.ad || it.timer != null || it.free)
+            if (it.price != null || it.gem != null || it.coin != null || it.timer != null || it.free)
             {
                 var price = PK.Centre(PK.Row(inn));
                 price.style.height = U(cfg.ph);
@@ -463,7 +463,7 @@ namespace Farmverse.Presentation.UI.Game
                 price.style.marginLeft = -U(bw * .08f);
                 price.style.marginRight = -U(bw * .08f);
                 Kit.Round(price, 0, 0, U(cfg.r * .7f), U(cfg.r * .7f));
-                var green = it.ad || it.free;
+                var green = it.free;
                 if (green) PK.Grad(price, "shopfree", true, (0f, GameTheme.C("#58d600")), (1f, GameTheme.C("#3fae00")));
                 else
                 {
@@ -483,11 +483,6 @@ namespace Farmverse.Presentation.UI.Game
                 {
                     PK.Img(price, "ResourceBar_Icon_Gold", ph * .62f).style.marginRight = U(6);
                     PK.TL(price, p, it.coin, nfs * .95f, 5);
-                }
-                else if (it.ad)
-                {
-                    PK.Img(price, "Icon_ImageIcon_Ad_00_l", ph * .72f).style.marginRight = U(6);
-                    PK.TL(price, p, "FREE", nfs * .95f, 5);
                 }
                 else if (it.free) PK.TL(price, p, "FREE", nfs * .95f, 5);
                 else if (it.timer != null)
@@ -567,21 +562,8 @@ namespace Farmverse.Presentation.UI.Game
             var list = new List<ShopSection>();
             var now = IslandEconomyHost.Clock;
 
-            // offers: the starter pack while its window (state/shop, from the catalogue) is open
+            // offers: everything here is bought with gems (no real-money products on the web build)
             var offers = new ShopSection { id = "offers", tab = "OFFERS", icon = "Icon_Gift", title = "SPECIAL OFFERS" };
-            var starterLeft = (Wallet.Shop?.StarterEndsAt ?? 0) / 1000.0 - now;
-            var iap = Wallet.Prices.Iap;
-            IapProduct? Product(IapKind kind) => iap.Values.Where(x => x.Kind == kind).OrderBy(x => x.Order).FirstOrDefault();
-            string? IdOf(IapProduct? x) => x == null ? null : iap.First(kv => kv.Value == x).Key;
-            var starter = Product(IapKind.Starter);
-            if (starterLeft > 0 && starter != null)
-                offers.items.Add(new ShopItem
-                {
-                    kind = "hero", frame = "p5", head = "<size=76%>One time only!</size> <color=#ff5a6e>" + ShopSpan(starterLeft) + "</color>",
-                    name = starter.Title.ToUpperInvariant(), art = starter.Art, glow = true,
-                    chips = ShopBundleChips(starter.Contents),
-                    price = ShopIapPrice(IdOf(starter)!), ribbon = starter.Ribbon, tap = () => ShopIapBuy(IdOf(starter)!),
-                });
             // the daily deal: a catalogue offer, once a day (the server keeps count and says what was bought today)
             var deal = Wallet.Offer("deal_daily");
             var dealBought = (Wallet.Service?.BoughtOn("deal_daily", ShopUtcDay) ?? 0) >= (deal?.PerDay > 0 ? deal.PerDay : long.MaxValue);
@@ -597,52 +579,26 @@ namespace Farmverse.Presentation.UI.Game
                     tap = () => ShopBuy("deal_daily"),
                 });
             }
-            var pass = Product(IapKind.Pass);
-            if (pass != null && Wallet.Shop?.Pass is not { PremiumActive: true })
+            // the Farm Pass's premium track: shown, but locked (it becomes an NFT pass later; nothing to buy here)
+            if (Wallet.Shop?.Pass is not { PremiumActive: true })
             {
                 var perkGems = Wallet.Prices.Pass.Tiers.Sum(t => t.Premium.Gems);
                 offers.items.Add(new ShopItem
                 {
-                    kind = "hero", frame = "p5", head = "<size=76%>" + Wallet.Prices.Pass.Pitch + "</size>", name = pass.Title.ToUpperInvariant(), art = pass.Art, glow = true,
-                    chips = perkGems > 0 ? new[] { ("Icon_ImageIcon_Gem01_s", "+" + PK.Num(perkGems)) } : null, price = ShopIapPrice(IdOf(pass)!), ribbon = pass.Ribbon, tap = () => Open("passbuy"),
+                    kind = "hero", frame = "p5", head = "<size=76%>" + Wallet.Prices.Pass.Pitch + "</size>", name = "PREMIUM FARM PASS", art = "ShopItem_SpecialChest_Green", glow = true,
+                    chips = perkGems > 0 ? new[] { ("Icon_ImageIcon_Gem01_s", "+" + PK.Num(perkGems)) } : null, locked = "Coming soon",
                 });
             }
-            var noAds = Product(IapKind.Noads);
-            if (noAds != null && Purchases?.Unlocked.NoAds != true)
-                offers.items.Add(new ShopItem { frame = "b", name = noAds.Title, art = noAds.Art, sub = noAds.Subtitle, price = ShopIapPrice(IdOf(noAds)!), tap = () => Open("removeads") });
-            var builder = Product(IapKind.Builder);
-            if (builder != null && (Purchases?.Unlocked.ExtraBuilders ?? 0) < 3)
-                offers.items.Add(new ShopItem { frame = "b", name = builder.Title, art = builder.Art, sub = builder.Subtitle, price = ShopIapPrice(IdOf(builder)!), tap = () => ShopIapBuy(IdOf(builder)!) });
-            offers.dot = (starterLeft > 0 ? 1 : 0) + (deal != null && !dealBought ? 1 : 0);
+            offers.dot = deal != null && !dealBought ? 1 : 0;
             list.Add(offers);
 
-            // gems: real money, at the store's own localised prices
-            var gems = new ShopSection { id = "gems", tab = "GEMS", icon = "Icon_Gems", title = "GEM PACK" };
-            var packs = iap.Where(kv => kv.Value.Kind == IapKind.Gems).OrderBy(kv => kv.Value.Order).ToList();
-            for (var i = 0; i < packs.Count; i++)
-            {
-                var (id, pack) = (packs[i].Key, packs[i].Value);
-                var last = i == packs.Count - 1;
-                gems.items.Add(new ShopItem
-                {
-                    kind = last ? "tall" : "card", frame = "p", top = PK.Num(pack.Contents.Gems), art = pack.Art, price = ShopIapPrice(id),
-                    pop = i == packs.Count / 2, glow = last, ribbon = pack.Ribbon, tap = () => ShopIapBuy(id),
-                });
-            }
-#if UNITY_IOS
-            gems.items.Add(new ShopItem { frame = "b", name = "Restore purchases", art = "Icon_Gems", sub = "Bought before on this Apple ID", tap = ShopIapRestore });
-#endif
+            // gems: earned in play (no real-money gem packs on the web build)
+            var gems = new ShopSection { id = "gems", tab = "GEMS", icon = "Icon_Gems", title = "EARN GEMS" };
+            gems.items.Add(new ShopItem { frame = "b", name = "Earn gems", art = "Icon_Gems", sub = "Achievements, daily rewards, the Lucky Wheel and the Farm Pass" });
             list.Add(gems);
 
-            // coins: free ones, then packs bought with gems
+            // coins: the free gift, then packs bought with gems
             var coins = new ShopSection { id = "coins", tab = "COINS", icon = "Icon_Golds", title = "COIN PACK" };
-            // free coins for a rewarded ad (catalogue ads.free_coins; the server pays and keeps the daily limit)
-            var adCoins = AdPrizeText("free_coins");
-            coins.items.Add(new ShopItem
-            {
-                frame = "b", name = "Free Coins", art = "Icon_ImageIcon_Ad_00_l", sub = (_adBusy ? "Loading ad…" : adCoins + " · watch an ad"), ad = true,
-                tap = () => WatchAd("free_coins", got => Say("+" + PK.Num(got.Coins) + " coins")),
-            });
             // the free gift: the catalogue's coins every few hours, timed by the server (state/shop)
             var gift = Wallet.Prices.FreeGift;
             var giftAt = (Wallet.Shop?.NextGiftAt ?? 0) / 1000.0;
@@ -730,10 +686,6 @@ namespace Farmverse.Presentation.UI.Game
             return list;
         }
 
-        /// <summary>A store product's price: the store's localised one once loaded, else the catalogue's.</summary>
-        private string ShopIapPrice(string productId) =>
-            Purchases?.PriceOf(productId) ?? (Wallet.Prices.Iap.TryGetValue(productId, out var p) ? "US$ " + p.Usd.ToString("0.00", CultureInfo.InvariantCulture) : "");
-
         private bool _shopBuying;
 
         /// <summary>
@@ -818,17 +770,6 @@ namespace Farmverse.Presentation.UI.Game
                 Say("+" + PK.Num(result.Value.Coins) + " coins");
             }
             MarkDirty();
-        }
-
-        /// <summary>Chips for what a bundle holds (gems, coins, boosts).</summary>
-        private static (string, string)[] ShopBundleChips(Bundle b)
-        {
-            var chips = new List<(string, string)>();
-            if (b.Gems > 0) chips.Add(("Icon_ImageIcon_Gem01_s", "+" + PK.Num(b.Gems)));
-            if (b.Coins > 0) chips.Add(("Icon_ImageIcon_Glod01_s", "+" + PK.Num(b.Coins)));
-            foreach (var kv in b.Boosts)
-                chips.Add((ShopBoosts.FirstOrDefault(x => x.id == kv.Key).art ?? "Icon_Booster", "x" + kv.Value));
-            return chips.ToArray();
         }
 
         private void ShopNoGems()

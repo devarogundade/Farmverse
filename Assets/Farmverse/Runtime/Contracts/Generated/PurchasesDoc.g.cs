@@ -7,23 +7,17 @@ using System.Collections.Generic;
 
 namespace Farmverse.Contracts
 {
-    /// <summary>Lasting purchases.</summary>
+    /// <summary>Lasting unlocks.</summary>
     public sealed partial class PurchasesDoc : IWireObject
     {
-        public bool NoAds { get; set; }
-
         public int ExtraBuilders { get; set; }
-
-        public bool LinkRewarded { get; set; }
 
         public long UpdatedAt { get; set; }
 
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(4);
-            map["noAds"] = NoAds;
+            var map = new Dictionary<string, object>(2);
             map["extraBuilders"] = ExtraBuilders;
-            map["linkRewarded"] = LinkRewarded;
             map["updatedAt"] = UpdatedAt;
             return map;
         }
@@ -33,9 +27,7 @@ namespace Farmverse.Contracts
             var map = Wire.AsMap(value, "PurchasesDoc");
             return new PurchasesDoc
             {
-                NoAds = Wire.Required(map, "noAds", "PurchasesDoc.noAds", Wire.AsBool),
                 ExtraBuilders = Wire.Required(map, "extraBuilders", "PurchasesDoc.extraBuilders", Wire.AsInt),
-                LinkRewarded = Wire.Required(map, "linkRewarded", "PurchasesDoc.linkRewarded", Wire.AsBool),
                 UpdatedAt = Wire.Required(map, "updatedAt", "PurchasesDoc.updatedAt", Wire.AsLong),
             };
         }

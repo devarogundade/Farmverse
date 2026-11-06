@@ -10,7 +10,7 @@ using Firebase.Installations;
 namespace Farmverse.Infrastructure.Firebase
 {
     /// <summary>
-    /// The install's id for push registration: the Firebase Installations id
+    /// The install's id (no longer composed since push was removed; kept until the web move): the Firebase Installations id
     /// (stable across launches, reset on reinstall), or — if that service is
     /// unreachable — a random id kept in local storage, so registration still
     /// keys one device document per install.

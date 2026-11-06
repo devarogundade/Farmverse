@@ -107,6 +107,6 @@ service cloud.firestore {
       allow list: if signedIn() && page(20);
     }
 
-    // usernames/*, counters/*, invites/*, referrals/*, content/*, players/*/ledger/*, couponCodes/*, iapTransactions/*: server only (content reaches clients through content-manifest)
+    // usernames/*, counters/*, invites/*, referrals/*, content/*, players/*/ledger/*, couponCodes/*: server only (content reaches clients through content-manifest)
   }
 }

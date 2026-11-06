@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Farmverse.Application.Ports;
@@ -15,9 +14,8 @@ namespace Farmverse.Bootstrap
     /// <summary>
     /// The session's platform step: run the Firebase boot (App Check, dependency
     /// check, persistence, emulators), then build the Firebase adapters and bind
-    /// them behind the deferred ports and start the adapters that had to wait
-    /// (Crashlytics, push). Idempotent, so a retry after a failed boot simply runs
-    /// again.
+    /// them behind the deferred ports. Idempotent, so a retry after a failed boot
+    /// simply runs again.
     /// </summary>
     internal sealed class FirebaseComposition : IPlatformBootstrap
     {
@@ -28,13 +26,11 @@ namespace Farmverse.Bootstrap
         private readonly DeferredDocumentStore _documents;
         private readonly DeferredAuth _auth;
         private readonly DeferredRemoteConfig _remoteConfig;
-        private readonly Action _afterBoot;
         private bool _bound;
 
         public FirebaseComposition(FirebaseEnvironment environment, IMainThread main, ILog log,
-            DeferredDocumentStore documents, DeferredAuth auth, DeferredRemoteConfig remoteConfig, Action afterBoot)
+            DeferredDocumentStore documents, DeferredAuth auth, DeferredRemoteConfig remoteConfig)
         {
-            _afterBoot = afterBoot;
             _environment = environment;
             _platform = new FirebasePlatformBootstrap(environment, log);
             _main = main;
@@ -50,10 +46,9 @@ namespace Farmverse.Bootstrap
             if (result.IsFailure || _bound) return result;
             _documents.Bind(new FirestoreDocumentStore(FirebaseFirestore.DefaultInstance, _main, _log));
             _auth.Bind(new FirebaseAuthService(FirebaseAuth.DefaultInstance, _main, _log,
-                _environment.UsesEmulators ? LocalDevAccount.Load() : null, PlatformLinkFlows.Create()));
+                _environment.UsesEmulators ? LocalDevAccount.Load() : null));
             _remoteConfig.Bind(new RemoteConfigService(FirebaseRemoteConfig.DefaultInstance, _environment, _main, _log));
             _bound = true;
-            _afterBoot();
             return result;
         }
     }

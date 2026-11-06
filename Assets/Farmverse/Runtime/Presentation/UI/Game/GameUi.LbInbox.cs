@@ -30,7 +30,7 @@ namespace Farmverse.Presentation.UI.Game
             public string Line = "";
             public string? Expires;
             public (string icon, string label, int coins, int gems)[]? Rewards;
-            public string Action = "view";   // claim, ad, go, view
+            public string Action = "view";   // claim, go, view
             public string? GoTo;             // a screen id for Go
             public bool IsNew;
         }
@@ -278,7 +278,7 @@ namespace Farmverse.Presentation.UI.Game
                 bar.style.height = p.U(barH);
                 bar.style.flexShrink = 0;
                 PK.Pad(bar, p.U(2), 0, p.U(2), 0);
-                var info = LbN(bar, p, "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts.", infoFs, GameTheme.T("#7fd0ff"));
+                var info = LbN(bar, p, "Pressing <color=#ffd23a>Claim All</color> collects every reward.", infoFs, GameTheme.T("#7fd0ff"));
                 info.style.flexGrow = 1;
                 info.style.flexShrink = 1;
                 var del = LbBtn(bar, p, "gr", barH * .78f, barH * .86f, null, 0, LbDeleteRead);
@@ -387,15 +387,8 @@ namespace Farmverse.Presentation.UI.Game
             // the action
             VisualElement act;
             if (isDone) act = LbBtn(row, p, "gr", rh * .62f, aw, m.Action == "go" || m.Action == "view" ? "Read" : "Claimed", hfs, () => { });
-            else if (m.Action == "claim" || m.Action == "ad")
-            {
+            else if (m.Action == "claim")
                 act = LbBtn(row, p, "g", rh * .62f, aw, "Claim", hfs, () => LbAct(m));
-                if (m.Action == "ad")
-                {
-                    var ad = PK.Img(act, "Icon_ImageIcon_Ad_00_s", p.U(rh * .62f) * .58f);
-                    PK.Abs(ad, top: -p.U(12), right: -p.U(8));
-                }
-            }
             else act = LbBtn(row, p, "b", rh * .62f, aw, m.Action == "go" ? "Go" : "View", hfs, () => LbAct(m));
 
             act.style.marginRight = p.U(rh * .2f);

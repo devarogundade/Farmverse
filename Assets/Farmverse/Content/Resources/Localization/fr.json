@@ -177,10 +177,6 @@
    "v": "Un appui à ce nombre de rayons du centre attrape encore le stick (un peu de marge pour les pouces)."
   },
   {
-   "k": "A purchase is already on its way",
-   "v": "Un achat est déjà en route"
-  },
-  {
    "k": "A raider knocked you down — {0} goods spilled!",
    "v": "Un pillard t'a renversé : {0} marchandises perdues !"
   },
@@ -477,10 +473,6 @@
    "v": "Grand coffre"
   },
   {
-   "k": "Big updates and events on Farmverse",
-   "v": "Grandes mises à jour et événements de Farmverse"
-  },
-  {
    "k": "Bigger Basket",
    "v": "Panier plus grand"
   },
@@ -507,10 +499,6 @@
   {
    "k": "Bought",
    "v": "Acheté"
-  },
-  {
-   "k": "Bought before on this Apple ID",
-   "v": "Déjà acheté avec cet identifiant Apple"
   },
   {
    "k": "Bread",
@@ -913,10 +901,6 @@
    "v": "Salle des fêtes"
   },
   {
-   "k": "Connect to the internet to buy",
-   "v": "Connecte-toi à Internet pour acheter"
-  },
-  {
    "k": "Connect to the internet to buy with gems",
    "v": "Connecte-toi à Internet pour acheter avec des gemmes"
   },
@@ -945,10 +929,6 @@
    "v": "Connecte-toi à Internet pour ouvrir le coffre"
   },
   {
-   "k": "Connect to the internet to save your farm.",
-   "v": "Connecte-toi à Internet pour sauvegarder ta ferme."
-  },
-  {
    "k": "Connect to the internet to spin",
    "v": "Connecte-toi à Internet pour tourner la roue"
   },
@@ -959,10 +939,6 @@
   {
    "k": "Connect to the internet to visit farms",
    "v": "Connecte-toi à Internet pour visiter des fermes"
-  },
-  {
-   "k": "Connect to the internet to watch ads",
-   "v": "Connecte-toi à Internet pour regarder des pubs"
   },
   {
    "k": "Connecting to the farm network…<br>Friends appear once you're online.",
@@ -1005,20 +981,12 @@
    "v": "Achat impossible : vérifie ta connexion et réessaie"
   },
   {
-   "k": "Couldn't change it — check your connection",
-   "v": "Modification impossible : vérifie ta connexion"
-  },
-  {
    "k": "Couldn't change your name — check your connection",
    "v": "Impossible de changer ton nom : vérifie ta connexion"
   },
   {
    "k": "Couldn't collect it — check your connection and try again",
    "v": "Récupération impossible : vérifie ta connexion et réessaie"
-  },
-  {
-   "k": "Couldn't collect the reward — check your connection",
-   "v": "Impossible de récupérer la récompense : vérifie ta connexion"
   },
   {
    "k": "Couldn't delete the account — check your connection and try again",
@@ -1033,10 +1001,6 @@
    "v": "Impossible d'obtenir un code : vérifie ta connexion et réessaie"
   },
   {
-   "k": "Couldn't link the account — check your connection and try again",
-   "v": "Impossible de lier le compte : vérifie ta connexion et réessaie"
-  },
-  {
    "k": "Couldn't open it — check your connection and try again",
    "v": "Ouverture impossible : vérifie ta connexion et réessaie"
   },
@@ -1045,20 +1009,8 @@
    "v": "Impossible de joindre cette ferme : vérifie ta connexion"
   },
   {
-   "k": "Couldn't restore purchases — try again",
-   "v": "Impossible de restaurer les achats : réessaie"
-  },
-  {
-   "k": "Couldn't save it — check your connection",
-   "v": "Impossible d'enregistrer — vérifie ta connexion"
-  },
-  {
    "k": "Couldn't send the like — check your connection",
    "v": "Impossible d'envoyer le j'aime : vérifie ta connexion"
-  },
-  {
-   "k": "Couldn't sign in — try again",
-   "v": "Connexion impossible : réessaie"
   },
   {
    "k": "Couldn't spin — check your connection and try again",
@@ -1139,10 +1091,6 @@
   {
    "k": "Daily Bonus",
    "v": "Bonus quotidien"
-  },
-  {
-   "k": "Daily gifts, free coins and welcome-back gifts",
-   "v": "Cadeaux du jour, pièces gratuites et cadeaux de retour"
   },
   {
    "k": "Daily tasks",
@@ -1413,14 +1361,6 @@
    "v": "Pass Ferme — merci !"
   },
   {
-   "k": "Farm found",
-   "v": "Ferme trouvée"
-  },
-  {
-   "k": "Farm saved!",
-   "v": "Ferme sauvegardée !"
-  },
-  {
    "k": "Farm saved! +{0} gems",
    "v": "Ferme sauvegardée ! +{0} gemmes"
   },
@@ -1665,16 +1605,8 @@
    "v": "Fontaine"
   },
   {
-   "k": "Free Coins",
-   "v": "Pièces gratuites"
-  },
-  {
    "k": "Free Gift",
    "v": "Cadeau gratuit"
-  },
-  {
-   "k": "Free gift ready",
-   "v": "Cadeau gratuit prêt"
   },
   {
    "k": "Freight Train",
@@ -1683,10 +1615,6 @@
   {
    "k": "French",
    "v": "Français"
-  },
-  {
-   "k": "Fresh goods are waiting to be collected and sold.",
-   "v": "Des produits frais attendent d'être ramassés et vendus."
   },
   {
    "k": "Friend's code",
@@ -1721,16 +1649,8 @@
    "v": "Des moutons."
   },
   {
-   "k": "Full storage, likes, crops and workshops done",
-   "v": "Entrepôt plein, j'aime, récoltes et ateliers terminés"
-  },
-  {
    "k": "Full train: one more crate of materials!",
    "v": "Train plein : une caisse de matériaux en plus !"
-  },
-  {
-   "k": "GEM PACK",
-   "v": "PACK DE GEMMES"
   },
   {
    "k": "GEMS",
@@ -1819,10 +1739,6 @@
   {
    "k": "Goods Sold",
    "v": "Biens vendus"
-  },
-  {
-   "k": "Google and Apple sign-in work in the phone builds.",
-   "v": "La connexion Google et Apple marche dans les versions mobiles."
   },
   {
    "k": "Grain silos",
@@ -2289,10 +2205,6 @@
    "v": "Chargé"
   },
   {
-   "k": "Loading ad…",
-   "v": "Chargement pub…"
-  },
-  {
    "k": "Loading...",
    "v": "Chargement..."
   },
@@ -2625,14 +2537,6 @@
    "v": "Valeur nette"
   },
   {
-   "k": "Never miss a raid",
-   "v": "Ne rate aucun raid"
-  },
-  {
-   "k": "Never while you're playing, never at night, a few a day at most.",
-   "v": "Jamais pendant que tu joues, jamais la nuit, quelques-unes par jour au plus."
-  },
-  {
    "k": "New crop: {x}",
    "v": "Nouvelle culture : {x}"
   },
@@ -2701,10 +2605,6 @@
    "v": "Équipe de nuit · {0} gemmes"
   },
   {
-   "k": "Night Shift: watch an ad",
-   "v": "Équipe de nuit : regarder une pub"
-  },
-  {
    "k": "No ",
    "v": "Pas de "
   },
@@ -2715,10 +2615,6 @@
   {
    "k": "No Ads — thank you!",
    "v": "Sans pub — merci !"
-  },
-  {
-   "k": "No ad right now — try again in a moment",
-   "v": "Pas de pub pour l'instant : réessaie dans un moment"
   },
   {
    "k": "No boosts yet: get them in the Shop.",
@@ -2857,14 +2753,6 @@
    "v": "Notifications"
   },
   {
-   "k": "Notifications are off for Farmverse in your phone's settings",
-   "v": "Les notifications de Farmverse sont désactivées dans les réglages du téléphone"
-  },
-  {
-   "k": "Notifications on: we'll warn you before raids",
-   "v": "Notifications activées : on te prévient avant les raids"
-  },
-  {
    "k": "OFFERS",
    "v": "OFFRES"
   },
@@ -2923,10 +2811,6 @@
   {
    "k": "Onion",
    "v": "Oignon"
-  },
-  {
-   "k": "Only a few a day, never at night. Change it any time in Settings.",
-   "v": "Quelques-unes par jour, jamais la nuit. Modifiable à tout moment dans les Réglages."
   },
   {
    "k": "Open redeem page",
@@ -3011,10 +2895,6 @@
   {
    "k": "Paste your code and tap <b>Redeem</b>.",
    "v": "Colle ton code et touche <b>Échanger</b>."
-  },
-  {
-   "k": "Payment pending — your items arrive once it goes through",
-   "v": "Paiement en attente : tes objets arrivent dès qu'il est validé"
   },
   {
    "k": "Pays {0}% more for bread, flour, cheese, eggs and milk",
@@ -3129,12 +3009,8 @@
    "v": "Récompenses premium à chaque palier !"
   },
   {
-   "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward except ad gifts.",
-   "v": "Toucher <color=#ffd23a>Tout récupérer</color> récupère tout sauf les cadeaux pub."
-  },
-  {
-   "k": "Price from the store · rewards already earned this season unlock at once.",
-   "v": "Prix du store · les récompenses déjà gagnées cette saison se débloquent aussitôt."
+   "k": "Pressing <color=#ffd23a>Claim All</color> collects every reward.",
+   "v": "Toucher <color=#ffd23a>Tout récupérer</color> récupère toutes les récompenses."
   },
   {
    "k": "Privacy",
@@ -3149,16 +3025,8 @@
    "v": "Citrouille"
   },
   {
-   "k": "Purchases restored",
-   "v": "Achats restaurés"
-  },
-  {
    "k": "Purple",
    "v": "Violet"
-  },
-  {
-   "k": "Push Alarm",
-   "v": "Alerte push"
   },
   {
    "k": "Quiet as a mouse round here.",
@@ -3187,10 +3055,6 @@
   {
    "k": "Raid Shield",
    "v": "Bouclier anti-raid"
-  },
-  {
-   "k": "Raid Shield ends soon",
-   "v": "Le bouclier se termine bientôt"
   },
   {
    "k": "Raid driven off!",
@@ -3369,10 +3233,6 @@
    "v": "Réapprovisionner"
   },
   {
-   "k": "Restore purchases",
-   "v": "Restaurer les achats"
-  },
-  {
    "k": "Retry",
    "v": "Réessayer"
   },
@@ -3481,16 +3341,8 @@
    "v": "Sauvegarder"
   },
   {
-   "k": "Save Farm",
-   "v": "Sauvegarder"
-  },
-  {
    "k": "Save your farm",
    "v": "Sauvegarde ta ferme"
-  },
-  {
-   "k": "Save your farm with Google or Apple to get coupons",
-   "v": "Sauvegarde ta ferme avec Google ou Apple pour avoir des coupons"
   },
   {
    "k": "Sawn from wood.",
@@ -3625,10 +3477,6 @@
    "v": "Boutique"
   },
   {
-   "k": "Shop deals about to end",
-   "v": "Offres de la boutique bientôt terminées"
-  },
-  {
    "k": "Short screen side, in pixels, from which a screen counts as large.",
    "v": "Petit côté de l'écran, en pixels, à partir duquel l'écran compte comme grand."
   },
@@ -3647,10 +3495,6 @@
   {
    "k": "Site ring",
    "v": "Zone chantier"
-  },
-  {
-   "k": "Skip the ads for good?",
-   "v": "Fini les pubs pour de bon ?"
   },
   {
    "k": "Smelted from ore. Needed to upgrade machines.",
@@ -3937,16 +3781,8 @@
    "v": "Ce nom est pris : essaie-en un autre"
   },
   {
-   "k": "That's all the ads for today — come back tomorrow",
-   "v": "Plus de pubs pour aujourd'hui : reviens demain"
-  },
-  {
    "k": "That's all {0} spins for today.\nCome back tomorrow!",
    "v": "C'est tout pour tes {0} tours du jour.\nReviens demain !"
-  },
-  {
-   "k": "The ad is still being checked — try again in a minute",
-   "v": "La pub est encore en vérification : réessaie dans une minute"
   },
   {
    "k": "The background music clip (Content/Audio/Music), looped under everything.",
@@ -4003,10 +3839,6 @@
   {
    "k": "The farmhouse is nearly full. Sell at the market or upgrade it.",
    "v": "La ferme est presque pleine. Vends au marché ou améliore-la."
-  },
-  {
-   "k": "The fields are ripe. Harvest them before they spoil!",
-   "v": "Les champs sont mûrs. Récolte-les avant qu'ils ne pourrissent !"
   },
   {
    "k": "The freight train starts stopping at your station at island level {0}.",
@@ -4137,16 +3969,8 @@
    "v": "Le concasseur s'ouvre au niveau {0}"
   },
   {
-   "k": "The store didn't confirm this purchase",
-   "v": "Le store n'a pas confirmé cet achat"
-  },
-  {
    "k": "The store has no food at all! Bring in a harvest, or eggs from the coop.",
    "v": "Plus aucune nourriture en réserve ! Rapporte une récolte, ou des œufs du poulailler."
-  },
-  {
-   "k": "The store isn't ready yet — try again in a moment",
-   "v": "Le store n'est pas encore prêt : réessaie dans un moment"
   },
   {
    "k": "The stores are empty: bring your harvest in.",
@@ -4521,14 +4345,6 @@
    "v": "Regarde une courte pub pour chaque tour.\n{0} tours par jour, remis à zéro à minuit (UTC)."
   },
   {
-   "k": "Watch the ad to the end to get the reward",
-   "v": "Regarde la pub jusqu'au bout pour la récompense"
-  },
-  {
-   "k": "Watch the ad to the end to spin",
-   "v": "Regarde la pub jusqu'au bout pour tourner"
-  },
-  {
    "k": "We'll see them off.",
    "v": "On va les repousser."
   },
@@ -4809,10 +4625,6 @@
    "v": "Vous êtes déjà amis."
   },
   {
-   "k": "You're playing as a <b>guest</b>. Link an account to keep your farm<br>if you change phone — and to receive coupons.",
-   "v": "Tu joues en <b>invité</b>. Lie un compte pour garder ta ferme<br>si tu changes de téléphone, et pour recevoir des coupons."
-  },
-  {
    "k": "Your Night Shift is already booked for your next absence",
    "v": "Ton équipe de nuit est déjà prévue pour ta prochaine absence"
   },
@@ -4821,16 +4633,8 @@
    "v": "Ton coupon"
   },
   {
-   "k": "Your crops are ready",
-   "v": "Tes récoltes sont prêtes"
-  },
-  {
-   "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.<br>Purchases can't be refunded.",
-   "v": "Ta ferme, tes gemmes, tes amis et ta progression seront <b>supprimés pour de bon</b>.<br>Les achats ne sont pas remboursables."
-  },
-  {
-   "k": "Your free coins are waiting in the shop.",
-   "v": "Tes pièces gratuites t'attendent dans la boutique."
+   "k": "Your farm, gems, friends and progress will be <b>deleted for good</b>.",
+   "v": "Ta ferme, tes gemmes, tes amis et ta progression seront <b>supprimés pour de bon</b>."
   },
   {
    "k": "Your friends",
@@ -4847,14 +4651,6 @@
   {
    "k": "Your next absence: workers keep going for {0} hours at the normal food price.",
    "v": "Prochaine absence : les ouvriers continuent {0} heures au prix normal de la nourriture."
-  },
-  {
-   "k": "Your purchase will arrive as soon as you're back online",
-   "v": "Ton achat arrivera dès que tu seras de nouveau en ligne"
-  },
-  {
-   "k": "Your reward is on its way — try again in a minute",
-   "v": "Ta récompense arrive : réessaie dans une minute"
   },
   {
    "k": "Your shield ends in {n} minutes. Raiders are watching!",
@@ -4875,14 +4671,6 @@
   {
    "k": "Your workers will run out of food in about {0} min — stock their house before you go",
    "v": "Tes ouvriers n'auront plus à manger dans environ {0} min — remplis leur maison avant de partir"
-  },
-  {
-   "k": "Your workshops are done",
-   "v": "Tes ateliers ont fini"
-  },
-  {
-   "k": "Yours already!",
-   "v": "Déjà à toi !"
   },
   {
    "k": "a building",
@@ -6035,10 +5823,6 @@
   {
    "k": "Truck",
    "v": "Camion"
-  },
-  {
-   "k": "Warnings before the zombies come, and how the night went",
-   "v": "Alertes avant l'arrivée des zombies, et bilan de la nuit"
   },
   {
    "k": "Warriors who fight the zombies",

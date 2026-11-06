@@ -23,7 +23,7 @@
   <ItemGroup Condition="'$(UnityRefs)' == ''">
     <Reference Include="$(UnityManaged)/UnityEngine*.dll" Private="false" />
     <Reference Include="$(ProjectRoot)Assets/Firebase/Plugins/*.dll" Private="false" />
-    <Reference Include="$(ProjectRoot)Library/ScriptAssemblies/Firebase.Functions.dll;$(ProjectRoot)Library/ScriptAssemblies/Firebase.App.Internal.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.InputSystem.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Addressables.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.ResourceManager.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Localization.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Purchasing.dll" Private="false" />
+    <Reference Include="$(ProjectRoot)Library/ScriptAssemblies/Firebase.Functions.dll;$(ProjectRoot)Library/ScriptAssemblies/Firebase.App.Internal.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.InputSystem.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Addressables.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.ResourceManager.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Localization.dll" Private="false" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Farmverse.Contracts/Farmverse.Contracts.csproj" />

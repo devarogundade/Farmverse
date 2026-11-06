@@ -538,10 +538,9 @@ namespace Farmverse.Presentation.UI.Game
                 Say(result.Error.Code switch
                 {
                     ErrorCode.CouponLocked => "Not finished yet",
-                    ErrorCode.CouponLinkRequired => "Save your farm with Google or Apple to get coupons",
+                    ErrorCode.CouponLinkRequired => "Coupons need a signed-in account — wallet sign-in is coming soon",
                     _ => "Couldn't get a code — check your connection and try again",
                 });
-                if (result.Error.Code == ErrorCode.CouponLinkRequired) Open("savefarm");
                 MarkDirty();
                 return;
             }
