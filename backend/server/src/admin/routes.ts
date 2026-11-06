@@ -34,6 +34,9 @@ const OpsInput = z.object({
   maintenance: z.boolean(),
   message: z.string().trim().max(200),
   minClientVersion: z.union([Version, z.literal('')]),
+  /** null: the server default. */
+  mintMinAccountHours: z.number().min(0).max(24 * 365).nullable().optional(),
+  mintDailyValueCap: z.number().int().min(0).max(100_000_000).nullable().optional(),
   reason: z.string().trim().min(3).max(300),
 });
 const NewsInput = NewsDoc.omit({ publishedAt: true }).extend({ reason: z.string().trim().min(3).max(300) });
@@ -182,18 +185,25 @@ export function adminRoutes(o: AdminOptions, log: Logger) {
 
     // ------------------------------------------------------------------ ops and news
 
-    app.get('/ops', async () => ({ ...o.ops.current, fallbackMinClientVersion: o.ops.fallbackMinClientVersion, stored: o.ops.stored ?? null }));
+    const opsView = () => ({ ...o.ops.current, fallbackMinClientVersion: o.ops.fallbackMinClientVersion, mintDefaults: o.ops.mintDefaults, stored: o.ops.stored ?? null });
+    app.get('/ops', async () => opsView());
 
     app.put('/ops', async (req) => {
       const input = parse(OpsInput, req.body);
       const before = o.ops.current;
-      const { reason, ...next } = input;
+      const { reason, ...fields } = input;
+      // an older admin page that doesn't send the mint fields keeps what is stored
+      const next = {
+        ...fields,
+        mintMinAccountHours: fields.mintMinAccountHours !== undefined ? fields.mintMinAccountHours : (o.ops.stored?.mintMinAccountHours ?? null),
+        mintDailyValueCap: fields.mintDailyValueCap !== undefined ? fields.mintDailyValueCap : (o.ops.stored?.mintDailyValueCap ?? null),
+      };
       await o.env.store.runTransaction(async (tx) => {
         tx.set(OPS_PATH, { ...next, updatedAt: now(), updatedBy: actor(req) });
       });
       await o.ops.reload();
       await audit(o.prisma, { actor: actor(req), action: 'ops.update', targetType: 'ops', targetId: 'ops', reason, details: { before, after: next } });
-      return { ...o.ops.current, fallbackMinClientVersion: o.ops.fallbackMinClientVersion, stored: o.ops.stored ?? null };
+      return opsView();
     });
 
     app.get('/news', async () => {

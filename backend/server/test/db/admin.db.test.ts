@@ -189,6 +189,19 @@ describe('ops, news, stats, audit', () => {
     expect((await app.inject({ method: 'GET', url: '/v1/config' })).json().values.maintenance).toBe(false);
   });
 
+  it('sets the mint limits live, keeps them when an older page saves, and clears back to the defaults', async () => {
+    expect(ops.current).toMatchObject({ mintMinAccountHours: 24, mintDailyValueCap: 5_000 });
+    const set = await send('PUT', '/ops', { maintenance: false, message: '', minClientVersion: '', mintMinAccountHours: 2, mintDailyValueCap: 800, reason: 'event weekend' });
+    expect(set.statusCode).toBe(200);
+    expect(set.json()).toMatchObject({ mintMinAccountHours: 2, mintDailyValueCap: 800, mintDefaults: { minAccountHours: 24, dailyValueCap: 5_000 } });
+    expect(ops.current).toMatchObject({ mintMinAccountHours: 2, mintDailyValueCap: 800 });
+    // a page that doesn't know the mint fields leaves them as they are
+    await send('PUT', '/ops', { maintenance: false, message: '', minClientVersion: '', reason: 'old page' });
+    expect(ops.current).toMatchObject({ mintMinAccountHours: 2, mintDailyValueCap: 800 });
+    await send('PUT', '/ops', { maintenance: false, message: '', minClientVersion: '', mintMinAccountHours: null, mintDailyValueCap: null, reason: 'back to normal' });
+    expect(ops.current).toMatchObject({ mintMinAccountHours: 24, mintDailyValueCap: 5_000 });
+  });
+
   it('publishes and deletes news', async () => {
     const made = await send('POST', '/news', { title: 'Harvest festival', body: 'Double coins all weekend.', reason: 'weekend event' });
     expect(made.statusCode).toBe(200);

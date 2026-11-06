@@ -143,7 +143,19 @@ export interface Ops {
   message: string;
   minClientVersion: string;
   fallbackMinClientVersion: string;
-  stored: { maintenance: boolean; message: string; minClientVersion: string; updatedAt: number; updatedBy: string } | null;
+  mintMinAccountHours: number;
+  mintDailyValueCap: number;
+  /** The server's own limits, used while the fields below are empty. */
+  mintDefaults: { minAccountHours: number; dailyValueCap: number };
+  stored: {
+    maintenance: boolean;
+    message: string;
+    minClientVersion: string;
+    mintMinAccountHours?: number | null;
+    mintDailyValueCap?: number | null;
+    updatedAt: number;
+    updatedBy: string;
+  } | null;
 }
 
 export interface NewsItem {
@@ -220,7 +232,11 @@ export const useSaveCoupons = () =>
   );
 
 export const useSaveOps = () =>
-  useChange((input: { maintenance: boolean; message: string; minClientVersion: string; reason: string }) => admin<Ops>('/ops', { method: 'PUT', body: input }), () => [['ops']]);
+  useChange(
+    (input: { maintenance: boolean; message: string; minClientVersion: string; mintMinAccountHours: number | null; mintDailyValueCap: number | null; reason: string }) =>
+      admin<Ops>('/ops', { method: 'PUT', body: input }),
+    () => [['ops']],
+  );
 
 export const usePublishNews = () =>
   useChange((input: { title: string; body: string; url?: string; push: boolean; reason: string }) => admin<NewsItem>('/news', { method: 'POST', body: input }), () => [['news']]);

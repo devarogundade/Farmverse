@@ -16,6 +16,10 @@ namespace Farmverse.Application.Config
         /// <summary>The items NFT contract; absent when the server has no chain (mint and redeem are then hidden).</summary>
         public const string ItemsContract = "items_contract";
 
+        /// <summary>Hours a new farm waits before it may mint (the admin web sets it).</summary>
+        public const string MintMinHours = "mint_min_hours";
+        public const long MintMinHoursDefault = 24;
+
         public const string MinClientVersion = "min_client_version";
         public const string MinClientVersionDefault = "0.0.0";
 

@@ -14,6 +14,10 @@ export const OpsDoc = z.object({
   message: z.string().max(200),
   /** Clients older than this are asked to update ('' = the server's MIN_CLIENT_VERSION). */
   minClientVersion: z.union([Version, z.literal('')]),
+  /** Hours a new farm waits before it may mint (null or absent = the server's MINT_MIN_ACCOUNT_HOURS). */
+  mintMinAccountHours: z.number().min(0).max(24 * 365).nullable().optional(),
+  /** Market value (coins) a player may mint per UTC day (null or absent = MINT_DAILY_VALUE_CAP). */
+  mintDailyValueCap: z.number().int().min(0).max(100_000_000).nullable().optional(),
   updatedAt: z.number().int().min(0),
   /** The admin account that last changed it. */
   updatedBy: z.string().max(64),
@@ -24,6 +28,14 @@ export interface Ops {
   readonly maintenance: boolean;
   readonly message: string;
   readonly minClientVersion: string;
+  readonly mintMinAccountHours: number;
+  readonly mintDailyValueCap: number;
+}
+
+/** The mint limits the server starts with (its environment); the admin web can override them. */
+export interface MintDefaults {
+  readonly minAccountHours: number;
+  readonly dailyValueCap: number;
 }
 
 /**
@@ -39,6 +51,7 @@ export class OpsConfig {
     private readonly store: Store,
     private readonly fallbackMinVersion: string,
     private readonly log: Logger,
+    readonly mintDefaults: MintDefaults = { minAccountHours: 24, dailyValueCap: 5_000 },
     readonly refreshMs = 10_000,
   ) {}
 
@@ -73,6 +86,8 @@ export class OpsConfig {
       maintenance: this.doc?.maintenance ?? false,
       message: this.doc?.message ?? '',
       minClientVersion: this.doc?.minClientVersion || this.fallbackMinVersion,
+      mintMinAccountHours: this.doc?.mintMinAccountHours ?? this.mintDefaults.minAccountHours,
+      mintDailyValueCap: this.doc?.mintDailyValueCap ?? this.mintDefaults.dailyValueCap,
     };
   }
 

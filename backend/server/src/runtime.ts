@@ -6,6 +6,7 @@ import { httpEngine } from '../../game/src/infra/islandEngine';
 import { paths } from '../../game/src/infra/paths';
 import { httpNearRpc } from './auth/nearRpc';
 import { Sessions } from './auth/sessions';
+import { OpsConfig } from './admin/ops';
 import { webMessenger, type Runtime } from './calls';
 import type { Config } from './config';
 import { PrismaClient } from './generated/prisma/client';
@@ -25,6 +26,8 @@ export interface Services {
   readonly bus: ChangeBus;
   readonly limiter: RateLimiter;
   readonly queues: JobQueues;
+  /** The admin web's live switches (started by the API process; others read the defaults). */
+  readonly ops: OpsConfig;
   close(): Promise<void>;
 }
 
@@ -67,6 +70,11 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
       triggers(changes);
     },
   });
+  // maintenance, min version and the mint limits, changed live from the admin web
+  const ops = new OpsConfig(store, config.MIN_CLIENT_VERSION, log, {
+    minAccountHours: config.MINT_MIN_ACCOUNT_HOURS,
+    dailyValueCap: config.MINT_DAILY_VALUE_CAP,
+  });
   const sessions = new Sessions(prisma, redisNonces(redis), httpNearRpc(config.NEAR_RPC_URL), {
     jwtSeed: Buffer.from(config.JWT_SEED, 'base64'),
     recipient: config.AUTH_RECIPIENT,
@@ -97,7 +105,15 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             reader: rpcChainReader(config.NEAR_RPC_URL, config.NEAR_ITEMS_CONTRACT),
             signer: new VoucherSigner(Buffer.from(config.MINT_SIGNER_SEED, 'base64')),
             itemsContract: config.NEAR_ITEMS_CONTRACT,
-            limits: { dailyValueCap: config.MINT_DAILY_VALUE_CAP, minAccountHours: config.MINT_MIN_ACCOUNT_HOURS },
+            // read on every mint, so an admin change applies at once
+            limits: {
+              get dailyValueCap() {
+                return ops.current.mintDailyValueCap;
+              },
+              get minAccountHours() {
+                return ops.current.mintMinAccountHours;
+              },
+            },
             scheduleExpiry: bullMintExpiry(queues.mintExpiry),
             accountOf: async (uid: string) => (await prisma.account.findUnique({ where: { uid }, select: { accountId: true } }))?.accountId ?? null,
           },
@@ -113,7 +129,9 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
     bus,
     limiter: redisRateLimiter(redis),
     queues,
+    ops,
     async close() {
+      ops.stop();
       await queues.close();
       await redis.quit();
       await prisma.$disconnect();

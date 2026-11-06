@@ -84,7 +84,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
   app.get('/healthz', async () => ({ ok: true }));
 
   // The client's remote config: maintenance switch, minimum client version and feature values.
-  const ops = () => o.ops?.current ?? { maintenance: false, message: '', minClientVersion: o.minClientVersion };
+  const ops = () => o.ops?.current ?? { maintenance: false, message: '', minClientVersion: o.minClientVersion, mintMinAccountHours: 24, mintDailyValueCap: 5_000 };
 
   app.get('/v1/config', async () => ({
     minClientVersion: ops().minClientVersion,
@@ -95,7 +95,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
       maintenance: ops().maintenance,
       ...(ops().message ? { maintenance_message: ops().message } : {}),
       island_shadow: true,
-      ...(o.rt.chain ? { items_contract: o.rt.chain.itemsContract } : {}),
+      ...(o.rt.chain ? { items_contract: o.rt.chain.itemsContract, mint_min_hours: Math.ceil(ops().mintMinAccountHours) } : {}),
     },
   }));
 

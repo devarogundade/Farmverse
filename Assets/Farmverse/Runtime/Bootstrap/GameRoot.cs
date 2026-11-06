@@ -240,6 +240,7 @@ namespace Farmverse.Bootstrap
                 {
                     GameUi.SystemNotice = null;
                     _flags.Refresh(); // the session just fetched Remote Config
+                    GameUi.MintMinHours = remoteConfig.GetLong(Farmverse.Application.Config.RemoteKeys.MintMinHours, Farmverse.Application.Config.RemoteKeys.MintMinHoursDefault);
                     _notifications.Attach(_session.Uid);
                     _friends.Attach(_session.Uid);
                     _rewards.Attach(_session.Uid);

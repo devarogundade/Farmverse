@@ -69,6 +69,18 @@ namespace Farmverse.Presentation.UI.Game
             else Say(done, 4f);
         }
 
+        /// <summary>Hours a new farm waits before minting (remote config, set by GameRoot).</summary>
+        public static long MintMinHours { get; set; } = 24;
+
+        /// <summary>"New farms can mint after …" in days when it's whole days, else hours.</summary>
+        internal static string MintTooSoonText(long hours)
+        {
+            if (hours <= 0) return "This farm can't mint yet. Try again in a moment.";
+            if (hours == 24) return "New farms can mint after their first day.";
+            if (hours % 24 == 0) return $"New farms can mint after {hours / 24} days.";
+            return hours == 1 ? "New farms can mint after their first hour." : $"New farms can mint after {hours} hours.";
+        }
+
         /// <summary>A mint refusal in the player's words.</summary>
         private static string ChainError(AppError e)
         {
@@ -77,7 +89,7 @@ namespace Farmverse.Presentation.UI.Game
             {
                 case ErrorCode.MintLocked: return "Minting is paused on this farm while we check it. Playing is fine.";
                 case ErrorCode.MintLimit: return $"Today's mint limit is reached ({P("left")} coins of value left today).";
-                case ErrorCode.MintTooSoon: return "New farms can mint after their first day.";
+                case ErrorCode.MintTooSoon: return MintTooSoonText(MintMinHours);
                 case ErrorCode.MintNotEnough: return $"Not enough in the farmhouse yet (the server sees {P("have")}). Try again in a moment.";
                 case ErrorCode.MintBuildingBusy:
                     return P("reason") switch

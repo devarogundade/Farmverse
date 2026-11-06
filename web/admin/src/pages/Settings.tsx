@@ -9,6 +9,8 @@ export function Settings() {
   const [maintenance, setMaintenance] = useState(false);
   const [message, setMessage] = useState('');
   const [version, setVersion] = useState('');
+  const [mintHours, setMintHours] = useState('');
+  const [mintCap, setMintCap] = useState('');
   const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
@@ -16,13 +18,25 @@ export function Settings() {
     setMaintenance(data.maintenance);
     setMessage(data.message);
     setVersion(data.stored?.minClientVersion ?? '');
+    setMintHours(storedText(data.stored?.mintMinAccountHours));
+    setMintCap(storedText(data.stored?.mintDailyValueCap));
   }, [data]);
 
   if (isLoading) return <Loading />;
   if (error || !data) return <Failed error={error} retry={() => void refetch()} />;
 
   const versionOk = version === '' || /^\d{1,4}\.\d{1,4}\.\d{1,6}$/.test(version);
-  const dirty = maintenance !== data.maintenance || message !== data.message || version !== (data.stored?.minClientVersion ?? '');
+  const hoursOk = mintHours === '' || (/^\d+(\.\d+)?$/.test(mintHours) && Number(mintHours) <= 24 * 365);
+  const capOk = mintCap === '' || /^\d{1,9}$/.test(mintCap);
+  const mintDirty = mintHours !== storedText(data.stored?.mintMinAccountHours) || mintCap !== storedText(data.stored?.mintDailyValueCap);
+  const dirty = maintenance !== data.maintenance || message !== data.message || version !== (data.stored?.minClientVersion ?? '') || mintDirty;
+  const undo = () => {
+    setMaintenance(data.maintenance);
+    setMessage(data.message);
+    setVersion(data.stored?.minClientVersion ?? '');
+    setMintHours(storedText(data.stored?.mintMinAccountHours));
+    setMintCap(storedText(data.stored?.mintDailyValueCap));
+  };
 
   return (
     <>
@@ -58,11 +72,25 @@ export function Settings() {
           <Input value={version} onChange={(e) => setVersion(e.target.value.trim())} placeholder={data.fallbackMinClientVersion} aria-invalid={!versionOk} />
         </Field>
         {!versionOk && <p className="form-err">Use a version like 1.4.0.</p>}
+        <Field
+          label="Hours before a new farm can mint"
+          hint={`Empty uses the server default (${data.mintDefaults.minAccountHours}). Now: ${data.mintMinAccountHours}. 0 lets new farms mint at once.`}
+        >
+          <Input value={mintHours} inputMode="decimal" onChange={(e) => setMintHours(e.target.value.trim())} placeholder={String(data.mintDefaults.minAccountHours)} aria-invalid={!hoursOk} />
+        </Field>
+        {!hoursOk && <p className="form-err">Use a number of hours, up to a year.</p>}
+        <Field
+          label="Mint value per player per day (coins)"
+          hint={`The market value a player can mint each UTC day. Empty uses the server default (${data.mintDefaults.dailyValueCap}). Now: ${data.mintDailyValueCap}.`}
+        >
+          <Input value={mintCap} inputMode="numeric" onChange={(e) => setMintCap(e.target.value.trim())} placeholder={String(data.mintDefaults.dailyValueCap)} aria-invalid={!capOk} />
+        </Field>
+        {!capOk && <p className="form-err">Use a whole number of coins.</p>}
         <div className="dlg-actions">
-          <button className="fv-btn gray" disabled={!dirty} onClick={() => (setMaintenance(data.maintenance), setMessage(data.message), setVersion(data.stored?.minClientVersion ?? ''))}>
+          <button className="fv-btn gray" disabled={!dirty} onClick={undo}>
             Undo
           </button>
-          <button className={`fv-btn ${maintenance && !data.maintenance ? 'purple' : 'yellow'}`} disabled={!dirty || !versionOk} onClick={() => setConfirming(true)}>
+          <button className={`fv-btn ${maintenance && !data.maintenance ? 'purple' : 'yellow'}`} disabled={!dirty || !versionOk || !hoursOk || !capOk} onClick={() => setConfirming(true)}>
             Save
           </button>
         </div>
@@ -76,10 +104,24 @@ export function Settings() {
         confirm="Save"
         tone={maintenance && !data.maintenance ? 'purple' : 'yellow'}
         done="Game settings saved"
-        onConfirm={(reason) => save.mutateAsync({ maintenance, message: message.trim(), minClientVersion: version, reason })}
+        onConfirm={(reason) =>
+          save.mutateAsync({
+            maintenance,
+            message: message.trim(),
+            minClientVersion: version,
+            mintMinAccountHours: mintHours === '' ? null : Number(mintHours),
+            mintDailyValueCap: mintCap === '' ? null : Number(mintCap),
+            reason,
+          })
+        }
       >
         <p className="note">Takes effect for every player within 10 seconds.</p>
       </ReasonDialog>
     </>
   );
+}
+
+/** A stored override as the field shows it ('' when the server default applies). */
+function storedText(value: number | null | undefined): string {
+  return value === null || value === undefined ? '' : String(value);
 }
