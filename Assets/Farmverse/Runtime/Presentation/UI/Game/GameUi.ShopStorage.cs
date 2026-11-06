@@ -294,6 +294,8 @@ namespace Farmverse.Presentation.UI.Game
                     var qty = _shopQty;
                     var mint = PK.Btn(side, p, "purple", "Mint " + PK.Num(qty) + " as NFT", sideW - 60, 64, 26, () => ChainMintGoods(entry.id, qty));
                     mint.style.marginTop = p.P(10);
+                    var buy = PK.Btn(side, p, "blue", "Buy more on the market", sideW - 60, 52, 20, () => GameLinks.Open(MarketBuy(entry.id), "Open the market"));
+                    buy.style.marginTop = p.P(8);
                 }
             }
             else

@@ -80,7 +80,11 @@ namespace Farmverse.Bootstrap
             if (!string.IsNullOrEmpty(UnityEngine.Application.absoluteURL)) OnDeepLink(UnityEngine.Application.absoluteURL);
         }
 
-        private void OnDeepLink(string url) => _friends.OfferLink(url);
+        private void OnDeepLink(string url)
+        {
+            _friends.OfferLink(url);
+            GameUi.PendingLink = url;   // links from the marketplace (?open=nfts, ?redeemed=…), handled once signed in
+        }
 
         /// <summary>The game itself: the Island scene replaces the boot scene (this object stays).</summary>
         private void OpenIsland()

@@ -20,6 +20,62 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>Whether minting is offered here (web build with a wallet, signed in).</summary>
         private static bool ChainReady => Chain != null && Chain.Available;
 
+        // ------------------------------------------------------------------ links in and out (docs 15 §3.2)
+
+        /// <summary>The page's URL when the game opened (or a link opened later); handled once signed in.</summary>
+        public static string? PendingLink { get; set; }
+
+        /// <summary>
+        /// Links from the marketplace: <c>?open=nfts</c> (Storage's NFTs tab), <c>?open=shop</c>, <c>?open=pass</c>,
+        /// <c>?redeemed=&lt;token&gt;</c> (redeemed on the market: fetch the island and say so).
+        /// </summary>
+        private void LinkTick()
+        {
+            var url = PendingLink;
+            if (url == null || Nfts?.Account == null || Host == null) return;
+            PendingLink = null;
+            var q = url.IndexOf('?');
+            if (q < 0) return;
+            string? open = null, redeemed = null;
+            foreach (var part in url.Substring(q + 1).Split('&', '#'))
+            {
+                var eq = part.IndexOf('=');
+                if (eq <= 0) continue;
+                var key = part.Substring(0, eq);
+                var value = System.Uri.UnescapeDataString(part.Substring(eq + 1));
+                if (key == "open") open = value;
+                else if (key == "redeemed") redeemed = value;
+            }
+            if (redeemed != null) LinkRedeemed();
+            switch (open)
+            {
+                case "nfts":
+                    _shopCat = "nft";
+                    _shopSel = null;
+                    Go("storage");
+                    break;
+                case "shop":
+                    Go("shop");
+                    break;
+                case "pass":
+                    Go("pass");
+                    break;
+            }
+        }
+
+        /// <summary>Redeemed on the market: the server credited it; the next sync brings it to the island.</summary>
+        private async void LinkRedeemed()
+        {
+            Say("Your redeemed item is on its way to your farm…", 4f);
+            if (Host != null) await IslandShadow.SyncNow(Host.CurrentState());
+            if (Nfts != null) await Nfts.RefreshOwned();
+            if (IslandServerState.Held.Count > 0) Open("heldbuildings");
+            else Say("It's on your farm!");
+        }
+
+        private static string MarketBuy(string item) =>
+            GameLinks.Market + "/#/?item=" + System.Uri.EscapeDataString(item) + "&sort=unit_price";
+
         // ------------------------------------------------------------------ the NFTs tab (docs 15 §3.1)
 
         /// <summary>A Storage row for an NFT the wallet holds.</summary>
