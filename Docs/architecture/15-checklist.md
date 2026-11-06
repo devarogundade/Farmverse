@@ -82,6 +82,13 @@ an indexer migration, and the Unity panels.
 - [ ] G6 README: NEP-245 for goods as the next step; what intents do on mainnet
 - [ ] G7 Buy FARM with any token (1Click → NEAR to the treasury → FARM from `sales.`), behind a mainnet switch; live quotes on testnet (§13.3)
 
+## H. Sponsored fees (plan §14)
+
+- [x] H1 Items contract: deposit-free voucher mints paid by the contract, redeem without 1 yocto, no refund for contract-paid storage
+- [x] H2 Server: `chain-relay` (policy + relayer pays gas), relayed redeems credited to the player, welcome top-up at sign-in, implicit accounts sign in
+- [x] H3 Game page: session key (one approval), sponsored mint/redeem, wallet fallback
+- [ ] H4 Check the whole sponsored flow on testnet (part of F4)
+
 ## F. Deploy and submit
 
 - [ ] F1 Hosting: play., marketplace., farmverse.world on the EC2 nginx; `deploy.sh --web` §9 D18

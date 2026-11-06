@@ -35,6 +35,8 @@ export interface MintDeps {
   readonly signer: VoucherSigner;
   readonly itemsContract: string;
   readonly limits: MintLimits;
+  /** The relayer account (sponsored redeems are its transactions). */
+  readonly relayerId?: string;
   /** Books the refund check for a voucher. */
   readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
 }
@@ -443,7 +445,9 @@ export async function backstopRedeems(env: Env, find: () => Promise<UnclaimedRed
  */
 export async function redeem(deps: MintDeps, uid: string, accountId: string, txHash: string, log: Logger): Promise<RedeemResponse> {
   const { env } = deps;
-  const seen = await deps.chain.redeemsIn(txHash, accountId);
+  let seen = await deps.chain.redeemsIn(txHash, accountId);
+  // a sponsored redeem: our relayer sent the transaction, the player's session key signed the call inside
+  if (seen.length === 0 && deps.relayerId) seen = await deps.chain.redeemsIn(txHash, deps.relayerId, accountId);
   if (seen.length === 0) fail('REDEEM_NOT_FOUND');
 
   let islandChanged = false;

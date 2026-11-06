@@ -18,6 +18,7 @@ import type { DocReader } from './live';
 import { prismaStore, type DocChange } from './store/prismaStore';
 import { queryDocuments } from './store/query';
 import { nearFaucetSender } from './chain/faucet';
+import { nearRelayer, welcome } from './chain/relay';
 import { reconcile } from './chain/reconcile';
 import { unclaimedRedeems } from './chain/unclaimed';
 import { crewOf } from './chain/crew';
@@ -79,12 +80,25 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
     minAccountHours: config.MINT_MIN_ACCOUNT_HOURS,
     dailyValueCap: config.MINT_DAILY_VALUE_CAP,
   });
+  // pays gas for sponsored calls and welcome top-ups: its own account, else the faucet's (plan 15 §14)
+  const relayAccount = config.RELAYER_ACCOUNT ?? config.FAUCET_ACCOUNT;
+  const relayKey = config.RELAYER_PRIVATE_KEY ?? config.FAUCET_PRIVATE_KEY;
+  const relayer = relayAccount && relayKey ? nearRelayer(config.NEAR_RPC_URL, relayAccount, relayKey) : undefined;
+  const welcomeYocto = BigInt(Math.round(config.WELCOME_NEAR * 1000)) * 10n ** 21n;
+  const welcomeBelow = BigInt(Math.round(config.WELCOME_BELOW_NEAR * 1000)) * 10n ** 21n;
   const sessions = new Sessions(prisma, redisNonces(redis), httpNearRpc(config.NEAR_RPC_URL), {
     jwtSeed: Buffer.from(config.JWT_SEED, 'base64'),
     recipient: config.AUTH_RECIPIENT,
     network: config.NEAR_NETWORK,
     adminAccounts: config.ADMIN_ACCOUNTS,
     allowDevSignIn: config.FARMVERSE_ENV === 'dev',
+    ...(relayer && welcomeYocto > 0n
+      ? {
+          onSignIn: (accountId: string) => {
+            void welcome({ store, clock: systemClock, log }, relayer, accountId, welcomeYocto, welcomeBelow, log);
+          },
+        }
+      : {}),
   });
 
   const rt: Runtime = {
@@ -125,6 +139,9 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             unclaimedRedeems: unclaimedRedeems(prisma, config.NEAR_ITEMS_CONTRACT),
             crewOf: crewOf(prisma, store, config.NEAR_ITEMS_CONTRACT),
             reconcile: () => reconcile(prisma, store, config.NEAR_ITEMS_CONTRACT, Date.now(), log.with({ job: 'chain-reconcile' })),
+            ...(relayer
+              ? { relay: { relayer, allow: (accountId: string) => redisRateLimiter(redis).hit(`relay:${accountId}`, 30, 60) } }
+              : {}),
             ...(config.NEAR_NETWORK === 'testnet' && config.FAUCET_ACCOUNT && config.FAUCET_PRIVATE_KEY
               ? {
                   faucet: {

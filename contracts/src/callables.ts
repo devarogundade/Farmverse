@@ -671,6 +671,31 @@ export const ChainFaucetResponse = named(
   }),
 );
 
+/** A delegate action (NEP-366) the page signed with the player's session key; the server relays it, paying gas. */
+export const RelayDelegate = named(
+  'RelayDelegate',
+  z.object({
+      senderId: z.string().min(2).max(64),
+      receiverId: z.string().min(2).max(64),
+      method: z.string().min(1).max(64),
+      args: z.string().max(8192),
+      gas: z.string().regex(/^\d{1,20}$/),
+      deposit: z.string().regex(/^\d{1,40}$/),
+      nonce: z.string().regex(/^\d{1,20}$/),
+      maxBlockHeight: z.string().regex(/^\d{1,20}$/),
+      publicKey: z.string().regex(/^ed25519:[1-9A-HJ-NP-Za-km-z]{32,64}$/),
+      signature: z.string().max(200),
+  }),
+);
+
+export const ChainRelayRequest = named(
+  'ChainRelayRequest',
+  z.object({ meta: RequestMeta, delegate: RelayDelegate }),
+  'Send a sponsored mint or redeem: the relayer pays the gas.',
+);
+
+export const ChainRelayResponse = named('ChainRelayResponse', z.object({ txHash: z.string() }));
+
 function callable<Req extends z.ZodType, Res extends z.ZodType>(
   name: string,
   request: Req,
@@ -717,6 +742,7 @@ export const CALLABLES = {
   chainRedeem: callable('chain-redeem', ChainRedeemRequest, ChainRedeemResponse),
   chainPendingMints: callable('chain-pendingMints', ChainPendingMintsRequest, ChainPendingMintsResponse),
   chainFaucet: callable('chain-faucet', ChainFaucetRequest, ChainFaucetResponse),
+  chainRelay: callable('chain-relay', ChainRelayRequest, ChainRelayResponse),
 } as const;
 
 export type PlatformContent = z.infer<typeof PlatformContent>;

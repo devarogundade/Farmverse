@@ -283,12 +283,35 @@ fn only_owner_redeems() {
 }
 
 #[test]
-#[should_panic(expected = "Requires attached deposit of exactly 1 yoctoNEAR")]
-fn redeem_needs_one_yocto() {
+fn redeem_works_without_a_deposit_for_session_keys() {
     let mut c = setup();
     mint(&mut c, voucher("g-1", alice()));
     testing_env!(ctx(alice(), NearToken::from_yoctonear(0)).build());
     c.redeem("g-1".into());
+    assert!(c.is_burned("g-1".into()));
+}
+
+#[test]
+#[should_panic(expected = "Attach nothing (or 1 yoctoNEAR)")]
+fn redeem_refuses_a_real_deposit() {
+    let mut c = setup();
+    mint(&mut c, voucher("g-1", alice()));
+    testing_env!(ctx(alice(), NearToken::from_millinear(1)).build());
+    c.redeem("g-1".into());
+}
+
+#[test]
+fn sponsored_mint_is_paid_by_the_contract_and_never_refunded() {
+    let mut c = setup();
+    let v = voucher("g-9", alice());
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(0)).build());
+    let sig = sign(&v, &key(7));
+    c.mint_with_voucher(v, public(&key(7)), sig);
+    assert_eq!(c.nft_token("g-9".into()).unwrap().owner_id, alice());
+    testing_env!(ctx(alice(), NearToken::from_yoctonear(0)).build());
+    c.redeem("g-9".into());
+    // no refund promise to the owner: the contract paid that storage
+    assert!(near_sdk::test_utils::get_created_receipts().iter().all(|r| r.receiver_id != alice()));
 }
 
 #[test]

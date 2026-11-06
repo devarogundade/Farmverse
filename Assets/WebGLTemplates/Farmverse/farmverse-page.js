@@ -2,6 +2,7 @@
 // and contract calls, exposed as window.farmversePage for Plugins/WebGL/FarmversePage.jslib.
 // The page owns the refresh token; the game only ever asks for a valid access token.
 import { NearConnector } from 'https://cdn.jsdelivr.net/npm/@hot-labs/near-connect@0.12.0/+esm';
+import { KeyPair, actions, buildDelegateAction, encodeDelegateAction } from 'https://cdn.jsdelivr.net/npm/near-api-js@7.4.0/+esm';
 
 const config = window.FARMVERSE_CONFIG;
 const api = config.apiBaseUrl.replace(/\/+$/, '');
@@ -11,6 +12,84 @@ const MARGIN_MS = 60_000;
 const connector = new NearConnector({ network: config.network, footerBranding: null, autoConnect: true });
 
 let session = null; // { accessToken, accessExpiresAt, uid, accountId }
+
+// ---- sponsored calls (docs 15 §14): a session key signs mints and redeems, our relayer pays the gas ----
+const RPC = config.rpcUrl || (config.network === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://rpc.testnet.near.org');
+const SPONSORED = ['mint_with_voucher', 'redeem'];
+const KEY_ALLOWANCE = '250000000000000000000000'; // 0.25 NEAR of gas the key could spend itself (the relayer pays, so ~none)
+let sponsorOff = config.sponsored === false;
+const lastNonce = new Map();
+
+async function rpc(method, params) {
+  const res = await fetch(RPC, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 'fv', method, params }) });
+  const json = await res.json();
+  return json.result ?? null;
+}
+
+const accessKeyOf = (accountId, publicKey) =>
+  rpc('query', { request_type: 'view_access_key', finality: 'final', account_id: accountId, public_key: publicKey });
+
+function sessionKey(accountId) {
+  const slot = `fv_session_key:${config.network}:${accountId}`;
+  let secret = localStorage.getItem(slot);
+  if (!secret) {
+    secret = KeyPair.fromRandom('ed25519').toString();
+    localStorage.setItem(slot, secret);
+  }
+  return KeyPair.fromString(secret);
+}
+
+/** The session key on chain: once, the wallet adds it (it can only mint and redeem on the items contract). */
+async function ensureSessionKey(wallet, accountId, contractId) {
+  const key = sessionKey(accountId);
+  const publicKey = key.getPublicKey().toString();
+  let ak = await accessKeyOf(accountId, publicKey);
+  if (ak) return { key, ak };
+  await wallet.signAndSendTransaction({
+    receiverId: accountId,
+    actions: [{ type: 'AddKey', params: { publicKey, accessKey: { nonce: 0, permission: { receiverId: contractId, allowance: KEY_ALLOWANCE, methodNames: SPONSORED } } } }],
+  });
+  for (let i = 0; i < 20 && !(ak = await accessKeyOf(accountId, publicKey)); i++) await new Promise((r) => setTimeout(r, 1500));
+  if (!ak) throw new Error('The session key is not on chain yet.');
+  return { key, ak };
+}
+
+const b64 = (bytes) => btoa(String.fromCharCode(...bytes));
+
+/** Signs the call with the session key and has the game server relay it (no popup, no gas). */
+async function sponsoredCall(wallet, accountId, contractId, method, args, gasTgas) {
+  const { key, ak } = await ensureSessionKey(wallet, accountId, contractId);
+  const publicKey = key.getPublicKey();
+  const seen = BigInt(ak.nonce);
+  const nonce = (seen > (lastNonce.get(accountId) ?? 0n) ? seen : lastNonce.get(accountId)) + 1n;
+  lastNonce.set(accountId, nonce);
+  const block = await rpc('block', { finality: 'final' });
+  const maxBlockHeight = BigInt(block.header.height) + 300n;
+  const argsBytes = new TextEncoder().encode(JSON.stringify(args ?? {}));
+  const gas = BigInt(gasTgas ?? 100) * 10n ** 12n;
+  const da = buildDelegateAction({ senderId: accountId, receiverId: contractId, actions: [actions.functionCall(method, argsBytes, gas, 0n)], nonce, maxBlockHeight, publicKey });
+  const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', encodeDelegateAction(da)));
+  const signature = key.sign(hash).signature;
+  const s = await window.farmversePage.requestSession(false);
+  const res = await fetch(api + '/v1/call/chain-relay', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: `Bearer ${s.accessToken}` },
+    body: JSON.stringify({
+      meta: { clientVersion: config.clientVersion || '1.0.0', platform: 'webgl' },
+      delegate: {
+        senderId: accountId, receiverId: contractId, method, args: b64(argsBytes), gas: String(gas), deposit: '0',
+        nonce: String(nonce), maxBlockHeight: String(maxBlockHeight), publicKey: publicKey.toString(), signature: b64(signature),
+      },
+    }),
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const code = json?.error?.code ?? `HTTP ${res.status}`;
+    if (code === 'UNSUPPORTED') sponsorOff = true; // this server doesn't sponsor: use the wallet from now on
+    throw Object.assign(new Error(code), { fallback: true });
+  }
+  return { txHash: json.data?.txHash ?? json.txHash };
+}
 let pending = null; // one sign-in at a time
 
 const $ = (id) => document.getElementById(id);
@@ -186,6 +265,14 @@ window.farmversePage = {
   /** Signs and sends one function call; resolves with its transaction hash once it succeeded. */
   async callContract({ contractId, method, args, deposit, gasTgas }) {
     const wallet = await connector.wallet();
+    // mints and redeems are sponsored when the server relays them (no NEAR needed, no popup after the first)
+    if (!sponsorOff && SPONSORED.includes(method) && session?.accountId) {
+      try {
+        return await sponsoredCall(wallet, session.accountId, contractId, method, args, gasTgas);
+      } catch (e) {
+        if (!e?.fallback) throw e; // declined in the wallet, or the call itself failed
+      }
+    }
     const outcome = await wallet.signAndSendTransaction({
       receiverId: contractId,
       actions: [{ type: 'FunctionCall', params: { methodName: method, args: args ?? {}, gas: String(BigInt(gasTgas ?? 100) * 10n ** 12n), deposit: String(deposit ?? '0') } }],

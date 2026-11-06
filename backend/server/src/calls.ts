@@ -26,6 +26,7 @@ import type { IslandEngine } from '../../game/src/infra/islandEngine';
 import type { Store } from '../../game/src/infra/store';
 import { fail } from '../../game/src/core/errors';
 import { claimFaucet, type FaucetSender } from './chain/faucet';
+import { relay, type Relayer } from './chain/relay';
 import { mint, pendingMints, redeem, type MintDeps, type MintLimits, type UnclaimedRedeem } from './mint/mint';
 import type { ChainReader } from './mint/nearChain';
 import type { VoucherSigner } from './mint/voucher';
@@ -48,6 +49,8 @@ export interface ChainRuntime {
   readonly reconcile?: () => Promise<unknown>;
   /** Redeems on chain that no `chain-redeem` call credited (the backstop job). */
   readonly unclaimedRedeems?: () => Promise<UnclaimedRedeem[]>;
+  /** Sponsored calls: the relayer and the per-account limit (plan 15 §14). */
+  readonly relay?: { readonly relayer: Relayer; readonly allow: (accountId: string) => Promise<boolean> };
   /** Testnet only: who pays faucet claims and how much. */
   readonly faucet?: { readonly sender: FaucetSender; readonly farmUnits: bigint; readonly nearYocto: bigint; readonly dailyCap: number };
 }
@@ -77,6 +80,7 @@ export function mintDeps(rt: Runtime, log: Logger): MintDeps {
     itemsContract: c.itemsContract,
     limits: c.limits,
     scheduleExpiry: c.scheduleExpiry,
+    ...(c.relay ? { relayerId: c.relay.relayer.accountId } : {}),
   };
 }
 
@@ -189,6 +193,15 @@ export function callDefinitions(rt: Runtime): ReadonlyMap<string, AnyDefinition>
         const f = rt.chain?.faucet;
         if (!f) fail('FAUCET_CLOSED');
         return claimFaucet({ env: envOf(rt, log), ...f }, uid, await walletOf(rt, uid), log);
+      },
+    }),
+    def({
+      spec: CALLABLES.chainRelay,
+      auth: 'required',
+      handler: async ({ uid, data, log }) => {
+        const c = rt.chain;
+        if (!c?.relay) fail('UNSUPPORTED');
+        return relay({ env: envOf(rt, log), relayer: c.relay.relayer, itemsContract: c.itemsContract, allow: c.relay.allow }, await walletOf(rt, uid), data.delegate, log);
       },
     }),
     def({

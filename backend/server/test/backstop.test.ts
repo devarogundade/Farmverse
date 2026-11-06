@@ -54,3 +54,18 @@ describe('land deeds', () => {
     expect(redeemOps({ kind: 'land', item_id: 'field', quantity: 1, props: '{"level":2,"price":50}' })).toEqual([{ op: 'hold', id: 'field', level: 2, price: 50 }]);
   });
 });
+
+describe('sponsored redeems', () => {
+  it('a relayed redeem counts for the player inside, not the relayer', async () => {
+    const { parseRedeems } = await import('../src/mint/nearChain');
+    const line = `EVENT_JSON:${JSON.stringify({ standard: 'farmverse_items', version: '1.0.0', event: 'item_redeem', data: [{ token_id: 'g-5', owner_id: 'alice.testnet', item: { kind: 'good', item_id: 'wheat', quantity: 10, props: '{}' } }] })}`;
+    const tx = {
+      status: { SuccessValue: '' },
+      transaction: { signer_id: 'relayer.testnet', receiver_id: 'alice.testnet' },
+      receipts_outcome: [{ outcome: { executor_id: 'items.t', logs: [line], status: { SuccessValue: '' } } }],
+    };
+    expect(parseRedeems(tx, 'relayer.testnet', 'items.t', 'alice.testnet').map((r) => r.tokenId)).toEqual(['g-5']);
+    expect(parseRedeems(tx, 'relayer.testnet', 'items.t', 'bob.testnet')).toEqual([]);
+    expect(parseRedeems(tx, 'alice.testnet', 'items.t')).toEqual([]);
+  });
+});

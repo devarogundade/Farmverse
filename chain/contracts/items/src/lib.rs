@@ -115,6 +115,7 @@ enum StorageKey {
     // v2
     Drops,
     DropBuys,
+    FloatPaid,
 }
 
 /// The state as deployed before drops (v1). Only [`Contract::migrate`] reads it.
@@ -156,6 +157,8 @@ pub struct Contract {
     drops: IterableMap<String, Drop>,
     /// `"<drop>:<account>"` → editions that account bought (per-wallet limits).
     drop_buys: LookupMap<String, u32>,
+    /// Live tokens whose storage this contract paid (drops, sponsored mints): no refund on redeem.
+    float_paid: LookupSet<TokenId>,
 }
 
 #[near]
@@ -193,6 +196,7 @@ impl Contract {
             treasury_id: None,
             drops: IterableMap::new(StorageKey::Drops),
             drop_buys: LookupMap::new(StorageKey::DropBuys),
+            float_paid: LookupSet::new(StorageKey::FloatPaid),
         };
         for key in signers {
             this.insert_signer(key);
@@ -222,13 +226,15 @@ impl Contract {
             treasury_id: None,
             drops: IterableMap::new(StorageKey::Drops),
             drop_buys: LookupMap::new(StorageKey::DropBuys),
+            float_paid: LookupSet::new(StorageKey::FloatPaid),
         }
     }
 
     // ---------------------------------------------------------------- mint & redeem
 
-    /// Mints the goods a game voucher describes to the caller. Attach enough NEAR for storage
-    /// (about 0.01 NEAR; the excess is refunded).
+    /// Mints the goods a game voucher describes to the caller. Attach NEAR for storage (about 0.01 NEAR;
+    /// the excess is refunded), or attach nothing and this contract pays it (sponsored mints: a session key
+    /// through the game's relayer, docs 15 §14). Only the game server's vouchers can mint, so the cost is bounded.
     #[payable]
     pub fn mint_with_voucher(&mut self, voucher: MintVoucher, signer: PublicKey, signature: Base64VecU8) -> Token {
         self.assert_not_paused();
@@ -253,7 +259,14 @@ impl Contract {
             minted_from: Some(caller.clone()),
             minted_at_ms: now,
         };
-        self.mint_item(voucher.token_id, caller.clone(), item, voucher.title, voucher.media, "voucher", Some(caller))
+        let payer = if env::attached_deposit().is_zero() { None } else { Some(caller.clone()) };
+        let sponsored = payer.is_none();
+        let token = self.mint_item(voucher.token_id, caller, item, voucher.title, voucher.media, "voucher", payer);
+        if sponsored {
+            self.float_paid.insert(token.token_id.clone());
+            self.assert_float();
+        }
+        token
     }
 
     /// Studio mint (primary-sale items: packs, land, workers …). `minter` only.
@@ -282,7 +295,9 @@ impl Contract {
     /// The storage the token used is refunded to the caller.
     #[payable]
     pub fn redeem(&mut self, token_id: TokenId) -> Item {
-        assert_one_yocto();
+        // No 1 yocto: a function-call (session) key may redeem for its account (docs 15 §14). Only the
+        // owner can, and redeeming only ever credits the owner's own island.
+        require!(env::attached_deposit().as_yoctonear() <= 1, "Attach nothing (or 1 yoctoNEAR)");
         self.assert_not_paused();
         let caller = env::predecessor_account_id();
         let owner = self.tokens.owner_by_id.get(&token_id).unwrap_or_else(|| env::panic_str("Token not found"));
@@ -293,8 +308,10 @@ impl Contract {
         let before = env::storage_usage();
         self.burn_redeemed(&token_id, &owner, &item);
         let after = env::storage_usage();
+        // storage this contract paid for (drops, sponsored mints) stays with it
+        let sponsored = self.float_paid.remove(&token_id);
 
-        if before > after {
+        if before > after && !sponsored {
             let refund = env::storage_byte_cost().saturating_mul((before - after) as u128);
             if !refund.is_zero() {
                 Promise::new(owner).transfer(refund).detach();
@@ -519,6 +536,8 @@ impl FungibleTokenReceiver for Contract {
         self.mint_item(token_id.clone(), sender_id.clone(), item.clone(), d.edition_title(edition), d.media.clone(), "drop", None);
         if buy.use_now {
             self.burn_redeemed(&token_id, &sender_id, &item);
+        } else {
+            self.float_paid.insert(token_id.clone());
         }
         d.sold = edition;
         self.drops.insert(d.id.clone(), d.clone());

@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import { AppError } from '../../../game/src/core/errors';
 import type { PrismaClient } from '../generated/prisma/client';
 import type { NearRpc } from './nearRpc';
-import { ACCOUNT_ID, verifyNep413 } from './nep413';
+import { ACCOUNT_ID, ed25519KeyBytes, verifyNep413 } from './nep413';
 
 export const SIGN_IN_MESSAGE = 'Sign in to Farmverse';
 export const ACCESS_TTL_SEC = 15 * 60;
@@ -42,6 +42,8 @@ export interface SessionsConfig {
   readonly adminAccounts: readonly string[];
   /** Local development only: sign in as any account without a wallet (the Unity editor has none). */
   readonly allowDevSignIn?: boolean;
+  /** After a wallet sign-in (welcome top-up, plan 15 §14). Must not throw or block. */
+  readonly onSignIn?: (accountId: string) => void;
 }
 
 const PKCS8_ED25519 = Buffer.from('302e020100300506032b657004220420', 'hex');
@@ -99,7 +101,12 @@ export class Sessions {
       { message: SIGN_IN_MESSAGE, nonce: nonceBytes, recipient: this.config.recipient, callbackUrl: null },
     );
     if (!valid) throw new AppError('UNAUTHENTICATED');
-    if (!(await this.rpc.isFullAccessKey(accountId, publicKey))) throw new AppError('UNAUTHENTICATED');
+    if (!(await this.rpc.isFullAccessKey(accountId, publicKey))) {
+      // A brand-new implicit account (social-login wallets, plan 15 §13.2) has no state until it gets NEAR:
+      // its id is the hex of its key, so the signature alone proves it.
+      const implicit = /^[0-9a-f]{64}$/.test(accountId) && ed25519KeyBytes(publicKey)?.toString('hex') === accountId;
+      if (!implicit || !this.rpc.accountExists || (await this.rpc.accountExists(accountId))) throw new AppError('UNAUTHENTICATED');
+    }
 
     const account = await this.prisma.account.upsert({
       where: { accountId },
@@ -107,6 +114,7 @@ export class Sessions {
       update: { lastLoginAt: new Date(this.now()), lastKey: publicKey },
     });
     if (account.bannedAt) throw new AppError('PERMISSION_DENIED');
+    this.config.onSignIn?.(accountId);
     return this.issue(accountId, randomUUID(), input.userAgent);
   }
 

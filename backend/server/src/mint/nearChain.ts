@@ -24,7 +24,7 @@ export interface ChainReader {
    * The redeems in a transaction signed by `signerId`, if it succeeded and its `item_redeem` events
    * came from the items contract. Empty when the transaction is unknown, failed, or isn't a redeem.
    */
-  redeemsIn(txHash: string, signerId: string): Promise<RedeemSeen[]>;
+  redeemsIn(txHash: string, signerId: string, ownerId?: string): Promise<RedeemSeen[]>;
 }
 
 type RpcResult<T> = { result?: T; error?: { cause?: { name?: string }; message?: string } };
@@ -60,10 +60,10 @@ export function rpcChainReader(rpcUrl: string, itemsContract: string, fetchImpl:
       return view<boolean>('is_burned', { token_id: tokenId });
     },
 
-    async redeemsIn(txHash, signerId) {
+    async redeemsIn(txHash, signerId, ownerId = signerId) {
       const out = await rpc<TxStatus>('tx', { tx_hash: txHash, sender_account_id: signerId, wait_until: 'FINAL' });
       if (!out.result) return []; // unknown (yet) or not this signer's
-      return parseRedeems(out.result, signerId, itemsContract);
+      return parseRedeems(out.result, signerId, itemsContract, ownerId);
     },
   };
 }
@@ -78,7 +78,11 @@ export interface TxStatus {
 }
 
 /** Pure: the `item_redeem` events of a successful transaction by `signerId`, from `itemsContract`. */
-export function parseRedeems(tx: TxStatus, signerId: string, itemsContract: string): RedeemSeen[] {
+/**
+ * `ownerId` is whose redeems count: the signer itself, or (a relayed meta-transaction, plan 15 §14) the player
+ * whose session key signed the inner call while our relayer signed the transaction.
+ */
+export function parseRedeems(tx: TxStatus, signerId: string, itemsContract: string, ownerId: string = signerId): RedeemSeen[] {
   const ok = (s: TxStatus['status']) => typeof s === 'object' && s !== null && 'SuccessValue' in s;
   if (!ok(tx.status) || tx.transaction.signer_id !== signerId) return [];
   const seen: RedeemSeen[] = [];
@@ -94,7 +98,7 @@ export function parseRedeems(tx: TxStatus, signerId: string, itemsContract: stri
       }
       if (event.standard !== 'farmverse_items' || event.event !== 'item_redeem') continue;
       for (const d of event.data ?? []) {
-        if (d.token_id && d.owner_id === signerId && d.item) seen.push({ tokenId: d.token_id, ownerId: d.owner_id, item: d.item });
+        if (d.token_id && d.owner_id === ownerId && d.item) seen.push({ tokenId: d.token_id, ownerId: d.owner_id, item: d.item });
       }
     }
   }

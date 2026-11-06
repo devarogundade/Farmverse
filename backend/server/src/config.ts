@@ -51,6 +51,12 @@ const Schema = z.object({
   FAUCET_FARM: z.coerce.number().int().min(0).default(100),
   FAUCET_NEAR: z.coerce.number().min(0).max(5).default(1),
   FAUCET_DAILY_CAP: z.coerce.number().int().min(0).default(2_000),
+  /** Pays gas for sponsored calls and welcome top-ups (plan 15 §14). Unset: the faucet account does it. */
+  RELAYER_ACCOUNT: optional(z.string().min(2)),
+  RELAYER_PRIVATE_KEY: optional(z.string().regex(/^ed25519:[1-9A-HJ-NP-Za-km-z]+$/, 'RELAYER_PRIVATE_KEY must be ed25519:<base58>')),
+  /** NEAR a new account gets once at sign-in when it holds less than WELCOME_BELOW_NEAR (0 = off). */
+  WELCOME_NEAR: z.coerce.number().min(0).max(1).default(0.05),
+  WELCOME_BELOW_NEAR: z.coerce.number().min(0).max(1).default(0.02),
 });
 
 export type Config = z.infer<typeof Schema>;

@@ -540,3 +540,25 @@ embedded wallets with email / phone / Google login; its manifest declares `signM
 **Considered:** NEAR Auth / FastAuth (`@fast-auth-near/*`, Auth0 + MPC keys): signs transactions but not NEP-413
 messages, needs approved Auth0 credentials on mainnet and has no documented testnet setup: the mainnet option, not the
 hackathon one. A studio-held key per player would break principle 3 (the studio never moves player assets).
+
+## 14. Sponsored fees: players don't need NEAR (added 2026-11-06)
+
+The user asked that players never need NEAR for gas. What is built:
+
+- **Mint and redeem without gas or popups.** The game page keeps a *session key* per account in the browser. The first
+  time, the wallet adds it once ("Allow Farmverse to mint and redeem for you"): a function-call key that can only call
+  `mint_with_voucher` and `redeem` on the items contract. Then every mint and redeem is a NEP-366 delegate action
+  signed by that key and sent to `chain-relay`; the server checks it is exactly one deposit-free call of those methods
+  on our items contract for the signed-in account (expiring within 600 blocks, 30 a minute per account) and sends it
+  from the relayer account, which pays the gas. Anything else falls back to the wallet.
+- **No deposits for those calls.** `mint_with_voucher` with nothing attached is paid from the items contract's own
+  NEAR (only server vouchers can mint, under the daily cap); `redeem` no longer needs 1 yoctoNEAR. Storage the contract
+  paid (drops, sponsored mints) is never refunded on redeem, so free mints can't be turned into NEAR.
+- **Welcome top-up.** At its first sign-in an account holding less than 0.02 NEAR gets 0.05 NEAR once from the relayer,
+  enough for the one-time key approval and for FARM payments.
+- **What can't be sponsored:** FARM payments (`ft_transfer_call`: drops, market buys, offers, rent) need 1 yoctoNEAR by
+  the token standard and FARM can't change, so they stay wallet transactions paid from the welcome NEAR. Every NEAR
+  account must hold a little NEAR for its own storage.
+- **Relayer key:** `RELAYER_ACCOUNT` / `RELAYER_PRIVATE_KEY` (testnet: the faucet account if unset). It only wraps
+  calls the player's own key signed and sends welcome NEAR; it can't move anyone's tokens or FARM.
+- **Implicit accounts** (social-login wallets) can sign in before they exist on chain: their id is the hex of the key.
