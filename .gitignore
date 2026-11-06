@@ -178,6 +178,9 @@ GoogleService-Info*.plist
 Claude outputs/
 _to_delete/
 
+# The game UI kit (paid) converted for the web. Rebuild: python tools/web/sync_game_ui.py
+/web/shared/public/ui/
+
 # 3D models exported from the ithappy packs (same licence as above). Rebuild: npm --prefix web run models
 /web/shared/public/models/**/*.glb
 web/**/node_modules/

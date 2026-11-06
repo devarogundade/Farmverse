@@ -30,8 +30,8 @@ Layers, libraries and the contract-call table are in `Docs/architecture/14-web-c
   doesn't allow redistribution, so they are **not in git**. Rebuild them with Blender 5.x installed:
   `npm run models` (runs `tools/blender/export_marketplace_models.py`). `character.parts.json` is committed.
 - **UI kit** (`shared/public/ui`, `shared/public/fonts`, `shared/src/tokens.css`) comes from the game's own
-  `Assets/Farmverse/Content/UI/Game/Resources/GameUi`. Re-sync after the game's UI changes:
-  `python ../tools/web/sync_game_ui.py`.
+  `Assets/Farmverse/Content/UI/Game/Resources/GameUi`, a paid kit, so `shared/public/ui` is **not in git**.
+  Create it (and re-sync after the game's UI changes) before building: `python ../tools/web/sync_game_ui.py`.
 
 ## How an NFT becomes 3D
 
