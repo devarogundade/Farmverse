@@ -485,7 +485,7 @@ with wallets and set prices from their own stock and demand.*
 | NPCs with wallets | Farmhands earn FARM into their own balance while rented (§12.1) | Keep, **and add merchant NPCs (§13.1)** |
 | Economy evolves without a patch | Fixed prices except player listings | **Merchants reprice themselves (§13.1)** |
 | Players never notice the chain | One approval per action, "Mint"/"Redeem" only | Keep; add social-login wallets where the network has them (§13.2) |
-| NEAR Intents | — | Mainnet only (the 1Click API and solvers don't serve testnet): "Get FARM with any token" is the mainnet path, documented, not built for the testnet submission |
+| NEAR Intents | — | The verifier contract (`intents.near`) has **no testnet deployment** (its docs: "There is no testnet deployment. Use small amounts for testing purposes."). So: **Buy FARM with any token** (§13.3) is built behind a mainnet switch; on testnet the sheet shows live 1Click quotes only |
 | NEP-245 multi token | Items are NEP-171 with a quantity | Not in this cut: moving goods to NEP-245 means a new contract and re-minting every good, the market and the indexer. Written in the README as the next step for fungible goods |
 
 ### 13.1 Market Town merchants (agent NPCs)
@@ -506,6 +506,21 @@ with wallets and set prices from their own stock and demand.*
   lot and accepts her offer — two approvals the first time (mint, then accept), shown as one step.
 - **Market site:** a Merchants page with each merchant's stock, prices over time and "why" (low stock, high demand).
 - Optional, cosmetic: a line of chat per merchant from NEAR AI Cloud, with the prices still set by the rule.
+
+### 13.3 Buy FARM with any token (NEAR Intents, mainnet)
+
+FARM has no DEX liquidity at launch, so solvers can't route *to* FARM. Instead the studio sells FARM at a fixed
+rate and takes payment through intents:
+
+1. The game's "Get FARM" sheet asks the server for a 1Click quote: any supported token on any chain → NEAR,
+   recipient = the treasury, with the player's account in the quote's reference.
+2. The player sends to the quote's deposit address from whatever wallet holds the token.
+3. The server polls 1Click's status for that deposit address; on `SUCCESS` it sends FARM at the fixed rate from a
+   `sales.` account (its own float, never the treasury key), once per deposit address.
+4. Refunds are 1Click's: a failed swap returns the token to the player's refund address.
+
+Without a mainnet deploy the sheet shows the quote (1Click's `dry` quotes need no funds) and says buying opens
+at launch.
 
 ### 13.2 Social login
 

@@ -79,7 +79,8 @@ an indexer migration, and the Unity panels.
 - [ ] G3 Game: merchants' offers at the market stall, "Sell to Bea" (mint + accept)
 - [ ] G4 Market site: Merchants page (stock, prices over time, why)
 - [ ] G5 Social-login wallets: check near-connect on testnet, put them first in the picker
-- [ ] G6 README: NEAR Intents (mainnet "Get FARM with any token") and NEP-245 for goods as next steps
+- [ ] G6 README: NEP-245 for goods as the next step; what intents do on mainnet
+- [ ] G7 Buy FARM with any token (1Click → NEAR to the treasury → FARM from `sales.`), behind a mainnet switch; live quotes on testnet (§13.3)
 
 ## F. Deploy and submit
 
