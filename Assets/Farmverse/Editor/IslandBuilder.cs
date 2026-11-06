@@ -266,10 +266,14 @@ namespace Farmverse.Editor
             // the pack animals face where they walk already
             foreach (var f in new[] { "cowYaw", "chickenYaw" }) IthappyArt.Set(animals, f, 0f);
             foreach (var f in new[] { "chickenScale", "cowScale", "sheepScale", "pigScale" }) IthappyArt.Set(animals, f, 1f);
-            // sound: every clip in Content/Audio, played by name
+            // sound: every effect in Content/Audio, played by name, and only the music track that plays
+            // (every clip wired here is in the web download: 12 unused tracks were ~30 MB of it)
             var audio = sys.AddComponent<IslandAudio>();
+            var music = new SerializedObject(audio).FindProperty("musicClip").stringValue;
             var clips = AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/Farmverse/Content/Audio" })
-                .Select(g => AssetDatabase.LoadAssetAtPath<AudioClip>(AssetDatabase.GUIDToAssetPath(g))).Where(c => c != null).ToArray();
+                .Select(g => AssetDatabase.GUIDToAssetPath(g))
+                .Where(path => !path.StartsWith(AudioSetup.Music + "/") || System.IO.Path.GetFileNameWithoutExtension(path) == music)
+                .Select(path => AssetDatabase.LoadAssetAtPath<AudioClip>(path)).Where(c => c != null).ToArray();
             SetArray(audio, "clips", clips);
             if (clips.Length == 0) Debug.LogWarning("[IslandBuilder] no sounds in Content/Audio: the island will be silent");
 

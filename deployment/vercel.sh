@@ -62,6 +62,8 @@ game() {
   cp "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.js" "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.css" "$out/"
   # Vercel takes files up to 100 MB: a bigger data file goes up in parts the page joins (a smaller one as it is)
   node "$ROOT/deployment/webgl-split.mjs" "$out"
+  # the install screen shows MB downloaded of the whole download
+  sed -i "s/data-bytes=\"0\"/data-bytes=\"$(du -cb "$out"/Build/* | tail -n1 | cut -f1)\"/" "$out/index.html"
   # the page settings the game reads (no Unity rebuild needed)
   sed -i -e "s#apiBaseUrl: \"[^\"]*\"#apiBaseUrl: \"$API\"#" \
     -e "s#marketplaceUrl: \"[^\"]*\"#marketplaceUrl: \"$MARKET_URL\"#" \

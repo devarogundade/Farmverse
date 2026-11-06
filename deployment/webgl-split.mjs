@@ -71,13 +71,11 @@ const loader = `
 const call = html.indexOf('createUnityInstance(canvas, {');
 if (call < 0) throw new Error('index.html: createUnityInstance call not found');
 // insert the helper, then wrap the call so it runs with the joined data
-html = html.slice(0, call) + loader + '    var fvBar = document.getElementById(\'fv-bar-fill\');\n    fvLoadData(function (p) { fvBar.style.width = Math.round(p * 80) + \'%\'; }).then(function (dataUrl) {\n    return ' + html.slice(call);
+// the parts are most of the download: they fill the install screen's download step, Unity the rest
+html = html.slice(0, call) + loader + '    fvLoadData(function (p) { window.fvProgress(p * 0.855); }).then(function (dataUrl) {\n    return ' + html.slice(call);
 html = html
   .replace(/dataUrl: "Build\/[^"]+\.data\.br",/, 'dataUrl: dataUrl,\n      cacheControl: function (url) { return url.indexOf("blob:") === 0 ? "no-store" : "must-revalidate"; },')
-  .replace(
-    "document.getElementById('fv-bar-fill').style.width = Math.round(progress * 100) + '%';",
-    "fvBar.style.width = Math.round(80 + progress * 20) + '%';",
-  );
+  .replace('window.fvProgress(progress);', 'window.fvProgress(0.855 + progress * 0.145);');
 // close the wrapper after Unity's .then(...) chain: the .catch now covers both steps
 html = html.replace(
   /\}\)\.then\(function \(instance\) \{([\s\S]*?)\}\)\.catch\(/,

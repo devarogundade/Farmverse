@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>{{{ PRODUCT_NAME }}}</title>
   <link rel="stylesheet" href="farmverse-page.css">
+  <link id="fv-icon" rel="icon" href="data:,">
   <script>
     // Set in Player Settings ▸ WebGL ▸ Resolution and Presentation (template variables). Empty = local dev.
     window.FARMVERSE_CONFIG = {
@@ -20,7 +21,24 @@
 <body>
   <div id="fv-root">
     <canvas id="unity-canvas" tabindex="-1"></canvas>
-    <div id="fv-loading"><div class="fv-logo">Farmverse</div><div class="fv-bar"><div id="fv-bar-fill"></div></div></div>
+    <!-- the install screen: the first visit downloads the game (data-bytes: its size, set by deployment/vercel.sh) -->
+    <div id="fv-loading" data-bytes="0">
+      <div class="fv-install">
+        <img class="fv-install-logo" alt="Farmverse" hidden>
+        <div class="fv-install-card">
+          <h1 id="fv-install-title">Installing Farmverse</h1>
+          <ol class="fv-steps">
+            <li id="fv-step-0" class="on"><span class="fv-step-dot">1</span>Download</li>
+            <li id="fv-step-1"><span class="fv-step-dot">2</span>Unpack</li>
+            <li id="fv-step-2"><span class="fv-step-dot">3</span>Start</li>
+          </ol>
+          <div class="fv-bar"><div id="fv-bar-fill"></div></div>
+          <div class="fv-install-row"><span id="fv-install-detail">Getting ready</span><span id="fv-install-pct">0%</span></div>
+          <p id="fv-install-note" class="fv-install-note">Only the first time. After this, your farm opens in seconds.</p>
+          <p id="fv-install-tip" class="fv-install-tip"></p>
+        </div>
+      </div>
+    </div>
     <div id="fv-signin" hidden>
       <div class="fv-card">
         <div class="fv-logo">Farmverse</div>
@@ -34,6 +52,90 @@
   <script type="module" src="farmverse-page.js"></script>
   <script src="Build/{{{ LOADER_FILENAME }}}"></script>
   <script>
+    // The install screen: the game's own art from the market site, the steps, and what's left to download.
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var root = $('fv-loading');
+      var site = (window.FARMVERSE_CONFIG.marketplaceUrl || '').replace(/\/+$/, '');
+      if (site) {
+        root.style.backgroundImage = 'linear-gradient(rgba(6, 22, 40, 0.1), rgba(6, 22, 40, 0.7)), url(' + site + '/ui/Home_LoadingBg.webp)';
+        var logo = root.querySelector('.fv-install-logo');
+        logo.onload = function () { logo.hidden = false; };
+        logo.src = site + '/ui/Home_Logo.webp';
+        $('fv-icon').href = site + '/ui/Icon_Clover.webp';
+        if (window.FontFace) {
+          [['FvTitle', 'LilitaOne'], ['FvBody', 'NunitoExtraBold']].forEach(function (f) {
+            new FontFace(f[0], 'url(' + site + '/fonts/' + f[1] + '.ttf)').load().then(function (face) { document.fonts.add(face); }, function () {});
+          });
+        }
+      }
+
+      var tips = [
+        'Plant crops, wait, harvest, sell. Coins buy more land.',
+        'Turn spare goods into NFTs and sell them on the market for FARM.',
+        'Farmhands work your farm and get better at it.',
+        'Minting and redeeming are free. We pay the network fee.',
+        'Bea, Ruth, Tomas and Ivy set their prices from what they hold.',
+      ];
+      var tip = Math.floor(Math.random() * tips.length);
+      var showTip = function () { $('fv-install-tip').textContent = tips[tip++ % tips.length]; };
+      showTip();
+      var tipTimer = setInterval(showTip, 6000);
+
+      var bytes = Number(root.getAttribute('data-bytes')) || 0;
+      var started = Date.now(), samples = [], cached = null, failed = false;
+      var mb = function (b) { return (b / 1048576).toFixed(b < 10 * 1048576 ? 1 : 0); };
+      var step = function (n) {
+        for (var i = 0; i < 3; i++) $('fv-step-' + i).className = i < n ? 'done' : i === n ? 'on' : '';
+      };
+
+      // Unity reports 0..0.9 while downloading, then up to 1 while it unpacks and starts
+      window.fvProgress = function (p) {
+        if (failed) return;
+        var pct = Math.round(Math.min(1, p) * 100);
+        $('fv-bar-fill').style.width = pct + '%';
+        $('fv-install-pct').textContent = pct + '%';
+        var d = Math.min(1, p / 0.9);
+        if (cached === null && d >= 1) {
+          // done downloading in a moment: it came from this browser's cache
+          cached = Date.now() - started < 2500;
+          if (cached) { $('fv-install-title').textContent = 'Opening your farm'; $('fv-install-note').hidden = true; }
+        }
+        if (d < 1) {
+          step(0);
+          if (!bytes) { $('fv-install-detail').textContent = 'Downloading the game'; return; }
+          var got = d * bytes, now = Date.now();
+          samples.push([now, got]);
+          while (samples.length > 2 && now - samples[0][0] > 4000) samples.shift();
+          var rate = samples.length > 1 ? (got - samples[0][1]) / ((now - samples[0][0]) / 1000) : 0;
+          var text = mb(got) + ' of ' + mb(bytes) + ' MB';
+          if (rate > 50000) {
+            var left = (bytes - got) / rate;
+            text += ' · ' + mb(rate) + ' MB/s';
+            if (left >= 1) text += ' · about ' + (left < 60 ? Math.ceil(left) + ' s' : Math.ceil(left / 60) + ' min') + ' left';
+          }
+          $('fv-install-detail').textContent = text;
+        } else if (p < 1) {
+          step(1);
+          $('fv-install-detail').textContent = 'Unpacking the farm';
+        } else {
+          step(2);
+          $('fv-install-detail').textContent = 'Starting your farm';
+        }
+      };
+      window.fvStarted = function () { clearInterval(tipTimer); root.hidden = true; };
+      window.fvFailed = function (message) {
+        failed = true;
+        clearInterval(tipTimer);
+        root.classList.add('fv-failed');
+        $('fv-install-title').textContent = 'The game could not start';
+        $('fv-install-detail').textContent = String(message);
+        $('fv-install-pct').textContent = '';
+        $('fv-install-note').hidden = false;
+        $('fv-install-note').textContent = 'Reload the page to try again.';
+      };
+    })();
+
     var canvas = document.getElementById('unity-canvas');
     createUnityInstance(canvas, {
       dataUrl: "Build/{{{ DATA_FILENAME }}}",
@@ -52,12 +154,12 @@
       productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
       productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
     }, function (progress) {
-      document.getElementById('fv-bar-fill').style.width = Math.round(progress * 100) + '%';
+      window.fvProgress(progress);
     }).then(function (instance) {
       window.unityInstance = instance;
-      document.getElementById('fv-loading').hidden = true;
+      window.fvStarted();
     }).catch(function (message) {
-      document.getElementById('fv-loading').textContent = 'The game could not start: ' + message;
+      window.fvFailed(message);
     });
   </script>
 </body>

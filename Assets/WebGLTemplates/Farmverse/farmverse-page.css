@@ -16,3 +16,29 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
 .fv-card button:disabled { opacity: 0.6; cursor: progress; }
 .fv-error { color: #ffb4a8; font-size: 14px; }
 .fv-small { font-size: 13px; opacity: 0.75; }
+
+/* ---- the install screen (first visit: download, unpack, start) ---- */
+#fv-loading { background: #1f3a2b center / cover no-repeat; justify-content: flex-end; padding: 24px 16px max(28px, 6vh); box-sizing: border-box; }
+.fv-install { width: min(560px, 100%); display: flex; flex-direction: column; align-items: center; gap: 2vh; font-family: FvBody, system-ui, sans-serif; }
+.fv-install-logo { width: min(400px, 76vw); filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35)); }
+.fv-install-card { width: 100%; box-sizing: border-box; padding: 20px 24px 16px; border-radius: 22px; background: rgba(8, 28, 52, 0.84); border: 3px solid rgba(255, 255, 255, 0.12); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.08); }
+#fv-install-title { margin: 0 0 14px; text-align: center; font: 28px/1.1 FvTitle, system-ui, sans-serif; letter-spacing: 0.5px; color: #fff; text-shadow: 0 3px 0 #06162a; }
+.fv-steps { list-style: none; margin: 0 0 16px; padding: 0; display: flex; gap: 8px; }
+.fv-steps li { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; color: rgba(255, 255, 255, 0.45); }
+.fv-step-dot { position: relative; width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; background: rgba(255, 255, 255, 0.12); }
+.fv-steps li.on { color: #fff; }
+.fv-steps li.on .fv-step-dot { background: #ffd23a; color: #4a2a00; box-shadow: 0 0 0 4px rgba(255, 210, 58, 0.25); }
+.fv-steps li.done { color: #9be37a; }
+.fv-steps li.done .fv-step-dot { background: #3fbf3a; color: transparent; }
+.fv-steps li.done .fv-step-dot::after { content: "\2713"; position: absolute; color: #fff; font-size: 15px; }
+.fv-install .fv-bar { width: 100%; height: 22px; padding: 3px; box-sizing: border-box; border-radius: 12px; background: rgba(0, 0, 0, 0.38); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4); overflow: hidden; }
+.fv-install #fv-bar-fill { min-width: 16px; border-radius: 9px; transition: width 0.3s;
+  background-image: repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 0 10px, transparent 10px 20px), linear-gradient(#ffe36a, #f5b31c);
+  background-size: 28px 28px, 100% 100%; animation: fv-stripes 1s linear infinite; }
+.fv-install-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 15px; color: #cfe6ff; }
+#fv-install-pct { color: #ffd23a; }
+.fv-install-note { margin: 12px 0 0; text-align: center; font-size: 14px; color: rgba(255, 255, 255, 0.75); }
+.fv-install-tip { margin: 8px 0 0; min-height: 2.6em; text-align: center; font-size: 14px; line-height: 1.3; color: #fff; }
+.fv-failed #fv-bar-fill { background-image: none; background-color: #e8253f; animation: none; }
+@keyframes fv-stripes { to { background-position: 28px 0, 0 0; } }
+@media (max-height: 520px) { .fv-install-logo { width: min(260px, 50vw); } .fv-install-tip { display: none; } }
