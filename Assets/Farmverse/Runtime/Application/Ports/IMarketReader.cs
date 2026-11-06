@@ -19,6 +19,11 @@ namespace Farmverse.Application.Ports
         public string? Price;
         /// <summary>Small traits (level, edition, specialty …) for the detail panel.</summary>
         public IReadOnlyDictionary<string, object> Props = new Dictionary<string, object>();
+        /// <summary>Workers: slot → part (the marketplace's outfit keys: hair, hat, face, top …).</summary>
+        public IReadOnlyDictionary<string, string> Outfit = new Dictionary<string, string>();
+        /// <summary>A worker this account is renting (works on its farm until <see cref="RentedUntil"/>).</summary>
+        public bool Rented;
+        public long RentedUntil;
     }
 
     /// <summary>A studio drop for sale (docs 15 §5): the Farm Pass, gem packs, land deeds …</summary>

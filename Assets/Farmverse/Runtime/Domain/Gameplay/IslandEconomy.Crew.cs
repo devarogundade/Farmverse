@@ -22,6 +22,8 @@ namespace Farmverse.Domain.Gameplay
         public int level = 1;
         /// <summary>Rented from someone else (shown as "Rented"; works the same).</summary>
         public bool rented;
+        /// <summary>How they're dressed on the island ("Slot=Mesh;…", see CharacterLook); cosmetic, the rules ignore it.</summary>
+        public string look = "";
     }
 
     public sealed partial class IslandEconomy
@@ -51,6 +53,7 @@ namespace Farmverse.Domain.Gameplay
                     stamina = Clamp(f.stamina, 1, 5),
                     level = Clamp(f.level, 1, GameplayRules.FarmhandMaxLevel),
                     rented = f.rented,
+                    look = f.look ?? "",
                 });
             }
         }
@@ -117,7 +120,7 @@ namespace Farmverse.Domain.Gameplay
 
         private void SaveCrew(EconomySave s)
         {
-            s.crew = _crew.Select(f => new Farmhand { token = f.token, name = f.name, specialty = f.specialty, speed = f.speed, carry = f.carry, stamina = f.stamina, level = f.level, rented = f.rented }).ToList();
+            s.crew = _crew.Select(f => new Farmhand { token = f.token, name = f.name, specialty = f.specialty, speed = f.speed, carry = f.carry, stamina = f.stamina, level = f.level, rented = f.rented, look = f.look }).ToList();
             s.wildPlotsOpen = WildPlotsOpen;
         }
 

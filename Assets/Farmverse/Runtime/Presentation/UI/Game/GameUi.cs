@@ -170,6 +170,7 @@ namespace Farmverse.Presentation.UI.Game
             DragTick();
             BoostSync();
             LinkTick();
+            CrewTick();
             SystemTick();
             RouteTick();
             TrainTick();

@@ -145,6 +145,7 @@ namespace Farmverse.Presentation.UI.Game
             });
             var tips = PK.N(side, p, "A bigger workers' house works longer offline: 12 hours at level 2, 16 at level 3. The Farm Pass makes it 24.", 14, GameTheme.T("#8ad6ff"), wrap: true);
             tips.style.marginTop = p.P(10);
+            WorkCrewSection(side, p, eco);
             var grow = PK.Box(side);
             grow.style.flexGrow = 1;
             WorkBoostButton(side, p, "nightshift", eco.NightShift ? "Night Shift on" : "Night Shift", "Next absence: normal food price, up to 24 h");
@@ -186,6 +187,27 @@ namespace Farmverse.Presentation.UI.Game
                 var label = Loc.Of(IslandEconomyHost.NameOf(id));
                 WorkBuildingRow(list, p, u, total[id] > 1 ? label + " " + seen[id] : label);
             }
+        }
+
+        /// <summary>Farmhands (docs 15 §7): who works here, their trade and level; beds come from the workers' houses.</summary>
+        private void WorkCrewSection(VisualElement side, Pt p, IslandEconomy eco)
+        {
+            if (!ChainReady) return;
+            var crew = eco.Crew;
+            var beds = eco.CrewBeds;
+            PK.T(side, p, crew.Count == 0 ? "Farmhands" : $"Farmhands · {System.Math.Min(crew.Count, beds)}/{beds} beds", 22).style.marginTop = p.P(14);
+            if (crew.Count == 0)
+                PK.N(side, p, "Farmhands are workers you own as NFTs: they work here with their own skills and level up.", 14, GameTheme.T("#9fd0ff"), wrap: true);
+            for (var i = 0; i < crew.Count && i < 8; i++)
+            {
+                var f = crew[i];
+                var bed = i < beds;
+                var trade = f.specialty switch { "fields" => "Fields", "animals" => "Animals", "machines" => "Machines", "freight" => "Freight", _ => "All-round" };
+                var line = $"{f.name} · {trade} · level {f.level}" + (f.rented ? " · rented" : "") + (bed ? "" : " · no bed free");
+                PK.N(side, p, line, 15, bed ? Color.white : GameTheme.T("#ffd23a"), wrap: true).style.marginTop = p.P(4);
+            }
+            var hire = PK.Btn(side, p, "yellow", crew.Count == 0 ? "Hire a Farmhand" : "Hire more", 340, 52, 18, () => GameLinks.Open(GameLinks.Market + "/#/rent", "Open the market"));
+            hire.style.marginTop = p.P(8);
         }
 
         private static int WorkSortKey(IslandEconomy eco, int uid) =>

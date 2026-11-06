@@ -86,6 +86,14 @@ namespace Farmverse.Presentation.World
         /// <summary>The costume worn now ("" for none).</summary>
         public string CostumeId => _costumeId;
 
+        /// <summary>Wears its own look from now on (a Farmhand's outfit), whatever its role's look is.</summary>
+        public void ApplyOwn(string look)
+        {
+            ownLook = true;
+            defaultLook = look;
+            Apply(look);
+        }
+
         /// <summary>Put on a look: each slot named in it gets that mesh (or nothing); slots not named stay as they are.</summary>
         public void Apply(string look)
         {

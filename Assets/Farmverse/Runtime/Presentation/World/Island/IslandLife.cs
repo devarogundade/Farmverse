@@ -45,6 +45,8 @@ namespace Farmverse.Presentation.World.Island
         {
             public Role Role;
             public int Home;
+            /// <summary>A Farmhand's token (docs 15 §7): they work like the house's people, dressed in their own outfit.</summary>
+            public string? Crew;
             public string Kind = "";
             public Transform Body = null!;
             public CharacterMotion? Motion;
@@ -238,6 +240,7 @@ namespace Farmverse.Presentation.World.Island
             var eco = Eco;
             // farm workers and warriors: one per person present in their house
             Sync(Role.Worker, eco.Workforce(DepartmentKind.WorkersHouse).ToList(), workerPrefab != null ? new[] { workerPrefab } : new GameObject[0]);
+            SyncCrew(eco);
             Sync(Role.Warrior, eco.Workforce(DepartmentKind.ArmyHouse).Concat(eco.Workforce(DepartmentKind.Watch)).ToList(), warriorPrefab != null ? new[] { warriorPrefab } : new GameObject[0]);
             // builders: one from the farmhouse, the rest from fed builders' huts
             var homes = new List<(int, int)>();
@@ -283,14 +286,35 @@ namespace Farmverse.Presentation.World.Island
             if (prefabs.Length == 0) return;
             foreach (var (house, people) in homes)
             {
-                var have = _agents.Count(a => a.Role == role && a.Home == house && a.Job != Job.Leave && a.Job != Job.Down);
+                var have = _agents.Count(a => a.Role == role && a.Crew == null && a.Home == house && a.Job != Job.Leave && a.Job != Job.Down);
                 for (var i = have; i < people; i++) Spawn(role, house, prefabs[(house + i) % prefabs.Length]);
                 if (have > people)
-                    foreach (var a in _agents.Where(a => a.Role == role && a.Home == house && a.Job != Job.Leave && a.Job != Job.Down).Take(have - people).ToList())
+                    foreach (var a in _agents.Where(a => a.Role == role && a.Crew == null && a.Home == house && a.Job != Job.Leave && a.Job != Job.Down).Take(have - people).ToList())
                         Leave(a);
             }
             // people whose house is gone (sold) leave too
-            foreach (var a in _agents.Where(a => a.Role == role && a.Job != Job.Leave && a.Job != Job.Down && !homes.Any(h => h.house == a.Home)).ToList())
+            foreach (var a in _agents.Where(a => a.Role == role && a.Crew == null && a.Job != Job.Leave && a.Job != Job.Down && !homes.Any(h => h.house == a.Home)).ToList())
+                Leave(a);
+        }
+
+        /// <summary>
+        /// Farmhands with a bed walk the island as workers in their own outfits (docs 15 §7.3); one sold or with no
+        /// bed walks off. They live in the first workers' house.
+        /// </summary>
+        private void SyncCrew(IslandEconomy eco)
+        {
+            if (workerPrefab == null) return;
+            var house = eco.Departments.Values.Where(d => d.Levels.Kind == DepartmentKind.WorkersHouse && eco.Working(d.Uid)).OrderBy(d => d.Uid).FirstOrDefault();
+            var working = house == null ? new List<Farmhand>() : eco.WorkingCrew.ToList();
+            foreach (var f in working)
+            {
+                if (_agents.Any(a => a.Crew == f.token && a.Job != Job.Leave && a.Job != Job.Down)) continue;
+                var a = Spawn(Role.Worker, house!.Uid, workerPrefab);
+                a.Crew = f.token;
+                a.Speed *= 1f + 0.06f * (f.speed - 1) + 0.03f * (f.level - 1);
+                if (!string.IsNullOrEmpty(f.look) && a.Body.GetComponentInChildren<CharacterLook>(true) is { } dress) dress.ApplyOwn(f.look);
+            }
+            foreach (var a in _agents.Where(a => a.Crew != null && a.Job != Job.Leave && a.Job != Job.Down && working.All(f => f.token != a.Crew)).ToList())
                 Leave(a);
         }
 

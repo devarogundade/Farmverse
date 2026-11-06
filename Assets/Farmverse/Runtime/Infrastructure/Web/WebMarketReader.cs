@@ -69,25 +69,42 @@ namespace Farmverse.Infrastructure.Web
             if (!r.IsOk) return Result<IReadOnlyList<OwnedNft>>.Fail(r.Error);
             var list = new List<OwnedNft>();
             if (r.Value is Dictionary<string, object> page && page.TryGetValue("items", out var items) && items is List<object> rows)
-            {
                 foreach (var row in rows)
+                    if (row is Dictionary<string, object> t) list.Add(Token(t));
+            // workers this account is renting right now work on its farm too (docs 15 §12.1)
+            var rent = await Get("/v1/market/accounts/" + Uri.EscapeDataString(account) + "/rentals", cancellation);
+            if (rent.IsOk && rent.Value is Dictionary<string, object> rd && rd.TryGetValue("renting", out var renting) && renting is List<object> rrows)
+            {
+                foreach (var row in rrows)
                 {
-                    if (row is not Dictionary<string, object> t) continue;
-                    var meta = t.TryGetValue("metadata", out var m) && m is Dictionary<string, object> md ? md : new Dictionary<string, object>();
-                    var props = meta.TryGetValue("props", out var pr) && pr is Dictionary<string, object> pd ? pd : new Dictionary<string, object>();
-                    list.Add(new OwnedNft
-                    {
-                        TokenId = Str(t, "token_id"),
-                        Title = Str(t, "title"),
-                        Kind = Str(t, "kind"),
-                        ItemId = Str(meta, "item_id"),
-                        Quantity = Long(meta, "quantity", 1),
-                        Price = t.TryGetValue("price", out var p) && p is string ps ? ps : null,
-                        Props = props,
-                    });
+                    if (row is not Dictionary<string, object> rr || !(rr.TryGetValue("token", out var tk) && tk is Dictionary<string, object> td)) continue;
+                    var nft = Token(td);
+                    nft.Rented = true;
+                    nft.RentedUntil = Long(rr, "rented_until", 0);
+                    list.Add(nft);
                 }
             }
             return Result<IReadOnlyList<OwnedNft>>.Ok(list);
+        }
+
+        private static OwnedNft Token(Dictionary<string, object> t)
+        {
+            var meta = t.TryGetValue("metadata", out var m) && m is Dictionary<string, object> md ? md : new Dictionary<string, object>();
+            var props = meta.TryGetValue("props", out var pr) && pr is Dictionary<string, object> pd ? pd : new Dictionary<string, object>();
+            var outfit = new Dictionary<string, string>();
+            if (meta.TryGetValue("outfit", out var o) && o is Dictionary<string, object> od)
+                foreach (var kv in od) if (kv.Value is string part) outfit[kv.Key] = part;
+            return new OwnedNft
+            {
+                TokenId = Str(t, "token_id"),
+                Title = Str(t, "title"),
+                Kind = Str(t, "kind"),
+                ItemId = Str(meta, "item_id"),
+                Quantity = Long(meta, "quantity", 1),
+                Price = t.TryGetValue("price", out var p) && p is string ps ? ps : null,
+                Props = props,
+                Outfit = outfit,
+            };
         }
 
         public async Task<Result<IReadOnlyList<MarketDrop>>> Drops(CancellationToken cancellation)

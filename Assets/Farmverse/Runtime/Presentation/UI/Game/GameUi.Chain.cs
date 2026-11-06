@@ -161,6 +161,60 @@ namespace Farmverse.Presentation.UI.Game
             return a.Length != b.Length ? a.Length.CompareTo(b.Length) : string.CompareOrdinal(a, b);
         }
 
+        // ------------------------------------------------------------------ Farmhands (docs 15 §7)
+
+        private float _crewNext;
+
+        /// <summary>The wallet's Farmhands (held and rented) onto the island, with their outfits; the server does the same on sync.</summary>
+        private void CrewTick()
+        {
+            if (Time.unscaledTime < _crewNext) return;
+            _crewNext = Time.unscaledTime + 3f;
+            var eco = Economy;
+            var n = Nfts;
+            if (eco == null || n == null || !n.OwnedLoaded || n.OwnedFailed) return;
+            var crew = n.Owned.Where(t => t.Kind == "worker" && t.Price == null).Select(CrewOf).ToList();
+            // compared with what the island holds now (a server island arrives without the outfits)
+            static string Key(System.Collections.Generic.IEnumerable<Farmverse.Domain.Gameplay.Farmhand> c) =>
+                string.Join("|", c.OrderBy(f => f.token, System.StringComparer.Ordinal).Select(f => f.token + ":" + f.level + f.rented + f.look));
+            if (Key(crew) == Key(eco.Crew)) return;
+            eco.SetCrew(crew);
+            Host?.Save();
+            MarkDirty();
+        }
+
+        private static Farmverse.Domain.Gameplay.Farmhand CrewOf(Farmverse.Application.Ports.OwnedNft t)
+        {
+            int Trait(string k) => t.Props.TryGetValue(k, out var v) ? System.Convert.ToInt32(v) : 1;
+            return new Farmverse.Domain.Gameplay.Farmhand
+            {
+                token = t.TokenId,
+                name = t.Props.TryGetValue("name", out var nm) && nm is string s ? s : t.Title,
+                specialty = t.Props.TryGetValue("specialty", out var sp) && sp is string sps ? sps : "",
+                speed = Trait("speed"), carry = Trait("carry"), stamina = Trait("stamina"), level = Trait("level"),
+                rented = t.Rented,
+                look = LookOf(t.Outfit),
+            };
+        }
+
+        /// <summary>The marketplace's outfit keys → the island's dressing slots (CharacterParts).</summary>
+        private static string LookOf(System.Collections.Generic.IReadOnlyDictionary<string, string> outfit)
+        {
+            var slots = new System.Collections.Generic.List<string>();
+            foreach (var kv in outfit)
+            {
+                var slot = kv.Key switch
+                {
+                    "hair" => "Hairstyle", "hat" => "Hat", "face" => "Faces", "glasses" => "Glasses", "top" => "Outerwear",
+                    "bottom" => "Pants", "glove" => "Gloves", "shoes" => "Shoes",
+                    "accessory" => kv.Value.StartsWith("Mustache") ? "Mustache" : "Accessories",
+                    _ => null,
+                };
+                if (slot != null) slots.Add(slot + "=" + kv.Value);
+            }
+            return string.Join(";", slots);
+        }
+
         // ------------------------------------------------------------------ the NFTs tab (docs 15 §3.1)
 
         /// <summary>A Storage row for an NFT the wallet holds.</summary>

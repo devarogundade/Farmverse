@@ -54,7 +54,7 @@ an indexer migration, and the Unity panels.
 - [x] D4 Mint sheet: chips + stepper, allowance bar, fee, four-step progress, Sell/Keep, errors in place, boosts mintable, "Finish minting" §4.1
 - [x] D5 FARM (and low NEAR) in the top bar; "Get FARM" sheet with the faucet §3.3
 - [x] D6 Pass "Get Premium · 250 FARM" (buy-and-use), "Use your Farm Pass"; shop: starter pack, Builder's Pass, gem packs, land deeds with counts left §5.3
-- [ ] D7 Farmhands on the island in their outfits; Workers panel Farmhands section, "No bed free", "Rented · n days left", Hire on market §7.3 §12.1
+- [x] D7 Farmhands on the island in their outfits; Workers panel Farmhands section, "No bed free", "Rented · n days left", Hire on market §7.3 §12.1
 - [ ] D8 Wild plots: locked signs, "Use a land deed", clearing §12.3
 - [ ] D9 Golden goods: gold frame in storage, harvest pop §12.4
 - [ ] D10 Market live socket → toasts + Inbox (sold, offer, rented) §3.4
