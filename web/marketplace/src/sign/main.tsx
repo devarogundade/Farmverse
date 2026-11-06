@@ -17,6 +17,11 @@ const CLIENT_ID = env.VITE_PRIVY_CLIENT_ID ?? '';
 /** Who may ask this page to sign: the market and the game. */
 const ORIGINS = [location.origin, new URL(config.playUrl).origin];
 
+// The wallet's executor (in the game or market) closes this window unless it hears READY within 5 s, but signing in
+// takes longer. Say READY now: the executor answers every READY with its request, so the sign step below, which says
+// READY again once it's mounted, still gets it. (Also runs again when Google sends the player back here.)
+if (window.opener) window.opener.postMessage({ source: 'privy-near-connect', type: 'READY' }, '*');
+
 type Step = 'loading' | 'email' | 'code' | 'wallet' | 'sign' | 'error';
 
 const STYLE = `body{margin:0;font-family:system-ui,sans-serif;background:#0b2a55;color:#fff}
