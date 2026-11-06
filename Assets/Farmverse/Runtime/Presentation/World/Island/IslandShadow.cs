@@ -114,6 +114,20 @@ namespace Farmverse.Presentation.World.Island
             Flush();
         }
 
+        /// <summary>
+        /// Mirrors <paramref name="state"/> to the server now and waits (before a mint, so the server's copy
+        /// has what the player sees). False when there is no server session.
+        /// </summary>
+        public static async System.Threading.Tasks.Task<bool> SyncNow(IslandState state)
+        {
+            var server = _server;
+            if (server == null) return false;
+            while (_running) await System.Threading.Tasks.Task.Delay(100);
+            _pending = null;
+            await Run(server, state);
+            return true;
+        }
+
         /// <summary>The island as the game loaded it from its save, before catching up (from the economy host), or as it is now.</summary>
         public static void Offer(IslandState loaded)
         {

@@ -280,7 +280,16 @@ namespace Farmverse.Presentation.World.Island
 
         private void OnPlaced(BuildingCatalogue.Entry e, PlacedBuilding pb)
         {
-            if (!_placed.Contains(pb))
+            if (!_placed.Contains(pb) && _placingHeld != null && _placingHeld.id == pb.id)
+            {
+                // a building redeemed from an NFT: already paid for, standing at its level
+                _placed.Add(pb);
+                if (_economyStarted) economy!.OnPlacedHeld(pb, _placingHeld.level);
+                IslandServerState.TakeHeld(_placingHeld);
+                _placingHeld = null;
+                IslandAudio.Play("buy", null, 0.8f, 0f);
+            }
+            else if (!_placed.Contains(pb))
             {
                 _placed.Add(pb);
                 Spend(e.price);

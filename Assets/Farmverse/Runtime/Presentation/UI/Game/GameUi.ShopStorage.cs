@@ -1,6 +1,7 @@
 #nullable enable
 using System.Collections.Generic;
 using System.Linq;
+using Farmverse.Presentation.World.Island;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -241,6 +242,7 @@ namespace Farmverse.Presentation.UI.Game
             PK.Pad(desc, p.P(12), p.P(12), p.P(12), p.P(12));
 
             PK.Grow(side);
+            ShopHeldButton(side, p, sideW - 60);
             var entry = it;
             if (it.use == null)
             {
@@ -273,6 +275,13 @@ namespace Farmverse.Presentation.UI.Game
                 PK.T(sell, p, "Sell", 32).style.marginRight = p.P(10);
                 PK.Img(sell, "ResourceBar_Icon_Gold", p.P(80) * .62f).style.marginRight = p.P(6);
                 PK.T(sell, p, PK.Num(entry.price * _shopQty), 32);
+                if (ChainReady)
+                {
+                    // the goods become one NFT the player can trade on the marketplace (docs 13 §7)
+                    var qty = _shopQty;
+                    var mint = PK.Btn(side, p, "purple", "Mint " + PK.Num(qty) + " as NFT", sideW - 60, 64, 26, () => ChainMintGoods(entry.id, qty));
+                    mint.style.marginTop = p.P(10);
+                }
             }
             else
             {
@@ -283,6 +292,15 @@ namespace Farmverse.Presentation.UI.Game
                     MarkDirty();
                 });
             }
+        }
+
+        /// <summary>Under Storage: redeemed NFT buildings waiting to be placed.</summary>
+        private void ShopHeldButton(VisualElement parent, Pt p, float width)
+        {
+            var count = IslandServerState.Held.Count;
+            if (count == 0) return;
+            var b = PK.Btn(parent, p, "green", "NFT buildings to place (" + count + ")", width, 60, 22, () => Open("heldbuildings"));
+            b.style.marginTop = p.P(10);
         }
 
         /// <summary>Puts a good's picture into a slot made without one (sized like the slot's own icon).</summary>

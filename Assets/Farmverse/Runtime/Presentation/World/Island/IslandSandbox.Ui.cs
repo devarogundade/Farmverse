@@ -30,10 +30,34 @@ namespace Farmverse.Presentation.World.Island
         public IEnumerable<BuildingCatalogue.Entry> ShopEntries =>
             catalogue == null ? Enumerable.Empty<BuildingCatalogue.Entry>() : catalogue.entries.Where(e => e.prefab != null && e.price > 0 && !e.id.StartsWith("nature_"));
 
+        /// <summary>The held building being placed (free, at its level), or null for a normal purchase.</summary>
+        private IslandState.Held? _placingHeld;
+
+        /// <summary>
+        /// Start placing a building redeemed from an NFT (<see cref="IslandServerState.Held"/>): no coins,
+        /// standing at once, at its level. False when this island doesn't know the building.
+        /// </summary>
+        public bool PlaceHeld(IslandState.Held held)
+        {
+            if (placer == null || islandCamera == null || catalogue == null) return false;
+            var e = catalogue.Find(held.id);
+            if (e == null || e.prefab == null) return false;
+            _selected = null;
+            _selectedProp = null;
+            _placingHeld = held;
+            var cam = islandCamera.GetComponent<Camera>();
+            var r = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+            var p = new Plane(Vector3.up, Vector3.zero);
+            placer.BeginNew(e, p.Raycast(r, out var en) ? r.GetPoint(en) : Vector3.zero);
+            IslandAudio.Play("pop", null, 0.5f, 0f);
+            return true;
+        }
+
         /// <summary>Start placing a new building from the shop, in the middle of the view.</summary>
         public void Buy(BuildingCatalogue.Entry e)
         {
             if (placer == null || islandCamera == null) return;
+            _placingHeld = null;
             if (IslandLevel < GameplayRules.UnlockLevel(e.id) || Coins < e.price || CantBuy(e) != null) { IslandAudio.Play("error", null, 0.6f); return; }
             _selected = null;
             _selectedProp = null;

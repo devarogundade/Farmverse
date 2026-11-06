@@ -38,6 +38,17 @@ namespace Farmverse.Presentation.World.Island
             }
         }
 
+        /// <summary>A held building was placed: it leaves the held list (the next upload tells the server).</summary>
+        public static void TakeHeld(IslandState.Held placed)
+        {
+            var items = new List<IslandState.Held>(Held);
+            var i = items.FindIndex(h => h.id == placed.id && h.level == placed.level && h.price == placed.price);
+            if (i < 0) return;
+            items.RemoveAt(i);
+            PlayerPrefs.SetString(HeldKey, JsonUtility.ToJson(new HeldList { items = items }));
+            PlayerPrefs.Save();
+        }
+
         /// <summary>Takes <paramref name="server"/>'s island (an <see cref="IslandState"/> JSON) and reloads the scene.</summary>
         public static void Load(string serverStateJson)
         {

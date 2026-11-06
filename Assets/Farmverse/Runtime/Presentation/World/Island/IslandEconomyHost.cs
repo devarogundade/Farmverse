@@ -245,6 +245,8 @@ namespace Farmverse.Presentation.World.Island
                     id = b.id, uid = b.uid, x = b.cells.x, z = b.cells.y, w = b.cells.width, d = b.cells.height,
                     price = PriceOf?.Invoke(b.id) ?? 0,
                 });
+            // redeemed buildings not placed yet travel with the island (the server's copy keeps them)
+            foreach (var h in IslandServerState.Held) state.held.Add(new IslandState.Held { id = h.id, level = h.level, price = h.price });
             return state;
         }
 
@@ -259,6 +261,14 @@ namespace Farmverse.Presentation.World.Island
 
 
         /// <summary>A building just bought: it goes up as a construction site the builders work on (a field is quick).</summary>
+        /// <summary>A redeemed (held) building was put down: standing at once, at its level, nothing to pay.</summary>
+        public void OnPlacedHeld(PlacedBuilding b, int level)
+        {
+            Add(b, Clock);
+            Economy.SetLevel(b.uid, level);
+            Save();
+        }
+
         public void OnBought(PlacedBuilding b, int price)
         {
             Add(b, Clock, GameplayRules.BuildWork(b.id, price));

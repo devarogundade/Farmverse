@@ -537,6 +537,7 @@ namespace Farmverse.Presentation.UI.Game
             if (s.CanGoInside) buttons.Add(("green", null, "Go inside", 54, 20, () => { s.GoInside(); MarkDirty(); }, null));
             if (s.CanRestyle) buttons.Add(("purple", null, b.alt ? "New look" : "Classic look", 54, 20, () => { s.RestyleSelected(); MarkDirty(); }, null));
             if (s.CanSell) buttons.Add(("red", "ResourceBar_Icon_Gold", "Sell " + PK.Num(s.SellValue), 54, 20, () => Open("sellbuilding"), null));
+            if (s.CanSell && ChainReady) buttons.Add(("purple", null, "Mint NFT", 54, 20, () => ChainMintBuilding(uid, b.id), null));
 
             // the design's column of three; more go into a second column beside it
             var cols = new List<VisualElement>();

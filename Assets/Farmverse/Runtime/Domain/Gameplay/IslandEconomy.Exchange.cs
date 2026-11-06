@@ -74,6 +74,14 @@ namespace Farmverse.Domain.Gameplay
             return null;
         }
 
+        /// <summary>Gives a placed building back its level (a redeemed building keeps the level it was minted at).</summary>
+        public void SetLevel(int uid, int level)
+        {
+            if (level < 1) return;
+            if (_departments.TryGetValue(uid, out var d)) d.Level = Math.Max(1, Math.Min(level, d.Levels.People.Length));
+            else if (level > 1) _buildingLevels[uid] = level;
+        }
+
         /// <summary>Forgets a picked-up building's upgrade level (it travels with the token instead).</summary>
         internal void ForgetLevel(int uid) => _buildingLevels.Remove(uid);
     }

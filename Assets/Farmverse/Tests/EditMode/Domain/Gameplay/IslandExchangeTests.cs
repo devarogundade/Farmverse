@@ -104,6 +104,20 @@ namespace Farmverse.Tests.Domain.Gameplay
         }
 
         [Test]
+        public void A_placed_redeemed_building_gets_its_level_back()
+        {
+            var e = IslandSim.Load(NewState());
+            Assert.AreEqual(1, e.LevelOf(3));
+            e.SetLevel(3, 3);
+            Assert.AreEqual(3, e.LevelOf(3));
+            // and the level survives a save and a reload, so a later mint carries it again
+            var state = NewState();
+            state.economy = e.ToSave();
+            var (_, done) = IslandExchange.Apply(state, T0, new[] { new ExchangeOp { op = "pickUp", uid = 3 } });
+            Assert.AreEqual(3, done.Single().level);
+        }
+
+        [Test]
         public void Unknown_ops_are_refused()
         {
             var e = Assert.Throws<ExchangeRefusal>(() => IslandExchange.Apply(NewState(), T0, new[] { new ExchangeOp { op = "duplicate", item = "wheat", n = 1 } }));
