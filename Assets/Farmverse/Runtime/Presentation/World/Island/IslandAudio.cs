@@ -63,6 +63,9 @@ namespace Farmverse.Presentation.World.Island
         /// <summary>Where the sliders start for a new player: quiet enough to play with other things on.</summary>
         public const float DefaultSoundVolume = 0.5f, DefaultMusicVolume = 0.4f;
 
+        /// <summary>The whole game's loudness under the sliders (the sliders' 100% is this loud).</summary>
+        private const float SoundMaster = 0.55f, MusicMaster = 0.5f;
+
         public static float SoundVolume
         {
             get => PlayerPrefs.GetFloat("fv_sound_vol", DefaultSoundVolume);
@@ -97,7 +100,7 @@ namespace Farmverse.Presentation.World.Island
             if (FindAnyObjectByType<AudioListener>() == null) gameObject.AddComponent<AudioListener>();
             // the music starts from the top and fades in
             _music = Loop(musicClip, false, fromStart: true);
-            if (_music != null) _music.Target = musicVolume;
+            if (_music != null) _music.Target = musicVolume * MusicMaster;
         }
 
         private void OnDestroy()
@@ -129,7 +132,7 @@ namespace Farmverse.Presentation.World.Island
             foreach (var s in a._pool) if (!s.isPlaying) { free = s; break; }
             if (free == null) return false;
             free.clip = clip;
-            free.volume = Mathf.Clamp01(vol * level * a.volume * SoundVolume);
+            free.volume = Mathf.Clamp01(vol * level * a.volume * SoundVolume * SoundMaster);
             free.panStereo = pan;
             free.pitch = pitch * (1f + Random.Range(-pitchJitter, pitchJitter));
             free.loop = false;
@@ -184,7 +187,7 @@ namespace Farmverse.Presentation.World.Island
                 var ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 if (new Plane(Vector3.up, Vector3.zero).Raycast(ray, out var t)) _focus = ray.GetPoint(t);
             }
-            if (_music != null) _music.Target = MusicOn ? musicVolume * MusicLevel * MusicVolume : 0f;
+            if (_music != null) _music.Target = MusicOn ? musicVolume * MusicLevel * MusicVolume * MusicMaster : 0f;
             foreach (var l in _loops)
             {
                 if (l.Source == null) continue;
@@ -198,7 +201,7 @@ namespace Farmverse.Presentation.World.Island
                     level *= k;
                     pan = p;
                 }
-                l.Source.volume = Mathf.Clamp01(level * volume * (l == _music ? 1f : SoundVolume));
+                l.Source.volume = Mathf.Clamp01(level * volume * (l == _music ? 1f : SoundVolume * SoundMaster));
                 l.Source.panStereo = pan;
                 l.Source.pitch = l.Pitch;
             }

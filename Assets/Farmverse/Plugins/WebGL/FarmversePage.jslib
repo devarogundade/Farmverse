@@ -69,6 +69,21 @@ mergeInto(LibraryManager.library, {
     else fallback();
   },
 
+  FvOpenTab: function (url, label) {
+    var target = UTF8ToString(url);
+    var name = UTF8ToString(label);
+    if (window.farmversePage && window.farmversePage.openTab) window.farmversePage.openTab(target, name);
+    else window.open(target, '_blank', 'noopener');
+  },
+
+  FvConfig: function (key) {
+    var value = (window.farmversePage && window.farmversePage.config) ? window.farmversePage.config(UTF8ToString(key)) : '';
+    var size = lengthBytesUTF8(value) + 1;
+    var buffer = _malloc(size);
+    stringToUTF8(value, buffer, size);
+    return buffer;
+  },
+
   FvReload: function () {
     window.location.reload();
   },

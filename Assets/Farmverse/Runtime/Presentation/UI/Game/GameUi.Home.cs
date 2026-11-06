@@ -17,13 +17,13 @@ namespace Farmverse.Presentation.UI.Game
     {
         private static readonly bool RegHome_Home = Register("home", UiLayer.Base, (ui, c) => ui.HomeScreen(c), .54f, covers: true);
 
-        private const string HomeTutorialPref = "fv_home_tutorial";   // 0 talk, 1 hand on BUILD, 2 done
+        private const string HomeTutorialPref = "fv_home_tutorial";   // 0 talk, 1 hand on PLAY, 2 done
 
         private static readonly string[] HomeLines =
         {
             "Welcome to your island, farmer! I'm Grandpa Joe.",
             "This little island is all yours. Let's turn it into the best farm in the sea!",
-            "First things first — let's build a field. Tap <color=#e08c00>BUILD</color>!",
+            "Let's go and see it. Tap <color=#e08c00>PLAY</color>!",
         };
 
         private int _homeLine;
@@ -61,10 +61,9 @@ namespace Farmverse.Presentation.UI.Game
             float L = p.L, R = p.R, B = p.B, m = P(16);
             float xL = L + m, xR = R + m;
 
-            // the island picture (static art); tapping it goes to the island
+            // the island picture (static art, not a button: PLAY goes to the island)
             var bg = PK.Inset(PK.Box(root));
             Kit.Cover(bg, GameArt.Get("Home_Bg"));
-            PK.Tap(bg, p, () => Go("play"), "whoosh");
 
             // ---------------------------------------------------------------- level, name, xp, daily gift
             var xpBar = PK.Abs(PK.Box(root), left: xL + P(60), top: P(44), width: P(320), height: P(34));
@@ -332,8 +331,8 @@ namespace Farmverse.Presentation.UI.Game
             var build = PK.Abs(PK.Row(root, P(14)), right: xR, bottom: bottom, width: bigW, height: bigH);
             build.style.justifyContent = Justify.Center;
             Kit.Nine(build, GameArt.Get("Button02_Yellow"), 38, 120, 38, 120, bigH / 2f / 120f);
-            PK.Img(build, "Icon_Hammer", P(92)).style.marginLeft = -P(10);
-            HomeTS(build, p, "BUILD", 40, 5);
+            PK.Img(build, "Icon_Shovel", P(92)).style.marginLeft = -P(10);
+            HomeTS(build, p, "PLAY", 40, 5);
             PK.Tap(build, p, () =>
             {
                 if (PlayerPrefs.GetInt(HomeTutorialPref, 0) < 2)
@@ -342,7 +341,7 @@ namespace Farmverse.Presentation.UI.Game
                     PlayerPrefs.Save();
                 }
 
-                Go("play", "build");
+                Go("play");   // straight to the island; the build band stays shut until asked for
             });
 
             // ---------------------------------------------------------------- new player

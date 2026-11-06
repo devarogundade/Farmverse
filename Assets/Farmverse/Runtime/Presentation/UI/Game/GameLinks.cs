@@ -10,18 +10,41 @@ namespace Farmverse.Presentation.UI.Game
     /// </summary>
     public static class GameLinks
     {
-        public const string Site = "https://farmverse.world";
-        public const string Terms = Site + "/#/terms";
-        public const string Privacy = Site + "/#/privacy";
-        public const string Market = "https://marketplace.farmverse.world";
         public const string SupportEmail = "support@farmverse.world";
+
+        /// <summary>The landing site (the page's <c>siteUrl</c>: localhost in a dev build).</summary>
+        public static string Site => PageValue("siteUrl", "https://farmverse.world");
+        public static string Terms => Site + "/#/terms";
+        public static string Privacy => Site + "/#/privacy";
+        /// <summary>The marketplace (the page's <c>marketplaceUrl</c>).</summary>
+        public static string Market => PageValue("marketplaceUrl", "https://marketplace.farmverse.world");
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")] private static extern void FvCopyText(string text);
         [DllImport("__Internal")] private static extern void FvReload();
+        [DllImport("__Internal")] private static extern void FvOpenTab(string url, string label);
+        [DllImport("__Internal")] private static extern string FvConfig(string key);
 #endif
 
-        public static void Open(string url) => UnityEngine.Application.OpenURL(url);
+        /// <summary>Opens a link in a new tab (in the browser through the page, which offers the link itself if a popup is blocked).</summary>
+        public static void Open(string url, string label = "")
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            FvOpenTab(url, label);
+#else
+            UnityEngine.Application.OpenURL(url);
+#endif
+        }
+
+        private static string PageValue(string key, string fallback)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            var value = FvConfig(key);
+            return string.IsNullOrWhiteSpace(value) ? fallback : value.TrimEnd('/');
+#else
+            return fallback;
+#endif
+        }
 
         /// <summary>A support email with the player's id and version filled in.</summary>
         public static void EmailSupport(string playerId)

@@ -120,7 +120,48 @@ function signInWithWallet() {
   });
 }
 
+/**
+ * Opens a link in a new tab. The game asks a frame after the click, which browsers can treat as a
+ * popup and block: then a small card offers the link itself, which opens on the player's own click.
+ */
+function openTab(url, label) {
+  const opened = window.open(url, '_blank', 'noopener');
+  if (opened !== null) return;
+  document.getElementById('fv-link')?.remove();
+  const layer = document.createElement('div');
+  layer.id = 'fv-link';
+  const card = document.createElement('div');
+  card.className = 'fv-card';
+  const text = document.createElement('p');
+  text.textContent = label ? `Open ${label} in a new tab.` : 'Open the link in a new tab.';
+  const link = document.createElement('a');
+  link.className = 'fv-button';
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.textContent = 'Open';
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'fv-plain';
+  close.textContent = 'Close';
+  const done = () => layer.remove();
+  link.addEventListener('click', () => setTimeout(done, 0));
+  close.addEventListener('click', done);
+  layer.addEventListener('click', (e) => { if (e.target === layer) done(); });
+  card.append(text, link, close);
+  layer.append(card);
+  document.getElementById('fv-root').append(layer);
+}
+
 window.farmversePage = {
+  /** A page setting the game reads (siteUrl, marketplaceUrl, …); empty when unset. */
+  config(key) {
+    const value = config[key];
+    return typeof value === 'string' ? value : '';
+  },
+
+  openTab,
+
   /** A session with a valid access token: kept, refreshed, or after the player signs in. */
   async requestSession(forceRefresh) {
     if (session && !forceRefresh && session.accessExpiresAt - Date.now() > MARGIN_MS) return session;

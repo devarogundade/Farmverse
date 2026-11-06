@@ -111,11 +111,11 @@ namespace Farmverse.Presentation.UI.Game
             Kit.Contain(flag, GameArt.Get("Icon_Flag_" + Flags[lang]));
 
             B(1, 0, "Blue", "Profile", () => Open("profile"));
-            B(1, 1, "Blue", "Market", () => GameLinks.Open(GameLinks.Market));
+            B(1, 1, "Blue", "Market", () => GameLinks.Open(GameLinks.Market, "the market"));
             B(0, 1, "Blue", "Theme", () => Open("theme"));
             B(1, 2, "Blue", "Support", () => GameLinks.EmailSupport(Profile?.Player?.ShortId ?? ""));
             B(0, 2, "BlueGray", "Delete Account", AccountDeleteAsk);
-            B(1, 3, "Blue", "Privacy", () => GameLinks.Open(GameLinks.Privacy));
+            B(1, 3, "Blue", "Privacy", () => GameLinks.Open(GameLinks.Privacy, "the Privacy Policy"));
         }
 
         private void LanguagePopup(Ctx c)

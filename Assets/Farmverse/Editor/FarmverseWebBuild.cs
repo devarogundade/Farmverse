@@ -16,18 +16,18 @@ namespace Farmverse.Editor
         private const string Template = "PROJECT:Farmverse";
 
         [MenuItem("Farmverse/Web/Configure WebGL Settings", priority = 40)]
-        public static void ConfigureDev() => Configure("http://localhost:8787", "testnet", "http://localhost:5174");
+        public static void ConfigureDev() => Configure("http://localhost:8787", "testnet", "http://localhost:5174", "http://localhost:5175");
 
         [MenuItem("Farmverse/Web/Build (dev, localhost server)", priority = 41)]
-        public static void BuildDev() => Build("dev", "http://localhost:8787", "testnet", "http://localhost:5174");
+        public static void BuildDev() => Build("dev", "http://localhost:8787", "testnet", "http://localhost:5174", "http://localhost:5175");
 
         [MenuItem("Farmverse/Web/Build (staging, testnet)", priority = 42)]
-        public static void BuildStaging() => Build("staging", "https://api.staging.farmverse.world", "testnet", "https://marketplace.staging.farmverse.world");
+        public static void BuildStaging() => Build("staging", "https://api.staging.farmverse.world", "testnet", "https://marketplace.staging.farmverse.world", "https://farmverse.world");
 
         [MenuItem("Farmverse/Web/Build (prod, mainnet)", priority = 43)]
-        public static void BuildProd() => Build("prod", "https://api.farmverse.world", "mainnet", "https://marketplace.farmverse.world");
+        public static void BuildProd() => Build("prod", "https://api.farmverse.world", "mainnet", "https://marketplace.farmverse.world", "https://farmverse.world");
 
-        public static void Configure(string apiBaseUrl, string network, string marketplaceUrl)
+        public static void Configure(string apiBaseUrl, string network, string marketplaceUrl, string siteUrl)
         {
             PlayerSettings.WebGL.template = Template;
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
@@ -39,12 +39,13 @@ namespace Farmverse.Editor
             PlayerSettings.SetTemplateCustomValue("FARMVERSE_API", apiBaseUrl);
             PlayerSettings.SetTemplateCustomValue("NEAR_NETWORK", network);
             PlayerSettings.SetTemplateCustomValue("MARKETPLACE_URL", marketplaceUrl);
+            PlayerSettings.SetTemplateCustomValue("SITE_URL", siteUrl);
             Debug.Log($"Farmverse: WebGL settings applied (template {Template}, API {apiBaseUrl}, {network}).");
         }
 
-        private static void Build(string environment, string apiBaseUrl, string network, string marketplaceUrl)
+        private static void Build(string environment, string apiBaseUrl, string network, string marketplaceUrl, string siteUrl)
         {
-            Configure(apiBaseUrl, network, marketplaceUrl);
+            Configure(apiBaseUrl, network, marketplaceUrl, siteUrl);
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0)
             {

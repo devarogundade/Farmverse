@@ -370,7 +370,8 @@ namespace Farmverse.Presentation.UI.Game
             tiles.style.justifyContent = Justify.Center;
             tiles.style.marginTop = p.P(20);
             var got = r.Gathered.OrderByDescending(kv => kv.Value).Take(4).ToList();
-            if (got.Count == 0) got.Add(new KeyValuePair<string, int>("", 0));
+            var nothing = got.Count == 0;
+            if (nothing) got.Add(new KeyValuePair<string, int>("", 0));
             for (var i = 0; i < got.Count; i++)
             {
                 var t = PK.Col(tiles, p.P(6));
@@ -382,8 +383,8 @@ namespace Farmverse.Presentation.UI.Game
                 else PK.Grad(t, "ptile2", true, (0f, GameTheme.T("#123f7c")), (1f, GameTheme.T("#0e3366")));
                 var item = got[i].Key;
                 PK.Fit(t, item.Length > 0 ? PlayGood(item) : "Icon_Chest", p.P(72), p.P(72));
-                PK.T(t, p, item.Length > 0 ? "+" + got[i].Value : "0", 32);
-                PK.N(t, p, item.Length > 0 ? PlayPretty(item) : "nothing new", 15, GameTheme.T("#bfe6ff"));
+                if (item.Length > 0) PK.T(t, p, "+" + got[i].Value, 32);
+                PK.N(t, p, item.Length > 0 ? PlayPretty(item) : "Nothing new to collect", 15, GameTheme.T("#bfe6ff"), TextAnchor.MiddleCenter, true);
             }
 
             // the farmhouse's room
@@ -406,7 +407,13 @@ namespace Farmverse.Presentation.UI.Game
             var buttons = PK.Row(pop, p.P(20));
             buttons.style.justifyContent = Justify.Center;
             buttons.style.marginTop = p.P(22);
-            PK.Btn(buttons, p, "blue", "Collect", 240, 74, 30, Collect);
+            // nothing came in: there's nothing to collect, just close; a full farmhouse is worth fixing from here
+            PK.Btn(buttons, p, "blue", nothing ? "OK" : "Collect", 240, 74, 30, Collect);
+            if (house != null && (r.StorageFull || r.Stopped == "storage") && (eco.CanLevel(house.Uid) || eco.UpgradeCost(house.Uid) != null))
+            {
+                var houseUid = house.Uid;
+                PK.Btn(buttons, p, "yellow", "Upgrade farmhouse", 300, 74, 26, () => { Host?.DismissReport(); Back(); Open("upgrade", houseUid); });
+            }
 
             // what each job did
             var jobs = new List<string>();
@@ -435,7 +442,7 @@ namespace Farmverse.Presentation.UI.Game
             var m = (int)(r.Seconds % 3600 / 60);
             var words = $"Away {h}h {m}m · {r.Workers} worker{(r.Workers == 1 ? "" : "s")} carried {r.Loads} load{(r.Loads == 1 ? "" : "s")}"
                         + (r.SeedCoins > 0 ? $" · seeds cost {r.SeedCoins} coins" : "")
-                        + (r.StorageFull ? " · the farmhouse filled up" : "");
+                        + (r.StorageFull && r.Stopped != "storage" ? " · the farmhouse filled up" : "");
             if (r.FoodUsed > 0) words = Loc.Of(words) + " · " + Loc.Of($"ate {Mathf.RoundToInt((float)r.FoodUsed)} food");
             var foot = PK.N(pop, p, words, 15, GameTheme.T("#9fd0ff"), TextAnchor.MiddleCenter, true);
             foot.style.marginTop = p.P(10);

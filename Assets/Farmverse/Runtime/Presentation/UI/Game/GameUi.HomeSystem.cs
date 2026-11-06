@@ -111,7 +111,8 @@ namespace Farmverse.Presentation.UI.Game
             var msg = HomeMsg(body, p, "Tap <b>OK</b> to agree to our <u>Terms of Service</u><br>and <u>Privacy Policy</u>.", 20);
             msg.enableRichText = true;
             var row = PK.Row(body, p.P(18));
-            PK.Btn(row, p, "blue", "Read terms", 220, 70, 24, () => GameLinks.Open(GameLinks.Terms));
+            PK.Btn(row, p, "blue", "Terms", 170, 70, 24, () => GameLinks.Open(GameLinks.Terms, "the Terms of Service"));
+            PK.Btn(row, p, "blue", "Privacy", 170, 70, 24, () => GameLinks.Open(GameLinks.Privacy, "the Privacy Policy"));
             PK.Btn(row, p, "green", "OK", 200, 70, 28, () =>
             {
                 PlayerPrefs.SetInt("fv_terms_ok", 1);
