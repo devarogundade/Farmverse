@@ -63,16 +63,34 @@ namespace Farmverse.Infrastructure.Web
         {
             var token = await _session.AccessToken(cancellation);
             var json = WireJson.Serialize(payload);
-            var res = await _api.Send("POST", "/v1/call/" + name, json, token, timeout, cancellation);
-            if (!res.Reached) throw new TransportException(TransportFailure.Unavailable, res.Error ?? "server unreachable");
-            if (res.Status == 401) throw new TransportException(TransportFailure.Unauthenticated, "unauthenticated");
-            object? body;
-            try { body = WireJson.Parse(res.Body); }
-            catch (Exception e) { throw new TransportException(TransportFailure.Internal, $"not an envelope ({res.Status})", e); }
-            // routed calls answer 200 with an envelope (ok or refusal); anything else carries one too, or is a defect
-            if (body is Dictionary<string, object> envelope && envelope.ContainsKey("ok")) return envelope;
-            throw new TransportException(TransportFailure.Internal, $"HTTP {res.Status} without an envelope");
+            for (var attempt = 0; ; attempt++)
+            {
+                var res = await _api.Send("POST", "/v1/call/" + name, json, token, timeout, cancellation);
+                if (!res.Reached) throw new TransportException(TransportFailure.Unavailable, res.Error ?? "server unreachable");
+                object? body = null;
+                if (res.Status != 401)
+                {
+                    try { body = WireJson.Parse(res.Body); }
+                    catch (Exception e) { throw new TransportException(TransportFailure.Internal, $"not an envelope ({res.Status})", e); }
+                }
+                // the server refused the token (it answers UNAUTHENTICATED inside a 200 envelope): refresh once and send again
+                if (attempt == 0 && (res.Status == 401 || IsUnauthenticated(body)))
+                {
+                    token = await _session.RefreshedToken(cancellation);
+                    if (token != null) continue;
+                }
+                if (res.Status == 401) throw new TransportException(TransportFailure.Unauthenticated, "unauthenticated");
+                // routed calls answer 200 with an envelope (ok or refusal); anything else carries one too, or is a defect
+                if (body is Dictionary<string, object> envelope && envelope.ContainsKey("ok")) return envelope;
+                throw new TransportException(TransportFailure.Internal, $"HTTP {res.Status} without an envelope");
+            }
         }
+
+        private static bool IsUnauthenticated(object? body) =>
+            body is Dictionary<string, object> envelope
+            && envelope.TryGetValue("ok", out var ok) && ok is bool b && !b
+            && envelope.TryGetValue("error", out var e) && e is Dictionary<string, object> error
+            && error.TryGetValue("code", out var code) && code as string == "UNAUTHENTICATED";
     }
 
     /// <summary>The server's settings (<c>GET /v1/config</c>): flags and the minimum client version.</summary>

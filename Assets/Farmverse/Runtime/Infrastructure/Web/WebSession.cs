@@ -78,6 +78,17 @@ namespace Farmverse.Infrastructure.Web
             catch { return null; }
         }
 
+        /// <summary>
+        /// A new access token after the server refused the one we had (expired early, a clock off, the
+        /// server's key changed): the session is refreshed even though it looks valid here.
+        /// </summary>
+        public async Task<string?> RefreshedToken(CancellationToken cancellation)
+        {
+            try { return (await Acquire(true, cancellation)).AccessToken; }
+            catch (OperationCanceledException) { throw; }
+            catch { return null; }
+        }
+
         /// <summary>Signs in (or refreshes). Concurrent callers share one attempt.</summary>
         public Task<SessionTokens> Acquire(bool forceRefresh, CancellationToken cancellation)
         {

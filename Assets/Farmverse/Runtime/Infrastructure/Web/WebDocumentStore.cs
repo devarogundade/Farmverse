@@ -63,6 +63,9 @@ namespace Farmverse.Infrastructure.Web
             {
                 var token = await _session.AccessToken(cancellation);
                 res = await _api.Send(method, path, json, token, Timeout, cancellation);
+                // the token was refused: refresh it once and ask again
+                if (res.Reached && res.Status == 401 && (token = await _session.RefreshedToken(cancellation)) != null)
+                    res = await _api.Send(method, path, json, token, Timeout, cancellation);
             }
             catch (OperationCanceledException) { return Result<Dictionary<string, object>>.Fail(ErrorCode.Cancelled); }
             if (!res.Reached) return Result<Dictionary<string, object>>.Fail(ErrorCode.NetworkRequired);
