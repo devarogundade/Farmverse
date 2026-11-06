@@ -1,7 +1,0 @@
-# Public entry for the Farmverse API. No domain yet: plain HTTP on the instance's IP.
-# When a domain points here, replace ":80" with it (e.g. "api.farmverse.world") and
-# `sudo systemctl reload caddy`: Caddy then gets and renews the HTTPS certificate itself.
-:80 {
-	encode gzip
-	reverse_proxy 127.0.0.1:8787
-}

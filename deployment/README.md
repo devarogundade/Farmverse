@@ -9,9 +9,10 @@ One Ubuntu 26.04 box runs the whole backend for testnet:
 | Chain indexer | `farmverse-indexer` | |
 | Island engine (C#) | `farmverse-engine` | 127.0.0.1:8080 |
 | Postgres 17, Redis 7 | Docker containers `fv-postgres`, `fv-redis` | 127.0.0.1 only |
-| Public entry | Caddy | :80 (and :443 once there's a domain) |
+| Public entry | nginx + certbot (Let's Encrypt) | :443, :80 redirects |
 
-The firewall (ufw) allows only 22, 80 and 443. Public URL for now: `http://34.203.207.91`.
+The firewall (ufw) allows only 22, 80 and 443. Public URLs (same API, WebSocket at `/v1/live`):
+`https://api.farmverse.world` and `https://server.farmverse.world` (A records → 34.203.207.91).
 
 ```bash
 ssh -i deployment/farmverse.pem ubuntu@ec2-34-203-207-91.compute-1.amazonaws.com
@@ -53,8 +54,11 @@ sudo journalctl -u farmverse-indexer -f                 # follow logs
 sudo docker exec -it fv-postgres psql -U farmverse      # database shell
 ```
 
-## Adding a domain (HTTPS)
+## HTTPS
 
-Point an A record (for example `api.farmverse.world`) at `34.203.207.91`, replace `:80` in
-`deployment/Caddyfile` with that name and run `deploy.sh --provision`. Caddy gets the certificate
-itself. The AWS security group must allow 80 and 443.
+`provision.sh` lists the names in `DOMAINS` and gets one certificate for those whose DNS
+already points at the box (`certbot --nginx`, account email devarogundade@gmail.com).
+`certbot.timer` renews it. `deployment/nginx/farmverse.conf` is the plain HTTP config: certbot adds
+the 443 listener and the redirect to the copy on the server, and every `--provision` run puts
+them back after copying the file. To add a name, create its A record, add it to `DOMAINS` and to
+`server_name` in the nginx config, then run `deploy.sh --provision`.

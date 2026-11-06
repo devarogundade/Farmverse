@@ -2,10 +2,10 @@
 # Build the Farmverse backend here and ship it to the EC2 box. Run from Git Bash at the repo root:
 #
 #   bash deployment/deploy.sh              # build, upload, migrate, restart
-#   bash deployment/deploy.sh --provision  # first run: also install packages, containers, units, Caddy
+#   bash deployment/deploy.sh --provision  # first run: also install packages, containers, units, nginx, certificates
 #
 # What runs on the box (see provision.sh): farmverse-server (API :8787), farmverse-worker,
-# farmverse-indexer, farmverse-engine (:8080), Postgres and Redis in Docker, Caddy on :80/:443.
+# farmverse-indexer, farmverse-engine (:8080), Postgres and Redis in Docker, nginx + certbot on :80/:443.
 # It ships the working tree as it is, uncommitted changes included.
 set -euo pipefail
 
@@ -37,7 +37,7 @@ dotnet publish "$ROOT/tools/dotnet/Farmverse.IslandEngine" -c Release -o "$STAGE
   --artifacts-path "$STAGE/.engine-build" --nologo -v quiet
 rm -rf "$STAGE/.engine-build"
 
-cp -r "$ROOT/deployment/systemd" "$ROOT/deployment/Caddyfile" "$ROOT/deployment/provision.sh" "$STAGE/"
+cp -r "$ROOT/deployment/systemd" "$ROOT/deployment/nginx" "$ROOT/deployment/provision.sh" "$STAGE/"
 
 say "upload"
 tar -C "$STAGE" -czf "$STAGE.tgz" .
@@ -90,5 +90,5 @@ say "install, migrate, restart"
   sleep 2
   sudo systemctl restart farmverse-server farmverse-worker farmverse-indexer
   sleep 4
-  systemctl is-active farmverse-engine farmverse-server farmverse-worker farmverse-indexer caddy
-  curl -fsS http://127.0.0.1/healthz && echo'
+  systemctl is-active farmverse-engine farmverse-server farmverse-worker farmverse-indexer nginx
+  curl -fsS http://127.0.0.1:8787/healthz && echo'
