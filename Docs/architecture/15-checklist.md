@@ -13,13 +13,13 @@ an indexer migration, and the Unity panels.
 - [x] A1 items: versioned state + `migrate` (keeps existing tokens) §5.1
 - [x] A2 items: drops — `create_drop`, `update_drop`, views, `ft_on_transfer` buy, edition numbers, per-wallet limit, NEAR float guard, FARM to treasury, `drop_sale` event §5.1
 - [x] A3 items: buy-and-use (`"use": true` mints and burns in one receipt) §5.1
-- [ ] A4 market: versioned state + `migrate` §12
-- [ ] A5 market: offers on tokens and on items — make, replace, accept via `nft_approve`, cancel, expiry refund §12.2
-- [ ] A6 market: rentals — rent out via `nft_transfer_call`, rent with FARM, worker balance, withdraw, end §12.1
-- [ ] A7 unit tests for A1–A6 (`cargo test`) and sandbox tests for the cross-contract paths (WSL)
-- [ ] A8 `chain/scripts/upgrade-testnet.sh`: build, deploy new code to items and market, `migrate`, register items with FARM, top up the items NEAR float, create the `faucet.` account
-- [ ] A9 `chain/scripts/drops.sh`: S1 Farm Pass, Builder's Pass, starter pack, gem packs ×3, Genesis land deeds (§9 D2, D3, §12.3)
-- [ ] A10 `chain/scripts/farmhands.mjs`: seeded generator for 500 Genesis Farmhands (outfit parts checked against `CharacterParts`), mint + list the first 100 (§7.2)
+- [x] A4 market: versioned state + `migrate` §12
+- [x] A5 market: offers on tokens and on items — make, replace, accept via `nft_approve`, cancel, expiry refund §12.2
+- [x] A6 market: rentals — rent out via `nft_transfer_call`, rent with FARM, worker balance, withdraw, end §12.1
+- [x] A7 unit tests for A1–A6 (`cargo test`) and sandbox tests for the cross-contract paths (WSL)
+- [x] A8 `chain/scripts/upgrade-testnet.sh`: build, deploy new code to items and market, `migrate`, register items with FARM, top up the items NEAR float, create the `faucet.` account
+- [x] A9 `chain/scripts/drops.sh`: S1 Farm Pass, Builder's Pass, starter pack, gem packs ×3, Genesis land deeds (§9 D2, D3, §12.3)
+- [x] A10 `chain/scripts/farmhands.mjs`: seeded generator for 500 Genesis Farmhands (outfit parts checked against `CharacterParts`), mint + list the first 100 (§7.2)
 
 ## B. Server, indexer, jobs
 

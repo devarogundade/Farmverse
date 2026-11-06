@@ -29,6 +29,8 @@ struct World {
     items: Contract,
     market: Contract,
     treasury: Account,
+    dao: Account,
+    studio: Account,
     signer: SigningKey,
 }
 
@@ -85,7 +87,7 @@ async fn world() -> anyhow::Result<World> {
 
     // The market pays out FARM and holds it mid-sale, so it needs a FARM account.
     register(&farm, market.as_account()).await?;
-    Ok(World { worker, farm, items, market, treasury, signer })
+    Ok(World { worker, farm, items, market, treasury, dao, studio, signer })
 }
 
 async fn register(farm: &Contract, who: &Account) -> anyhow::Result<()> {
@@ -272,5 +274,195 @@ async fn a_voucher_cannot_be_replayed() -> anyhow::Result<()> {
     alice.call(w.items.id(), "redeem").args_json(json!({ "token_id": "g-4" })).deposit(NearToken::from_yoctonear(1)).transact().await?.into_result()?;
     let again = mint(&w, &alice, "g-4").await;
     assert!(again.is_err(), "a burned token id must never mint again");
+    Ok(())
+}
+
+// ------------------------------------------------------------------ v2: drops, offers, rentals
+
+const PASS: u128 = 250;
+
+async fn open_shop(w: &World) -> anyhow::Result<()> {
+    w.dao
+        .call(w.items.id(), "set_drop_payment")
+        .args_json(json!({ "farm_id": w.farm.id(), "treasury_id": w.treasury.id() }))
+        .deposit(NearToken::from_yoctonear(1))
+        .transact()
+        .await?
+        .into_result()?;
+    register(&w.farm, w.items.as_account()).await?;
+    w.studio
+        .call(w.items.id(), "create_drop")
+        .args_json(json!({ "drop": {
+            "id": "farm_pass_s1", "kind": "pack", "item_id": "farm_pass", "quantity": 1, "props": "{\"season\":1}",
+            "title": "Farm Pass · Founders", "media": "items/farm_pass.png", "price": PASS.to_string(),
+            "cap": 2, "per_wallet": 5, "starts_at_ms": 0, "ends_at_ms": null
+        }}))
+        .deposit(NearToken::from_millinear(100))
+        .transact()
+        .await?
+        .into_result()?;
+    Ok(())
+}
+
+async fn ft_call(w: &World, from: &Account, to: &near_workspaces::AccountId, amount: u128, msg: serde_json::Value) -> anyhow::Result<near_workspaces::result::ExecutionFinalResult> {
+    Ok(from
+        .call(w.farm.id(), "ft_transfer_call")
+        .args_json(json!({ "receiver_id": to, "amount": amount.to_string(), "msg": msg.to_string() }))
+        .deposit(NearToken::from_yoctonear(1))
+        .max_gas()
+        .transact()
+        .await?)
+}
+
+#[tokio::test]
+async fn drop_sells_editions_and_buy_and_use_redeems_at_once() -> anyhow::Result<()> {
+    let w = world().await?;
+    open_shop(&w).await?;
+    let bob = sub(&w.worker, "bob", 20).await?;
+    give_farm(&w, &bob, 10_000).await?;
+    let treasury_before = farm_balance(&w, &w.treasury).await?;
+
+    ft_call(&w, &bob, w.items.id(), PASS, json!({ "drop": "farm_pass_s1" })).await?.into_result()?;
+    assert_eq!(owner_of(&w, "d-farm_pass_s1-1").await?.as_deref(), Some(bob.id().as_str()));
+    assert_eq!(farm_balance(&w, &w.treasury).await? - treasury_before, PASS, "takings forwarded");
+    assert_eq!(farm_balance(&w, w.items.as_account()).await?, 0);
+
+    let out = ft_call(&w, &bob, w.items.id(), PASS, json!({ "drop": "farm_pass_s1", "use": true })).await?;
+    assert!(out.logs().iter().any(|l| l.contains("item_redeem") && l.contains("farm_pass")));
+    out.into_result()?;
+    assert_eq!(owner_of(&w, "d-farm_pass_s1-2").await?, None);
+
+    // cap 2: the third buy fails and the FARM comes back
+    let _ = ft_call(&w, &bob, w.items.id(), PASS, json!({ "drop": "farm_pass_s1" })).await?;
+    assert_eq!(farm_balance(&w, &bob).await?, 10_000 - 2 * PASS, "sold out: refunded");
+    let d: serde_json::Value = w.items.view("get_drop").args_json(json!({ "id": "farm_pass_s1" })).await?.json()?;
+    assert_eq!(d["sold"], 2);
+    Ok(())
+}
+
+#[tokio::test]
+async fn token_and_item_offers_settle_on_chain() -> anyhow::Result<()> {
+    let w = world().await?;
+    let alice = sub(&w.worker, "alice", 20).await?;
+    let bob = sub(&w.worker, "bob", 20).await?;
+    register(&w.farm, &alice).await?;
+    give_farm(&w, &bob, 10_000).await?;
+    bob.call(w.market.id(), "storage_deposit").args_json(json!({})).deposit(NearToken::from_millinear(20)).transact().await?.into_result()?;
+    let now_ms = w.worker.view_block().await?.timestamp() / 1_000_000;
+    let expires = now_ms + 24 * 60 * 60 * 1000;
+
+    mint(&w, &alice, "g-5").await?;
+    ft_call(&w, &bob, w.market.id(), 800, json!({ "offer": { "nft_contract_id": w.items.id(), "token_id": "g-5", "expires_at_ms": expires } }))
+        .await?
+        .into_result()?;
+    assert_eq!(farm_balance(&w, w.market.as_account()).await?, 800, "escrowed");
+    alice
+        .call(w.items.id(), "nft_approve")
+        .args_json(json!({ "token_id": "g-5", "account_id": w.market.id(), "msg": json!({ "accept_offer": 1 }).to_string() }))
+        .deposit(NearToken::from_millinear(10))
+        .max_gas()
+        .transact()
+        .await?
+        .into_result()?;
+    assert_eq!(owner_of(&w, "g-5").await?.as_deref(), Some(bob.id().as_str()));
+    // fee 5 % = 40; royalty 2.5 % of 760 = 19; seller 741
+    assert_eq!(farm_balance(&w, &alice).await?, 741);
+    assert_eq!(farm_balance(&w, w.market.as_account()).await?, 0);
+
+    // any Wheat ×100 or more
+    mint(&w, &alice, "g-6").await?;
+    ft_call(&w, &bob, w.market.id(), 500, json!({ "offer": { "nft_contract_id": w.items.id(), "item_id": "wheat", "min_quantity": 100, "expires_at_ms": expires } }))
+        .await?
+        .into_result()?;
+    alice
+        .call(w.items.id(), "nft_approve")
+        .args_json(json!({ "token_id": "g-6", "account_id": w.market.id(), "msg": json!({ "accept_offer": 2 }).to_string() }))
+        .deposit(NearToken::from_millinear(10))
+        .max_gas()
+        .transact()
+        .await?
+        .into_result()?;
+    assert_eq!(owner_of(&w, "g-6").await?.as_deref(), Some(bob.id().as_str()));
+    assert_eq!(farm_balance(&w, w.market.as_account()).await?, 0);
+    Ok(())
+}
+
+#[tokio::test]
+async fn workers_are_rented_and_earn_for_the_lender() -> anyhow::Result<()> {
+    let w = world().await?;
+    let alice = sub(&w.worker, "alice", 20).await?;
+    let bob = sub(&w.worker, "bob", 20).await?;
+    register(&w.farm, &alice).await?;
+    give_farm(&w, &bob, 10_000).await?;
+    alice.call(w.market.id(), "storage_deposit").args_json(json!({})).deposit(NearToken::from_millinear(30)).transact().await?.into_result()?;
+    for t in ["s-w1", "s-w2"] {
+        w.studio
+            .call(w.items.id(), "studio_mint")
+            .args_json(json!({ "token_id": t, "receiver_id": alice.id(), "kind": "worker", "item_id": "farmhand", "quantity": 1,
+                "props": "{\"name\":\"Mia\"}", "title": "Mia", "media": "items/farmhand.png" }))
+            .deposit(NearToken::from_millinear(50))
+            .transact()
+            .await?
+            .into_result()?;
+    }
+    let rent_out = |token: &'static str| {
+        alice
+            .call(w.items.id(), "nft_transfer_call")
+            .args_json(json!({ "receiver_id": w.market.id(), "token_id": token, "msg": json!({ "rent": { "price_per_day": "100", "max_days": 7 } }).to_string() }))
+            .deposit(NearToken::from_yoctonear(1))
+            .max_gas()
+            .transact()
+    };
+    rent_out("s-w1").await?.into_result()?;
+    assert_eq!(owner_of(&w, "s-w1").await?.as_deref(), Some(w.market.id().as_str()), "held by the market");
+
+    ft_call(&w, &bob, w.market.id(), 200, json!({ "rent": { "nft_contract_id": w.items.id(), "token_id": "s-w1", "days": 2 } }))
+        .await?
+        .into_result()?;
+    let r: serde_json::Value = w.market.view("get_rental").args_json(json!({ "nft_contract_id": w.items.id(), "token_id": "s-w1" })).await?.json()?;
+    assert_eq!(r["renter_id"], bob.id().as_str());
+    assert_eq!(r["earned"], "190");
+
+    alice
+        .call(w.market.id(), "rent_withdraw")
+        .args_json(json!({ "nft_contract_id": w.items.id(), "token_id": "s-w1" }))
+        .deposit(NearToken::from_yoctonear(1))
+        .max_gas()
+        .transact()
+        .await?
+        .into_result()?;
+    assert_eq!(farm_balance(&w, &alice).await?, 190);
+    let early = alice
+        .call(w.market.id(), "rent_end")
+        .args_json(json!({ "nft_contract_id": w.items.id(), "token_id": "s-w1" }))
+        .deposit(NearToken::from_yoctonear(1))
+        .max_gas()
+        .transact()
+        .await?;
+    assert!(early.into_result().is_err(), "can't end a running rental");
+
+    // a worker nobody rented comes straight back
+    rent_out("s-w2").await?.into_result()?;
+    alice
+        .call(w.market.id(), "rent_end")
+        .args_json(json!({ "nft_contract_id": w.items.id(), "token_id": "s-w2" }))
+        .deposit(NearToken::from_yoctonear(1))
+        .max_gas()
+        .transact()
+        .await?
+        .into_result()?;
+    assert_eq!(owner_of(&w, "s-w2").await?.as_deref(), Some(alice.id().as_str()));
+
+    // goods can't be rented: the token goes back
+    mint(&w, &alice, "g-7").await?;
+    alice
+        .call(w.items.id(), "nft_transfer_call")
+        .args_json(json!({ "receiver_id": w.market.id(), "token_id": "g-7", "msg": json!({ "rent": { "price_per_day": "100", "max_days": 7 } }).to_string() }))
+        .deposit(NearToken::from_yoctonear(1))
+        .max_gas()
+        .transact()
+        .await?
+        .into_result()?;
+    assert_eq!(owner_of(&w, "g-7").await?.as_deref(), Some(alice.id().as_str()));
     Ok(())
 }

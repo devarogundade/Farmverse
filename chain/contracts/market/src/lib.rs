@@ -11,11 +11,22 @@
 //!   * NFT transferred → the fee goes to `treasury_id`, royalties and the seller are paid per the
 //!     NEP-199 payout. A payment that can't be delivered (receiver not registered with FARM) is
 //!     kept as `owed` and can be withdrawn later with `withdraw_owed` — never lost.
+//! * **Offers** ([`offers`]): a buyer escrows FARM for a token or for any token of an item; the owner
+//!   accepts by approving the market with `{"accept_offer": id}`.
+//! * **Rentals** ([`rentals`]): a lender escrows a worker here; a renter pays FARM per day and the
+//!   worker works on the renter's island until the rental ends. The FARM waits in the worker's own
+//!   balance until the lender withdraws it.
 //! * The fee is capped in code at `MAX_FEE_BPS`; the accepted token can't change after init.
+//! * Offers and rentals reserve `STORAGE_PER_LISTING` of the maker's storage deposit, like listings.
 
 use near_contract_standards::fungible_token::receiver::FungibleTokenReceiver;
 use near_contract_standards::non_fungible_token::TokenId;
 use near_contract_standards::non_fungible_token::approval::NonFungibleTokenApprovalReceiver;
+
+pub mod offers;
+pub mod rentals;
+use offers::Offer;
+use rentals::Rental;
 use near_sdk::json_types::U128;
 use near_sdk::serde::Deserialize;
 use near_sdk::serde_json::{self, json};
@@ -40,6 +51,8 @@ const GAS_ON_PAYMENT: Gas = Gas::from_tgas(4);
 const GAS_NFT_TOKEN: Gas = Gas::from_tgas(10);
 const GAS_RESOLVE_STALE: Gas = Gas::from_tgas(10);
 const ONE_YOCTO: NearToken = NearToken::from_yoctonear(1);
+const GAS_GET_ITEM: Gas = Gas::from_tgas(10);
+const GAS_NFT_TRANSFER: Gas = Gas::from_tgas(15);
 
 #[near(serializers = [borsh, json])]
 #[derive(Clone, Debug, PartialEq)]
@@ -103,6 +116,17 @@ trait NftContract {
         max_len_payout: Option<u32>,
     ) -> Payout;
     fn nft_token(&self, token_id: TokenId) -> Option<TokenView>;
+    fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, approval_id: Option<u64>, memo: Option<String>);
+    fn get_item(&self, token_id: TokenId) -> Option<ItemView>;
+}
+
+/// The fields of a Farmverse item the market checks (other fields are ignored).
+#[near(serializers = [json])]
+#[derive(Clone, Debug)]
+pub struct ItemView {
+    pub kind: String,
+    pub item_id: String,
+    pub quantity: u64,
 }
 
 #[ext_contract(ext_ft)]
@@ -119,6 +143,27 @@ enum StorageKey {
     StorageDeposits,
     Owed,
     NftContracts,
+    // v2
+    Offers,
+    OfferKeys,
+    Rentals,
+    Reserved,
+}
+
+/// The state as deployed before offers and rentals (v1). Only [`Contract::migrate`] reads it.
+#[near(serializers = [borsh])]
+struct ContractV1 {
+    owner_id: AccountId,
+    pending_owner_id: Option<AccountId>,
+    ft_token_id: AccountId,
+    treasury_id: AccountId,
+    fee_bps: u32,
+    nft_contracts: IterableSet<AccountId>,
+    listings: IterableMap<String, Listing>,
+    listing_count: LookupMap<AccountId, u32>,
+    storage_deposits: LookupMap<AccountId, NearToken>,
+    owed: LookupMap<AccountId, u128>,
+    paused: bool,
 }
 
 #[derive(PanicOnDefault)]
@@ -138,6 +183,15 @@ pub struct Contract {
     /// FARM a payout couldn't deliver, waiting for `withdraw_owed`.
     owed: LookupMap<AccountId, u128>,
     paused: bool,
+    // ---- v2: offers and rentals
+    offers: IterableMap<u64, Offer>,
+    next_offer_id: u64,
+    /// `"<buyer>|<nft_contract_id>:<token_id or #item_id>"` → the buyer's live offer there (one each).
+    offer_keys: LookupMap<String, u64>,
+    /// `"<nft_contract_id>:<token_id>"` → a worker held for rent.
+    rentals: IterableMap<String, Rental>,
+    /// Offers + rentals each account has open (each reserves `STORAGE_PER_LISTING`).
+    reserved: LookupMap<AccountId, u32>,
 }
 
 fn key(nft_contract_id: &AccountId, token_id: &str) -> String {
@@ -173,11 +227,42 @@ impl Contract {
             storage_deposits: LookupMap::new(StorageKey::StorageDeposits),
             owed: LookupMap::new(StorageKey::Owed),
             paused: false,
+            offers: IterableMap::new(StorageKey::Offers),
+            next_offer_id: 1,
+            offer_keys: LookupMap::new(StorageKey::OfferKeys),
+            rentals: IterableMap::new(StorageKey::Rentals),
+            reserved: LookupMap::new(StorageKey::Reserved),
         };
         for c in nft_contracts {
             this.nft_contracts.insert(c);
         }
         this
+    }
+
+    /// Upgrades v1 state (listings only) in place. Called by the contract account right after deploying
+    /// the new code; a second call fails (v2 state doesn't parse as v1).
+    #[private]
+    #[init(ignore_state)]
+    pub fn migrate() -> Self {
+        let old: ContractV1 = env::state_read().unwrap_or_else(|| env::panic_str("No v1 state to migrate"));
+        Self {
+            owner_id: old.owner_id,
+            pending_owner_id: old.pending_owner_id,
+            ft_token_id: old.ft_token_id,
+            treasury_id: old.treasury_id,
+            fee_bps: old.fee_bps,
+            nft_contracts: old.nft_contracts,
+            listings: old.listings,
+            listing_count: old.listing_count,
+            storage_deposits: old.storage_deposits,
+            owed: old.owed,
+            paused: old.paused,
+            offers: IterableMap::new(StorageKey::Offers),
+            next_offer_id: 1,
+            offer_keys: LookupMap::new(StorageKey::OfferKeys),
+            rentals: IterableMap::new(StorageKey::Rentals),
+            reserved: LookupMap::new(StorageKey::Reserved),
+        }
     }
 
     // ---------------------------------------------------------------- storage
@@ -294,25 +379,7 @@ impl Contract {
             emit("market_sale_failed", json!({ "nft_contract_id": listing.nft_contract_id, "token_id": listing.token_id, "buyer_id": buyer_id, "price": price }));
             return price;
         };
-        let net = price.0 - fee.0;
-        let valid = payout.payout.len() as u32 <= MAX_LEN_PAYOUT
-            && payout.payout.values().try_fold(0u128, |a, v| a.checked_add(v.0)).is_some_and(|sum| sum <= net);
-        // A bad payout (only possible from a broken NFT contract) pays everything to the seller.
-        let mut payments: Vec<(AccountId, u128)> = if valid {
-            payout.payout.into_iter().map(|(a, v)| (a, v.0)).filter(|(_, v)| *v > 0).collect()
-        } else {
-            vec![]
-        };
-        let paid: u128 = payments.iter().map(|(_, v)| *v).sum();
-        if net > paid {
-            payments.push((listing.owner_id.clone(), net - paid));
-        }
-        if fee.0 > 0 {
-            payments.push((self.treasury_id.clone(), fee.0));
-        }
-        for (account, amount) in &payments {
-            self.pay(account.clone(), *amount).detach();
-        }
+        let valid = self.settle(&listing.owner_id, price.0 - fee.0, fee.0, payout);
         emit(
             "market_sale",
             json!({
@@ -444,6 +511,9 @@ impl NonFungibleTokenApprovalReceiver for Contract {
         self.assert_not_paused();
         let nft_contract_id = env::predecessor_account_id();
         require!(self.nft_contracts.contains(&nft_contract_id), "NFT contract not accepted");
+        if let Ok(accept) = serde_json::from_str::<offers::AcceptArgs>(&msg) {
+            return self.accept_offer(nft_contract_id, token_id, owner_id, approval_id, accept.accept_offer);
+        }
         let args: ListArgs = serde_json::from_str(&msg).unwrap_or_else(|_| env::panic_str("msg must be {\"price\":\"<amount>\"}"));
         require!(args.price.0 > 0, "price must be positive");
 
@@ -479,6 +549,14 @@ impl FungibleTokenReceiver for Contract {
     fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> PromiseOrValue<U128> {
         require!(env::predecessor_account_id() == self.ft_token_id, "Only FARM is accepted");
         self.assert_not_paused();
+        if let Ok(o) = serde_json::from_str::<offers::OfferMsg>(&msg) {
+            self.make_offer(sender_id, amount, o.offer);
+            return PromiseOrValue::Value(U128(0));
+        }
+        if let Ok(r) = serde_json::from_str::<rentals::RentMsg>(&msg) {
+            self.start_rental(sender_id, amount, r.rent);
+            return PromiseOrValue::Value(U128(0));
+        }
         let args: BuyArgs = serde_json::from_str(&msg)
             .unwrap_or_else(|_| env::panic_str("msg must be {\"nft_contract_id\":…,\"token_id\":…}"));
         let listing = self.listing_or_panic(&args.nft_contract_id, &args.token_id);
@@ -492,7 +570,7 @@ impl FungibleTokenReceiver for Contract {
 
         // Off the book before anything async happens: a second buyer now fails and is refunded.
         self.take_listing(&args.nft_contract_id, &args.token_id);
-        let fee = amount.0 * self.fee_bps as u128 / BPS;
+        let fee = self.fee_of(amount.0);
         let net = amount.0 - fee;
 
         ext_nft::ext(listing.nft_contract_id.clone())
@@ -554,8 +632,58 @@ impl Contract {
     }
 
     fn storage_free(&self, account: &AccountId) -> NearToken {
-        let reserved = STORAGE_PER_LISTING.saturating_mul(self.listing_count_of(account.clone()) as u128);
-        self.storage_balance(account).saturating_sub(reserved)
+        let slots = self.listing_count_of(account.clone()) as u128 + self.reserved_of(account) as u128;
+        self.storage_balance(account).saturating_sub(STORAGE_PER_LISTING.saturating_mul(slots))
+    }
+
+    fn reserved_of(&self, account: &AccountId) -> u32 {
+        self.reserved.get(account).copied().unwrap_or(0)
+    }
+
+    /// Reserves one storage slot for an offer or rental (panics without the deposit for it).
+    fn reserve(&mut self, account: &AccountId) {
+        require!(
+            self.storage_free(account) >= STORAGE_PER_LISTING,
+            "Deposit storage first (storage_deposit, 0.01 NEAR per open listing, offer or rental)"
+        );
+        let n = self.reserved_of(account);
+        self.reserved.insert(account.clone(), n + 1);
+    }
+
+    fn release(&mut self, account: &AccountId) {
+        let n = self.reserved_of(account);
+        if n <= 1 {
+            self.reserved.remove(account);
+        } else {
+            self.reserved.insert(account.clone(), n - 1);
+        }
+    }
+
+    /// Pays a finished sale (listing or offer): NEP-199 payout of `net`, the remainder to `seller`,
+    /// `fee` to the treasury. Returns whether the payout was valid (a broken one pays the seller all).
+    fn settle(&mut self, seller: &AccountId, net: u128, fee: u128, payout: Payout) -> bool {
+        let valid = payout.payout.len() as u32 <= MAX_LEN_PAYOUT
+            && payout.payout.values().try_fold(0u128, |a, v| a.checked_add(v.0)).is_some_and(|sum| sum <= net);
+        let mut payments: Vec<(AccountId, u128)> = if valid {
+            payout.payout.into_iter().map(|(a, v)| (a, v.0)).filter(|(_, v)| *v > 0).collect()
+        } else {
+            vec![]
+        };
+        let paid: u128 = payments.iter().map(|(_, v)| *v).sum();
+        if net > paid {
+            payments.push((seller.clone(), net - paid));
+        }
+        if fee > 0 {
+            payments.push((self.treasury_id.clone(), fee));
+        }
+        for (account, amount) in &payments {
+            self.pay(account.clone(), *amount).detach();
+        }
+        valid
+    }
+
+    fn fee_of(&self, amount: u128) -> u128 {
+        amount * self.fee_bps as u128 / BPS
     }
 
     fn pay(&mut self, account: AccountId, amount: u128) -> Promise {

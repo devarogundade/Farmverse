@@ -43,10 +43,19 @@ One item type per token: `kind` (`good | boost | building | land | tool | pack |
 |---|---|---|
 | `mint_with_voucher(voucher, signer, signature)` | the player | payable (storage, ~0.01 NEAR; excess refunded) |
 | `studio_mint(token_id, receiver_id, kind, item_id, quantity, props, title, media)` | `minter_id` | ids start `s-` |
+| `create_drop(drop)`, `update_drop(id, update)` | `minter_id` (update: or owner) | fixed-price editions paid in FARM; cap only goes down |
+| `ft_on_transfer` (FARM only) | buyer via `farm.ft_transfer_call(items, price, {"drop":id,"use":false})` | mints edition `d-<drop>-<n>`; `"use": true` mints and redeems at once |
+| `set_drop_payment(farm_id, treasury_id)`, `sweep_farm(amount)` | owner / anyone | takings go to the treasury |
 | `redeem(token_id)` | token owner | 1 yocto; burns, refunds storage, emits `item_redeem`; workers can't be redeemed |
 | `nft_payout`, `nft_transfer_payout` | anyone / approved market | NEP-199; royalties capped at 10 % in code |
 | `add_signer`, `remove_signer`, `set_minter`, `set_royalties`, `set_paused`, `set_base_uri`, `propose_owner` / `accept_owner` | owner (multisig) | 1 yocto (full-access key only) |
-| `get_item`, `is_burned`, `get_config`, `voucher_message` | views | |
+| `get_item`, `is_burned`, `get_config`, `voucher_message`, `get_drop`, `get_drops`, `drop_bought` | views | |
+| `migrate()` | the contract account, with the code deploy | v1 → v2 in place (drops); fails if run twice |
+
+**Drops.** A drop is a fixed-price sale with an optional cap, per-wallet limit and window, all checked
+here. The contract pays each edition's storage from its own balance and stops selling ("The shop is
+restocking") when its free balance falls under 0.5 NEAR, so keep a NEAR float on the items account.
+Any failed check panics and the FT standard returns the FARM.
 
 `paused` stops minting and redeeming only; transfers and sales always work, so nobody's tokens
 can be frozen.
@@ -84,8 +93,8 @@ mint anything.
 
 ### Events (NEP-297, `standard: "farmverse_items"`)
 
-`item_mint {token_id, owner_id, source: voucher|studio, item}`, `item_redeem {token_id, owner_id, item}`,
-`config_change {field, value}` — alongside the standard `nep171` `nft_mint`, `nft_transfer`, `nft_burn`.
+`item_mint {token_id, owner_id, source: voucher|studio|drop, item}`, `item_redeem {token_id, owner_id, item}`,
+`drop_update {action, drop}`, `drop_sale {drop_id, token_id, buyer_id, price, edition, used}`, `config_change {field, value}` — alongside the standard `nep171` `nft_mint`, `nft_transfer`, `nft_burn`.
 
 ## Marketplace
 
@@ -106,8 +115,22 @@ On buy, the listing leaves the book at once, the market calls `nft_transfer_payo
 * Owner (multisig): `set_fee_bps` (≤ 1000 in code), `set_treasury`, `add_nft_contract` /
   `remove_nft_contract`, `set_paused` (stops listing and buying; delist and withdrawals still work).
 
+**Offers** (v2): `farm.ft_transfer_call(market, amount, {"offer":{"nft_contract_id","token_id"|"item_id","min_quantity"?,"expires_at_ms"}})`
+escrows FARM (≤ 30 days, one per buyer per token or item; a new one replaces the old). The owner accepts with
+`items.nft_approve(token, market, {"accept_offer": id})` (300 TGas); item offers check `get_item` first. A failed
+transfer reopens the offer. `offer_cancel(id)`: the buyer (1 yocto) any time, anyone once expired.
+
+**Rentals** (v2): `items.nft_transfer_call(market, token, {"rent":{"price_per_day","max_days"}})` — workers only, other
+tokens go back. `farm.ft_transfer_call(market, price_per_day × days, {"rent":{"nft_contract_id","token_id","days"}})`
+rents it; the fee goes to the treasury and the rest to the worker's `earned`. Lender: `rent_withdraw`, `rent_update`,
+`rent_end` (only when no rental runs). Views: `get_rental`, `get_rentals`, `rentals_of_lender`, `rentals_of_renter`.
+
+Offers and rentals reserve 0.01 NEAR of the maker's `storage_deposit` each, like listings.
+`migrate()` upgrades v1 (listings only) in place.
+
 Events (`standard: "farmverse_market"`): `market_list`, `market_delist {reason}`, `market_sale
-{seller_id, buyer_id, price, fee, payout_valid}`, `market_sale_failed`, `market_owed`, `config_change`.
+{seller_id, buyer_id, price, fee, payout_valid}`, `market_sale_failed`, `market_owed`, `offer_make`, `offer_cancel`,
+`offer_accept`, `offer_accept_failed`, `rent_list`, `rent_refused`, `rent_start`, `rent_withdraw`, `rent_end`, `config_change`.
 
 ## Deploy order (testnet first)
 
@@ -125,6 +148,15 @@ FARM and writes `chain/deploy/testnet.env`: the account names, the block to star
 and the signer key. Re-running it skips whatever already exists.
 
 To give a tester FARM from the treasury: `MASTER=… chain/scripts/fund-tester.sh friend.testnet 500`.
+
+**Upgrading testnet to v2** (drops, offers, rentals), keeping every token and listing:
+
+```bash
+scripts/build.sh
+MASTER=farmverse.testnet scripts/upgrade-testnet.sh   # deploy + migrate items and market, FARM wiring, faucet account
+MASTER=farmverse.testnet scripts/drops.sh             # Farm Pass, Builder's Pass, starter pack, gem packs, land deeds
+node scripts/farmhands.mjs --master farmverse.testnet # 500 Genesis Farmhands generated, first 100 minted and listed
+```
 
 1. Create `farm.`, `items.`, `market.`, `treasury.`, `studio.` sub-accounts of the team account,
    and the owner multisig (Sputnik DAO / Trezu).
