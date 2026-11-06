@@ -56,6 +56,33 @@ namespace Farmverse.Application.Features
         /// <summary>The FARM token contract (drops are paid in it); empty when the server doesn't say.</summary>
         public Func<string> FarmContract { get; set; } = () => "";
 
+        /// <summary>The market contract (offers are accepted through it).</summary>
+        public Func<string> MarketContract { get; set; } = () => "";
+
+        /// <summary>
+        /// Accepts an offer for a token the player holds: approves the market with <c>accept_offer</c>, which moves the
+        /// token to the buyer and pays the offer's FARM to the player (docs 15 §12.2). One wallet approval.
+        /// </summary>
+        public async Task<Result<ChainOutcome>> AcceptOffer(string tokenId, string offerId, CancellationToken cancellation)
+        {
+            if (!_wallet.Available || string.IsNullOrEmpty(MarketContract())) return Result<ChainOutcome>.Fail(ErrorCode.Unsupported);
+            try
+            {
+                var tx = await _wallet.Call(_itemsContract(), "nft_approve", new Dictionary<string, object>
+                {
+                    ["token_id"] = tokenId,
+                    ["account_id"] = MarketContract(),
+                    ["msg"] = WireJson.Serialize(new Dictionary<string, object> { ["accept_offer"] = long.Parse(offerId) }),
+                }, "2000000000000000000000", 300);
+                return Result<ChainOutcome>.Ok(new ChainOutcome { TokenId = tokenId, TxHash = tx });
+            }
+            catch (WalletException e)
+            {
+                if (e.Declined) return Result<ChainOutcome>.Ok(new ChainOutcome { TokenId = tokenId, Declined = true });
+                return Result<ChainOutcome>.Fail(AppError.FromException(ErrorCode.Internal, e));
+            }
+        }
+
         /// <summary>Mints goods (or boosts) from the island as one NFT. <paramref name="packed"/>: the server took them (the wallet is next).</summary>
         public Task<Result<ChainOutcome>> MintGoods(string item, int quantity, bool boost, CancellationToken cancellation, Action? packed = null) =>
             Mint(boost ? MintKind.Boost : MintKind.Good, item, quantity, null, cancellation, packed);

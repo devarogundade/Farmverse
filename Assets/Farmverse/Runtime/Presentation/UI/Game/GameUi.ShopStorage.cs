@@ -296,6 +296,7 @@ namespace Farmverse.Presentation.UI.Game
                     mint.style.marginTop = p.P(10);
                     var buy = PK.Btn(side, p, "blue", "Buy more on the market", sideW - 60, 52, 20, () => GameLinks.Open(MarketBuy(entry.id), "Open the market"));
                     buy.style.marginTop = p.P(8);
+                    MerchantOffer(side, p, sideW - 60, entry.id, entry.count);
                 }
             }
             else

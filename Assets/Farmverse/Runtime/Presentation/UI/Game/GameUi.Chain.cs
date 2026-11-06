@@ -161,6 +161,79 @@ namespace Farmverse.Presentation.UI.Game
             return a.Length != b.Length ? a.Length.CompareTo(b.Length) : string.CompareOrdinal(a, b);
         }
 
+        // ------------------------------------------------------------------ merchants (docs 15 §13.1)
+
+        private readonly System.Collections.Generic.Dictionary<string, (float at, Farmverse.Application.Ports.ItemOffer? best)> _offers = new();
+
+        /// <summary>"Bea" for bea.farmverse.testnet (the Market Town cast), else the account.</summary>
+        private static string BuyerName(string account)
+        {
+            var first = account.Split('.')[0];
+            return first is "bea" or "ruth" or "tomas" or "ivy" ? char.ToUpperInvariant(first[0]) + first.Substring(1) : account;
+        }
+
+        /// <summary>The best standing offer for a good the player holds enough of: "Sell to Bea".</summary>
+        private void MerchantOffer(VisualElement side, Pt p, float width, string item, int held)
+        {
+            var n = Nfts;
+            if (n == null) return;
+            if (!_offers.TryGetValue(item, out var cached) || Time.unscaledTime - cached.at > 60f)
+            {
+                _offers[item] = (Time.unscaledTime, cached.best);
+                LoadOffers(n, item);
+            }
+            var best = _offers[item].best;
+            if (best == null) return;
+            var name = BuyerName(best.From);
+            var lot = (int)System.Math.Max(1, best.MinQuantity);
+            var label = $"{name} buys {IslandEconomyHost.NameOf(item)} ×{lot} for {NftService.Farm(best.Amount)} FARM";
+            PK.N(side, p, label, 17, GameTheme.T("#ffd23a"), TextAnchor.MiddleCenter, true).style.marginTop = p.P(10);
+            if (held >= lot)
+                PK.Btn(side, p, _chainBusy ? "gray" : "green", "Sell to " + name, width, 60, 22, () => SellToMerchant(item, lot, best)).style.marginTop = p.P(6);
+        }
+
+        private async void LoadOffers(NftService n, string item)
+        {
+            var r = await n.OffersForItem(item);
+            if (!r.IsOk) return;
+            var best = r.Value.OrderByDescending(o => o.Amount.Length).ThenByDescending(o => o.Amount, System.StringComparer.Ordinal).FirstOrDefault();
+            _offers[item] = (Time.unscaledTime, best);
+            MarkDirty();
+        }
+
+        /// <summary>Mints the lot (sponsored) and accepts the merchant's offer: the FARM arrives, the goods go to them.</summary>
+        private async void SellToMerchant(string item, int lot, Farmverse.Application.Ports.ItemOffer offer)
+        {
+            var chain = Chain;
+            if (chain == null || _chainBusy) return;
+            _chainBusy = true;
+            MarkDirty();
+            try
+            {
+                Say("Packing " + lot + " " + IslandEconomyHost.NameOf(item) + "…", 3f);
+                if (Host != null) await IslandShadow.SyncNow(Host.CurrentState());
+                var minted = await chain.MintGoods(item, lot, boost: false, CancellationToken.None);
+                if (!minted.IsOk) { Say(ChainError(minted.Error), 4f); return; }
+                if (minted.Value.Declined) { Say("Not sold. Your goods come back within the hour.", 4f); return; }
+                Say("Approve the sale in your wallet", 4f);
+                var sold = await chain.AcceptOffer(minted.Value.TokenId, offer.Id, CancellationToken.None);
+                if (!sold.IsOk) Say("Minted, but the sale didn't go through. It's in your NFTs: sell it there.", 4.5f);
+                else if (sold.Value.Declined) Say("Kept as an NFT: you can sell it from your NFTs.", 4f);
+                else Say("Sold to " + BuyerName(offer.From) + " for " + NftService.Farm(offer.Amount) + " FARM!", 3.5f);
+                _offers.Remove(item);
+                if (Nfts != null)
+                {
+                    await Nfts.RefreshBalances();
+                    await Nfts.RefreshOwned();
+                }
+            }
+            finally
+            {
+                _chainBusy = false;
+                MarkDirty();
+            }
+        }
+
         // ------------------------------------------------------------------ Farmhands (docs 15 §7)
 
         private float _crewNext, _notesNext;

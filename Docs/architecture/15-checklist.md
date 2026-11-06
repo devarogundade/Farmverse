@@ -76,7 +76,7 @@ an indexer migration, and the Unity panels.
 
 - [x] G1 Merchant accounts (`<name>.merchants.<master>`), FARM float from the treasury, keys in the server env (script)
 - [x] G2 `merchant-tick` agent loop: stock + demand → prices → item offers and listings; `merchant_log`
-- [ ] G3 Game: merchants' offers at the market stall, "Sell to Bea" (mint + accept)
+- [x] G3 Game: merchants' offers at the market stall, "Sell to Bea" (mint + accept)
 - [ ] G4 Market site: Merchants page (stock, prices over time, why)
 - [ ] G5 Social login: Privy wallet via our near-connect manifest + `/sign` page; server accepts implicit accounts by key (§13.2). Needs the team's Privy App ID + Client ID
 - [ ] G6 README: NEP-245 for goods as the next step; what intents do on mainnet
