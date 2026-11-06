@@ -123,6 +123,8 @@ node -e '
     "FAUCET_FARM", "FAUCET_NEAR", "FAUCET_DAILY_CAP", "RELAYER_ACCOUNT", "RELAYER_PRIVATE_KEY", "WELCOME_NEAR",
     "WELCOME_BELOW_NEAR", "MERCHANTS", "FARM_PER_NEAR", "INTENTS_LIVE", "ONECLICK_API_KEY"]) if (local[k]) out[k] = local[k];
   if (!out.FAUCET_NEAR) out.FAUCET_NEAR = "0.2";
+  // rpc.testnet.near.org answers 429 to cloud addresses after a few calls (sign-in checks keys through it)
+  if ((chain.NEAR_NETWORK || "testnet") === "testnet") out.NEAR_RPC_URL = process.env.NEAR_RPC_URL || "https://test.rpc.fastnear.com";
   out.ADD_ORIGINS = ["https://play.farmverse.world", "https://marketplace.farmverse.world", "https://admin.farmverse.world",
     "https://farmverse.world", "https://farmverse-play.vercel.app", "https://farmverse-market.vercel.app",
     "https://farmverse-admin.vercel.app", "https://farmverse-site.vercel.app", ...(process.env.EXTRA_ORIGINS || "").split(",")]
