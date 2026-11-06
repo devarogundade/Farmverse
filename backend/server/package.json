@@ -14,11 +14,13 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "build": "prisma generate && esbuild src/main.ts src/worker.ts --bundle --platform=node --target=node22 --format=esm --sourcemap --outdir=dist --external:@prisma/client --external:@prisma/adapter-pg --external:pg --external:bullmq --external:ioredis --external:fastify --external:@fastify/websocket --external:dotenv --external:jose",
+    "build": "prisma generate && esbuild src/main.ts src/worker.ts src/indexer.ts --bundle --platform=node --target=node22 --format=esm --sourcemap --outdir=dist --external:@prisma/client --external:@prisma/adapter-pg --external:pg --external:bullmq --external:ioredis --external:fastify --external:@fastify/websocket --external:dotenv --external:jose",
     "start": "node --enable-source-maps dist/main.js",
     "start:worker": "node --enable-source-maps dist/worker.js",
+    "start:indexer": "node --enable-source-maps dist/indexer.js",
     "dev": "tsx watch src/main.ts",
-    "dev:worker": "tsx watch src/worker.ts"
+    "dev:worker": "tsx watch src/worker.ts",
+    "dev:indexer": "tsx watch src/indexer.ts"
   },
   "dependencies": {
     "@farmverse/contracts": "0.1.0",

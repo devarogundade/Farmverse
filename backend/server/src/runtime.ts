@@ -72,7 +72,6 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
     recipient: config.AUTH_RECIPIENT,
     network: config.NEAR_NETWORK,
     adminAccounts: config.ADMIN_ACCOUNTS,
-    allowDevSignIn: config.FARMVERSE_ENV === 'dev',
   });
 
   const rt: Runtime = {

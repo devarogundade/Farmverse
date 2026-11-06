@@ -390,6 +390,20 @@ Players stay human; workers are the agents.
   newest|qty&min=&max=&cursor=`, `GET /owners/{account}/tokens`, `GET /tokens/{id}`, `GET /stats`.
   The UI re-checks a listing on-chain (`get_listing`) right before buy.
 
+**As built (2026-11-06).** Goldsky's NEAR datasets cover mainnet only, so they can't feed the
+testnet build. The indexer is our own process instead (`backend/server/src/indexer.ts`,
+`npm run start:indexer`, one per database). It reads final blocks from neardata.xyz. FastNEAR's free
+tier is too slow to follow testnet; use a key (`NEARDATA_API_KEY`, `NEARDATA_RPM`). It keeps only
+NEP-297 events from successful receipts of the items and market contracts, and writes them with
+their projections and the cursor in one transaction per batch:
+- `chain.events` (append-only), `tokens`, `listings`, `sales` and `activity`;
+- migration `20261106120000_chain_indexer`; Prisma doesn't model the schema.
+
+The read API is mounted at `/v1/market`: `listings`, `owners/{account}/tokens`, `tokens/{id}`,
+`tokens?ids=` and `accounts/{account}/notifications`, plus a public live socket at
+`/v1/market/live` that the indexer feeds through Redis. Goldsky can still replace the block
+source on mainnet later.
+
 ## 10. Websites
 
 **`web/marketplace`** (Vite + React + TypeScript, wallet selector):

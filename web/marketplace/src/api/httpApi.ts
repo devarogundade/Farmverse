@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { toYocto } from '../lib/amount';
 import { http } from './http';
-import { NoteWire, OfferWire, PageWire, TokenDetailWire, TokenWire } from './schemas';
+import { NoteWire, OfferWire, PageWire, TokenDetailWire, TokenListWire } from './schemas';
 import type { MarketApi } from './types';
 
 /** MarketApi over the backend (docs 13 §9 read API + off-chain offers and notifications). */
@@ -21,7 +21,7 @@ export const httpApi: MarketApi = {
     }
   },
   tokens: (ids, signal) =>
-    ids.length ? http('/tokens', { query: { ids: ids.join(',') }, schema: z.array(TokenWire), signal }) : Promise.resolve([]),
+    ids.length ? http('/tokens', { query: { ids: ids.join(',') }, schema: TokenListWire, signal }) : Promise.resolve([]),
   offers: (tokenId, signal) => http(`/tokens/${encodeURIComponent(tokenId)}/offers`, { schema: z.array(OfferWire), signal }),
   notifications: (account, signal) => http(`/accounts/${encodeURIComponent(account)}/notifications`, { schema: z.array(NoteWire), signal }),
   markNotificationsRead: async (account) => {

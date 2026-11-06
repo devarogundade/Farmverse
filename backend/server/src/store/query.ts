@@ -1,31 +1,22 @@
 import type { DocData, QueryRow } from '../../../functions/src/infra/store';
 import { Prisma, type PrismaClient } from '../generated/prisma/client';
 
-export type FilterOp = '==' | '<' | '<=' | '>' | '>=' | 'in';
+export type FilterOp = '==' | '<' | '<=' | '>' | '>=';
 export type Scalar = string | number | boolean;
 
 export interface DocQuery {
   readonly collection: string;
-  /** `in` takes a list of up to 30 values; every other op one value. */
-  readonly filters: readonly { field: string; op: FilterOp; value: Scalar | readonly Scalar[] }[];
-  /** Orders, most significant first. Ties break on the document path. */
+  readonly filters: readonly { field: string; op: FilterOp; value: Scalar }[];
+  /** Orders, most significant first. Ties always break on the document path. */
   readonly orders: readonly { field: string; direction: 'asc' | 'desc' }[];
   readonly limit: number;
-  /**
-   * Firestore `startAfter`: one value per order, optionally followed by the last document's id
-   * (the client's keyset cursor). Rows at or before it are skipped.
-   */
+  /** Firestore `startAfter`: one value per order; rows at or before it are skipped. */
   readonly startAfter?: readonly Scalar[];
-  /**
-   * Direction of the path tie-break. `asc` always (default) is what the game code and its
-   * in-memory store expect; `last` follows the last order, as Firestore orders by document id.
-   */
-  readonly tieBreak?: 'asc' | 'last';
 }
 
 const FIELD = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 const COLLECTION = /^[A-Za-z0-9_-]{1,128}(\/[A-Za-z0-9_-]{1,128}\/[A-Za-z0-9_-]{1,128})*$/;
-const OPS: Record<Exclude<FilterOp, 'in'>, string> = { '==': '=', '<': '<', '<=': '<=', '>': '>', '>=': '>=' };
+const OPS: Record<FilterOp, string> = { '==': '=', '<': '<', '<=': '<=', '>': '>', '>=': '>=' };
 
 export function assertQuery(q: DocQuery): void {
   if (!COLLECTION.test(q.collection)) throw new Error(`Not a collection path: '${q.collection}'`);
@@ -33,17 +24,8 @@ export function assertQuery(q: DocQuery): void {
     if (!FIELD.test(f)) throw new Error(`Not a queryable field: '${f}'`);
   }
   if (!Number.isInteger(q.limit) || q.limit < 1 || q.limit > 1000) throw new Error('limit must be 1-1000');
-  if (q.startAfter && q.startAfter.length !== q.orders.length && q.startAfter.length !== q.orders.length + 1) {
-    throw new Error('startAfter needs one value per order (and optionally the last id)');
-  }
-  for (const f of q.filters) {
-    const v = f.value;
-    const bad = f.op === 'in' ? !Array.isArray(v) || v.length === 0 || v.length > 30 : Array.isArray(v);
-    if (bad) throw new Error(`bad value for ${f.op} on ${f.field}`);
-  }
+  if (q.startAfter && q.startAfter.length !== q.orders.length) throw new Error('startAfter needs one value per order');
 }
-
-const tieDirection = (q: DocQuery): 'asc' | 'desc' => (q.tieBreak === 'last' ? (q.orders.at(-1)?.direction ?? 'asc') : 'asc');
 
 /** The value of `field` as SQL: numbers compare as numbers, strings as text. */
 function value(field: string, sample: Scalar): Prisma.Sql {
@@ -57,13 +39,8 @@ function literal(v: Scalar): Prisma.Sql {
 }
 
 function filterSql(f: DocQuery['filters'][number]): Prisma.Sql {
-  if (f.op === 'in') {
-    const values = (f.value as readonly Scalar[]).map((v) => Prisma.sql`${JSON.stringify(v)}::jsonb`);
-    return Prisma.sql`(data -> ${f.field}) IN (${Prisma.join(values)})`;
-  }
-  const v = f.value as Scalar;
-  if (f.op === '==') return Prisma.sql`(data -> ${f.field}) = ${JSON.stringify(v)}::jsonb`;
-  return Prisma.sql`${value(f.field, v)} ${Prisma.raw(OPS[f.op])} ${literal(v)}`;
+  if (f.op === '==') return Prisma.sql`(data -> ${f.field}) = ${JSON.stringify(f.value)}::jsonb`;
+  return Prisma.sql`${value(f.field, f.value)} ${Prisma.raw(OPS[f.op])} ${literal(f.value)}`;
 }
 
 /** Orders sort numerically (as the in-memory store does); documents missing the field sort last. */
@@ -82,23 +59,17 @@ function cursorSql(q: DocQuery): Prisma.Sql {
     parts.push(Prisma.sql`${orderExpr(o.field)} ${Prisma.raw(o.direction === 'asc' ? '>' : '<')} ${literal(after[i]!)}`);
     branches.push(Prisma.sql`(${Prisma.join(parts, ' AND ')})`);
   }
-  if (after.length === q.orders.length + 1) {
-    // the last document's id: equal on every order, then past it on the path
-    const parts = q.orders.map((o, j) => Prisma.sql`${orderExpr(o.field)} = ${literal(after[j]!)}`);
-    parts.push(Prisma.sql`path ${Prisma.raw(tieDirection(q) === 'asc' ? '>' : '<')} ${`${q.collection}/${String(after.at(-1))}`}`);
-    branches.push(Prisma.sql`(${Prisma.join(parts, ' AND ')})`);
-  }
   return Prisma.sql`(${Prisma.join(branches, ' OR ')})`;
 }
 
 export async function queryDocuments(db: Pick<PrismaClient, '$queryRaw'>, q: DocQuery): Promise<QueryRow[]> {
   assertQuery(q);
   const where: Prisma.Sql[] = [Prisma.sql`collection = ${q.collection}`, ...q.filters.map(filterSql)];
-  if (q.startAfter && (q.orders.length > 0 || q.startAfter.length === 1)) where.push(cursorSql(q));
+  if (q.startAfter && q.orders.length > 0) where.push(cursorSql(q));
   const order: Prisma.Sql[] = q.orders.map(
     (o) => Prisma.sql`${orderExpr(o.field)} ${Prisma.raw(o.direction === 'asc' ? 'ASC' : 'DESC')} NULLS LAST`,
   );
-  order.push(Prisma.sql`path ${Prisma.raw(tieDirection(q) === 'asc' ? 'ASC' : 'DESC')}`);
+  order.push(Prisma.sql`path ASC`);
   const rows = await db.$queryRaw<{ path: string; data: DocData }[]>`
     SELECT path, data FROM documents
     WHERE ${Prisma.join(where, ' AND ')}

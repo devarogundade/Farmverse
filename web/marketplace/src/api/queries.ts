@@ -3,9 +3,8 @@
  * states, pagination and realtime invalidation work the same way everywhere.
  */
 import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { config, DATA_MODE } from '../config';
+import { config, features } from '../config';
 import { useWallet } from '../chain/wallet';
-import { getState, useStore } from '../state/store';
 import { api } from '.';
 import type { ListingQuery } from './types';
 
@@ -17,6 +16,7 @@ export const keys = {
   offers: (tokenId: string) => ['market', 'offers', tokenId] as const,
   notes: (account: string | null) => ['account', 'notes', account] as const,
   balance: (account: string | null) => ['account', 'balance', account] as const,
+  marketConfig: ['chain', 'market-config'] as const,
 };
 
 /** Listings (or one owner's tokens), a page at a time. */
@@ -36,7 +36,8 @@ export const useToken = (id: string) => useQuery({ queryKey: keys.token(id), que
 export const useTokensByIds = (ids: string[]) =>
   useQuery({ queryKey: keys.tokens(ids), queryFn: ({ signal }) => api.tokens(ids, signal), enabled: ids.length > 0 });
 
-export const useOffers = (tokenId: string) => useQuery({ queryKey: keys.offers(tokenId), queryFn: ({ signal }) => api.offers(tokenId, signal) });
+export const useOffers = (tokenId: string) =>
+  useQuery({ queryKey: keys.offers(tokenId), queryFn: ({ signal }) => api.offers(tokenId, signal), enabled: features.offers });
 
 export function useNotes() {
   const { accountId } = useWallet();
@@ -56,15 +57,26 @@ export function useMarkNotesRead() {
   });
 }
 
-/** FARM balance: ft_balance_of on chain, or the mock wallet. */
+/** FARM balance of the connected account: ft_balance_of on the FARM contract. */
 export function useBalance() {
   const { accountId } = useWallet();
-  const mockBalance = useStore((s) => s.balance);
-  const q = useQuery({
+  return useQuery({
     queryKey: keys.balance(accountId),
-    queryFn: () => (DATA_MODE === 'api' ? import('../chain/market').then((c) => c.farmBalance(accountId!)) : Promise.resolve(getState().balance)),
+    queryFn: () => import('../chain/market').then((c) => c.farmBalance(accountId!)),
     enabled: !!accountId,
     staleTime: 15_000,
   });
-  return DATA_MODE === 'api' ? q : { ...q, data: accountId ? mockBalance : undefined };
+}
+
+/**
+ * The market's fee as a fraction (fee_bps / 10 000), read from the market contract. Undefined
+ * until loaded or if the contract can't be reached; the fee can only change by an owner call.
+ */
+export function useFeeRate(): number | undefined {
+  const q = useQuery({
+    queryKey: keys.marketConfig,
+    queryFn: () => import('../chain/market').then((c) => c.marketConfig()),
+    staleTime: 10 * 60_000,
+  });
+  return q.data ? q.data.fee_bps / 10_000 : undefined;
 }

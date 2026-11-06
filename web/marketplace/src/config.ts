@@ -1,26 +1,37 @@
 /**
- * Runtime configuration from Vite env (see .env.example). With no VITE_API_URL the whole app runs on
- * the in-memory mock (api/mockApi, chain via state/store), so it works before the backend is deployed.
+ * Runtime configuration from Vite env (see .env.example). The marketplace always talks to the game
+ * API (backend/server: the read API and live socket the indexer feeds) and to NEAR.
  */
 const env = import.meta.env;
 
 export type Network = 'testnet' | 'mainnet';
 
+const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
+
+/** The game API's marketplace routes. Local dev falls back to the server's default port. */
+const apiUrl = (str(env.VITE_API_URL) ?? (env.DEV ? 'http://localhost:8787/v1/market' : '')).replace(/\/$/, '');
+
 export const config = {
   network: (env.VITE_NEAR_NETWORK === 'mainnet' ? 'mainnet' : 'testnet') as Network,
-  apiUrl: (env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || null,
-  wsUrl: (env.VITE_WS_URL as string | undefined) || null,
-  rpcUrl:
-    (env.VITE_NEAR_RPC as string | undefined) ||
-    (env.VITE_NEAR_NETWORK === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://rpc.testnet.near.org'),
+  apiUrl: apiUrl || null,
+  /** Live market updates; by default the API's /live socket. */
+  wsUrl: str(env.VITE_WS_URL) ?? (apiUrl ? `${apiUrl.replace(/^http/, 'ws')}/live` : null),
+  rpcUrl: str(env.VITE_NEAR_RPC) ?? (env.VITE_NEAR_NETWORK === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://rpc.testnet.near.org'),
   contracts: {
-    items: (env.VITE_ITEMS_CONTRACT as string | undefined) || 'items.farmverse.testnet',
-    market: (env.VITE_MARKET_CONTRACT as string | undefined) || 'market.farmverse.testnet',
-    farm: (env.VITE_FARM_CONTRACT as string | undefined) || 'farm.farmverse.testnet',
+    items: str(env.VITE_ITEMS_CONTRACT) ?? 'items.farmverse.testnet',
+    market: str(env.VITE_MARKET_CONTRACT) ?? 'market.farmverse.testnet',
+    farm: str(env.VITE_FARM_CONTRACT) ?? 'farm.farmverse.testnet',
   },
+  /** A token to show under "Featured" in the menu; the item is hidden without one. */
+  featuredToken: str(env.VITE_FEATURED_TOKEN) ?? null,
   /** Items per page for listings. */
   pageSize: 8,
 };
 
-/** 'api' talks to the backend + NEAR; 'mock' runs entirely in the browser. */
-export const DATA_MODE: 'api' | 'mock' = config.apiUrl ? 'api' : 'mock';
+/**
+ * Features the backend doesn't serve yet stay hidden rather than half-working.
+ * Offers are off-chain (docs 14 §3) and need marketplace sign-in and settlement first.
+ */
+export const features = {
+  offers: env.VITE_OFFERS === 'on',
+};

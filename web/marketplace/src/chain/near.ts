@@ -1,6 +1,6 @@
 /**
- * NEAR access: one NearConnector (wallets) and one RPC provider (reads). Created lazily so the mock
- * mode never loads wallet manifests or touches the network.
+ * NEAR access: one NearConnector (wallets) and one RPC provider (reads), created on first use so
+ * the first paint doesn't wait for wallet manifests.
  */
 import type { NearConnector } from '@hot-labs/near-connect';
 import type { JsonRpcProvider } from 'near-api-js';

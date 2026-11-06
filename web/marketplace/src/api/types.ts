@@ -1,9 +1,50 @@
-import type { NftType } from '@farmverse/shared/nft/metadata';
-import type { Token } from '../data/mock';
-import type { Note, Offer } from '../state/store';
+import type { NftMetadata, NftType } from '@farmverse/shared/nft/metadata';
 
-export type { Note, Offer, Token };
 export type Sort = 'newest' | 'price_asc' | 'price_desc';
+
+export type EventKind = 'minted' | 'listed' | 'bought' | 'delisted' | 'redeemed' | 'sent' | 'offer';
+
+export interface TokenEvent {
+  kind: EventKind;
+  account: string;
+  /** FARM. */
+  price?: number;
+  /** Epoch ms. */
+  at: number;
+}
+
+/** An item NFT as the read API serves it (backend/server/src/market/read.ts). */
+export interface Token {
+  token_id: string;
+  title: string;
+  owner_id: string;
+  metadata: NftMetadata;
+  /** Active listing price in FARM, if listed. */
+  price?: number;
+  /** Daily average sale price of the same model, oldest first (detail only). */
+  priceHistory: number[];
+  /** Newest first (detail only). */
+  events: TokenEvent[];
+}
+
+export interface Offer {
+  id: string;
+  token_id: string;
+  from: string;
+  amount: number;
+  expires_at: number;
+  status: 'open' | 'accepted' | 'declined' | 'cancelled';
+}
+
+export interface Note {
+  id: string;
+  /** A game sprite name. */
+  icon: string;
+  text: string;
+  href?: string;
+  at: number;
+  read: boolean;
+}
 
 export interface Page<T> {
   items: T[];

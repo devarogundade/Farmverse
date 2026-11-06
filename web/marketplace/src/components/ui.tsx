@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { FarmIcon } from '@farmverse/shared/brand';
 import type { NftType } from '@farmverse/shared/nft/metadata';
-import type { EventKind } from '../data/mock';
+import type { EventKind } from '../api/types';
 
 export { FarmIcon };
 

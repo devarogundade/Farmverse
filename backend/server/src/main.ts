@@ -2,7 +2,11 @@ import 'dotenv/config';
 import { cloudLogger } from '../../functions/src/core/logger';
 import { buildApp } from './app';
 import { loadConfig } from './config';
+import { redisClient, redisMarketBus } from './infra/redis';
 import { LiveHub } from './live';
+import { redisNoteMarks } from './market/marks';
+import { MarketReader } from './market/read';
+import { MarketHub } from './market/routes';
 import { buildServices } from './runtime';
 
 /** The HTTP/WebSocket server process. Jobs run in worker.ts (scale them separately). */
@@ -12,6 +16,11 @@ async function main(): Promise<void> {
   const services = buildServices(config, log);
   const hub = new LiveHub(services.reader, (t) => services.sessions.verify(t), log);
   await hub.start(services.bus);
+
+  // The marketplace reads what the indexer process writes, and relays its updates live.
+  const marketRedis = redisClient(config.REDIS_URL, 'market');
+  const marketHub = new MarketHub(log);
+  await marketHub.start(redisMarketBus(marketRedis, config.REDIS_URL, (error) => log.error('market bus', { error: String(error) })));
 
   const app = await buildApp({
     rt: services.rt,
@@ -28,12 +37,20 @@ async function main(): Promise<void> {
     allowedOrigins: config.ALLOWED_ORIGINS,
     minClientVersion: config.MIN_CLIENT_VERSION,
     environment: config.FARMVERSE_ENV,
+    market: {
+      reader: new MarketReader(services.prisma, config.NEAR_ITEMS_CONTRACT),
+      marks: redisNoteMarks(marketRedis),
+      limiter: services.limiter,
+      hub: marketHub,
+    },
   });
 
   const shutdown = async (signal: string) => {
     log.info('shutting down', { signal });
     await hub.stop();
+    await marketHub.stop();
     await app.close();
+    await marketRedis.quit();
     await services.close();
     process.exit(0);
   };

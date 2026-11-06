@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useOffers, useToken } from '../api/queries';
 import type { Offer, Token } from '../api/types';
 import { useWallet } from '../chain/wallet';
+import { features } from '../config';
 import { toast } from '../components/Dialog';
 import { useFlow } from '../components/Flows';
 import { NftCard } from '../components/NftCard';
@@ -126,9 +127,11 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
                     Buy now
                   </button>
                 )}
-                <button className="fv-btn blue" onClick={() => open({ kind: 'offer', token })}>
-                  {myOffer ? 'New offer' : 'Make offer'}
-                </button>
+                {features.offers && (
+                  <button className="fv-btn blue" onClick={() => open({ kind: 'offer', token })}>
+                    {myOffer ? 'New offer' : 'Make offer'}
+                  </button>
+                )}
                 <button
                   className={`fv-chip save${saved ? ' on' : ''}`}
                   aria-pressed={saved}
@@ -191,10 +194,12 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
               <Tabs.Trigger value="history" className="tab fv-title">
                 History
               </Tabs.Trigger>
-              <Tabs.Trigger value="offers" className="tab fv-title">
-                Offers
-                {visibleOffers.length > 0 && <i className="count">{visibleOffers.length}</i>}
-              </Tabs.Trigger>
+              {features.offers && (
+                <Tabs.Trigger value="offers" className="tab fv-title">
+                  Offers
+                  {visibleOffers.length > 0 && <i className="count">{visibleOffers.length}</i>}
+                </Tabs.Trigger>
+              )}
               <Tabs.Trigger value="details" className="tab fv-title">
                 Details
               </Tabs.Trigger>
@@ -217,9 +222,11 @@ function TokenView({ token, floor, related }: { token: Token; floor?: number; re
               )}
             </Tabs.Content>
 
-            <Tabs.Content value="offers">
-              <OffersList offers={visibleOffers} mine={mine} me={accountId} loading={offersQ.isPending} error={offersQ.error} onRetry={() => offersQ.refetch()} token={token} />
-            </Tabs.Content>
+            {features.offers && (
+              <Tabs.Content value="offers">
+                <OffersList offers={visibleOffers} mine={mine} me={accountId} loading={offersQ.isPending} error={offersQ.error} onRetry={() => offersQ.refetch()} token={token} />
+              </Tabs.Content>
+            )}
 
             <Tabs.Content value="details">
               <dl className="traits">

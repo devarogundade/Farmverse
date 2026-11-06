@@ -55,26 +55,3 @@ describe('PrismaStore specifics', () => {
     expect(next.map((r) => r.path)).toEqual(['leaderboards/w1/players/p4', 'leaderboards/w1/players/p1', 'leaderboards/w1/players/p3']);
   });
 });
-
-describe('client queries (Firestore semantics)', () => {
-  it('pages with the last id after the order values, ties following the last order', async () => {
-    await resetDatabase(prisma);
-    const store = prismaStore(prisma);
-    await store.writeBatch(['a', 'b', 'c', 'd'].map((id, i) => ({ path: `news/${id}`, data: { at: i < 2 ? 5 : 9, kind: i % 2 ? 'x' : 'y' } })));
-    const { queryDocuments } = await import('../../src/store/query');
-    const q = { collection: 'news', filters: [], orders: [{ field: 'at', direction: 'desc' as const }], limit: 2, tieBreak: 'last' as const };
-    const first = await queryDocuments(prisma, q);
-    expect(first.map((r) => r.path)).toEqual(['news/d', 'news/c']);
-    const next = await queryDocuments(prisma, { ...q, startAfter: [9, 'c'] });
-    expect(next.map((r) => r.path)).toEqual(['news/b', 'news/a']);
-  });
-
-  it('filters with in', async () => {
-    await resetDatabase(prisma);
-    const store = prismaStore(prisma);
-    await store.writeBatch(['a', 'b', 'c'].map((id, i) => ({ path: `news/${id}`, data: { kind: ['x', 'y', 'z'][i] } })));
-    const { queryDocuments } = await import('../../src/store/query');
-    const rows = await queryDocuments(prisma, { collection: 'news', filters: [{ field: 'kind', op: 'in', value: ['x', 'z'] }], orders: [], limit: 10 });
-    expect(rows.map((r) => r.path)).toEqual(['news/a', 'news/c']);
-  });
-});

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Farmverse.Bootstrap;
+using Farmverse.Infrastructure.Firebase;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -30,9 +31,9 @@ namespace Farmverse.Editor
             Folder(Root + "/UI");
             RenderPipelineSetup.Ensure(); // URP first: the world's materials are URP materials
 
-            var dev = Environment("dev", "http://localhost:8787");
-            Environment("staging", "https://api.staging.farmverse.world");
-            Environment("prod", "https://api.farmverse.world");
+            var dev = Environment("dev", AppCheckMode.Debug);
+            Environment("staging", AppCheckMode.Platform);
+            Environment("prod", AppCheckMode.Platform);
             Panel();
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -45,7 +46,7 @@ namespace Farmverse.Editor
             else Debug.LogWarning("Farmverse setup: " + IslandScenePath + " is missing; run Farmverse ▸ World ▸ Build Island.");
             Verify();
             AssetDatabase.SaveAssets();
-            Debug.Log("Farmverse boot scene ready at " + ScenePath + ". Press Play with the game server running (backend/server: npm run dev, FARMVERSE_ENV=dev).");
+            Debug.Log("Farmverse boot scene ready at " + ScenePath + ". Press Play (dev uses the App Check debug provider: register the token printed in the console).");
         }
 
         /// <summary>Fail loudly in the editor rather than with a null at Play.</summary>
@@ -58,7 +59,7 @@ namespace Farmverse.Editor
                     Debug.LogError("Farmverse setup: GameRoot." + field + " is not assigned in " + ScenePath + ".", root);
         }
 
-        private static EnvironmentConfig Environment(string name, string apiBaseUrl)
+        private static EnvironmentConfig Environment(string name, AppCheckMode appCheck)
         {
             var path = Root + "/Config/Environments/Environment." + name + ".asset";
             var config = AssetDatabase.LoadAssetAtPath<EnvironmentConfig>(path);
@@ -73,7 +74,7 @@ namespace Farmverse.Editor
             config = ScriptableObject.CreateInstance<EnvironmentConfig>();
             var so = new SerializedObject(config);
             so.FindProperty("environmentName").stringValue = name;
-            so.FindProperty("apiBaseUrl").stringValue = apiBaseUrl;
+            so.FindProperty("appCheck").enumValueIndex = (int)appCheck;
             so.FindProperty("minimumLog").enumValueIndex = name == "prod" ? 2 : 0;
             so.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.CreateAsset(config, path);

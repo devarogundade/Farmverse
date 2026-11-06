@@ -70,8 +70,8 @@ namespace Farmverse.Bootstrap
             _relay = target.User.Subscribe(u => _user.Value = u);
         }
 
-        public Task<Result<AuthUser>> SignIn(CancellationToken cancellation) =>
-            _target?.SignIn(cancellation) ?? Task.FromResult(Result<AuthUser>.Fail(NotReady.Error));
+        public Task<Result<AuthUser>> SignInAnonymously(CancellationToken cancellation) =>
+            _target?.SignInAnonymously(cancellation) ?? Task.FromResult(Result<AuthUser>.Fail(NotReady.Error));
 
         public Task SignOut() => _target?.SignOut() ?? Task.CompletedTask;
     }

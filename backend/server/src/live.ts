@@ -22,20 +22,13 @@ export interface LiveSocket {
 }
 
 const Scalar = z.union([z.string().max(256), z.number(), z.boolean()]);
-/** A client's query: Firestore semantics (ties break by document id in the last order's direction). */
-export const QuerySpec = z
-  .object({
-    collection: z.string().min(1).max(512),
-    filters: z
-      .array(z.object({ field: z.string().max(64), op: z.enum(['==', '<', '<=', '>', '>=', 'in']), value: z.union([Scalar, z.array(Scalar).max(30)]) }))
-      .max(5)
-      .default([]),
-    orders: z.array(z.object({ field: z.string().max(64), direction: z.enum(['asc', 'desc']) })).max(3).default([]),
-    limit: z.number().int().min(1).max(50),
-    /** One value per order, then optionally the last document's id. */
-    startAfter: z.array(Scalar).max(4).optional(),
-  })
-  .transform((q) => ({ ...q, tieBreak: 'last' as const }));
+export const QuerySpec = z.object({
+  collection: z.string().min(1).max(512),
+  filters: z.array(z.object({ field: z.string().max(64), op: z.enum(['==', '<', '<=', '>', '>=']), value: Scalar })).max(5).default([]),
+  orders: z.array(z.object({ field: z.string().max(64), direction: z.enum(['asc', 'desc']) })).max(3).default([]),
+  limit: z.number().int().min(1).max(50),
+  startAfter: z.array(Scalar).max(3).optional(),
+});
 
 const ClientMessage = z.discriminatedUnion('type', [
   z.object({ type: z.literal('auth'), token: z.string().max(4096) }),

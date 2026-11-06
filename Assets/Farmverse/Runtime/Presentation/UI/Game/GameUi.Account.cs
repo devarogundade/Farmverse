@@ -9,9 +9,6 @@ namespace Farmverse.Presentation.UI.Game
     {
         public static AccountService? Account { get; set; }
 
-        /// <summary>Island items ⇄ NFTs (mint, redeem): set by the composition root on the web build.</summary>
-        public static ChainService? Chain { get; set; }
-
         private bool _accountBusy;
 
         /// <summary>Settings ▸ Delete Account: asks twice, then deletes everything and starts over as a new guest.</summary>

@@ -1,6 +1,4 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { DATA_MODE } from '../config';
-import { actions, useStore } from '../state/store';
 import { getConnector } from './near';
 
 export interface WalletState {
@@ -8,9 +6,8 @@ export interface WalletState {
   accountId: string | null;
   /** False until a saved session has been checked (avoid flashing "Connect"). */
   ready: boolean;
-  /** 'near' = real wallets via NEAR Connect; 'mock' = the in-browser demo account. */
-  mode: 'near' | 'mock';
-  connect: () => Promise<void>;
+  /** Opens NEAR Connect's wallet picker; resolves with the account once one is connected. */
+  connect: () => Promise<string>;
   disconnect: () => Promise<void>;
 }
 
@@ -22,7 +19,8 @@ export function useWallet(): WalletState {
   return w;
 }
 
-function NearWalletProvider({ children }: { children: ReactNode }) {
+/** NEAR wallets through NEAR Connect (MyNearWallet, Meteor, HOT, Intear, …). */
+export function WalletProvider({ children }: { children: ReactNode }) {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -49,12 +47,13 @@ function NearWalletProvider({ children }: { children: ReactNode }) {
     () => ({
       accountId,
       ready,
-      mode: 'near',
       connect: async () => {
         const c = await getConnector();
         const w = await c.connect(); // NEAR Connect's own wallet picker
         const [acc] = await w.getAccounts();
-        setAccountId(acc?.accountId ?? null);
+        if (!acc) throw new Error('No account was connected.');
+        setAccountId(acc.accountId);
+        return acc.accountId;
       },
       disconnect: async () => {
         const c = await getConnector();
@@ -66,14 +65,3 @@ function NearWalletProvider({ children }: { children: ReactNode }) {
   );
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
 }
-
-function MockWalletProvider({ children }: { children: ReactNode }) {
-  const accountId = useStore((s) => s.account);
-  const value = useMemo<WalletState>(
-    () => ({ accountId, ready: true, mode: 'mock', connect: () => actions.connect(), disconnect: async () => actions.disconnect() }),
-    [accountId],
-  );
-  return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
-}
-
-export const WalletProvider = DATA_MODE === 'api' ? NearWalletProvider : MockWalletProvider;

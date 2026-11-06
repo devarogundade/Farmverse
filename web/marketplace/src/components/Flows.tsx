@@ -1,12 +1,12 @@
 import { sprite } from '@farmverse/shared/gameTheme';
 import { displayNo, modelLabel } from '@farmverse/shared/nft/metadata';
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { useMarket } from '../actions/useMarket';
-import { useBalance, useMarkNotesRead, useNotes, useToken } from '../api/queries';
+import { useBalance, useFeeRate, useMarkNotesRead, useNotes, useToken } from '../api/queries';
 import type { Offer, Token } from '../api/types';
 import { useWallet } from '../chain/wallet';
 import { href } from '../router';
-import { MARKET_FEE, isAccount } from '../state/store';
+import { isAccount } from '../lib/account';
 import { Dialog, Done, WalletWait, toast, useRun } from './Dialog';
 import { Select } from './Select';
 import { AccountAvatar, FRAME, FarmIcon, TYPE_ICON, fmt, timeAgo } from './ui';
@@ -27,7 +27,6 @@ const ownItem = (f: Flow, account: string) => (f.kind === 'buy' || f.kind === 'o
 
 export function FlowHost({ children }: { children: ReactNode }) {
   const [flow, setFlow] = useState<Flow | null>(null);
-  const after = useRef<Flow | null>(null);
   const wallet = useWallet();
 
   const continueWith = useCallback((f: Flow | null, account: string) => {
@@ -39,36 +38,20 @@ export function FlowHost({ children }: { children: ReactNode }) {
 
   const open = useCallback(
     (f: Flow) => {
-      const signedOut = !wallet.accountId;
-      if ((needsAccount(f) || f.kind === 'wallet') && signedOut && wallet.mode === 'near') {
-        // NEAR Connect shows its own wallet picker; ours would sit above it in the top layer.
+      if ((needsAccount(f) || f.kind === 'wallet') && !wallet.accountId) {
+        // NEAR Connect shows its own wallet picker; then carry on with what they were doing.
         wallet.connect().then(
-          () => needsAccount(f) && setFlow(f),
+          (account) => needsAccount(f) && continueWith(f, account),
           () => toast('Wallet not connected', 'Icon_ImageIcon_Info'),
         );
         return;
       }
-      if (needsAccount(f) && signedOut) {
-        after.current = f;
-        setFlow({ kind: 'wallet' });
-      } else setFlow(f);
+      setFlow(f);
     },
-    [wallet],
+    [wallet, continueWith],
   );
 
-  // Mock sign-in from the gate: carry on with what they were doing.
-  useEffect(() => {
-    if (wallet.accountId && after.current && flow?.kind === 'wallet') {
-      const f = after.current;
-      after.current = null;
-      continueWith(f, wallet.accountId);
-    }
-  }, [wallet.accountId, flow, continueWith]);
-
-  const close = () => {
-    setFlow(null);
-    after.current = null;
-  };
+  const close = () => setFlow(null);
 
   return (
     <FlowContext.Provider value={open}>
@@ -175,6 +158,9 @@ function AmountInput({ value, onChange, label, suggestions }: { value: string; o
     </div>
   );
 }
+
+/** "Market fee (5%)", from the market contract's fee_bps. */
+const feeLabel = (rate: number | undefined) => `Market fee (${rate == null ? '…' : `${+(rate * 100).toFixed(2)}`}%)`;
 
 const lastSale = (t: Token) => t.events.find((e) => e.kind === 'bought')?.price;
 /** Floor from the item query already in cache (the item page loaded it). */
@@ -304,7 +290,8 @@ function ListFlow({ token, onClose }: { token: Token; onClose: () => void }) {
   const [amount, setAmount] = useState(editing ? String(token.price) : '');
   const { status, error, run } = useRun();
   const n = Number(amount);
-  const fee = n > 0 ? n * MARKET_FEE : 0;
+  const rate = useFeeRate();
+  const fee = rate == null ? undefined : n > 0 ? n * rate : 0;
   return (
     <Dialog open onClose={onClose} title={status === 'done' ? 'On the market!' : editing ? 'Change price' : 'Sell item'} icon="Icon_Shop">
       {status === 'busy' ? (
@@ -338,8 +325,8 @@ function ListFlow({ token, onClose }: { token: Token; onClose: () => void }) {
           <Rows
             rows={[
               ['Price', <Farm n={n || 0} />],
-              [`Market fee (${MARKET_FEE * 100}%)`, <span className="minus">−{fmt(fee)} FARM</span>],
-              ['You get', <Farm n={Math.max(0, (n || 0) - fee)} />, 'total'],
+              [feeLabel(rate), <span className="minus">−{fee == null ? '…' : fmt(fee)} FARM</span>],
+              ['You get', <Farm n={fee == null ? undefined : Math.max(0, (n || 0) - fee)} />, 'total'],
             ]}
           />
           {!editing && <p className="dlg-note">The first time you sell, your wallet also asks for a small NEAR deposit to hold the listing.</p>}
@@ -505,8 +492,9 @@ function SendFlow({ token, onClose }: { token: Token; onClose: () => void }) {
 
 function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' | 'decline' | 'cancelOffer'; offer: Offer; token: Token; onClose: () => void }) {
   const market = useMarket();
+  const rate = useFeeRate();
   if (kind === 'accept') {
-    const fee = o.amount * MARKET_FEE;
+    const fee = rate == null ? undefined : o.amount * rate;
     return (
       <Confirm
         title="Accept offer?"
@@ -517,8 +505,8 @@ function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' |
             rows={[
               ['Offer from', o.from],
               ['Offer', <Farm n={o.amount} />],
-              [`Market fee (${MARKET_FEE * 100}%)`, <span className="minus">−{fmt(fee)} FARM</span>],
-              ['You get', <Farm n={o.amount - fee} />, 'total'],
+              [feeLabel(rate), <span className="minus">−{fee == null ? '…' : fmt(fee)} FARM</span>],
+              ['You get', <Farm n={fee == null ? undefined : o.amount - fee} />, 'total'],
             ]}
           />
         }
@@ -547,12 +535,6 @@ function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' |
   );
 }
 
-const MOCK_WALLETS = [
-  { name: 'MyNearWallet', hint: 'In your browser' },
-  { name: 'Meteor Wallet', hint: 'Browser extension' },
-  { name: 'HOT Wallet', hint: 'On your phone' },
-];
-
 function WalletFlow({ onClose }: { onClose: () => void }) {
   const wallet = useWallet();
   const { data: balance } = useBalance();
@@ -564,22 +546,13 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
           <WalletWait text="Approve the sign-in in your wallet…" />
         ) : (
           <>
-            <p className="dlg-note">Sign in with your NEAR wallet to buy, sell and make offers. It’s the same wallet you play with.</p>
-            <div className="wallet-list">
-              {MOCK_WALLETS.map((w) => (
-                <button key={w.name} className="wallet-opt fv-row" onClick={() => run(() => wallet.connect())}>
-                  <span className="fv-row-ava">
-                    <AccountAvatar account={w.name} size={30} />
-                  </span>
-                  <span>
-                    <b>{w.name}</b>
-                    <small>{w.hint}</small>
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="dlg-note demo-note">Demo mode: this signs you in as a test farmer.</p>
+            <p className="dlg-note">Sign in with your NEAR wallet to buy and sell. It’s the same wallet you play with.</p>
             <Err error={error} />
+            <Actions>
+              <button className="fv-btn green" onClick={() => run(async () => void (await wallet.connect()))}>
+                Connect wallet
+              </button>
+            </Actions>
           </>
         )}
       </Dialog>
@@ -640,13 +613,13 @@ function NotesFlow({ onClose }: { onClose: () => void }) {
   return (
     <Dialog open onClose={onClose} title="Notifications" icon="Icon_PictoIcon_Bell">
       {!accountId ? (
-        <p className="dlg-note">Connect your wallet to get notified about offers and sales.</p>
+        <p className="dlg-note">Connect your wallet to hear when your items sell.</p>
       ) : notesQ.isPending ? (
         <WalletWait text="Loading…" />
       ) : notesQ.error ? (
         <p className="dlg-err">{(notesQ.error as Error).message}</p>
       ) : !list?.length ? (
-        <p className="dlg-note">Nothing yet. Offers and sales will show up here.</p>
+        <p className="dlg-note">Nothing yet. Sales and items sent to you show up here.</p>
       ) : (
         <ul className="notes">
           {list.map((n) => (

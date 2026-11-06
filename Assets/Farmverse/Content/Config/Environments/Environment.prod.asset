@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Environment.prod
   m_EditorClassIdentifier: Farmverse.Bootstrap::Farmverse.Bootstrap.EnvironmentConfig
   environmentName: prod
-  apiBaseUrl: https://api.farmverse.world
-  devAccount: dev-farmer.testnet
+  functionsRegion: europe-west1
+  appCheck: 0
+  emulatorHost: 
   minimumLog: 2
   storeUrl: 

@@ -1,5 +1,6 @@
 import { Redis } from 'ioredis';
 import type { NonceStore } from '../auth/sessions';
+import type { MarketMessage } from '../chain/project';
 import type { DocChange } from '../store/prismaStore';
 
 export function redisClient(url: string, name: string): Redis {
@@ -69,6 +70,51 @@ export function localChangeBus(): ChangeBus {
   return {
     publish(changes) {
       for (const l of listeners) l(changes);
+    },
+    async subscribe(listener) {
+      listeners.add(listener);
+      return async () => {
+        listeners.delete(listener);
+      };
+    },
+  };
+}
+
+/** Marketplace updates from the indexer to every server's market socket. */
+export const MARKET_CHANNEL = 'fv:market';
+
+export interface MarketBus {
+  publish(messages: readonly MarketMessage[]): void;
+  subscribe(listener: (messages: readonly MarketMessage[]) => void): Promise<() => Promise<void>>;
+}
+
+export function redisMarketBus(publisher: Redis, url: string, onError: (error: unknown) => void): MarketBus {
+  return {
+    publish(messages) {
+      publisher.publish(MARKET_CHANNEL, JSON.stringify(messages)).catch(onError);
+    },
+    async subscribe(listener) {
+      const sub = redisClient(url, 'market-sub');
+      sub.on('message', (_channel, message) => {
+        try {
+          listener(JSON.parse(message) as MarketMessage[]);
+        } catch (error) {
+          onError(error);
+        }
+      });
+      await sub.subscribe(MARKET_CHANNEL);
+      return async () => {
+        await sub.quit();
+      };
+    },
+  };
+}
+
+export function localMarketBus(): MarketBus {
+  const listeners = new Set<(messages: readonly MarketMessage[]) => void>();
+  return {
+    publish(messages) {
+      for (const l of listeners) l(messages);
     },
     async subscribe(listener) {
       listeners.add(listener);

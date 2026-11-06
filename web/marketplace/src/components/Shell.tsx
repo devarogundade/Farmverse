@@ -2,6 +2,7 @@ import { THEMES, sprite, useGameTheme } from '@farmverse/shared/gameTheme';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useBalance, useNotes } from '../api/queries';
 import { useWallet } from '../chain/wallet';
+import { config } from '../config';
 import { useLiveStatus } from '../realtime/socket';
 import { useFlow } from './Flows';
 import { href, type Route } from '../router';
@@ -9,7 +10,8 @@ import { AccountAvatar, fmt } from './ui';
 
 const NAV = [
   { key: 'home', icon: 'Icon_Shop', label: 'Explore', to: href.explore() },
-  { key: 'token', icon: 'Icon_Crown', label: 'Featured', to: href.token('w-1245') },
+  // "Featured" is a token the studio picks (VITE_FEATURED_TOKEN); hidden without one.
+  ...(config.featuredToken ? [{ key: 'token', icon: 'Icon_Crown', label: 'Featured', to: href.token(config.featuredToken) }] : []),
   { key: 'mine', icon: 'Icon_MenuIcon02_Inventory', label: 'My items', to: href.mine() },
   { key: 'studio', icon: 'Icon_PictoIcon_Cloth', label: 'Wardrobe', to: href.studio() },
 ] as const;

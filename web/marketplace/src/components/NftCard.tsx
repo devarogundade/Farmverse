@@ -1,6 +1,6 @@
 import { sprite } from '@farmverse/shared/gameTheme';
 import { useState } from 'react';
-import type { Token } from '../data/mock';
+import type { Token } from '../api/types';
 import { href } from '../router';
 import { NftStage } from '@farmverse/shared/three/NftStage';
 import { displayNo } from '@farmverse/shared/nft/metadata';

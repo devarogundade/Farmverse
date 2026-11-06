@@ -1,13 +1,13 @@
 <Project>
   <!--
-    Compile-checks the Unity assemblies (UnityEngine and Unity packages) outside the
+    Compile-checks the Unity assemblies (UnityEngine + Firebase SDK) outside the
     editor, against the real reference assemblies. Needs a local Unity install:
 
       dotnet build tools/dotnet/UnityCheck/Farmverse.Bootstrap.csproj ^  (builds every Unity assembly)
         -p:UnityManaged="C:\Program Files\Unity\Hub\Editor\6000.6.6f1\Editor\Data\Managed\UnityEngine"
 
     or a flat folder holding copies of those DLLs: -p:UnityRefs=/path/to/dlls
-    Never commit the DLLs: they are Unity's, not ours.
+    Never commit the DLLs: they are Unity's and Google's, not ours.
   -->
   <Import Project="../Directory.Build.props" />
   <PropertyGroup>
@@ -16,15 +16,14 @@
     <UnityManaged Condition="'$(UnityManaged)' == ''">C:/Program Files/Unity/Hub/Editor/6000.6.6f1/Editor/Data/Managed/UnityEngine</UnityManaged>
     <!-- CS0649: Unity suppresses it for [SerializeField] fields assigned by the serializer -->
     <NoWarn>$(NoWarn);CS1591;CS0649</NoWarn>
-    <!-- Unity 6.6 marks some APIs obsolete that the game still uses deliberately -->
-    <WarningsNotAsErrors>$(WarningsNotAsErrors);CS0618</WarningsNotAsErrors>
   </PropertyGroup>
   <ItemGroup Condition="'$(UnityRefs)' != ''">
     <Reference Include="$(UnityRefs)/*.dll" Private="false" />
   </ItemGroup>
   <ItemGroup Condition="'$(UnityRefs)' == ''">
     <Reference Include="$(UnityManaged)/UnityEngine*.dll" Private="false" />
-    <Reference Include="$(ProjectRoot)Library/ScriptAssemblies/Unity.InputSystem.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Addressables.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.ResourceManager.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Localization.dll" Private="false" />
+    <Reference Include="$(ProjectRoot)Assets/Firebase/Plugins/*.dll" Private="false" />
+    <Reference Include="$(ProjectRoot)Library/ScriptAssemblies/Firebase.Functions.dll;$(ProjectRoot)Library/ScriptAssemblies/Firebase.App.Internal.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.InputSystem.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Addressables.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.ResourceManager.dll;$(ProjectRoot)Library/ScriptAssemblies/Unity.Localization.dll" Private="false" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Farmverse.Contracts/Farmverse.Contracts.csproj" />

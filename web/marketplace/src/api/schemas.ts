@@ -4,9 +4,8 @@
  */
 import { parseMetadata } from '@farmverse/shared/nft/metadata';
 import { z } from 'zod';
-import type { Token } from '../data/mock';
 import { fromYocto } from '../lib/amount';
-import type { Note, Offer, Page, TokenDetail } from './types';
+import type { Note, Offer, Page, Token, TokenDetail } from './types';
 
 const yocto = z.string().regex(/^\d+$/);
 const farm = yocto.transform((v) => fromYocto(v));
@@ -45,12 +44,23 @@ export const TokenWire = z
     };
   });
 
+/**
+ * A list of tokens where one this build can't render (a model added after it shipped) is left out
+ * instead of failing the whole page.
+ */
+export const TokenListWire = z.array(z.unknown()).transform((rows) =>
+  rows.flatMap((row) => {
+    const t = TokenWire.safeParse(row);
+    return t.success ? [t.data] : [];
+  }),
+);
+
 export const PageWire = z
-  .object({ items: z.array(TokenWire), next_cursor: z.string().nullable(), total: z.number() })
+  .object({ items: TokenListWire, next_cursor: z.string().nullable(), total: z.number() })
   .transform((p): Page<Token> => p);
 
 export const TokenDetailWire = z
-  .object({ token: TokenWire, floor: farm.nullish(), related: z.array(TokenWire).default([]) })
+  .object({ token: TokenWire, floor: farm.nullish(), related: TokenListWire.default([]) })
   .transform((d): TokenDetail => ({ token: d.token, floor: d.floor ?? undefined, related: d.related }));
 
 export const OfferWire = z

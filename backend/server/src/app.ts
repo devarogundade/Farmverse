@@ -8,6 +8,7 @@ import type { Caller, Sessions } from './auth/sessions';
 import { callDefinitions, type Runtime } from './calls';
 import type { RateLimiter } from './infra/redis';
 import { QuerySpec, type DocReader, type LiveHub, type LiveSocket } from './live';
+import { marketRoutes, type MarketOptions } from './market/routes';
 
 export interface AppOptions {
   readonly rt: Runtime;
@@ -19,6 +20,8 @@ export interface AppOptions {
   readonly allowedOrigins: readonly string[];
   readonly minClientVersion: string;
   readonly environment: string;
+  /** The marketplace read API and live socket under /v1/market (off when absent). */
+  readonly market?: MarketOptions;
 }
 
 const STATUS: Record<string, number> = {
@@ -62,7 +65,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
       reply.header('access-control-allow-origin', origin);
       reply.header('vary', 'origin');
       reply.header('access-control-allow-headers', 'authorization, content-type');
-      reply.header('access-control-allow-methods', 'GET, POST, PATCH, OPTIONS');
+      reply.header('access-control-allow-methods', 'GET, POST, PATCH, DELETE, OPTIONS');
       reply.header('access-control-max-age', '600');
     }
     if (req.method === 'OPTIONS') return reply.status(204).send();
@@ -74,18 +77,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
 
   app.get('/healthz', async () => ({ ok: true }));
 
-  // The client's remote config (Firebase Remote Config keys, backend/remoteconfig.template.json defaults).
-  app.get('/v1/config', async () => ({
-    minClientVersion: o.minClientVersion,
-    environment: o.environment,
-    serverTimeMs: o.rt.clock.nowMs(),
-    values: {
-      min_client_version: o.minClientVersion,
-      maintenance: false,
-      island_shadow: true,
-      ...(o.rt.chain ? { items_contract: o.rt.chain.itemsContract } : {}),
-    },
-  }));
+  app.get('/v1/config', async () => ({ minClientVersion: o.minClientVersion, environment: o.environment, serverTimeMs: o.rt.clock.nowMs() }));
 
   // ---------------------------------------------------------------- auth
 
@@ -114,18 +106,6 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
     if (!body.success) return refuse(reply, 'INVALID_ARGUMENT', req.id);
     try {
       return await o.sessions.refresh(body.data.refreshToken, req.headers['user-agent']);
-    } catch (error) {
-      if (error instanceof AppError) return refuse(reply, error.code, req.id);
-      throw error;
-    }
-  });
-
-  // Local development only (FARMVERSE_ENV=dev): the Unity editor signs in without a wallet.
-  app.post('/v1/auth/dev', async (req, reply) => {
-    const body = z.object({ accountId: z.string().min(2).max(64) }).safeParse(req.body);
-    if (!body.success) return refuse(reply, 'INVALID_ARGUMENT', req.id);
-    try {
-      return await o.sessions.devSignIn(body.data.accountId, req.headers['user-agent']);
     } catch (error) {
       if (error instanceof AppError) return refuse(reply, error.code, req.id);
       throw error;
@@ -199,6 +179,10 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
     }
     return { ok: true };
   });
+
+  // ---------------------------------------------------------------- marketplace (docs 13 §9)
+
+  if (o.market) await app.register(marketRoutes(o.market), { prefix: '/v1/market' });
 
   // ---------------------------------------------------------------- live
 

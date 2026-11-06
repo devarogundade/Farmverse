@@ -200,7 +200,6 @@ namespace Farmverse.Presentation.World.Island
         /// <summary>Start the economy over the buildings already on the island; restores the saved state if there is one.</summary>
         public void Begin(IslandGrid grid, int coins, IEnumerable<PlacedBuilding> placed)
         {
-            IslandServerState.Started();
             _grid = grid;
             _begun = true;
             var now = Clock;
@@ -1053,7 +1052,7 @@ namespace Farmverse.Presentation.World.Island
 
         public void Save()
         {
-            if (_grid == null || !_begun || IslandServerState.Applying) return;
+            if (_grid == null || !_begun) return;
             PlayerPrefs.SetString(saveKey, JsonUtility.ToJson(Economy.ToSave()));
             PlayerPrefs.Save();
         }

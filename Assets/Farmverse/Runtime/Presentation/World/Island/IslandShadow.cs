@@ -194,14 +194,6 @@ namespace Farmverse.Presentation.World.Island
                     PlayerPrefs.SetString(OwnerPref, uid);
                     PlayerPrefs.Save();
                 }
-                // the server changed the island itself (a redeem, a mint refund): take its island, or the
-                // next upload would undo the change (docs 13 §7.4)
-                if (result.Value.ServerChanged == true)
-                {
-                    _pending = null;
-                    IslandServerState.Load(result.Value.State);
-                    return;
-                }
                 var check = Compare(before, JsonUtility.FromJson<IslandState>(result.Value.State));
                 check.RoundTripMs = watch.ElapsedMilliseconds;
                 Last = check;

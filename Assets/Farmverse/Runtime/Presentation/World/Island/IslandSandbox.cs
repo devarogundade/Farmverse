@@ -796,28 +796,11 @@ namespace Farmverse.Presentation.World.Island
         private void Save()
         {
             if (!_started) return;   // after a script reload in play mode: never write a half-empty island over the save
-            if (IslandServerState.Applying) return;   // the server's island was just written: don't save over it
             var s = new SaveData { coins = Coins, cleared = new List<int>(_cleared), regrow = new List<Regrow>(_regrow), chapter = _chapter, layout = grid != null ? grid.Data.layoutVersion : 0 };
             foreach (var p in _placed.Where(p => p != null))
                 s.items.Add(new SaveItem { id = p.id, uid = p.uid, x = p.cells.x, z = p.cells.y, w = p.cells.width, d = p.cells.height, turns = p.turns, alt = p.alt });
             PlayerPrefs.SetString(saveKey, JsonUtility.ToJson(s));
             PlayerPrefs.Save();
-        }
-
-        /// <summary>
-        /// Drops saved buildings the server no longer has (a mint picked them up), before the island
-        /// reloads from the server's state (<see cref="IslandServerState"/>).
-        /// </summary>
-        public static void KeepOnly(ICollection<int> uids, string key = "fv_island_v1")
-        {
-            if (!PlayerPrefs.HasKey(key)) return;
-            SaveData? s;
-            try { s = JsonUtility.FromJson<SaveData>(PlayerPrefs.GetString(key)); }
-            catch { return; }
-            if (s == null) return;
-            var before = s.items.Count;
-            s.items.RemoveAll(i => !uids.Contains(i.uid));
-            if (s.items.Count != before) PlayerPrefs.SetString(key, JsonUtility.ToJson(s));
         }
 
         private SaveData? ReadSave()

@@ -5,7 +5,7 @@
         "Farmverse.Bootstrap",
         "Farmverse.Presentation.UI",
         "Farmverse.Presentation.World",
-        "Farmverse.Infrastructure.Web",
+        "Farmverse.Infrastructure.Firebase",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Farmverse.Domain",

@@ -8,8 +8,8 @@ using Farmverse.Core.Logging;
 using Farmverse.Core.Reactive;
 using Farmverse.Core.Scheduling;
 using Farmverse.Core.Time;
+using Farmverse.Infrastructure.Firebase;
 using Farmverse.Infrastructure.Unity;
-using Farmverse.Infrastructure.Web;
 using Farmverse.Presentation.UI.Game;
 using Farmverse.Presentation.World.Island;
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace Farmverse.Bootstrap
 {
     /// <summary>
     /// The composition root (02 §3): the only place that knows every concrete type. Lives in the boot
-    /// scene, builds the server-side services once (game server, wallet sign-in, config, analytics),
+    /// scene, builds the server-side services once (Firebase, sign-in, Remote Config, analytics),
     /// opens the Island scene (the game and its own UI, playable offline) and starts the session.
     /// Server features attach when the session is Ready.
     /// </summary>
@@ -47,7 +47,6 @@ namespace Farmverse.Bootstrap
         private LeaderboardService _board = null!;
         private InboxService _inbox = null!;
         private AccountService _account = null!;
-        private ChainService _chain = null!;
         private GameAnalytics? _gameAnalytics;
         private bool _composed;
 
@@ -122,7 +121,6 @@ namespace Farmverse.Bootstrap
             if (GameUi.Board == _board) GameUi.Board = null;
             if (GameUi.Inbox == _inbox) GameUi.Inbox = null;
             if (GameUi.Account == _account) GameUi.Account = null;
-            if (GameUi.Chain == _chain) GameUi.Chain = null;
             GameUi.RetrySession = null;
             GameUi.SystemNotice = null;
             if (GameUi.Visits == _server) GameUi.Visits = null;
@@ -140,39 +138,27 @@ namespace Farmverse.Bootstrap
 
         private void Compose(EnvironmentConfig config)
         {
-            var web = config.ToWeb();
+            var firebase = config.ToFirebase();
             _log = new Farmverse.Core.Logging.Logger(new ILogSink[] { new UnityLogSink() }, config.MinimumLog);
             var crash = new LogCrashReporter(_log);
 
             // engine services
             var main = gameObject.AddComponent<UnityMainThread>();
             var connectivity = gameObject.AddComponent<UnityConnectivity>();
-#if UNITY_WEBGL && !UNITY_EDITOR
-            Farmverse.Application.Ports.ILocalStore local = new PlayerPrefsLocalStore();
-#else
-            Farmverse.Application.Ports.ILocalStore local = new FileLocalStore(_log);
-#endif
+            var local = new FileLocalStore(_log);
             var app = new UnityAppInfo();
             var scheduler = TaskDelayScheduler.Instance;
             var clock = new ServerClock(new StopwatchTimer(), SystemClock.Instance);
 
-            // the game server (docs 13 §5): the wallet on the web page signs in; the editor uses the dev account
-            var api = new WebApi(web);
-#if UNITY_WEBGL && !UNITY_EDITOR
-            var session = new WebSession(new PageTokenSource(), () => clock.NowMs);
-            var live = new LiveChannel(() => new BrowserSocket(), web.LiveUrl, session, _log);
-#else
-            var session = new WebSession(new DevTokenSource(api, web.DevAccount, local), () => clock.NowMs);
-            var live = new LiveChannel(() => new DotNetSocket(main), web.LiveUrl, session, _log);
-#endif
+            // Firebase-backed ports, bound after the platform step
             var documents = new DeferredDocumentStore();
             var auth = new DeferredAuth();
             var remoteConfig = new DeferredRemoteConfig();
-            var platform = new WebComposition(api, session, live, local, _log, documents, auth, remoteConfig);
+            var platform = new FirebaseComposition(firebase, main, _log, documents, auth, remoteConfig);
             var analytics = new LogAnalytics(crash, _log);
 
             // application
-            var callables = new CallableClient(new HttpCallableTransport(api, session), clock, _log);
+            var callables = new CallableClient(new FunctionsCallableTransport(firebase), clock, _log);
             System.Func<Farmverse.Contracts.RequestMeta> meta = () => _session.Meta();
             _session = new SessionService(new SessionDependencies
             {
@@ -212,13 +198,6 @@ namespace Farmverse.Bootstrap
             _inbox = new InboxService(documents, _server, () => clock.NowMs);
             GameUi.Inbox = _inbox;          // mail and notifications, with rewards to collect
             _account = new AccountService(auth, _server, Restart, () => { PlayerPrefs.DeleteAll(); PlayerPrefs.Save(); });
-#if UNITY_WEBGL && !UNITY_EDITOR
-            Farmverse.Application.Ports.IWallet wallet = new PageWallet();
-#else
-            Farmverse.Application.Ports.IWallet wallet = new NoWallet();
-#endif
-            _chain = new ChainService(_server, wallet, IslandServerState.Load, () => remoteConfig.GetString("items_contract", "items.farmverse.testnet"));
-            GameUi.Chain = _chain;
             GameUi.Account = _account;
             GameUi.RetrySession = () => _ = _session.Start(_life.Token);      // deleting the account restarts on a new guest
             Wallet.Shop = _shop;            // boosts, free gift, starter pack, daily chests: server-owned
