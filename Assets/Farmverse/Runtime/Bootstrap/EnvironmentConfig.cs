@@ -1,6 +1,6 @@
 #nullable enable
 using Farmverse.Core.Logging;
-using Farmverse.Infrastructure.Firebase;
+using Farmverse.Infrastructure.Web;
 using UnityEngine;
 
 namespace Farmverse.Bootstrap
@@ -13,48 +13,40 @@ namespace Farmverse.Bootstrap
     public sealed class EnvironmentConfig : ScriptableObject
     {
         [SerializeField] private string environmentName = "dev";
-        [SerializeField] private string functionsRegion = "europe-west1";
-        [SerializeField] private AppCheckMode appCheck = AppCheckMode.Debug;
-        [Tooltip("Empty for the real project; 127.0.0.1 (or the LAN IP for devices) to use the emulators.")]
-        [SerializeField] private string emulatorHost = string.Empty;
+        [Tooltip("The game server (backend/server), no trailing slash: http://localhost:8787 locally.")]
+        [SerializeField] private string apiBaseUrl = "http://localhost:8787";
+        [Tooltip("Editor/desktop only: the NEAR account the dev sign-in plays as (the server must run with FARMVERSE_ENV=dev).")]
+        [SerializeField] private string devAccount = "dev-farmer.testnet";
         [SerializeField] private LogLevel minimumLog = LogLevel.Debug;
 
+        public string Name => environmentName;
         public LogLevel MinimumLog => minimumLog;
 
-        public FirebaseEnvironment ToFirebase() => new FirebaseEnvironment
+        public WebEnvironment ToWeb() => new WebEnvironment
         {
-            Name = environmentName,
-            FunctionsRegion = functionsRegion,
-            AppCheck = appCheck,
-            AppCheckDebugToken = DebugToken(),
-            EmulatorHost = emulatorHost,
+            ApiBaseUrl = apiBaseUrl.TrimEnd('/'),
+            DevAccount = DevAccount(),
         };
 
         /// <summary>
-        /// The App Check debug token is a secret, so it never lives in this asset
-        /// (assets are committed). In the editor it is read from the
-        /// FARMVERSE_APPCHECK_DEBUG_TOKEN environment variable or from
-        /// UserSettings/appcheck-debug-token.txt (UserSettings is not committed).
-        /// Device debug builds print their own token to the log on first run;
-        /// register that one in the Firebase console.
+        /// The editor's dev account: FARMVERSE_DEV_ACCOUNT, else UserSettings/dev-near-account.txt
+        /// (not committed), else the asset's value.
         /// </summary>
-        private string DebugToken()
+        private string DevAccount()
         {
 #if UNITY_EDITOR
-            if (appCheck != AppCheckMode.Debug) return string.Empty;
-            var fromEnv = System.Environment.GetEnvironmentVariable("FARMVERSE_APPCHECK_DEBUG_TOKEN");
+            var fromEnv = System.Environment.GetEnvironmentVariable("FARMVERSE_DEV_ACCOUNT");
             if (!string.IsNullOrWhiteSpace(fromEnv)) return fromEnv.Trim();
-            const string file = "UserSettings/appcheck-debug-token.txt";
-            return System.IO.File.Exists(file) ? System.IO.File.ReadAllText(file).Trim() : string.Empty;
-#else
-            return string.Empty;
+            const string file = "UserSettings/dev-near-account.txt";
+            if (System.IO.File.Exists(file)) return System.IO.File.ReadAllText(file).Trim();
 #endif
+            return devAccount;
         }
 
         private void OnValidate()
         {
-            if (environmentName == "prod" && (appCheck == AppCheckMode.Debug || !string.IsNullOrEmpty(emulatorHost)))
-                Debug.LogError("Environment.prod must use the platform App Check provider and no emulators (08 §3.1).", this);
+            if (environmentName != "dev" && apiBaseUrl.StartsWith("http://", System.StringComparison.Ordinal))
+                Debug.LogError($"Environment.{environmentName} must reach the server over https.", this);
         }
     }
 }

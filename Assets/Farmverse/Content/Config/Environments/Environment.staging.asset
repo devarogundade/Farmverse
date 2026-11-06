@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Environment.staging
   m_EditorClassIdentifier: Farmverse.Bootstrap::Farmverse.Bootstrap.EnvironmentConfig
   environmentName: staging
-  functionsRegion: europe-west1
-  appCheck: 0
-  emulatorHost: 
+  apiBaseUrl: https://api.staging.farmverse.world
+  devAccount: dev-farmer.testnet
   minimumLog: 0
   storeUrl: 

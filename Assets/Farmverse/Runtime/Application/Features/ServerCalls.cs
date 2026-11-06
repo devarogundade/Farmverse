@@ -41,6 +41,14 @@ namespace Farmverse.Application.Features
         public Task<Result<IslandSyncResponse>> IslandSync(string? adopt, bool mirror, CancellationToken cancellation = default, string? device = null) =>
             _client.Call(Callables.IslandSync, new IslandSyncRequest { Meta = _meta(), Adopt = adopt, Mirror = mirror ? true : (bool?)null, Device = device }, cancellation);
 
+        /// <summary>Take items off the island for an NFT: returns the signed voucher to mint with (docs 13 §7).</summary>
+        public Task<Result<ChainMintResponse>> ChainMint(MintKind kind, string? item, int? quantity, long? buildingUid, string key, CancellationToken cancellation = default) =>
+            _client.Call(Callables.ChainMint, new ChainMintRequest { Meta = _meta(), Kind = kind, Item = item, Quantity = quantity, BuildingUid = buildingUid, Key = key }, cancellation);
+
+        /// <summary>Credit the items of an NFT this wallet redeemed on chain (safe to repeat).</summary>
+        public Task<Result<ChainRedeemResponse>> ChainRedeem(string txHash, CancellationToken cancellation = default) =>
+            _client.Call(Callables.ChainRedeem, new ChainRedeemRequest { Meta = _meta(), TxHash = txHash }, cancellation);
+
         /// <summary>The game is open (start, then every minute in front): no pushes while playing; returns today's raid.</summary>
         public Task<Result<SessionPingResponse>> SessionPing(int offsetMin, bool raidAck, CancellationToken cancellation = default) =>
             _client.Call(Callables.SessionPing, new SessionPingRequest { Meta = _meta(), OffsetMin = offsetMin, RaidAck = raidAck ? true : (bool?)null }, cancellation);

@@ -6,7 +6,7 @@
         "Farmverse.Core",
         "Farmverse.Domain",
         "Farmverse.Application",
-        "Farmverse.Infrastructure.Firebase",
+        "Farmverse.Infrastructure.Web",
         "Farmverse.Infrastructure.Unity",
         "Farmverse.Presentation.UI",
         "Farmverse.Presentation.World",

@@ -40,6 +40,8 @@ export interface SessionsConfig {
   readonly recipient: string;
   readonly network: 'testnet' | 'mainnet';
   readonly adminAccounts: readonly string[];
+  /** Local development only: sign in as any account without a wallet (the Unity editor has none). */
+  readonly allowDevSignIn?: boolean;
 }
 
 const PKCS8_ED25519 = Buffer.from('302e020100300506032b657004220420', 'hex');
@@ -105,6 +107,21 @@ export class Sessions {
       update: { lastLoginAt: new Date(this.now()), lastKey: publicKey },
     });
     return this.issue(accountId, randomUUID(), input.userAgent);
+  }
+
+  /**
+   * Development sign-in: no signature, any account on the network. Refused unless the server was
+   * started with FARMVERSE_ENV=dev (never staging or prod), so the editor can play locally.
+   */
+  async devSignIn(accountId: string, userAgent?: string): Promise<SessionTokens> {
+    if (!this.config.allowDevSignIn) throw new AppError('PERMISSION_DENIED');
+    if (!accountOnNetwork(accountId, this.config.network)) throw new AppError('INVALID_ARGUMENT');
+    await this.prisma.account.upsert({
+      where: { accountId },
+      create: { accountId, uid: uidFor(accountId), lastKey: 'dev' },
+      update: { lastLoginAt: new Date(this.now()), lastKey: 'dev' },
+    });
+    return this.issue(accountId, randomUUID(), userAgent);
   }
 
   /** Swaps a refresh token for new tokens. Presenting a rotated token revokes the whole sign-in. */
