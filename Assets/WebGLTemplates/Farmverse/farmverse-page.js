@@ -69,12 +69,18 @@ async function ensureSessionKey(wallet, accountId, contractId) {
   const publicKey = key.getPublicKey().toString();
   let ak = await accessKeyOf(accountId, publicKey);
   if (ak) return { key, ak };
-  await wallet.signAndSendTransaction({
-    receiverId: accountId,
-    actions: [{ type: 'AddKey', params: { publicKey, accessKey: { nonce: 0, permission: { receiverId: contractId, allowance: KEY_ALLOWANCE, methodNames: SPONSORED } } } }],
-  });
-  for (let i = 0; i < 20 && !(ak = await accessKeyOf(accountId, publicKey)); i++) await new Promise((r) => setTimeout(r, 1500));
-  if (!ak) throw new Error('The session key is not on chain yet.');
+  try {
+    await wallet.signAndSendTransaction({
+      receiverId: accountId,
+      actions: [{ type: 'AddKey', params: { publicKey, accessKey: { nonce: 0, permission: { receiverId: contractId, allowance: KEY_ALLOWANCE, methodNames: SPONSORED } } } }],
+    });
+    for (let i = 0; i < 20 && !(ak = await accessKeyOf(accountId, publicKey)); i++) await new Promise((r) => setTimeout(r, 1500));
+    if (!ak) throw new Error('The session key is not on chain yet.');
+  } catch (e) {
+    // some wallets won't add keys (or the player said no): this call goes through the wallet instead
+    console.warn('[farmverse] no session key, signing with the wallet:', e?.message ?? e);
+    throw Object.assign(new Error('SESSION_KEY'), { fallback: true });
+  }
   return { key, ak };
 }
 
@@ -298,7 +304,8 @@ window.farmversePage = {
       try {
         return await sponsoredCall(wallet, session.accountId, contractId, method, args, gasTgas);
       } catch (e) {
-        if (!e?.fallback) throw e; // declined in the wallet, or the call itself failed
+        console.warn(`[farmverse] sponsored ${method} failed:`, e?.message ?? e);
+        if (!e?.fallback) throw e; // the call itself failed
       }
     }
     const outcome = await wallet.signAndSendTransaction({
