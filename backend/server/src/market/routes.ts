@@ -61,7 +61,7 @@ export function marketRoutes(o: MarketOptions) {
       const account = Account.safeParse(req.params.account);
       const q = Browse.safeParse(req.query);
       if (!account.success || !q.success) return fail(reply, 400, 'bad_query', 'That search isn’t valid.');
-      return o.reader.browse({ ...q.data, type: q.data.kind as never, owner: account.data });
+      return o.reader.browse({ ...q.data, type: q.data.kind as never, owner: account.data, allKinds: (req.query as { all?: string }).all === '1' });
     });
 
     app.get('/tokens', async (req, reply) => {

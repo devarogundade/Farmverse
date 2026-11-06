@@ -49,7 +49,7 @@ an indexer migration, and the Unity panels.
 ## D. Unity game
 
 - [x] D1 Stale sign-in text out; every link via `GameLinks.Open` (`FvOpenTab`) §4.3. `en.json` fills itself when the Editor plays; the default coupon types (VeChain partner codes) are catalogue data the admin web edits
-- [ ] D2 Storage → My NFTs tab: list, Redeem (place mode for buildings/land), Sell, View, listed-token rule §3.1
+- [x] D2 Storage → My NFTs tab: list, Redeem (place mode for buildings/land), Sell, View, listed-token rule §3.1
 - [ ] D3 Deep links: outbound (token, sell, explore item, shop) and inbound (`?open=nfts`, `?redeemed=`) §3.2
 - [ ] D4 Mint sheet: chips + stepper, allowance bar, fee, four-step progress, Sell/Keep, errors in place, boosts mintable, "Finish minting" §4.1
 - [ ] D5 FARM (and low NEAR) in the top bar; "Get FARM" sheet with the faucet §3.3

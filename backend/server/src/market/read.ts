@@ -12,6 +12,8 @@ export type Sort = 'newest' | 'price_asc' | 'price_desc' | 'unit_price';
 export interface TokenWire {
   token_id: string;
   title: string;
+  /** The contract's ItemKind (good, boost, building, land, tool, pack, worker). */
+  kind: string;
   owner_id: string;
   metadata: Record<string, unknown>;
   price: string | null;
@@ -49,6 +51,8 @@ export interface BrowseQuery {
   rarity?: string;
   /** Goods: only this catalogue item. */
   item?: string;
+  /** Owner pages: every kind, packs and boosts too (the game's NFT tab); `metadata.type` is null for those. */
+  allKinds?: boolean;
   cursor?: string | null;
   limit?: number;
 }
@@ -56,6 +60,7 @@ export interface BrowseQuery {
 interface Row {
   token_id: string;
   title: string;
+  kind: string;
   owner_id: string;
   nft_type: NftType;
   item_id: string;
@@ -96,6 +101,7 @@ export function metadataOf(r: Pick<Row, 'nft_type' | 'item_id' | 'quantity' | 'p
 const wire = (r: Row): TokenWire => ({
   token_id: r.token_id,
   title: r.title,
+  kind: r.kind,
   owner_id: r.owner_id,
   metadata: metadataOf(r),
   price: r.price,
@@ -104,7 +110,7 @@ const wire = (r: Row): TokenWire => ({
 });
 
 const SELECT = Prisma.sql`
-  SELECT t.token_id, t.title, t.owner_id, t.nft_type, t.item_id, t.quantity::text AS quantity, t.props, t.minted_from,
+  SELECT t.token_id, t.title, t.kind, t.owner_id, t.nft_type, t.item_id, t.quantity::text AS quantity, t.props, t.minted_from,
          (extract(epoch FROM t.minted_at) * 1000)::bigint::text AS minted_at, l.price::text AS price,
          (SELECT (d.data->>'xp')::int FROM documents d WHERE d.path = 'workers/' || t.token_id) AS worker_xp`;
 
@@ -125,7 +131,8 @@ export class MarketReader {
   async browse(q: BrowseQuery): Promise<Page<TokenWire>> {
     const limit = Math.min(Math.max(q.limit ?? 24, 1), MAX_LIMIT);
     const offset = parseCursor(q.cursor);
-    const where: Prisma.Sql[] = [Prisma.sql`t.contract_id = ${this.items}`, Prisma.sql`t.burned_at IS NULL`, Prisma.sql`t.nft_type IS NOT NULL`];
+    const where: Prisma.Sql[] = [Prisma.sql`t.contract_id = ${this.items}`, Prisma.sql`t.burned_at IS NULL`];
+    if (!(q.allKinds && q.owner)) where.push(Prisma.sql`t.nft_type IS NOT NULL`);
     if (q.type && NFT_TYPES.includes(q.type)) where.push(Prisma.sql`t.nft_type = ${q.type}`);
     if (q.owner) where.push(Prisma.sql`t.owner_id = ${q.owner}`);
     if (q.specialty) where.push(Prisma.sql`t.props->>'specialty' = ${q.specialty}`);
@@ -389,7 +396,7 @@ export class MarketReaderV2 {
     if (q.lender) where.push(Prisma.sql`r.lender_id = ${q.lender}`);
     if (q.renter) where.push(Prisma.sql`r.renter_id = ${q.renter} AND r.rented_until > ${now}`);
     const rows = await this.prisma.$queryRaw<RentalRow[]>`
-      SELECT t.token_id, t.title, t.owner_id, t.nft_type, t.item_id, t.quantity::text AS quantity, t.props, t.minted_from,
+      SELECT t.token_id, t.title, t.kind, t.owner_id, t.nft_type, t.item_id, t.quantity::text AS quantity, t.props, t.minted_from,
              (extract(epoch FROM t.minted_at) * 1000)::bigint::text AS minted_at, NULL::text AS price,
              (SELECT (d.data->>'xp')::int FROM documents d WHERE d.path = 'workers/' || t.token_id) AS worker_xp,
              r.lender_id, r.price_per_day::text, r.max_days, r.renter_id,

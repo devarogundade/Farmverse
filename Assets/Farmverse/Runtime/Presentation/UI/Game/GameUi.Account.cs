@@ -12,6 +12,9 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>Island items ⇄ NFTs (mint, redeem): set by the composition root on the web build.</summary>
         public static ChainService? Chain { get; set; }
 
+        /// <summary>NFTs the wallet holds and the studio's drops (market API); null outside the game.</summary>
+        public static NftService? Nfts { get; set; }
+
         private bool _accountBusy;
 
         /// <summary>Settings ▸ Delete Account: asks twice, then deletes everything and starts over as a new guest.</summary>

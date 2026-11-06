@@ -20,7 +20,7 @@ namespace Farmverse.Presentation.UI.Game
 
         private static readonly (string id, string label, string? icon)[] ShopCats =
         {
-            ("all", "ALL", null), ("crops", "Crops", "Icon_Pumkin"), ("animal", "Animal goods", "Icon_Egg"), ("mat", "Materials", "G_Wood"), ("boost", "Boosts", "Icon_Potion02_Green"),
+            ("all", "ALL", null), ("crops", "Crops", "Icon_Pumkin"), ("animal", "Animal goods", "Icon_Egg"), ("mat", "Materials", "G_Wood"), ("boost", "Boosts", "Icon_Potion02_Green"), ("nft", "NFTs", "Icon_Gift"),
         };
 
         /// <summary>A row of the storage grid: a stored good or a boost.</summary>
@@ -29,6 +29,10 @@ namespace Farmverse.Presentation.UI.Game
             public string id = "", name = "", cat = "", colour = "Blue", about = "";
             public int count, price;
             public string? use, boostArt;
+            /// <summary>The good whose picture the slot shows (NFT goods: their item, not the entry id).</summary>
+            public string? goodId;
+            /// <summary>An NFT the wallet holds (the NFTs tab).</summary>
+            public Farmverse.Application.Ports.OwnedNft? nft;
         }
 
         private List<ShopEntry> ShopEntries()
@@ -43,6 +47,9 @@ namespace Farmverse.Presentation.UI.Game
                 var n = ShopBoostCount(b.id);
                 if (n > 0) list.Add(new ShopEntry { id = "boost:" + b.id, name = b.name, cat = "boost", colour = "Purple", count = n, use = b.use, boostArt = b.art, about = "Boost. Use it on your island." });
             }
+            if (Nfts != null)
+                foreach (var t in Nfts.Owned)
+                    list.Add(NftEntry(t));
 
             return list;
         }
@@ -60,7 +67,9 @@ namespace Farmverse.Presentation.UI.Game
             }
 
             if (it != null) _shopQty = Mathf.Clamp(_shopQty, 1, Mathf.Max(1, it.count));
-            c.Watch(() => string.Join(",", ShopStock().Select(x => x.item + x.n)) + "|" + string.Join(",", ShopBoosts.Select(b => ShopBoostCount(b.id))));
+            c.Watch(() => string.Join(",", ShopStock().Select(x => x.item + x.n)) + "|" + string.Join(",", ShopBoosts.Select(b => ShopBoostCount(b.id)))
+                          + "|" + (Nfts == null ? "" : string.Join(",", Nfts.Owned.Select(t => t.TokenId + t.Price)) + Nfts.OwnedLoaded + Nfts.OwnedFailed));
+            if (_shopCat == "nft") Nfts?.RefreshIfStale();
 
             var screen = PK.Screen(c.Root, true);
             var H = p.Phone ? 52f : 96f;
@@ -149,7 +158,7 @@ namespace Farmverse.Presentation.UI.Game
                     _shopQty = 1;
                     MarkDirty();
                 });
-                if (slotIcon == null) ShopSlotGood(slot, p, i.id, s);
+                if (slotIcon == null) ShopSlotGood(slot, p, i.goodId ?? i.id, s);
                 cells.Add(cell);
             }
 
@@ -195,7 +204,7 @@ namespace Farmverse.Presentation.UI.Game
 
             if (list.Count == 0)
             {
-                var none = PK.N(null, p, _shopCat == "boost" ? "No boosts yet: get them in the Shop." : "Empty: walk your harvest into the farmhouse.", 20, GameTheme.T("#9fd0ff"), TextAnchor.MiddleCenter);
+                var none = PK.N(null, p, _shopCat == "boost" ? "No boosts yet: get them in the Shop." : _shopCat == "nft" ? NftEmptyText() : "Empty: walk your harvest into the farmhouse.", 20, GameTheme.T("#9fd0ff"), TextAnchor.MiddleCenter);
                 PK.Abs(none, left: 0, right: 0, top: p.P(220));
                 left.Add(none);
             }
@@ -218,7 +227,7 @@ namespace Farmverse.Presentation.UI.Game
             var top = PK.Row(side);
             top.style.alignSelf = Align.Stretch;
             var big = PK.Slot(top, p, it.boostArt, "", it.colour, p.Phone ? 120 : 130);
-            if (it.boostArt == null) ShopSlotGood(big, p, it.id, p.Phone ? 120 : 130);
+            if (it.boostArt == null) ShopSlotGood(big, p, it.goodId ?? it.id, p.Phone ? 120 : 130);
             var info = PK.Col(top);
             info.style.marginLeft = p.P(16);
             info.style.minWidth = 0;
@@ -231,9 +240,9 @@ namespace Farmverse.Presentation.UI.Game
             tag.style.marginTop = p.P(10);
             PK.N(info, p, "You have " + PK.Num(it.count), 18, GameTheme.T("#9fd0ff")).style.marginTop = p.P(10);
 
-            var desc = PK.N(side, p, it.about + "\n" + (it.use != null
+            var desc = PK.N(side, p, it.about + (it.nft != null ? "" : "\n" + (it.use != null
                 ? "<b><color=#7dff6a>" + it.use + "</color></b>"
-                : "<color=#ffd23a>Shops pay <b>" + it.price + "</b> coins each.</color>"), 19, GameTheme.T("#dff1ff"), TextAnchor.UpperLeft, true);
+                : "<color=#ffd23a>Shops pay <b>" + it.price + "</b> coins each.</color>")), 19, GameTheme.T("#dff1ff"), TextAnchor.UpperLeft, true);
             desc.enableRichText = true;
             desc.style.alignSelf = Align.Stretch;
             desc.style.marginTop = p.P(14);
@@ -244,7 +253,11 @@ namespace Farmverse.Presentation.UI.Game
             PK.Grow(side);
             ShopHeldButton(side, p, sideW - 60);
             var entry = it;
-            if (it.use == null)
+            if (it.nft != null)
+            {
+                NftActions(side, p, sideW - 60, it.nft);
+            }
+            else if (it.use == null)
             {
                 var step = PK.Row(side);
                 step.style.alignSelf = Align.Stretch;

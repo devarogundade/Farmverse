@@ -20,6 +20,115 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>Whether minting is offered here (web build with a wallet, signed in).</summary>
         private static bool ChainReady => Chain != null && Chain.Available;
 
+        // ------------------------------------------------------------------ the NFTs tab (docs 15 §3.1)
+
+        /// <summary>A Storage row for an NFT the wallet holds.</summary>
+        private static ShopEntry NftEntry(Farmverse.Application.Ports.OwnedNft t)
+        {
+            var e = new ShopEntry { id = "nft:" + t.TokenId, name = t.Title, cat = "nft", colour = "Purple", count = (int)System.Math.Min(int.MaxValue, t.Quantity), nft = t };
+            switch (t.Kind)
+            {
+                case "good":
+                    e.goodId = t.ItemId;
+                    e.about = t.Price != null ? "On the market for " + NftService.Farm(t.Price) + " FARM." : "An NFT of your goods. Redeem it to put them in your farmhouse, or sell it on the market.";
+                    break;
+                case "worker":
+                    e.boostArt = "Icon_PictoIcon_User";
+                    e.about = "A Farmhand. They work on your farm while you hold them" + (t.Props.TryGetValue("specialty", out var sp) ? ", best at " + sp : "") + ".";
+                    break;
+                case "pack":
+                    e.boostArt = "Icon_Gift";
+                    e.about = t.ItemId == "farm_pass" ? "A Farm Pass: one season of premium rewards. Redeem it to use it."
+                        : t.ItemId == "builder_pass" ? "A Builder's Pass: one more builder for good."
+                        : t.ItemId.StartsWith("gems_") ? "Gems. Redeem them into your wallet."
+                        : "A pack. Redeem it to open it.";
+                    break;
+                case "land":
+                    e.boostArt = t.ItemId == "deed" ? "Icon_Map" : null;
+                    if (t.ItemId != "deed") e.goodId = t.ItemId;
+                    e.about = t.ItemId == "deed" ? "A Genesis land deed. Redeem it to clear a wild plot on your island for good." : "A field. Redeem it and place it on your island.";
+                    break;
+                case "boost":
+                    e.boostArt = "Icon_Potion02_Green";
+                    e.about = "Boosts. Redeem them into your bag.";
+                    break;
+                default:
+                    e.goodId = t.ItemId;
+                    e.about = "A building. Redeem it and place it on your island.";
+                    break;
+            }
+            return e;
+        }
+
+        private static string NftEmptyText()
+        {
+            if (Nfts == null || !ChainReady) return "NFTs need the web version with a NEAR wallet.";
+            if (!Nfts.OwnedLoaded) return "Looking for your NFTs…";
+            if (Nfts.OwnedFailed) return "Can't reach the market right now. Try again in a moment.";
+            return "No NFTs yet: mint goods here, or buy on the market.";
+        }
+
+        private static string MarketToken(string tokenId, bool sell = false) =>
+            GameLinks.Market + "/#/token/" + System.Uri.EscapeDataString(tokenId) + (sell ? "?sell=1" : "");
+
+        /// <summary>The NFTs tab's buttons: Redeem / Sell on market, or what the token is doing.</summary>
+        private void NftActions(VisualElement side, Pt p, float width, Farmverse.Application.Ports.OwnedNft t)
+        {
+            if (t.Price != null)
+            {
+                PK.Btn(side, p, "blue", "Listed · " + NftService.Farm(t.Price) + " FARM", width, 72, 26, () => GameLinks.Open(MarketToken(t.TokenId), "Open the market"));
+                PK.N(side, p, "Take it off the market to redeem it.", 16, GameTheme.T("#9fd0ff"), TextAnchor.MiddleCenter).style.marginTop = p.P(8);
+                return;
+            }
+            if (t.Kind == "worker")
+            {
+                PK.N(side, p, "Working on your farm", 22, GameTheme.T("#7dff6a"), TextAnchor.MiddleCenter).style.marginBottom = p.P(10);
+                PK.Btn(side, p, "yellow", "Sell or rent out", width, 72, 26, () => GameLinks.Open(MarketToken(t.TokenId), "Open the market"));
+                return;
+            }
+            var deedFull = t.Kind == "land" && t.ItemId == "deed" && Economy != null && Economy.WildPlotsOpen >= Farmverse.Domain.Gameplay.GameplayRules.WildPlots;
+            if (deedFull)
+                PK.N(side, p, "All your wild land is open already. You can still sell this deed.", 17, GameTheme.T("#ffd23a"), TextAnchor.MiddleCenter, true).style.marginBottom = p.P(10);
+            else
+                PK.Btn(side, p, "green", _chainBusy ? "Redeeming…" : "Redeem", width, 80, 32, () => ChainRedeem(t));
+            var sell = PK.Btn(side, p, "yellow", "Sell on market", width, 64, 26, () => GameLinks.Open(MarketToken(t.TokenId, sell: true), "Sell on the market"));
+            sell.style.marginTop = p.P(10);
+        }
+
+        /// <summary>Burns an NFT the wallet holds and credits it to the island (goods, buildings, packs, deeds).</summary>
+        private async void ChainRedeem(Farmverse.Application.Ports.OwnedNft t)
+        {
+            var chain = Chain;
+            if (chain == null || _chainBusy) return;
+            _chainBusy = true;
+            MarkDirty();
+            try
+            {
+                Say("Approve the redeem in your wallet", 4f);
+                var r = await chain.Redeem(t.TokenId, CancellationToken.None);
+                if (r.IsOk && r.Value.Declined) Say("Not redeemed. It's still yours.");
+                else if (r.IsOk)
+                {
+                    Say(t.Kind switch
+                    {
+                        "good" => t.Title + " is in your farmhouse",
+                        "pack" => t.ItemId == "farm_pass" ? "Your Farm Pass is on!" : t.Title + " opened",
+                        "land" when t.ItemId == "deed" => "A wild plot is clear. Build on it!",
+                        "boost" => t.Title + " is in your bag",
+                        _ => t.Title + " is ready to place",
+                    });
+                    if (t.Kind is "building" or "tool" || (t.Kind == "land" && t.ItemId != "deed")) Open("heldbuildings");
+                }
+                else Say(ChainError(r.Error));
+                if (Nfts != null) await Nfts.RefreshOwned();
+            }
+            finally
+            {
+                _chainBusy = false;
+                MarkDirty();
+            }
+        }
+
         /// <summary>Mints goods from the farmhouse as one NFT: the island is synced first so the server has them.</summary>
         private async void ChainMintGoods(string item, int quantity)
         {
