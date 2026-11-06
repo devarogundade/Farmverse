@@ -633,7 +633,7 @@ impl Contract {
     ) -> Token {
         require!(!self.burned.contains(&token_id), "token_id was used before");
         let before = env::storage_usage();
-        let metadata = Self::token_metadata(&item, title, media);
+        let metadata = Self::token_metadata(&item, title.clone(), media.clone());
         self.items.insert(token_id.clone(), item.clone());
         let token = self.tokens.internal_mint_with_refund(token_id.clone(), owner.clone(), Some(metadata), None);
         self.items.flush();
@@ -647,7 +647,7 @@ impl Contract {
             memo: Some(source),
         }
         .emit();
-        events::item_mint(&token_id, &owner, &item, source);
+        events::item_mint(&token_id, &owner, &item, source, &title, &media);
         token
     }
 

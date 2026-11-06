@@ -121,7 +121,8 @@ export function eventsIn(block: NearBlock, watched: Watched): ChainEvent[] {
           let data = entry as Record<string, unknown>;
           if (body.event === 'item_mint') {
             call ??= functionCall(r);
-            data = { ...data, ...mintDisplay(call) };
+            // v2 events carry title and media themselves (drops mint inside ft_on_transfer); older ones don't
+            data = { ...mintDisplay(call), ...data };
           }
           out.push({
             id: entries.length > 1 ? `${r.receipt.receipt_id}:${logIndex}:${n}` : `${r.receipt.receipt_id}:${logIndex}`,

@@ -14,9 +14,10 @@ fn emit<T: Serialize>(event: &str, data: T) {
     log!("EVENT_JSON:{}", body);
 }
 
-/// A token was minted: `source` is `voucher` (out of an island) or `studio`.
-pub fn item_mint(token_id: &str, owner_id: &AccountId, item: &Item, source: &str) {
-    emit("item_mint", json!({ "token_id": token_id, "owner_id": owner_id, "source": source, "item": item }));
+/// A token was minted: `source` is `voucher` (out of an island), `studio` or `drop`. Title and media
+/// ride along so the indexer doesn't depend on the call's arguments (a drop mints inside `ft_on_transfer`).
+pub fn item_mint(token_id: &str, owner_id: &AccountId, item: &Item, source: &str, title: &str, media: &str) {
+    emit("item_mint", json!({ "token_id": token_id, "owner_id": owner_id, "source": source, "item": item, "title": title, "media": media }));
 }
 
 /// A token was burned so its contents can be credited to `owner_id`'s island.

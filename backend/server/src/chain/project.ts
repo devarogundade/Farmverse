@@ -1,6 +1,7 @@
 import type { Prisma } from '../generated/prisma/client';
 import { fallbackTitle, formatFarm, nftTypeOf, parseProps } from './items';
 import type { ChainEvent, Watched } from './parse';
+import { projectV2 } from './projectV2';
 
 type Tx = Prisma.TransactionClient;
 
@@ -10,6 +11,8 @@ type Tx = Prisma.TransactionClient;
  */
 export type MarketMessage =
   | { type: 'listing' | 'delist' | 'sale' | 'redeem'; token_id: string }
+  /** v2: an offer, rental or drop changed (`token_id` is the drop id for drops, `#item` for item offers). */
+  | { type: 'offer' | 'rental' | 'drop'; token_id: string }
   | { type: 'note'; to: string; text: string; icon?: string; href?: string };
 
 const str = (v: unknown): string | null => (typeof v === 'string' && v.length > 0 ? v : null);
@@ -58,6 +61,8 @@ export async function project(tx: Tx, e: ChainEvent, w: Watched): Promise<Market
   const d = e.data;
   const out: MarketMessage[] = [];
   const many = (i: number, n: number) => (n > 1 ? `${e.id}#${i}` : e.id);
+  const v2 = await projectV2(tx, e, w);
+  if (v2) return v2;
 
   if (e.contractId === w.items && e.standard === 'farmverse_items') {
     const tokenId = str(d['token_id']);
@@ -105,7 +110,8 @@ export async function project(tx: Tx, e: ChainEvent, w: Watched): Promise<Market
         // A transfer clears every approval, so any listing for the token can no longer sell.
         if (await unlist(tx, e.contractId, tokenId)) out.push({ type: 'delist', token_id: tokenId });
         // Market sales are recorded from market_sale (with the price); everything else is a send.
-        if (!byMarket) {
+        // a worker handed to the market for rent isn't a gift to anyone
+        if (!byMarket && to !== w.market) {
           await activity(tx, many(i, ids.length), e, e.contractId, tokenId, 'sent', from, to);
           const title = await titleOf(tx, e.contractId, tokenId);
           out.push({ type: 'note', to, text: `${from} sent you ${title}`, icon: 'Icon_Gift', href: tokenHref(tokenId) });
