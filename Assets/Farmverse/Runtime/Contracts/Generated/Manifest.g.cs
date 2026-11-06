@@ -49,6 +49,7 @@ namespace Farmverse.Contracts
         public static readonly CallableSpec<ChainMintRequest, ChainMintResponse> ChainMint = new CallableSpec<ChainMintRequest, ChainMintResponse>("chain-mint", ChainMintResponse.FromWire);
         public static readonly CallableSpec<ChainRedeemRequest, ChainRedeemResponse> ChainRedeem = new CallableSpec<ChainRedeemRequest, ChainRedeemResponse>("chain-redeem", ChainRedeemResponse.FromWire);
         public static readonly CallableSpec<ChainPendingMintsRequest, ChainPendingMintsResponse> ChainPendingMints = new CallableSpec<ChainPendingMintsRequest, ChainPendingMintsResponse>("chain-pendingMints", ChainPendingMintsResponse.FromWire);
+        public static readonly CallableSpec<ChainFaucetRequest, ChainFaucetResponse> ChainFaucet = new CallableSpec<ChainFaucetRequest, ChainFaucetResponse>("chain-faucet", ChainFaucetResponse.FromWire);
     }
 
     /// <summary>The localization parameters each error code carries.</summary>

@@ -17,6 +17,7 @@ import { VoucherSigner } from './mint/voucher';
 import type { DocReader } from './live';
 import { prismaStore, type DocChange } from './store/prismaStore';
 import { queryDocuments } from './store/query';
+import { nearFaucetSender } from './chain/faucet';
 
 export interface Services {
   readonly rt: Runtime;
@@ -116,6 +117,16 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             },
             scheduleExpiry: bullMintExpiry(queues.mintExpiry),
             accountOf: async (uid: string) => (await prisma.account.findUnique({ where: { uid }, select: { accountId: true } }))?.accountId ?? null,
+            ...(config.NEAR_NETWORK === 'testnet' && config.FAUCET_ACCOUNT && config.FAUCET_PRIVATE_KEY
+              ? {
+                  faucet: {
+                    sender: nearFaucetSender(config.NEAR_RPC_URL, config.FAUCET_ACCOUNT, config.FAUCET_PRIVATE_KEY, config.NEAR_FARM_CONTRACT),
+                    farmUnits: BigInt(config.FAUCET_FARM) * 10n ** 18n,
+                    nearYocto: BigInt(Math.round(config.FAUCET_NEAR * 1000)) * 10n ** 21n,
+                    dailyCap: config.FAUCET_DAILY_CAP,
+                  },
+                }
+              : {}),
           },
         }
       : {}),

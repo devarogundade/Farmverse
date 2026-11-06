@@ -651,6 +651,20 @@ export const ChainPendingMintsResponse = named(
   }),
 );
 
+export const ChainFaucetRequest = named('ChainFaucetRequest', z.object({ meta: RequestMeta }), "Today's test FARM (testnet only).");
+
+export const ChainFaucetResponse = named(
+  'ChainFaucetResponse',
+  z.object({
+    /** Whole FARM sent, as a decimal string. */
+    farm: z.string(),
+    /** Whole NEAR sent ("0" after the first claim). */
+    near: z.string(),
+    /** When the next claim opens (epoch ms). */
+    nextAt: EpochMs,
+  }),
+);
+
 function callable<Req extends z.ZodType, Res extends z.ZodType>(
   name: string,
   request: Req,
@@ -696,6 +710,7 @@ export const CALLABLES = {
   chainMint: callable('chain-mint', ChainMintRequest, ChainMintResponse),
   chainRedeem: callable('chain-redeem', ChainRedeemRequest, ChainRedeemResponse),
   chainPendingMints: callable('chain-pendingMints', ChainPendingMintsRequest, ChainPendingMintsResponse),
+  chainFaucet: callable('chain-faucet', ChainFaucetRequest, ChainFaucetResponse),
 } as const;
 
 export type PlatformContent = z.infer<typeof PlatformContent>;

@@ -43,6 +43,14 @@ const Schema = z.object({
   MINT_DAILY_VALUE_CAP: z.coerce.number().int().min(0).default(5_000),
   /** Hours since a player started before they may mint. */
   MINT_MIN_ACCOUNT_HOURS: z.coerce.number().min(0).default(24),
+  NEAR_FARM_CONTRACT: z.string().min(2).default('farm.farmverse.testnet'),
+  /** Testnet faucet (chain/scripts/upgrade-testnet.sh writes these). Unset, or on mainnet: no faucet. */
+  FAUCET_ACCOUNT: optional(z.string().min(2)),
+  FAUCET_PRIVATE_KEY: optional(z.string().regex(/^ed25519:[1-9A-HJ-NP-Za-km-z]+$/, 'FAUCET_PRIVATE_KEY must be ed25519:<base58>')),
+  /** Whole test FARM per daily claim, test NEAR once per account, claims per UTC day in total. */
+  FAUCET_FARM: z.coerce.number().int().min(0).default(100),
+  FAUCET_NEAR: z.coerce.number().min(0).max(5).default(1),
+  FAUCET_DAILY_CAP: z.coerce.number().int().min(0).default(2_000),
 });
 
 export type Config = z.infer<typeof Schema>;

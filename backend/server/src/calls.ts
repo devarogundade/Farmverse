@@ -24,6 +24,7 @@ import { contentFor } from '../../game/src/game/content';
 import type { IslandEngine } from '../../game/src/infra/islandEngine';
 import type { Store } from '../../game/src/infra/store';
 import { fail } from '../../game/src/core/errors';
+import { claimFaucet, type FaucetSender } from './chain/faucet';
 import { mint, pendingMints, redeem, type MintDeps, type MintLimits } from './mint/mint';
 import type { ChainReader } from './mint/nearChain';
 import type { VoucherSigner } from './mint/voucher';
@@ -37,6 +38,8 @@ export interface ChainRuntime {
   readonly scheduleExpiry: (uid: string, tokenId: string, atMs: number) => Promise<void>;
   /** The NEAR account behind a game uid. */
   readonly accountOf: (uid: string) => Promise<string | null>;
+  /** Testnet only: who pays faucet claims and how much. */
+  readonly faucet?: { readonly sender: FaucetSender; readonly farmUnits: bigint; readonly nearYocto: bigint; readonly dailyCap: number };
 }
 
 /** Everything the game handlers need, built once per process (main.ts / worker.ts / tests). */
@@ -167,6 +170,15 @@ export function callDefinitions(rt: Runtime): ReadonlyMap<string, AnyDefinition>
       spec: CALLABLES.chainRedeem,
       auth: 'required',
       handler: async ({ uid, data, log }) => redeem(mintDeps(rt, log), uid, await walletOf(rt, uid), data.txHash, log),
+    }),
+    def({
+      spec: CALLABLES.chainFaucet,
+      auth: 'required',
+      handler: async ({ uid, log }) => {
+        const f = rt.chain?.faucet;
+        if (!f) fail('FAUCET_CLOSED');
+        return claimFaucet({ env: envOf(rt, log), ...f }, uid, await walletOf(rt, uid), log);
+      },
     }),
     def({
       spec: CALLABLES.chainPendingMints,

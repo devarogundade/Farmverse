@@ -31,7 +31,7 @@ an indexer migration, and the Unity panels.
 - [x] B6 Extra builders reach the island sync §5.2
 - [x] B7 Mint fee (2 %, min 5 coins) + lot minimum (10; 1 for golden goods) §6.2
 - [x] B8 `chain-pendingMints` ("Finish minting") §3.5
-- [ ] B9 Faucet route: 100 FARM/day + 1 NEAR once, from `faucet.`, rate-limited §6.6
+- [x] B9 Faucet route: 100 FARM/day + 1 NEAR once, from `faucet.`, rate-limited §6.6
 - [ ] B10 `crew` from owned + rented Farmhands, beds = sum of workers' house levels (max 6) §7.3 §12.1
 - [ ] B11 `worker_stats` XP per token from server island runs §7.4
 - [ ] B12 Market read API: drops, offers, rentals, worker filters (specialty, rarity, level) §5.4 §7.5 §12
