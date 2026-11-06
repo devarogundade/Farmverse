@@ -44,51 +44,79 @@ function base64ToBytes(b64) {
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 }
 
-/** Shows the sign-in card and resolves once the player connected and signed (two clicks: browsers need a gesture for each popup). */
+/**
+ * Shows the sign-in card and resolves once the player connected and signed. Connecting asks for the
+ * signature straight away (an extension wallet shows it at once); only if that can't open without
+ * another click (a web wallet's popup) does the card wait on its "Sign in" button. A wallet that is
+ * already connected goes straight to signing.
+ */
 function signInWithWallet() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const card = $('fv-signin');
     const button = $('fv-signin-button');
     const text = $('fv-signin-text');
     const error = $('fv-signin-error');
     let wallet = null;
+    let busy = false;
     card.hidden = false;
     error.hidden = true;
     button.textContent = 'Connect wallet';
     button.disabled = false;
 
-    const fail = (e) => {
-      error.textContent = String(e?.message ?? e);
-      error.hidden = false;
+    const show = (message) => {
+      error.textContent = message;
+      error.hidden = !message;
+    };
+
+    const readyToSign = () => {
+      text.textContent = 'Sign in to Farmverse with your wallet: a free signature, no transaction.';
+      button.textContent = 'Sign in';
       button.disabled = false;
     };
 
-    button.onclick = async () => {
+    // signs the server's challenge and trades it for a session; the card goes when it worked
+    const signIn = async () => {
+      text.textContent = 'Approve the sign-in in your wallet…';
       button.disabled = true;
-      error.hidden = true;
+      const challenge = await post('/v1/auth/nonce');
+      const signed = await wallet.signMessage({ message: challenge.message, recipient: challenge.recipient, nonce: base64ToBytes(challenge.nonce) });
+      if (!signed?.signature) throw new Error('The wallet did not sign.');
+      const tokens = await post('/v1/auth/wallet', {
+        accountId: signed.accountId,
+        publicKey: signed.publicKey,
+        signature: signed.signature,
+        nonce: challenge.nonce,
+      });
+      card.hidden = true;
+      resolve(keep(tokens));
+    };
+
+    const run = async (connect) => {
+      if (busy) return;
+      busy = true;
+      show('');
+      button.disabled = true;
       try {
-        if (!wallet) {
-          wallet = await connector.connect();
-          text.textContent = 'Now sign in to Farmverse with your wallet (a free signature, no transaction).';
-          button.textContent = 'Sign in';
-          button.disabled = false;
-          return;
-        }
-        const challenge = await post('/v1/auth/nonce');
-        const signed = await wallet.signMessage({ message: challenge.message, recipient: challenge.recipient, nonce: base64ToBytes(challenge.nonce) });
-        const tokens = await post('/v1/auth/wallet', {
-          accountId: signed.accountId,
-          publicKey: signed.publicKey,
-          signature: signed.signature,
-          nonce: challenge.nonce,
-        });
-        card.hidden = true;
-        resolve(keep(tokens));
+        if (connect || !wallet) wallet = await connector.connect();
+        await signIn();
       } catch (e) {
-        fail(e);
+        // connected but the signature didn't happen (declined, or the popup needs this click): ask again
+        if (wallet) readyToSign();
+        else button.disabled = false;
+        show(String(e?.message ?? e));
+      } finally {
+        busy = false;
       }
     };
-    void reject; // the card stays until the player signs in
+
+    button.onclick = () => run(false);
+
+    // a wallet remembered from last time (autoConnect): no need to pick it again
+    connector.wallet().then((w) => {
+      if (!w || wallet || busy) return;
+      wallet = w;
+      readyToSign();
+    }, () => {});
   });
 }
 
