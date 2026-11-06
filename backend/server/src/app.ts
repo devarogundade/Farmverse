@@ -13,6 +13,8 @@ import { adminRoutes, type AdminOptions } from './admin/routes';
 import type { OpsConfig } from './admin/ops';
 
 export interface AppOptions {
+  /** The NEAR RPC node, sent to the game in /v1/config (it reads balances there). */
+  readonly rpcUrl?: string;
   readonly rt: Runtime;
   readonly sessions: Sessions;
   readonly reader: DocReader;
@@ -102,6 +104,7 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
             ...(o.rt.chain.farmContract ? { farm_contract: o.rt.chain.farmContract } : {}),
             ...(o.rt.chain.marketContract ? { market_contract: o.rt.chain.marketContract } : {}),
             faucet: Boolean(o.rt.chain.faucet),
+            ...(o.rpcUrl ? { rpc_url: o.rpcUrl } : {}),
           }
         : {}),
     },

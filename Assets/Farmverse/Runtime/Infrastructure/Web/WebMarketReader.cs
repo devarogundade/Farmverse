@@ -14,8 +14,54 @@ namespace Farmverse.Infrastructure.Web
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(15);
         private readonly WebApi _api;
+        private readonly Func<string> _rpcUrl;
 
-        public WebMarketReader(WebApi api) => _api = api;
+        /// <param name="rpcUrl">The NEAR RPC node (from the server's config); balances are view calls on it.</param>
+        public WebMarketReader(WebApi api, Func<string> rpcUrl)
+        {
+            _api = api;
+            _rpcUrl = rpcUrl;
+        }
+
+        public async Task<Result<(string farm, string near)>> Balances(string account, string farmContract, CancellationToken cancellation)
+        {
+            var rpc = _rpcUrl();
+            if (string.IsNullOrEmpty(rpc)) return Result<(string, string)>.Fail(ErrorCode.Unsupported);
+            var farm = "0";
+            if (!string.IsNullOrEmpty(farmContract))
+            {
+                var args = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("{\"account_id\":\"" + account + "\"}"));
+                var r = await Rpc(rpc, new Dictionary<string, object>
+                {
+                    ["request_type"] = "call_function", ["finality"] = "final", ["account_id"] = farmContract, ["method_name"] = "ft_balance_of", ["args_base64"] = args,
+                }, cancellation);
+                if (r is Dictionary<string, object> res && res.TryGetValue("result", out var bytes) && bytes is List<object> list)
+                {
+                    var raw = new byte[list.Count];
+                    for (var i = 0; i < list.Count; i++) raw[i] = (byte)Convert.ToInt32(list[i]);
+                    farm = System.Text.Encoding.UTF8.GetString(raw).Trim('"');
+                }
+            }
+            var near = "0";
+            var a = await Rpc(rpc, new Dictionary<string, object> { ["request_type"] = "view_account", ["finality"] = "final", ["account_id"] = account }, cancellation);
+            if (a is Dictionary<string, object> acc && acc.TryGetValue("amount", out var amt) && amt is string s) near = s;
+            return Result<(string, string)>.Ok((farm, near));
+        }
+
+        private async Task<object?> Rpc(string url, Dictionary<string, object> queryParams, CancellationToken cancellation)
+        {
+            var body = WireJson.Serialize(new Dictionary<string, object> { ["jsonrpc"] = "2.0", ["id"] = "fv", ["method"] = "query", ["params"] = queryParams });
+            try
+            {
+                var res = await _api.SendAbsolute("POST", url, body, Timeout, cancellation);
+                if (!res.Ok) return null;
+                return WireJson.Parse(res.Body) is Dictionary<string, object> m && m.TryGetValue("result", out var r) ? r : null;
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
+        }
 
         public async Task<Result<IReadOnlyList<OwnedNft>>> Owned(string account, CancellationToken cancellation)
         {

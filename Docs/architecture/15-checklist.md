@@ -52,7 +52,7 @@ an indexer migration, and the Unity panels.
 - [x] D2 Storage → My NFTs tab: list, Redeem (place mode for buildings/land), Sell, View, listed-token rule §3.1
 - [x] D3 Deep links: outbound (token, sell, explore item, shop) and inbound (`?open=nfts`, `?redeemed=`) §3.2
 - [x] D4 Mint sheet: chips + stepper, allowance bar, fee, four-step progress, Sell/Keep, errors in place, boosts mintable, "Finish minting" §4.1
-- [ ] D5 FARM (and low NEAR) in the top bar; "Get FARM" sheet with the faucet §3.3
+- [x] D5 FARM (and low NEAR) in the top bar; "Get FARM" sheet with the faucet §3.3
 - [ ] D6 Pass "Get Premium · 250 FARM" (buy-and-use), "Use your Farm Pass"; shop: starter pack, Builder's Pass, gem packs, land deeds with counts left §5.3
 - [ ] D7 Farmhands on the island in their outfits; Workers panel Farmhands section, "No bed free", "Rented · n days left", Hire on market §7.3 §12.1
 - [ ] D8 Wild plots: locked signs, "Use a land deed", clearing §12.3

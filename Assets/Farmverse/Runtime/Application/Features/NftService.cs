@@ -40,6 +40,46 @@ namespace Farmverse.Application.Features
         public bool OwnedFailed { get; private set; }
         public bool OwnedLoaded => _ownedAt > 0;
 
+        /// <summary>yocto-FARM and yoctoNEAR the wallet holds (null before the first read).</summary>
+        public string? FarmYocto { get; private set; }
+        public string? NearYocto { get; private set; }
+        /// <summary>The FARM contract (set by the game from the server's config).</summary>
+        public Func<string> FarmContract { get; set; } = () => "";
+        private long _balancesAt;
+        private bool _loadingBalances;
+
+        public async Task RefreshBalances()
+        {
+            var account = _account();
+            if (_loadingBalances || string.IsNullOrEmpty(account)) return;
+            _loadingBalances = true;
+            try
+            {
+                var r = await _reader.Balances(account!, FarmContract(), CancellationToken.None);
+                if (r.IsOk)
+                {
+                    FarmYocto = r.Value.farm;
+                    NearYocto = r.Value.near;
+                }
+                _balancesAt = _nowMs();
+            }
+            finally
+            {
+                _loadingBalances = false;
+                Changed?.Invoke();
+            }
+        }
+
+        /// <summary>yoctoNEAR as NEAR for display ("0.05").</summary>
+        public static string Near(string yocto)
+        {
+            if (string.IsNullOrEmpty(yocto) || yocto == "0") return "0";
+            var s = yocto.TrimStart('0').PadLeft(25, '0');
+            var whole = s.Substring(0, s.Length - 24).TrimStart('0');
+            var frac = s.Substring(s.Length - 24, 3).TrimEnd('0');
+            return (whole.Length == 0 ? "0" : whole) + (frac.Length > 0 ? "." + frac : "");
+        }
+
         /// <summary>The signed-in wallet, or null.</summary>
         public string? Account => _account();
 
@@ -47,6 +87,7 @@ namespace Farmverse.Application.Features
         {
             var now = _nowMs();
             if (now - _ownedAt > StaleMs) _ = RefreshOwned();
+            if (now - _balancesAt > StaleMs) _ = RefreshBalances();
             if (now - _dropsAt > StaleMs) _ = RefreshDrops();
         }
 

@@ -23,6 +23,8 @@ namespace Farmverse.Application.Config
         public const string MarketContract = "market_contract";
         /// <summary>The testnet faucet is open (docs 15 §6.6).</summary>
         public const string Faucet = "faucet";
+        /// <summary>The NEAR RPC node the server uses (balances are read from it).</summary>
+        public const string RpcUrl = "rpc_url";
         public const long MintMinHoursDefault = 24;
 
         public const string MinClientVersion = "min_client_version";

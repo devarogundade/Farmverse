@@ -49,9 +49,16 @@ namespace Farmverse.Infrastructure.Web
 
         public string Url(string path) => _base + path;
 
-        public async Task<WebResponse> Send(string method, string path, string? json, string? bearer, TimeSpan timeout, CancellationToken cancellation)
+        public Task<WebResponse> Send(string method, string path, string? json, string? bearer, TimeSpan timeout, CancellationToken cancellation) =>
+            SendTo(Url(path), method, json, bearer, timeout, cancellation);
+
+        /// <summary>A request to another host (the NEAR RPC node), no sign-in.</summary>
+        public Task<WebResponse> SendAbsolute(string method, string url, string? json, TimeSpan timeout, CancellationToken cancellation) =>
+            SendTo(url, method, json, null, timeout, cancellation);
+
+        private static async Task<WebResponse> SendTo(string url, string method, string? json, string? bearer, TimeSpan timeout, CancellationToken cancellation)
         {
-            using var request = new UnityWebRequest(Url(path), method)
+            using var request = new UnityWebRequest(url, method)
             {
                 downloadHandler = new DownloadHandlerBuffer(),
                 timeout = Math.Max(1, (int)Math.Ceiling(timeout.TotalSeconds)),

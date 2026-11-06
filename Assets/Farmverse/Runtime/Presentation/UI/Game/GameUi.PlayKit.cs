@@ -151,7 +151,7 @@ namespace Farmverse.Presentation.UI.Game
         }
 
         /// <summary>The coin or gem pill at the HUD's top right (.pill, design sizes in points), as wide as its value.</summary>
-        private static (VisualElement pill, Label value) PlayPill(VisualElement? parent, Pt p, bool gem, Action? onPlus)
+        private static (VisualElement pill, Label value) PlayPill(VisualElement? parent, Pt p, bool gem, Action? onPlus, string? icon = null)
         {
             var pill = PK.Row(parent);
             pill.style.justifyContent = Justify.FlexEnd;
@@ -168,7 +168,7 @@ namespace Farmverse.Presentation.UI.Game
             PK.Centre(plus);
             PK.Img(plus, "ResourceBar_Btn_Icon_Add", p.P(21));
             var t = PK.T(pill, p, "0", 23);
-            var ico = PK.Img(pill, gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold", p.P(58));
+            var ico = PK.Img(pill, icon ?? (gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold"), p.P(58));
             PK.Abs(ico, right: -p.P(10), top: -p.P(5));
             if (onPlus != null) PK.Tap(plus, p, onPlus);
             return (pill, t);

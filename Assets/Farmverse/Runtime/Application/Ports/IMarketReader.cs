@@ -58,5 +58,8 @@ namespace Farmverse.Application.Ports
         Task<Result<IReadOnlyList<OwnedNft>>> Owned(string account, CancellationToken cancellation);
         Task<Result<IReadOnlyList<MarketDrop>>> Drops(CancellationToken cancellation);
         Task<Result<IReadOnlyList<ItemOffer>>> OffersForItem(string itemId, CancellationToken cancellation);
+
+        /// <summary>FARM (yocto-FARM) and NEAR (yoctoNEAR) the account holds; "0" when unknown.</summary>
+        Task<Result<(string farm, string near)>> Balances(string account, string farmContract, CancellationToken cancellation);
     }
 }

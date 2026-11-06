@@ -232,7 +232,10 @@ namespace Farmverse.Bootstrap
             _chain.FarmContract = () => remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.FarmContract, "");
             GameUi.FaucetOpen = () => remoteConfig.GetBool(Farmverse.Application.Config.RemoteKeys.Faucet, false);
             // what the wallet holds and what the studio sells, from the market API (docs 15 §3.1)
-            GameUi.Nfts = new NftService(new WebMarketReader(api), () => auth.User.Value?.AccountId, () => clock.NowMs);
+            GameUi.Nfts = new NftService(new WebMarketReader(api, () => remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.RpcUrl, "")), () => auth.User.Value?.AccountId, () => clock.NowMs)
+            {
+                FarmContract = () => remoteConfig.GetString(Farmverse.Application.Config.RemoteKeys.FarmContract, ""),
+            };
             GameUi.Account = _account;
             GameUi.RetrySession = () => _ = _session.Start(_life.Token);      // deleting the account restarts on a new guest
             Wallet.Shop = _shop;            // boosts, free gift, starter pack, daily chests: server-owned

@@ -379,6 +379,16 @@ namespace Farmverse.Presentation.UI.Game
             var (coinPill, coins) = PlayPill(right, p, false, () => Open("shop", "coins"));
             var (gemPill, gems) = PlayPill(right, p, true, () => Open("shop", "gems"));
             gemPill.style.marginLeft = p.P(14);
+            // FARM, the market's money (web build with a wallet): tap for the Get FARM sheet
+            Label? farm = null;
+            if (ChainReady)
+            {
+                var (farmPill, farmText) = PlayPill(right, p, false, () => Open("getfarm"), "Icon_Clover");
+                farmPill.style.marginLeft = p.P(14);
+                PK.Tap(farmPill, p, () => Open("getfarm"));
+                farm = farmText;
+                Nfts?.RefreshIfStale();
+            }
             var home = PK.Centre(PK.Box(right));
             PK.Size(home, p.P(62), p.P(66));
             home.style.marginLeft = p.P(20);
@@ -389,6 +399,7 @@ namespace Farmverse.Presentation.UI.Game
             {
                 coins.text = Loc.Of(PK.Num(Sandbox != null ? Sandbox.CoinsNow : 0));
                 gems.text = Loc.Of(PK.Num(Wallet.Gems));
+                if (farm != null) farm.text = Loc.Of(Nfts?.FarmYocto == null ? "…" : Farmverse.Application.Features.NftService.Farm(Nfts.FarmYocto));
             });
         }
 

@@ -27,6 +27,7 @@ async function main(): Promise<void> {
   await ops.start();
 
   const app = await buildApp({
+    rpcUrl: config.NEAR_RPC_URL,
     rt: services.rt,
     sessions: services.sessions,
     reader: services.reader,
