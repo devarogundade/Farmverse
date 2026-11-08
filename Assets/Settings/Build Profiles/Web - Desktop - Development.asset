@@ -533,6 +533,7 @@ MonoBehaviour:
     - line: '|     FARMVERSE_API: http://localhost:8787'
     - line: '|     MARKETPLACE_URL: http://localhost:5174'
     - line: '|     NEAR_NETWORK: testnet'
+    - line: '|     SITE_URL: http://localhost:5175'
     - line: '|   mobileMTRendering:'
     - line: '|     Android: 1'
     - line: '|     iPhone: 1'

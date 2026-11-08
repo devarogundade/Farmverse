@@ -2749,6 +2749,10 @@
             "v": "Loading...{0}%"
         },
         {
+            "k": "Locked · coming soon",
+            "v": "Locked · coming soon"
+        },
+        {
             "k": "Look",
             "v": "Look"
         },
@@ -3869,6 +3873,10 @@
             "v": "Pouf placed"
         },
         {
+            "k": "Premium",
+            "v": "Premium"
+        },
+        {
             "k": "Premium is yours this season!",
             "v": "Premium is yours this season!"
         },
@@ -4773,6 +4781,10 @@
             "v": "Tap <color=#ffd23a>Open redeem page</color>."
         },
         {
+            "k": "Tap a tool, or drag it onto fields and buildings",
+            "v": "Tap a tool, or drag it onto fields and buildings"
+        },
+        {
             "k": "Tap anywhere to continue",
             "v": "Tap anywhere to continue"
         },
@@ -4985,6 +4997,10 @@
             "v": "The post office wants {0} more {1}: double pay."
         },
         {
+            "k": "The premium track isn't on sale yet · free-track rewards keep unlocking as you play.",
+            "v": "The premium track isn't on sale yet · free-track rewards keep unlocking as you play."
+        },
+        {
             "k": "The quarry hills",
             "v": "The quarry hills"
         },
@@ -5085,6 +5101,10 @@
             "v": "The truck paid {0} coins: {1} Oil, {2} Planks"
         },
         {
+            "k": "The truck paid {0} coins: {1} Oil, {2} Wood",
+            "v": "The truck paid {0} coins: {1} Oil, {2} Wood"
+        },
+        {
             "k": "The truck paid {0} coins: {1} Planks, {2} Stone",
             "v": "The truck paid {0} coins: {1} Planks, {2} Stone"
         },
@@ -5107,6 +5127,10 @@
         {
             "k": "The waterfall",
             "v": "The waterfall"
+        },
+        {
+            "k": "The zombies got away — {0} goods stolen, {1} people killed",
+            "v": "The zombies got away — {0} goods stolen, {1} people killed"
         },
         {
             "k": "The zombies got away — {0} goods stolen, {1} people killed, {2} coins taken",
@@ -5143,6 +5167,10 @@
         {
             "k": "They ran out of food after",
             "v": "They ran out of food after"
+        },
+        {
+            "k": "They ran out of food after {0}m {1}s. Stock the workers' house before you go.",
+            "v": "They ran out of food after {0}m {1}s. Stock the workers' house before you go."
         },
         {
             "k": "They stopped when the farmhouse filled up: sell, or upgrade it",
@@ -5719,6 +5747,10 @@
         {
             "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3}",
             "v": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3}"
+        },
+        {
+            "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3} · loaded {4} train crates",
+            "v": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3} · loaded {4} train crates"
         },
         {
             "k": "Workers harvested {0} · sowed {1} fields · fed the animals {2} · collected {3} · refilled machines with {4}",
@@ -6521,6 +6553,10 @@
             "v": "{0} food in every workers' house"
         },
         {
+            "k": "{0} free spins a day,\nreset at midnight (UTC).",
+            "v": "{0} free spins a day,\nreset at midnight (UTC)."
+        },
+        {
             "k": "{0} fresh goods went off — collect more often",
             "v": "{0} fresh goods went off — collect more often"
         },
@@ -6661,6 +6697,10 @@
             "v": "{0} zombie from the south-east"
         },
         {
+            "k": "{0} zombie from the south-west",
+            "v": "{0} zombie from the south-west"
+        },
+        {
             "k": "{0} zombies from the north-east",
             "v": "{0} zombies from the north-east"
         },
@@ -6671,6 +6711,10 @@
         {
             "k": "{0} zombies from the south-east",
             "v": "{0} zombies from the south-east"
+        },
+        {
+            "k": "{0} zombies from the south-west",
+            "v": "{0} zombies from the south-west"
         },
         {
             "k": "{0} zombies shamble in from the north-east!",
