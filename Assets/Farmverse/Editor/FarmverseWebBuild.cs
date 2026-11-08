@@ -39,6 +39,9 @@ namespace Farmverse.Editor
             PlayerSettings.WebGL.decompressionFallback = false;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
             PlayerSettings.WebGL.dataCaching = true;
+            // file names are their content hashes: a new build never shares a URL with an old one, so a browser (or a
+            // CDN) can never serve one build's code with another's framework ("function signature mismatch")
+            PlayerSettings.WebGL.nameFilesAsHashes = true;
             PlayerSettings.WebGL.emscriptenArgs = "";
             PlayerSettings.SetTemplateCustomValue("FARMVERSE_API", apiBaseUrl);
             PlayerSettings.SetTemplateCustomValue("NEAR_NETWORK", network);

@@ -69,11 +69,12 @@ game() {
     -e "s#marketplaceUrl: \"[^\"]*\"#marketplaceUrl: \"$MARKET_URL\"#" \
     -e "s#siteUrl: \"[^\"]*\"#siteUrl: \"$SITE_URL\"#" \
     -e "s#socialLogin: \"[^\"]*\"#socialLogin: \"$SOCIAL_LOGIN\"#" "$out/index.html"
-  # Unity's Brotli files need their encoding header (the loader can't decompress them itself)
+  # Unity's Brotli files need their encoding header (the loader can't decompress them itself); their names are
+  # content hashes (FarmverseWebBuild), so they can be cached for good
   cat >"$out/vercel.json" <<'JSON'
 {
   "headers": [
-    { "source": "/Build/(.*)\\.br", "headers": [{ "key": "Content-Encoding", "value": "br" }, { "key": "Cache-Control", "value": "public, max-age=3600" }] },
+    { "source": "/Build/(.*)\\.br", "headers": [{ "key": "Content-Encoding", "value": "br" }, { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
     { "source": "/Build/(.*)\\.js\\.br", "headers": [{ "key": "Content-Type", "value": "application/javascript" }] },
     { "source": "/Build/(.*)\\.wasm\\.br", "headers": [{ "key": "Content-Type", "value": "application/wasm" }] },
     { "source": "/Build/(.*)\\.data\\.br", "headers": [{ "key": "Content-Type", "value": "application/octet-stream" }] }
