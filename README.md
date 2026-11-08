@@ -38,7 +38,7 @@ Desktop browser recommended. Every step says what to do and what you should see.
 | # | Do | You should see |
 |---|---|---|
 | 1 | Open **play.farmverse.world** | An install screen (Download → Unpack → Start, with MB left). The first visit downloads ~55 MB; later visits open from the browser cache in seconds. |
-| 2 | Tap **OK** on "Before you start", then **Connect wallet** → **Email or Google** | A sign-in window. Sign in with Google or an emailed code. A NEAR account is made for you; no seed phrase. (Any NEAR testnet wallet works too: Meteor, HOT, MyNearWallet, Intear.) |
+| 2 | Tap **Play as guest** | You're on your own island in a few seconds: no wallet app, no sign-up. The page makes a NEAR account for you (its key stays in this browser; Settings → **Save your farm** shows it). Prefer an account? **Connect wallet** → **Email or Google**, or any NEAR testnet wallet (Meteor, HOT, MyNearWallet, Intear). |
 | 3 | Play for a minute: plant **wheat** on a field, wait ~60 s, harvest | Wheat in the farmhouse. Crops, animals and factories all work like this: start, wait, collect. |
 | 4 | Tap the **FARM** pill (top bar) → **Get 100 test FARM** | 100 test FARM arrives in your wallet (once a day). New accounts also got a little test NEAR at sign-in. |
 | 5 | **Storage** → pick a good (e.g. wheat, 10 or more) → **Mint as NFT** | The steps tick off. The first time, approve one restricted key in your wallet; after that, mints and redeems need **no popup and no gas** (our relayer pays). |
@@ -136,7 +136,7 @@ the game loop, not the token — bonus if players never notice the chain."*
 | NPCs with wallets | Bea, Ruth, Tomas and Ivy: own accounts, own FARM, an agent loop that prices from stock and demand and explains each price on the Market Town page. Farmhands earn FARM into their own balance while rented. | Live |
 | Player-owned markets | Listings, offers (per token and per item), rentals, merchant offers, studio drops with on-chain caps. | Live |
 | Economy that evolves without a patch | Merchant prices move with stock and sales; scarcity from capped drops, fixed Genesis sets, burns on redeem, golden crops; a coin fee and daily cap on minting. | Live |
-| Players never notice the chain | The words players see are "Mint", "Redeem" and "FARM". Email or Google sign-in (Privy NEAR wallet). Mints and redeems are gasless after one approval (session key + NEP-366 relayer); new accounts get a little NEAR. | Live |
+| Players never notice the chain | The words players see are "Mint", "Redeem" and "FARM". **Play as guest** (a NEAR account made in the browser, one tap) or Email or Google sign-in (Privy NEAR wallet). Mints and redeems are gasless after one approval (session key + NEP-366 relayer); new accounts get a little NEAR. | Live |
 | Social login | "Email or Google" wallet in the game and the market (Privy, created through our server). | Live |
 | NEAR Intents | *Get FARM with any token* via 1Click: real quotes now; orders need mainnet (Intents has no testnet). | Quotes only on testnet |
 | NEP-245 multi-token | Goods are NEP-171 tokens that carry a quantity ("Wheat ×250"). A NEP-245 contract would make stacks fungible and splittable. | Not done (next step) |
