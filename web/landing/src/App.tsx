@@ -4,12 +4,18 @@ import { useEffect, useState } from 'react';
 import { Home } from './Home';
 import { LEGAL_PAGES, Legal } from './Legal';
 import { MARKET_URL, PLAY_URL } from './links';
+import { Redeem } from './Redeem';
 
-/** "#/terms" -> "terms"; section anchors ("#how") stay on the home page. */
+/**
+ * "#/terms" -> "terms"; section anchors ("#how") stay on the home page. The redeem page has a path of its
+ * own, farmverse.world/redeem (the link the game opens), and "#/redeem" works too.
+ */
 function usePage() {
   const read = () => {
     const m = location.hash.match(/^#\/(\w+)/);
-    return m && LEGAL_PAGES.includes(m[1]) ? m[1] : 'home';
+    if (m && LEGAL_PAGES.includes(m[1])) return m[1];
+    if ((m && m[1] === 'redeem') || location.pathname.replace(/\/+$/, '') === '/redeem') return 'redeem';
+    return 'home';
   };
   const [page, setPage] = useState(read);
   useEffect(() => {
@@ -29,11 +35,12 @@ function usePage() {
 export function App() {
   useGameTheme();
   const page = usePage();
-  const anchor = (id: string) => (page === 'home' ? `#${id}` : `#/`);
+  // From another page the section links go to the home page's sections (the redeem page has its own path)
+  const anchor = (id: string) => (page === 'home' ? `#${id}` : `/#${id}`);
   return (
     <>
       <header className="nav">
-        <a href="#/" className="nav-logo" aria-label="Farmverse home">
+        <a href="/" className="nav-logo" aria-label="Farmverse home">
           <img src={sprite('Home_Logo')} alt="Farmverse" />
         </a>
         <nav className="nav-links" aria-label="Sections">
@@ -52,16 +59,17 @@ export function App() {
         </div>
       </header>
 
-      <main>{page === 'home' ? <Home /> : <Legal page={page} />}</main>
+      <main>{page === 'home' ? <Home /> : page === 'redeem' ? <Redeem /> : <Legal page={page} />}</main>
 
       <footer className="footer">
         <img src={sprite('Home_Logo')} alt="Farmverse" />
         <nav aria-label="Footer">
           <a href={PLAY_URL}>Play</a>
           <a href={MARKET_URL}>Market</a>
-          <a href="#/terms">Terms</a>
-          <a href="#/privacy">Privacy</a>
-          <a href="#/farm">FARM disclosure</a>
+          <a href="/redeem">Redeem a code</a>
+          <a href="/#/terms">Terms</a>
+          <a href="/#/privacy">Privacy</a>
+          <a href="/#/farm">FARM disclosure</a>
         </nav>
         <small>© 2026 Farmverse</small>
       </footer>

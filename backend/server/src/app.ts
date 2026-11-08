@@ -11,6 +11,7 @@ import type { RateLimiter } from './infra/redis';
 import { QuerySpec, type DocReader, type LiveHub, type LiveSocket } from './live';
 import { marketRoutes, type MarketOptions } from './market/routes';
 import { adminRoutes, type AdminOptions } from './admin/routes';
+import { couponRoutes, type CouponRouteOptions } from './coupons/routes';
 import type { OpsConfig } from './admin/ops';
 
 export interface AppOptions {
@@ -33,6 +34,8 @@ export interface AppOptions {
   readonly ops?: OpsConfig;
   /** The admin web's API under /v1/admin (off when absent). */
   readonly admin?: AdminOptions;
+  /** The public coupon redeem page's API under /v1/coupons (off when absent). */
+  readonly coupons?: CouponRouteOptions;
 }
 
 const STATUS: Record<string, number> = {
@@ -252,6 +255,10 @@ export async function buildApp(o: AppOptions): Promise<FastifyInstance> {
   // ---------------------------------------------------------------- admin web
 
   if (o.admin) await app.register(adminRoutes(o.admin, log), { prefix: '/v1/admin' });
+
+  // ---------------------------------------------------------------- coupon redeem page
+
+  if (o.coupons) await app.register(couponRoutes(o.coupons), { prefix: '/v1/coupons' });
 
   // ---------------------------------------------------------------- live
 

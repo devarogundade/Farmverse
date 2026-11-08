@@ -92,8 +92,77 @@ export async function redeemCoupon(env: Env, code: string): Promise<{ typeId: st
     if (!snap.exists || !snap.data) throw new AppError('COUPON_UNKNOWN');
     const d = snap.data;
     if (Number(d['redeemedAt'] ?? 0) > 0 || Number(d['expiresAt'] ?? 0) < nowMs) throw new AppError('COUPON_USED');
+    // a payout from the redeem page is under way (or was sent): it is not the team's to mark
+    if (d['payoutState'] === 'sending') throw new AppError('COUPON_USED');
     uow.set(paths.couponCode(normalised), { redeemedAt: nowMs }, { merge: true });
     uow.commit();
     return { typeId: String(d['typeId']), amount: Number(d['amount']), unit: String(d['unit']), redeemedAt: nowMs };
+  });
+}
+
+/*
+ * Payouts from the public redeem page. A code is put on hold for one payout (so two requests can't both
+ * pay it), the payment is sent outside the transaction, then the hold is settled (paid) or released
+ * (nothing was sent, so it can be tried again). The code's registry doc keeps the wallet and the
+ * transaction: `payoutState` sending | paid | failed, `payoutWallet`, `payoutTx`, `payoutAt`, `payoutError`.
+ */
+
+/** Normalises what a player typed: upper case, no spaces. */
+export const normaliseCouponCode = (code: string) => code.replace(/\s+/g, '').toUpperCase();
+
+/** A hold older than this with nothing sent is a crashed attempt: the code can be held again. */
+export const PAYOUT_HOLD_MS = 10 * 60_000;
+
+export type PayoutHold =
+  | { ok: true; typeId: string; amount: number; unit: string; task: string }
+  | { ok: false; why: 'unknown' | 'used' | 'expired' | 'busy' | 'unsupported'; unit?: string; tx?: string };
+
+export async function holdCouponPayout(env: Env, code: string, wallet: string, units: readonly string[]): Promise<PayoutHold> {
+  const id = normaliseCouponCode(code);
+  return env.store.runTransaction(async (tx): Promise<PayoutHold> => {
+    const uow = new UnitOfWork(tx);
+    const nowMs = env.clock.nowMs();
+    const snap = await uow.read(paths.couponCode(id));
+    if (!snap.exists || !snap.data) return { ok: false, why: 'unknown' };
+    const d = snap.data;
+    const unit = String(d['unit']);
+    const sent = d['payoutTx'] ? { tx: String(d['payoutTx']) } : {};
+    if (Number(d['redeemedAt'] ?? 0) > 0) return { ok: false, why: 'used', ...sent };
+    if (Number(d['expiresAt'] ?? 0) < nowMs) return { ok: false, why: 'expired' };
+    if (!units.includes(unit)) return { ok: false, why: 'unsupported', unit };
+    // sent and waiting for its receipt, or held a moment ago by another request
+    if (d['payoutState'] === 'sending' && (d['payoutTx'] || nowMs - Number(d['payoutAt'] ?? 0) < PAYOUT_HOLD_MS)) return { ok: false, why: 'busy', ...sent };
+    uow.set(paths.couponCode(id), { payoutState: 'sending', payoutWallet: wallet, payoutAt: nowMs, payoutTx: '', payoutError: '' }, { merge: true });
+    uow.commit();
+    return { ok: true, typeId: String(d['typeId']), amount: Number(d['amount']), unit, task: String(d['task'] ?? '') };
+  });
+}
+
+/** The payment is on its way: keep its transaction, so the code is never paid again. */
+export async function noteCouponPayoutTx(env: Env, code: string, txHash: string): Promise<void> {
+  await env.store.runTransaction(async (tx) => {
+    const uow = new UnitOfWork(tx);
+    uow.set(paths.couponCode(normaliseCouponCode(code)), { payoutTx: txHash }, { merge: true });
+    uow.commit();
+  });
+}
+
+/** The payment went through: the code is used. Returns when. */
+export async function settleCouponPayout(env: Env, code: string, txHash: string): Promise<number> {
+  return env.store.runTransaction(async (tx) => {
+    const uow = new UnitOfWork(tx);
+    const nowMs = env.clock.nowMs();
+    uow.set(paths.couponCode(normaliseCouponCode(code)), { payoutState: 'paid', payoutTx: txHash, redeemedAt: nowMs }, { merge: true });
+    uow.commit();
+    return nowMs;
+  });
+}
+
+/** Nothing was paid (refused before sending, or the transaction reverted): the code can be redeemed again. */
+export async function releaseCouponPayout(env: Env, code: string, reason: string): Promise<void> {
+  await env.store.runTransaction(async (tx) => {
+    const uow = new UnitOfWork(tx);
+    uow.set(paths.couponCode(normaliseCouponCode(code)), { payoutState: 'failed', payoutTx: '', payoutError: reason.slice(0, 200) }, { merge: true });
+    uow.commit();
   });
 }

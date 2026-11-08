@@ -45,6 +45,7 @@ vite_site() { # vite_site <web dir> <project> [api url]
   cat >"$out/vercel.json" <<'JSON'
 {
   "cleanUrls": false,
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
   ]

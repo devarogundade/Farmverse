@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { cloudLogger } from '../../game/src/core/logger';
 import { buildApp } from './app';
 import { loadConfig } from './config';
+import { veBetterPayer } from './coupons/vebetter';
 import { redisClient, redisMarketBus } from './infra/redis';
 import { LiveHub } from './live';
 import { redisNoteMarks } from './market/marks';
@@ -53,6 +54,16 @@ async function main(): Promise<void> {
       limiter: services.limiter,
       itemsContract: config.NEAR_ITEMS_CONTRACT,
       adminAccounts: config.ADMIN_ACCOUNTS,
+    },
+    coupons: {
+      env: { store: services.rt.store, clock: services.rt.clock, log },
+      log,
+      limiter: services.limiter,
+      explorerTxUrl: config.VECHAIN_EXPLORER_TX_URL,
+      payers:
+        config.VECHAIN_NODE_URL && config.X2EARN_REWARDS_POOL && config.X2EARN_APP_ID && config.X2EARN_SIGNER_KEY
+          ? [veBetterPayer({ nodeUrl: config.VECHAIN_NODE_URL, pool: config.X2EARN_REWARDS_POOL, appId: config.X2EARN_APP_ID, signerKey: config.X2EARN_SIGNER_KEY }, log)]
+          : [],
     },
     callDeps: {
       clock: services.rt.clock,

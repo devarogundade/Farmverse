@@ -78,6 +78,17 @@ const Schema = z.object({
   SALES_ACCOUNT: optional(z.string().min(2)),
   SALES_PRIVATE_KEY: optional(z.string().regex(/^ed25519:[1-9A-HJ-NP-Za-km-z]+$/)),
   NEAR_TREASURY: z.string().min(2).default('treasury.farmverse.testnet'),
+  /**
+   * B3TR coupon payouts on the redeem page (VeBetterDAO's X2EarnRewardsPool). All four set: B3TR codes
+   * pay out; any missing: the page says B3TR redeeming isn't open yet. The signer is a reward
+   * distributor of the app; keep its key out of the repo (a KMS in production).
+   */
+  VECHAIN_NODE_URL: optional(z.string().url()),
+  X2EARN_REWARDS_POOL: optional(z.string().regex(/^0x[0-9a-fA-F]{40}$/, 'X2EARN_REWARDS_POOL must be a 0x address')),
+  X2EARN_APP_ID: optional(z.string().regex(/^0x[0-9a-fA-F]{64}$/, 'X2EARN_APP_ID must be 0x + 64 hex')),
+  X2EARN_SIGNER_KEY: optional(z.string().regex(/^(0x)?[0-9a-fA-F]{64}$/, 'X2EARN_SIGNER_KEY must be a 32-byte hex private key')),
+  /** A transaction's page on the VeChain explorer, without its hash. */
+  VECHAIN_EXPLORER_TX_URL: z.string().url().default('https://explore-testnet.vechain.org/transactions/'),
   /** Market Town merchants (plan 15 §13.1): JSON [{"name":"bea","account":"bea.x.testnet","key":"ed25519:…"}] (chain/scripts/merchants.sh). */
   MERCHANTS: optional(
     z.string().transform((s, ctx) => {

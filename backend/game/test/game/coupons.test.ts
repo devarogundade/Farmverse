@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_CATALOGUE } from '@farmverse/contracts';
 import { AppError } from '../../src/core/errors';
 import { resetCatalogueCache } from '../../src/game/catalogue';
-import { claimCoupon, newCouponCode, redeemCoupon } from '../../src/game/coupons';
+import { claimCoupon, holdCouponPayout, newCouponCode, PAYOUT_HOLD_MS, redeemCoupon, releaseCouponPayout, settleCouponPayout } from '../../src/game/coupons';
 import { paths } from '../../src/infra/paths';
 import { DAY, FARMER, MAKER, World, islandWith } from './world';
 
@@ -75,6 +75,44 @@ describe('coupons', () => {
     const b = await claimCoupon(w.env, MAKER, 'g3', true, (k) => (n++ < 8 ? 0 : 1 % k));
     expect(a.code).toBe(newCouponCode('B3TR', same));
     expect(b.code).not.toBe(a.code);
+  });
+
+  it('holds a code for one payout from the redeem page, then settles or releases it', async () => {
+    const w = await world();
+    w.store.put(paths.island(MAKER), islandWith(w.clock.nowMs(), { stats: { harvested: 600 } }));
+    const got = await claimCoupon(w.env, MAKER, 'g3', true);
+    const wallet = '0x' + 'ab'.repeat(20);
+    expect(await holdCouponPayout(w.env, 'B3TR-0000-0000', wallet, ['B3TR'])).toEqual({ ok: false, why: 'unknown' });
+    expect(await holdCouponPayout(w.env, got.code, wallet, ['USDT'])).toEqual({ ok: false, why: 'unsupported', unit: 'B3TR' });
+    // typed in lower case with spaces around it
+    expect(await holdCouponPayout(w.env, ` ${got.code.toLowerCase()} `, wallet, ['B3TR'])).toMatchObject({ ok: true, typeId: 'b3tr', amount: got.amount, unit: 'B3TR' });
+    // a second request while the first is paying
+    expect(await holdCouponPayout(w.env, got.code, wallet, ['B3TR'])).toEqual({ ok: false, why: 'busy' });
+    // nor can the team mark it used meanwhile
+    expect(await code(redeemCoupon(w.env, got.code))).toBe('COUPON_USED');
+    // nothing was sent: it can be tried again
+    await releaseCouponPayout(w.env, got.code, 'paused');
+    expect(await holdCouponPayout(w.env, got.code, wallet, ['B3TR'])).toMatchObject({ ok: true });
+    await settleCouponPayout(w.env, got.code, '0xtx');
+    expect(w.store.get(paths.couponCode(got.code))).toMatchObject({ payoutState: 'paid', payoutTx: '0xtx', payoutWallet: wallet });
+    expect(await holdCouponPayout(w.env, got.code, wallet, ['B3TR'])).toEqual({ ok: false, why: 'used', tx: '0xtx' });
+  });
+
+  it('frees a hold a crashed request left behind, but never one whose payment was sent', async () => {
+    const w = await world();
+    w.store.put(paths.island(MAKER), islandWith(w.clock.nowMs(), { stats: { harvested: 600 } }));
+    const a = await claimCoupon(w.env, MAKER, 'g3', true);
+    const wallet = '0x' + 'cd'.repeat(20);
+    expect(await holdCouponPayout(w.env, a.code, wallet, ['B3TR'])).toMatchObject({ ok: true });
+    w.clock.advance(PAYOUT_HOLD_MS + 1);
+    expect(await holdCouponPayout(w.env, a.code, wallet, ['B3TR'])).toMatchObject({ ok: true });
+    w.store.put(paths.couponCode(a.code), { ...(w.store.get(paths.couponCode(a.code)) as object), payoutTx: '0xsent' });
+    w.clock.advance(PAYOUT_HOLD_MS + 1);
+    expect(await holdCouponPayout(w.env, a.code, wallet, ['B3TR'])).toEqual({ ok: false, why: 'busy', tx: '0xsent' });
+    // an expired code is said to be expired
+    w.clock.advance(31 * DAY);
+    w.store.put(paths.couponCode(a.code), { ...(w.store.get(paths.couponCode(a.code)) as object), payoutState: 'failed', payoutTx: '' });
+    expect(await holdCouponPayout(w.env, a.code, wallet, ['B3TR'])).toEqual({ ok: false, why: 'expired' });
   });
 
   it('keeps level-locked tasks shut', async () => {
