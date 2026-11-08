@@ -23,7 +23,7 @@ OWNER=${OWNER:-$MASTER}                      # mainnet: the multisig
 FARM_SUPPLY=${FARM_SUPPLY:-1000000000}       # whole FARM; the real total is still open (plan §11 Q1)
 FEE_BPS=${FEE_BPS:-500}
 ROYALTY_BPS=${ROYALTY_BPS:-250}
-BASE_URI=${BASE_URI:-https://marketplace.farmverse.world/nft}
+BASE_URI=${BASE_URI:-https://marketplace.farmverse.world/nft/}   # the slash: wallets that join, paste or resolve base_uri + media all reach the image
 ENV_FILE=../backend/server/.env
 
 FARM=farm.$MASTER

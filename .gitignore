@@ -183,6 +183,9 @@ _to_delete/
 
 # 3D models exported from the ithappy packs (same licence as above). Rebuild: npm --prefix web run models
 /web/shared/public/models/**/*.glb
+
+# NFT images rendered from the same packs (wallets load them via the items contract's base_uri). Rebuild: python tools/nft_images.py
+/web/shared/public/nft/
 web/**/node_modules/
 web/**/dist/
 
