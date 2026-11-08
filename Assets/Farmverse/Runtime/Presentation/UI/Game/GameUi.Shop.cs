@@ -247,7 +247,7 @@ namespace Farmverse.Presentation.UI.Game
             PK.TL(bar, p, "Shop", hh * .48f, 5).style.marginLeft = U(hh * .35f);
             PK.Grow(bar);
 
-            Label Pill(bool gem, Action plus)
+            Label Pill(bool gem, Action plus, string? icon = null)
             {
                 var pill = PK.Row(bar);
                 pill.style.height = U(hh * .56f);
@@ -255,7 +255,9 @@ namespace Farmverse.Presentation.UI.Game
                 pill.style.marginLeft = U(cfg.pgap);
                 PK.Pad(pill, U(hh * .66f), 0, U(hh * .62f), 0);
                 Kit.Round(pill, U(10));
-                PK.Grad(pill, gem ? "shoppillgem" : "shoppillgold", true, gem
+                PK.Grad(pill, icon != null ? "shoppillfarm" : gem ? "shoppillgem" : "shoppillgold", true, icon != null
+                    ? new[] { (0f, GameTheme.C("#06170d")), (1f, GameTheme.C("#0b2b16")) }
+                    : gem
                     ? new[] { (0f, GameTheme.C("#170a2c")), (1f, GameTheme.C("#221040")) }
                     : new[] { (0f, GameTheme.C("#170d06")), (1f, GameTheme.C("#2b160a")) });
                 var pl = PK.Img(pill, gem ? "ResourceBar_Btn_Single_Purple" : "ResourceBar_Btn_Single_Yellow", U(hh * .46f));
@@ -264,13 +266,22 @@ namespace Farmverse.Presentation.UI.Game
                 PK.Img(pl, "ResourceBar_Btn_Icon_Add", U(hh * .22f));
                 PK.Tap(pl, p, plus);
                 var v = PK.TL(pill, p, "0", hh * .3f, 3);
-                var ico = PK.Img(pill, gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold", U(hh * .7f));
+                var ico = PK.Img(pill, icon ?? (gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold"), U(hh * .7f));
                 PK.Abs(ico, right: -U(hh * .18f), top: (U(hh * .56f) - U(hh * .7f)) / 2f);
                 return v;
             }
 
             var coins = Pill(false, plusCoins);
             var gems = Pill(true, plusGems);
+            // FARM after the gems, as on every other screen (web build with a wallet); the pill opens Get FARM
+            if (ChainReady)
+            {
+                var farm = Pill(false, () => Open("getfarm"), "Icon_Clover");
+                PK.Tap(farm.parent, p, () => Open("getfarm"));
+                Nfts?.RefreshIfStale();
+                farm.text = Loc.Of(FarmText);
+                farm.schedule.Execute(() => farm.text = Loc.Of(FarmText)).Every(500);
+            }
             var home = PK.Img(bar, "Icon_PictoIcon_Home", U(hh * .6f));
             home.style.marginLeft = U(cfg.pgap * 1.1f);
             PK.Tap(home, p, () => Go("home"), "whoosh");
