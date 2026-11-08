@@ -48,3 +48,11 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
 .fv-card button.fv-secondary:hover:not(:disabled) { border-color: rgba(255, 248, 231, 0.7); }
 .fv-card-title { font-size: 20px; font-weight: 800; color: #ffd76a; }
 .fv-keybox { display: block; padding: 10px; border-radius: 8px; background: rgba(0, 0, 0, 0.3); font: 12px/1.4 ui-monospace, Consolas, monospace; word-break: break-all; user-select: all; text-align: left; }
+
+/* ---- landscape only: a phone held upright sees this instead of the game ---- */
+#fv-rotate { display: none; position: absolute; inset: 0; z-index: 50; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 24px; box-sizing: border-box; text-align: center; background: #1f3a2b center / cover no-repeat; font-family: FvBody, system-ui, sans-serif; }
+#fv-rotate p { margin: 0; color: rgba(255, 255, 255, 0.85); font-size: 15px; }
+#fv-rotate .fv-rotate-title { font: 26px/1.15 FvTitle, system-ui, sans-serif; color: #fff; text-shadow: 0 3px 0 #06162a; margin-top: 18px; }
+.fv-rotate-phone { width: 46px; height: 78px; border: 5px solid #ffd23a; border-radius: 10px; box-sizing: border-box; animation: fv-turn 2.4s ease-in-out infinite; }
+@keyframes fv-turn { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
+@media (orientation: portrait) { #fv-rotate { display: flex; } }

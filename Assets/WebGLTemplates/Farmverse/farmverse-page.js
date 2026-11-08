@@ -29,6 +29,27 @@ if (config.socialLogin && config.marketplaceUrl) {
 
 let session = null; // { accessToken, accessExpiresAt, uid, accountId }
 
+// ---- landscape only: the game is laid out for wide screens. A phone held upright gets a "turn it" screen;
+// where the browser allows it (Android, in full screen) the first tap also locks the screen sideways.
+(function landscapeOnly() {
+  const touch = matchMedia('(pointer: coarse)').matches;
+  if (!touch) return;
+  const turn = document.createElement('div');
+  turn.id = 'fv-rotate';
+  turn.innerHTML = '<div class="fv-rotate-phone"></div><p class="fv-rotate-title">Turn your phone sideways</p><p>Farmverse plays in landscape.</p>';
+  if (config.marketplaceUrl) {
+    const site = config.marketplaceUrl.replace(/\/+$/, '');
+    turn.style.backgroundImage = `linear-gradient(rgba(6, 22, 40, 0.55), rgba(6, 22, 40, 0.85)), url(${site}/ui/Home_LoadingBg.webp)`;
+  }
+  document.getElementById('fv-root').append(turn);
+  const lock = () => {
+    const el = document.documentElement;
+    const full = el.requestFullscreen ? el.requestFullscreen({ navigationUI: 'hide' }) : Promise.reject();
+    full.then(() => screen.orientation?.lock?.('landscape')).catch(() => {}); // iOS: no lock, the turn screen covers it
+  };
+  window.addEventListener('pointerup', lock, { once: true });
+})();
+
 // ---- sponsored calls (docs 15 §14): a session key signs mints and redeems, our relayer pays the gas ----
 // FastNEAR on testnet: rpc.testnet.near.org rate-limits (429) after a few calls
 const RPC = config.rpcUrl || (config.network === 'mainnet' ? 'https://rpc.mainnet.near.org' : 'https://test.rpc.fastnear.com');

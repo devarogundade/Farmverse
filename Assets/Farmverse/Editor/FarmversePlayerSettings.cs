@@ -5,11 +5,10 @@ using UnityEngine;
 namespace Farmverse.Editor
 {
     /// <summary>
-    /// Farmverse is laid out portrait first. Enforced on every editor load so a stray
-    /// Player Settings click cannot ship landscape: auto-rotation between the two
-    /// portrait orientations only (used by browsers that honour orientation). The
-    /// phone-only settings (iOS full screen, Android resizable activity) went with the
-    /// move to the web build.
+    /// Farmverse plays in landscape only (the game UI is laid out for wide screens; on the web the page shows
+    /// phones held upright a "turn your phone" screen and locks landscape where the browser allows). Enforced on
+    /// every editor load so a stray Player Settings click cannot ship portrait: auto-rotation between the two
+    /// landscape orientations only. Also sets the project's icon.
     /// </summary>
     [InitializeOnLoad]
     public static class FarmversePlayerSettings
@@ -19,7 +18,7 @@ namespace Farmverse.Editor
         /// <summary>The UI kit's clover (not in git: the icon stays unset in a clone without the kit).</summary>
         private const string CloverIcon = "Assets/Farmverse/Content/UI/Game/Resources/GameUi/Art/Icon_Clover.png";
 
-        [MenuItem("Farmverse/Apply Portrait Settings", priority = 30)]
+        [MenuItem("Farmverse/Apply Player Settings", priority = 30)]
         public static void Apply()
         {
             var changed = false;
@@ -31,10 +30,10 @@ namespace Farmverse.Editor
             }
 
             Set(PlayerSettings.defaultInterfaceOrientation, UIOrientation.AutoRotation, v => PlayerSettings.defaultInterfaceOrientation = v);
-            Set(PlayerSettings.allowedAutorotateToPortrait, true, v => PlayerSettings.allowedAutorotateToPortrait = v);
-            Set(PlayerSettings.allowedAutorotateToPortraitUpsideDown, true, v => PlayerSettings.allowedAutorotateToPortraitUpsideDown = v);
-            Set(PlayerSettings.allowedAutorotateToLandscapeLeft, false, v => PlayerSettings.allowedAutorotateToLandscapeLeft = v);
-            Set(PlayerSettings.allowedAutorotateToLandscapeRight, false, v => PlayerSettings.allowedAutorotateToLandscapeRight = v);
+            Set(PlayerSettings.allowedAutorotateToPortrait, false, v => PlayerSettings.allowedAutorotateToPortrait = v);
+            Set(PlayerSettings.allowedAutorotateToPortraitUpsideDown, false, v => PlayerSettings.allowedAutorotateToPortraitUpsideDown = v);
+            Set(PlayerSettings.allowedAutorotateToLandscapeLeft, true, v => PlayerSettings.allowedAutorotateToLandscapeLeft = v);
+            Set(PlayerSettings.allowedAutorotateToLandscapeRight, true, v => PlayerSettings.allowedAutorotateToLandscapeRight = v);
 
             // the project's icon: the clover (also the sites' favicon and the FARM token's icon)
             var clover = AssetDatabase.LoadAssetAtPath<Texture2D>(CloverIcon);
@@ -48,7 +47,7 @@ namespace Farmverse.Editor
             if (changed)
             {
                 AssetDatabase.SaveAssets();
-                Debug.Log("[Farmverse] Player settings set: portrait only, clover icon.");
+                Debug.Log("[Farmverse] Player settings set: landscape only, clover icon.");
             }
         }
     }
