@@ -76,26 +76,33 @@ namespace Farmverse.Presentation.UI.Game
             float P(float n) => p.P(n);
             var (today, claimedToday) = CpDailyState();
             float w = P(220), h = P(200), g = P(16);
-            var pop = PK.Popup(c.Root, p, 3 * 220 + 2 * 16 + 250 + 16 + 60, 0, "Daily Bonus", Back, "Green", 30, 560);
+            var pop = PK.Popup(c.Root, p, 3 * 220 + 2 * 16 + 250 + 16 + 60 + 20, 0, "Daily Bonus", Back, "Green", 30, 560);
 
             var body = PK.Row(pop, g);
             body.style.alignItems = Align.Stretch;
             body.style.marginTop = P(14);
             body.style.alignSelf = Align.Center;
-            var grid = PK.Box(body);
-            grid.style.flexDirection = FlexDirection.Row;
-            grid.style.flexWrap = Wrap.Wrap;
-            PK.Size(grid, 3 * w + 2 * g, 2 * h + g);
+            // two fixed rows of three: the popup is sized with no slack, and a wrapping grid re-wrapped two to a
+            // row (with the wrong margins) as soon as rounding made it a pixel too narrow
+            var grid = PK.Col(body);
+            grid.style.flexShrink = 0;
+            VisualElement? cardRow = null;
             for (var i = 0; i < 6; i++)
             {
+                if (i % 3 == 0)
+                {
+                    cardRow = PK.Row(grid);
+                    cardRow.style.flexShrink = 0;
+                    if (i >= 3) cardRow.style.marginTop = g;
+                }
                 var d = i + 1;
                 var got = d < today || (d == today && claimedToday);
                 var isT = d == today && !claimedToday;
                 var (art, text) = i < CpDays.Count ? CpPrize.Tile(CpDays[i]) : ("Icon_Gift", "");
-                var cell = PK.Centre(PK.Col(grid));
+                var cell = PK.Centre(PK.Col(cardRow!));
                 PK.Size(cell, w, h);
+                cell.style.flexShrink = 0;
                 if (i % 3 != 0) cell.style.marginLeft = g;
-                if (i >= 3) cell.style.marginTop = g;
                 Kit.Nine(cell, GameArt.Get("CardFrame06_Bg_Blue"), 28, 40, 28, 20, p.U(20) / 40f);
                 if (isT)
                 {
@@ -127,6 +134,7 @@ namespace Farmverse.Presentation.UI.Game
             // day 7: the tall purple card with the big chest
             var d7 = PK.Centre(PK.Col(body));
             PK.Size(d7, P(250), 2 * h + g);
+            d7.style.flexShrink = 0;
             Kit.Nine(d7, GameArt.Get("CardFrame06_Bg_Purple"), 28, 40, 28, 20, p.U(20) / 40f);
             var d7l = PK.T(d7, p, "DAY 7", 20);
             PK.Abs(d7l, left: P(250) * .08f, top: (2 * h + g) * .06f);
