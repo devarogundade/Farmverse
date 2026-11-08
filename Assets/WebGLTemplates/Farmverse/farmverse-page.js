@@ -2,7 +2,7 @@
 // and contract calls, exposed as window.farmversePage for Plugins/WebGL/FarmversePage.jslib.
 // The page owns the refresh token; the game only ever asks for a valid access token.
 import { NearConnector } from 'https://cdn.jsdelivr.net/npm/@hot-labs/near-connect@0.12.0/+esm';
-import { KeyPair, actions, buildDelegateAction, encodeDelegateAction } from 'https://cdn.jsdelivr.net/npm/near-api-js@7.4.0/+esm';
+import { Account, JsonRpcProvider, KeyPair, KeyPairSigner, actions, buildDelegateAction, encodeDelegateAction } from 'https://cdn.jsdelivr.net/npm/near-api-js@7.4.0/+esm';
 
 const config = window.FARMVERSE_CONFIG;
 const api = config.apiBaseUrl.replace(/\/+$/, '');
@@ -54,6 +54,8 @@ async function accessKeyOf(accountId, publicKey) {
 }
 
 function sessionKey(accountId) {
+  const guest = guestKey(false);
+  if (guest && guestAccountOf(guest) === accountId) return guest; // a guest's own key signs its mints and redeems
   const slot = `fv_session_key:${config.network}:${accountId}`;
   let secret = localStorage.getItem(slot);
   if (!secret) {
@@ -69,6 +71,12 @@ async function ensureSessionKey(wallet, accountId, contractId) {
   const publicKey = key.getPublicKey().toString();
   let ak = await accessKeyOf(accountId, publicKey);
   if (ak) return { key, ak };
+  if (key === guestKey(false)) {
+    // a guest's account appears with the welcome NEAR sent at sign-in: wait for it rather than add a key
+    for (let i = 0; i < 15 && !(ak = await accessKeyOf(accountId, publicKey)); i++) await new Promise((r) => setTimeout(r, 1500));
+    if (!ak) throw new Error('Your farm is still being set up. Try again in a minute.');
+    return { key, ak };
+  }
   try {
     await wallet.signAndSendTransaction({
       receiverId: accountId,
@@ -85,6 +93,108 @@ async function ensureSessionKey(wallet, accountId, contractId) {
 }
 
 const b64 = (bytes) => btoa(String.fromCharCode(...bytes));
+
+// ---- guest play: a NEAR key made in this browser. No wallet app, no sign-up; the welcome NEAR sent at
+// sign-in creates its account (an implicit one: its id is the key). "Save your farm" in Settings shows the key.
+const GUEST_KEY = `fv_guest_key:${config.network}`;
+const WALLET_KIND = 'fv_wallet_kind';
+const B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+function base58Decode(text) {
+  let n = 0n;
+  for (const ch of text) n = n * 58n + BigInt(B58.indexOf(ch));
+  const bytes = [];
+  while (n > 0n) { bytes.unshift(Number(n & 0xffn)); n >>= 8n; }
+  for (const ch of text) { if (ch !== '1') break; bytes.unshift(0); }
+  return Uint8Array.from(bytes);
+}
+
+/** This browser's guest key (made on first use when `create`), or null. */
+function guestKey(create) {
+  let secret = localStorage.getItem(GUEST_KEY);
+  if (!secret && create) {
+    secret = KeyPair.fromRandom('ed25519').toString();
+    localStorage.setItem(GUEST_KEY, secret);
+  }
+  return secret ? (guestKey.cached?.secret === secret ? guestKey.cached.key : (guestKey.cached = { secret, key: KeyPair.fromString(secret) }).key) : null;
+}
+const guestAccountOf = (key) => Array.from(base58Decode(key.getPublicKey().toString().split(':')[1]), (b) => b.toString(16).padStart(2, '0')).join('');
+const isGuest = () => localStorage.getItem(WALLET_KIND) === 'guest' && !!localStorage.getItem(GUEST_KEY);
+
+/** NEP-413: sha256(u32le(2^31 + 413) ‖ borsh({ message, nonce[32], recipient, callbackUrl: none })). */
+async function nep413Hash(message, nonce, recipient) {
+  const enc = new TextEncoder();
+  const str = (s) => {
+    const b = enc.encode(s);
+    const out = new Uint8Array(4 + b.length);
+    new DataView(out.buffer).setUint32(0, b.length, true);
+    out.set(b, 4);
+    return out;
+  };
+  const tag = new Uint8Array(4);
+  new DataView(tag.buffer).setUint32(0, 2 ** 31 + 413, true);
+  const parts = [tag, str(message), nonce, str(recipient), new Uint8Array([0])];
+  const bytes = new Uint8Array(parts.reduce((n, x) => n + x.length, 0));
+  let at = 0;
+  for (const x of parts) { bytes.set(x, at); at += x.length; }
+  return new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+}
+
+/** A wallet for the guest key, shaped like near-connect's: signs messages and contract calls itself. */
+function guestWallet(key) {
+  const accountId = guestAccountOf(key);
+  return {
+    guest: true,
+    accountId,
+    async signMessage({ message, recipient, nonce }) {
+      const signature = key.sign(await nep413Hash(message, nonce, recipient)).signature;
+      return { accountId, publicKey: key.getPublicKey().toString(), signature: b64(signature) };
+    },
+    async signAndSendTransaction({ receiverId, actions: list }) {
+      const calls = list.map((a) => {
+        if (a.type !== 'FunctionCall') throw new Error('A guest farm can only call contracts.');
+        const p = a.params;
+        return actions.functionCall(p.methodName, p.args ?? {}, BigInt(p.gas ?? '30000000000000'), BigInt(p.deposit ?? '0'));
+      });
+      const account = new Account(accountId, new JsonRpcProvider({ url: RPC }), new KeyPairSigner(key));
+      return account.signAndSendTransaction({ receiverId, actions: calls });
+    },
+  };
+}
+
+/** Shows the guest's key with a copy button, to keep the farm on another device or in a wallet app. */
+function guestBackup() {
+  const key = guestKey(false);
+  if (!key) return;
+  document.getElementById('fv-link')?.remove();
+  const layer = document.createElement('div');
+  layer.id = 'fv-link';
+  const card = document.createElement('div');
+  card.className = 'fv-card';
+  const title = document.createElement('p');
+  title.className = 'fv-card-title';
+  title.textContent = 'Save your farm';
+  const text = document.createElement('p');
+  text.textContent = 'Your guest farm lives in this browser. Keep this key somewhere safe: import it into any NEAR wallet (Meteor, MyNearWallet, HOT: "import with private key") to play on another device or trade on the market. Anyone with it owns your farm.';
+  const box = document.createElement('code');
+  box.className = 'fv-keybox';
+  box.textContent = key.toString();
+  const account = document.createElement('p');
+  account.className = 'fv-small';
+  account.textContent = `Account: ${guestAccountOf(key)}`;
+  const copy = document.createElement('button');
+  copy.type = 'button';
+  copy.textContent = 'Copy key';
+  copy.onclick = () => navigator.clipboard.writeText(key.toString()).then(() => (copy.textContent = 'Copied'), () => (copy.textContent = 'Select the key and copy it'));
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'fv-plain';
+  close.textContent = 'Close';
+  close.onclick = () => layer.remove();
+  card.append(title, text, box, account, copy, close);
+  layer.append(card);
+  document.getElementById('fv-root').append(layer);
+}
 
 /** Signs the call with the session key and has the game server relay it (no popup, no gas). */
 async function sponsoredCall(wallet, accountId, contractId, method, args, gasTgas) {
@@ -171,6 +281,18 @@ function signInWithWallet() {
     error.hidden = true;
     button.textContent = 'Connect wallet';
     button.disabled = false;
+    button.classList.add('fv-secondary');
+    text.textContent = 'Jump straight in as a guest, or connect a NEAR wallet. Your farm is saved to your account.';
+    // guest play: one tap, no wallet app (the same browser comes back to the same farm)
+    let guest = $('fv-guest-button');
+    if (!guest) {
+      guest = document.createElement('button');
+      guest.id = 'fv-guest-button';
+      guest.type = 'button';
+      button.before(guest);
+    }
+    guest.textContent = localStorage.getItem(GUEST_KEY) ? 'Continue as guest' : 'Play as guest';
+    guest.disabled = false;
 
     const show = (message) => {
       error.textContent = message;
@@ -185,8 +307,9 @@ function signInWithWallet() {
 
     // signs the server's challenge and trades it for a session; the card goes when it worked
     const signIn = async () => {
-      text.textContent = 'Approve the sign-in in your wallet…';
+      text.textContent = wallet.guest ? 'Setting up your farm…' : 'Approve the sign-in in your wallet…';
       button.disabled = true;
+      guest.disabled = true;
       const challenge = await post('/v1/auth/nonce');
       const signed = await wallet.signMessage({ message: challenge.message, recipient: challenge.recipient, nonce: base64ToBytes(challenge.nonce) });
       if (!signed?.signature) throw new Error('The wallet did not sign.');
@@ -196,6 +319,7 @@ function signInWithWallet() {
         signature: signed.signature,
         nonce: challenge.nonce,
       });
+      localStorage.setItem(WALLET_KIND, wallet.guest ? 'guest' : 'wallet');
       card.hidden = true;
       resolve(keep(tokens));
     };
@@ -212,6 +336,7 @@ function signInWithWallet() {
         // connected but the signature didn't happen (declined, or the popup needs this click): ask again
         if (wallet) readyToSign();
         else button.disabled = false;
+        guest.disabled = false;
         show(String(e?.message ?? e));
       } finally {
         busy = false;
@@ -219,6 +344,23 @@ function signInWithWallet() {
     };
 
     button.onclick = () => run(false);
+    guest.onclick = async () => {
+      if (busy) return;
+      busy = true;
+      show('');
+      try {
+        wallet = guestWallet(guestKey(true));
+        await signIn();
+      } catch (e) {
+        wallet = null;
+        button.disabled = false;
+        guest.disabled = false;
+        button.textContent = 'Connect wallet';
+        show(String(e?.message ?? e));
+      } finally {
+        busy = false;
+      }
+    };
 
     // a wallet remembered from last time (autoConnect): no need to pick it again
     connector.wallet().then((w) => {
@@ -269,11 +411,14 @@ function openTab(url, label) {
 window.farmversePage = {
   /** A page setting the game reads (siteUrl, marketplaceUrl, …); empty when unset. */
   config(key) {
+    if (key === 'guest') return isGuest() ? '1' : ''; // the game shows "Save your farm" to guests
     const value = config[key];
     return typeof value === 'string' ? value : '';
   },
 
   openTab,
+
+  guestBackup,
 
   /** A session with a valid access token: kept, refreshed, or after the player signs in. */
   async requestSession(forceRefresh) {
@@ -292,13 +437,14 @@ window.farmversePage = {
     const token = localStorage.getItem(REFRESH_KEY);
     localStorage.removeItem(REFRESH_KEY);
     session = null;
+    localStorage.removeItem(WALLET_KIND); // a guest key stays: "Continue as guest" brings the same farm back
     if (token) await post('/v1/auth/logout', { refreshToken: token }).catch(() => {});
     try { await connector.disconnect(); } catch { /* not connected */ }
   },
 
   /** Signs and sends one function call; resolves with its transaction hash once it succeeded. */
   async callContract({ contractId, method, args, deposit, gasTgas }) {
-    const wallet = await connector.wallet();
+    const wallet = isGuest() ? guestWallet(guestKey(false)) : await connector.wallet();
     // mints and redeems are sponsored when the server relays them (no NEAR needed, no popup after the first)
     if (!sponsorOff && SPONSORED.includes(method) && session?.accountId) {
       try {

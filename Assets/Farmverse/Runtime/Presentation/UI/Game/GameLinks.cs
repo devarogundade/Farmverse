@@ -24,7 +24,19 @@ namespace Farmverse.Presentation.UI.Game
         [DllImport("__Internal")] private static extern void FvReload();
         [DllImport("__Internal")] private static extern void FvOpenTab(string url, string label);
         [DllImport("__Internal")] private static extern string FvConfig(string key);
+        [DllImport("__Internal")] private static extern void FvGuestBackup();
 #endif
+
+        /// <summary>Playing as a guest (a key the page made in this browser, no wallet app).</summary>
+        public static bool IsGuest => PageValue("guest", "") == "1";
+
+        /// <summary>Shows the guest's key to save the farm (the page's "Save your farm" card).</summary>
+        public static void GuestBackup()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            FvGuestBackup();
+#endif
+        }
 
         /// <summary>Opens a link in a new tab (in the browser through the page, which offers the link itself if a popup is blocked).</summary>
         public static void Open(string url, string label = "")

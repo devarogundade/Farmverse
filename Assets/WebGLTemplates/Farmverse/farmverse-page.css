@@ -42,3 +42,9 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
 .fv-failed #fv-bar-fill { background-image: none; background-color: #e8253f; animation: none; }
 @keyframes fv-stripes { to { background-position: 28px 0, 0 0; } }
 @media (max-height: 520px) { .fv-install-logo { width: min(260px, 50vw); } .fv-install-tip { display: none; } }
+
+/* ---- guest play: "Play as guest" first, the wallet second; "Save your farm" shows the guest key ---- */
+.fv-card button.fv-secondary { background: transparent; color: #fff8e7; border: 2px solid rgba(255, 248, 231, 0.35); }
+.fv-card button.fv-secondary:hover:not(:disabled) { border-color: rgba(255, 248, 231, 0.7); }
+.fv-card-title { font-size: 20px; font-weight: 800; color: #ffd76a; }
+.fv-keybox { display: block; padding: 10px; border-radius: 8px; background: rgba(0, 0, 0, 0.3); font: 12px/1.4 ui-monospace, Consolas, monospace; word-break: break-all; user-select: all; text-align: left; }

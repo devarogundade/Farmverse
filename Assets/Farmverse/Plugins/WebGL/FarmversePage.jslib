@@ -69,6 +69,10 @@ mergeInto(LibraryManager.library, {
     else fallback();
   },
 
+  FvGuestBackup: function () {
+    if (window.farmversePage && window.farmversePage.guestBackup) window.farmversePage.guestBackup();
+  },
+
   FvOpenTab: function (url, label) {
     var target = UTF8ToString(url);
     var name = UTF8ToString(label);

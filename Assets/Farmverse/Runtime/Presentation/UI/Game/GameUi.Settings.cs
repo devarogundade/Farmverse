@@ -116,6 +116,8 @@ namespace Farmverse.Presentation.UI.Game
             B(1, 2, "Blue", "Support", () => GameLinks.EmailSupport(Profile?.Player?.ShortId ?? ""));
             B(0, 2, "BlueGray", "Delete Account", AccountDeleteAsk);
             B(1, 3, "Blue", "Privacy", () => GameLinks.Open(GameLinks.Privacy, "the Privacy Policy"));
+            // a guest farm lives in this browser: its key, to keep it on another device or in a wallet
+            if (GameLinks.IsGuest) B(0, 3, "Green", "Save your farm", GameLinks.GuestBackup);
         }
 
         private void LanguagePopup(Ctx c)
