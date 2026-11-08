@@ -101,8 +101,8 @@ export class ChainIndexer {
         const messages: MarketMessage[] = [];
         for (const e of events) {
           const inserted = await tx.$queryRaw<{ id: string }[]>`
-            INSERT INTO chain.events (id, block_height, block_time, tx_hash, receipt_id, log_index, contract_id, standard, event, data)
-            VALUES (${e.id}, ${e.blockHeight}, ${e.blockTime}, ${e.txHash}, ${e.receiptId}, ${e.logIndex}, ${e.contractId},
+            INSERT INTO chain.events (id, block_height, block_time, tx_hash, receipt_id, predecessor_id, log_index, contract_id, standard, event, data)
+            VALUES (${e.id}, ${e.blockHeight}, ${e.blockTime}, ${e.txHash}, ${e.receiptId}, ${e.predecessorId}, ${e.logIndex}, ${e.contractId},
                     ${e.standard}, ${e.event}, ${JSON.stringify(e.data)}::jsonb)
             ON CONFLICT (id) DO NOTHING RETURNING id`;
           if (inserted.length) messages.push(...(await project(tx, e, this.o.watched)));

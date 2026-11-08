@@ -102,14 +102,15 @@ export async function project(tx: Tx, e: ChainEvent, w: Watched): Promise<Market
       const from = str(d['old_owner_id']);
       const to = str(d['new_owner_id']);
       if (!from || !to) return out;
-      const byMarket = str(d['authorized_id']) === w.market;
+      // The market moves a sold token with nft_transfer_payout, which logs no authorized_id; the
+      // receipt's caller (the market) is what marks it. Sales are recorded from market_sale.
+      const byMarket = e.predecessorId === w.market || str(d['authorized_id']) === w.market;
       for (const [i, tokenId] of ids.entries()) {
         await tx.$executeRaw`
           UPDATE chain.tokens SET owner_id = ${to}, updated_at = ${e.blockTime}
           WHERE contract_id = ${e.contractId} AND token_id = ${tokenId}`;
         // A transfer clears every approval, so any listing for the token can no longer sell.
         if (await unlist(tx, e.contractId, tokenId)) out.push({ type: 'delist', token_id: tokenId });
-        // Market sales are recorded from market_sale (with the price); everything else is a send.
         // a worker handed to the market for rent isn't a gift to anyone
         if (!byMarket && to !== w.market) {
           await activity(tx, many(i, ids.length), e, e.contractId, tokenId, 'sent', from, to);

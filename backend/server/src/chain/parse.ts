@@ -39,6 +39,8 @@ export interface ChainEvent {
   readonly blockTime: Date;
   readonly txHash: string | null;
   readonly receiptId: string;
+  /** The account that called the receipt (for a market sale's NFT transfer: the market). */
+  readonly predecessorId: string;
   readonly logIndex: number;
   readonly contractId: string;
   readonly standard: string;
@@ -130,6 +132,7 @@ export function eventsIn(block: NearBlock, watched: Watched): ChainEvent[] {
             blockTime: time,
             txHash: r.tx_hash ?? null,
             receiptId: r.receipt.receipt_id,
+            predecessorId: r.receipt.predecessor_id,
             logIndex,
             contractId,
             standard: body.standard as string,

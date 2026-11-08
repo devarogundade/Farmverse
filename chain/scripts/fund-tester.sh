@@ -17,10 +17,16 @@ RPC=${RPC:-https://rpc.testnet.near.org}
 SIGN_WITH=${SIGN_WITH:-sign-with-legacy-keychain}
 SAVE_TO=${SAVE_TO:-save-to-legacy-keychain}
 
+rpc() { curl -fsS "$RPC" -H 'content-type: application/json' -d "$1"; }
+# NEAR account names: lowercase letters, digits, - _ . (e.g. friend.testnet).
+[[ $TO =~ ^[a-z0-9]([a-z0-9_.-]*[a-z0-9])?$ ]] || { echo "\"$TO\" isn't a NEAR account name (lowercase, e.g. friend.testnet)" >&2; exit 1; }
+rpc "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"view_account\",\"finality\":\"final\",\"account_id\":\"$TO\"}}" |
+  grep -q '"result"' || { echo "$TO doesn't exist on testnet" >&2; exit 1; }
+
 args=$(printf '{"account_id":"%s"}' "$TO" | base64 -w0)
-registered=$(curl -fsS "$RPC" -H 'content-type: application/json' \
-  -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"call_function\",\"finality\":\"final\",\"account_id\":\"$FARM\",\"method_name\":\"storage_balance_of\",\"args_base64\":\"$args\"}}" |
-  python3 -c 'import json,sys; print(bytes(json.load(sys.stdin)["result"]["result"]).decode())')
+registered=$(rpc "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"call_function\",\"finality\":\"final\",\"account_id\":\"$FARM\",\"method_name\":\"storage_balance_of\",\"args_base64\":\"$args\"}}" |
+  python3 -c 'import json,sys; r=json.load(sys.stdin); print(bytes(r["result"]["result"]).decode() if "result" in r and "result" in r["result"] else "error: " + json.dumps(r.get("error", r))[:300])')
+[[ $registered == error:* ]] && { echo "couldn't read $TO's FARM registration: ${registered#error: }" >&2; exit 1; }
 if [[ $registered == null ]]; then
   echo "• registering $TO with FARM"
   near contract call-function as-transaction "$FARM" storage_deposit json-args "{\"account_id\":\"$TO\"}" \

@@ -33,7 +33,7 @@ const BLOCKS: Record<number, NearBlock | null> = {
   ]),
   11: block(11, [list('g-wheat', 'ann.testnet', farm(12.5)), list('g-trac', 'ann.testnet', farm(40)), list('s-w1', 'bob.testnet', farm(30))]),
   12: block(12, [list('g-wheat', 'ann.testnet', farm(10)), list('g-trac2', 'ann.testnet', farm(55))]),
-  13: block(13, [transfer('g-trac', 'ann.testnet', 'cy.testnet', MARKET), sale('g-trac', 'ann.testnet', 'cy.testnet', farm(40), farm(2))]),
+  13: block(13, [transfer('g-trac', 'ann.testnet', 'cy.testnet', true), sale('g-trac', 'ann.testnet', 'cy.testnet', farm(40), farm(2))]),
   14: block(14, [transfer('s-w1', 'bob.testnet', 'dee.testnet')]),
   15: block(15, [redeem('g-trac', 'cy.testnet', tractor)]),
   16: null,
@@ -168,6 +168,15 @@ describe('chain indexer → marketplace API', () => {
     expect((await app.inject({ method: 'POST', url: '/v1/market/accounts/ann.testnet/notifications/read' })).statusCode).toBe(200);
     expect((await get('/accounts/ann.testnet/notifications')).body[0].read).toBe(true);
     expect((await get('/accounts/dee.testnet/notifications')).body[0].text).toBe('bob.testnet sent you Tilly Furrow');
+  });
+
+  it('records a market sale as bought, not sent, and a gift as sent', async () => {
+    const kinds = async (tokenId: string) =>
+      (await prisma.$queryRaw<{ kind: string }[]>`SELECT kind FROM chain.activity WHERE contract_id = ${ITEMS} AND token_id = ${tokenId} ORDER BY block_height, id`).map((r) => r.kind);
+    expect(await kinds('g-trac')).toEqual(['minted', 'listed', 'bought', 'redeemed']);
+    expect(await kinds('s-w1')).toEqual(['minted', 'listed', 'sent']);
+    // The buyer hears nothing about a "send"; the seller hears about the sale.
+    expect(published.some((m) => m.type === 'note' && m.to === 'cy.testnet')).toBe(false);
   });
 
   it('applies a repeated batch once, and refuses a cursor someone else moved', async () => {

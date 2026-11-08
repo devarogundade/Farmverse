@@ -105,11 +105,16 @@ export function delist(tokenId: string, reason: 'seller' | 'stale' = 'seller') {
   });
 }
 
-export function transfer(tokenId: string, from: string, to: string, authorizedId?: string) {
+/**
+ * An NFT transfer. `byMarket` mirrors a market sale as testnet logged it: nft_transfer_payout called
+ * by the market, with the sale memo and no authorized_id.
+ */
+export function transfer(tokenId: string, from: string, to: string, byMarket = false) {
   return receipt({
     executor: ITEMS,
-    method: authorizedId ? 'nft_transfer_payout' : 'nft_transfer',
-    logs: [log('nep171', '1.2.0', 'nft_transfer', { old_owner_id: from, new_owner_id: to, token_ids: [tokenId], ...(authorizedId ? { authorized_id: authorizedId } : {}) })],
+    method: byMarket ? 'nft_transfer_payout' : 'nft_transfer',
+    predecessor: byMarket ? MARKET : from,
+    logs: [log('nep171', '1.2.0', 'nft_transfer', { old_owner_id: from, new_owner_id: to, token_ids: [tokenId], ...(byMarket ? { memo: 'farmverse market sale' } : {}) })],
   });
 }
 
