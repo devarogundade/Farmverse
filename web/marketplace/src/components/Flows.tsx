@@ -563,16 +563,16 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
   const { status, error, run } = useRun();
   if (!wallet.accountId) {
     return (
-      <Dialog open onClose={onClose} title="Connect wallet" icon="Icon_PictoIcon_User">
+      <Dialog open onClose={onClose} title="Sign in" icon="Icon_PictoIcon_User">
         {status === 'busy' ? (
           <WalletWait text="Approve the sign-in in your wallet…" />
         ) : (
           <>
-            <p className="dlg-note">Sign in with your NEAR wallet to buy and sell. It’s the same wallet you play with.</p>
+            <p className="dlg-note">Sign in to buy and sell: with email or Google, or a NEAR wallet. Use the same account you play with.</p>
             <Err error={error} />
             <Actions>
               <button className="fv-btn green" onClick={() => run(async () => void (await wallet.connect()))}>
-                Connect wallet
+                Sign in
               </button>
             </Actions>
           </>
@@ -647,7 +647,7 @@ function NotesFlow({ onClose }: { onClose: () => void }) {
   return (
     <Dialog open onClose={onClose} title="Notifications" icon="Icon_PictoIcon_Bell">
       {!accountId ? (
-        <p className="dlg-note">Connect your wallet to hear when your items sell.</p>
+        <p className="dlg-note">Sign in to hear when your items sell.</p>
       ) : notesQ.isPending ? (
         <WalletWait text="Loading…" />
       ) : notesQ.error ? (

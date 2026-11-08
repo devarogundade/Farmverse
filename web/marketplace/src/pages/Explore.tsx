@@ -50,10 +50,10 @@ export function Explore(props: { type?: string; mine?: boolean; search: string; 
 
   if (mine && ready && !accountId) {
     return (
-      <EmptyState art="Icon_MenuIcon02_Inventory" title="Your items live in your wallet">
-        <p className="muted">Connect it to see what you own, sell things and use them in the game.</p>
+      <EmptyState art="Icon_MenuIcon02_Inventory" title="Your items live in your account">
+        <p className="muted">Sign in to see what you own, sell things and use them in the game.</p>
         <button className="fv-btn green" onClick={() => open({ kind: 'wallet' })}>
-          Connect wallet
+          Sign in
         </button>
       </EmptyState>
     );

@@ -38,7 +38,7 @@ Desktop browser recommended. Every step says what to do and what you should see.
 | # | Do | You should see |
 |---|---|---|
 | 1 | Open **play.farmverse.world** | An install screen (Download → Unpack → Start, with MB left). The first visit downloads ~55 MB; later visits open from the browser cache in seconds. |
-| 2 | Tap **Play as guest** | You're on your own island in a few seconds: no wallet app, no sign-up. The page makes a NEAR account for you (its key stays in this browser; Settings → **Save your farm** shows it). Prefer an account? **Connect wallet** → **Email or Google**, or any NEAR testnet wallet (Meteor, HOT, MyNearWallet, Intear). |
+| 2 | Tap **Play as guest** | You're on your own island in a few seconds: no wallet app, no sign-up. The page makes a NEAR account for you (its key stays in this browser; Settings → **Save your farm** shows it). Prefer an account? **Sign in** → **Email or Google**, or any NEAR testnet wallet (Meteor, HOT, MyNearWallet, Intear). |
 | 3 | Play for a minute: plant **wheat** on a field, wait ~60 s, harvest | Wheat in the farmhouse. Crops, animals and factories all work like this: start, wait, collect. |
 | 4 | Tap the **FARM** pill (top bar) → **Get 100 test FARM** | 100 test FARM arrives in your wallet (once a day). New accounts also got a little test NEAR at sign-in. |
 | 5 | **Storage** → pick a good (e.g. wheat, 10 or more) → **Mint as NFT** | The steps tick off. The first time, approve one restricted key in your wallet; after that, mints and redeems need **no popup and no gas** (our relayer pays). |

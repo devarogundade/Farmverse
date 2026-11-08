@@ -60,7 +60,7 @@ export function useMarket() {
     }
   };
   const me = () => {
-    if (!accountId) throw new Error('Connect your wallet first.');
+    if (!accountId) throw new Error('Sign in first.');
     return accountId;
   };
 

@@ -129,7 +129,7 @@ export function Shell({ route, children, search, onSearch }: { route: Route; chi
             </button>
           ) : (
             <button className="fv-btn green sm" onClick={() => open({ kind: 'wallet' })}>
-              Connect
+              Sign in
             </button>
           )}
         </div>

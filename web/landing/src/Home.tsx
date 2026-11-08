@@ -38,7 +38,7 @@ const STEPS = [
 const FAQ = [
   ['What is Farmverse?', 'A cosy island farming game you play in your browser. Grow crops, raise animals, build, hire workers — and trade what you make with other players.'],
   ['Is it free to play?', 'Yes. You can play the whole game for free. FARM is only needed if you want to buy things on the market or in the shop.'],
-  ['How do I sign in?', 'With a NEAR wallet. Making one is free and takes about a minute; the game walks you through it the first time.'],
+  ['How do I sign in?', 'Tap Play as guest to start straight away: your farm is made for you, nothing to sign up for. Or sign in with email or Google, or any NEAR wallet, to keep your farm with your account.'],
   ['What is FARM?', 'Farmverse’s own coin. You earn it by selling what you make to other players, and spend it on the market and in the shop. There will only ever be one billion FARM: 35% for player rewards, 20% for trading pools, 20% for the Farmverse treasury, 15% for the team (released over two years) and 10% for partners and grants.'],
   ['How do I get my first FARM?', 'Sell something you minted on the market. While Farmverse is in testing, the market and the game also have a free tap: 100 test FARM a day, plus a little test NEAR the first time so you can mint.'],
   ['What does “Mint” mean?', 'Minting packs something from your island — a stack of wheat, a barn, a tractor — into an item you own outright. While it’s minted it leaves your island, and you can keep it, give it away or sell it. Minting costs a few coins from your island, and goods are minted in stacks of at least 10.'],

@@ -300,10 +300,14 @@ function signInWithWallet() {
     let busy = false;
     card.hidden = false;
     error.hidden = true;
-    button.textContent = 'Connect wallet';
+    button.textContent = 'Sign in';
     button.disabled = false;
     button.classList.add('fv-secondary');
-    text.textContent = 'Jump straight in as a guest, or connect a NEAR wallet. Your farm is saved to your account.';
+    text.textContent = 'Jump straight in as a guest, or sign in. Your farm is saved to your account.';
+    const small = card.querySelector('.fv-small');
+    if (small) small.textContent = config.socialLogin
+      ? 'Sign in with email or Google, or any NEAR wallet (HOT, Meteor, MyNearWallet, Intear…).'
+      : 'Sign in with any NEAR wallet (HOT, Meteor, MyNearWallet, Intear…).';
     // guest play: one tap, no wallet app (the same browser comes back to the same farm)
     let guest = $('fv-guest-button');
     if (!guest) {
@@ -376,7 +380,7 @@ function signInWithWallet() {
         wallet = null;
         button.disabled = false;
         guest.disabled = false;
-        button.textContent = 'Connect wallet';
+        button.textContent = 'Sign in';
         show(String(e?.message ?? e));
       } finally {
         busy = false;
