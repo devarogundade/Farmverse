@@ -134,6 +134,7 @@ namespace Farmverse.Presentation.UI.Game
             if (sandbox == null) sandbox = FindAnyObjectByType<IslandSandbox>();
             IslandBoosts.Running = ShopBoostRunning;
             IslandLife.Words = Loc.Of;
+            PK.HeaderFarm = FarmPill;
             Loc.Use(LanguageIso);
             _doc = GetComponent<UIDocument>();
             _root = _doc.rootVisualElement;
@@ -564,7 +565,9 @@ namespace Farmverse.Presentation.UI.Game
             W = w;
             H = h;
             Phone = w / h > 1.6f;
-            Unit = Phone ? w / 844f : w / 1366f;
+            // the phone frame is 844 × 390 (landscape): fit it to whichever runs out first, so a screen wider than the
+            // frame (an ultrawide monitor, a short browser window) keeps the designed spacing instead of overlapping
+            Unit = Phone ? Mathf.Min(w / 844f, h / 390f) : w / 1366f;
             K = Phone ? Unit * phoneK : Unit;
             var safe = Screen.safeArea;
             var px = Screen.width > 0 ? w / Screen.width : 1f;

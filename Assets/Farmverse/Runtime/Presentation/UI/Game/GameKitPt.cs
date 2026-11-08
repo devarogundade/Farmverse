@@ -538,7 +538,7 @@ namespace Farmverse.Presentation.UI.Game
         /// icon hanging off the right. As wide as its value (every pill in the game fits its number the same
         /// way). Sizes are the header's (k = header scale). Returns (pill, value label).
         /// </summary>
-        public static (VisualElement pill, Label value) Currency(VisualElement? parent, Pt p, bool gem, string value, float k, Action? onPlus = null)
+        public static (VisualElement pill, Label value) Currency(VisualElement? parent, Pt p, bool gem, string value, float k, Action? onPlus = null, string? icon = null)
         {
             var pill = Row(parent);
             pill.style.justifyContent = Justify.FlexEnd;
@@ -547,7 +547,9 @@ namespace Farmverse.Presentation.UI.Game
             pill.style.paddingLeft = p.U(4) + p.U(42 * k) + p.U(14 * k);   // clear of the plus button
             pill.style.paddingRight = p.U(62 * k);                          // clear of the hanging icon
             Kit.Round(pill, p.U(10));
-            Grad(pill, gem ? "pillgem" : "pillgold", true, gem
+            Grad(pill, icon != null ? "pillfarm" : gem ? "pillgem" : "pillgold", true, icon != null
+                ? new[] { (0f, GameTheme.C("#06170d")), (1f, GameTheme.C("#0b2b16")) }
+                : gem
                 ? new[] { (0f, GameTheme.C("#170a2c")), (1f, GameTheme.C("#221040")) }
                 : new[] { (0f, GameTheme.C("#170d06")), (1f, GameTheme.C("#2b160a")) });
             var plus = Img(pill, gem ? "ResourceBar_Btn_Single_Purple" : "ResourceBar_Btn_Single_Yellow", p.U(42 * k));
@@ -555,7 +557,7 @@ namespace Farmverse.Presentation.UI.Game
             Centre(plus);
             Img(plus, "ResourceBar_Btn_Icon_Add", p.U(22 * k));
             var t = TL(pill, p, value, 25 * k);
-            var ico = Img(pill, gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold", p.U(60 * k));
+            var ico = Img(pill, icon ?? (gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold"), p.U(60 * k));
             Abs(ico, right: -p.U(10 * k), top: (p.U(50 * k) - p.U(60 * k)) / 2f);
             if (onPlus != null) Tap(plus, p, onPlus);
             return (pill, t);
@@ -565,6 +567,9 @@ namespace Farmverse.Presentation.UI.Game
         /// The page header (hdr): back button flush left, title, optional extra, coins, gems, home. Height 96
         /// on tablet, 52 on phone (literal px). Returns the coins and gems labels for live updates.
         /// </summary>
+        /// <summary>The game's FARM pill for page headers (web build with a wallet), or null: set by GameUi.</summary>
+        public static Func<Pt, float, VisualElement?>? HeaderFarm;
+
         public static (Label coins, Label gems) Header(VisualElement root, Pt p, string title, Action back, Action? home, string coins, string gems, VisualElement? extra = null, bool pills = true, Action? addCoins = null, Action? addGems = null)
         {
             var H = p.Phone ? 52f : 96f;
@@ -595,6 +600,13 @@ namespace Farmverse.Presentation.UI.Game
                 gp.style.marginLeft = p.U(22 * k);
                 c = cl;
                 g = gl;
+                // FARM after the gems, as on the island screen
+                var farm = HeaderFarm?.Invoke(p, k);
+                if (farm != null)
+                {
+                    bar.Add(farm);
+                    farm.style.marginLeft = p.U(22 * k);
+                }
             }
 
             if (home != null)

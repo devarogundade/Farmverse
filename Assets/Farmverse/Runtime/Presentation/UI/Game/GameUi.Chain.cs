@@ -21,6 +21,23 @@ namespace Farmverse.Presentation.UI.Game
         /// <summary>Whether minting is offered here (web build with a wallet, signed in).</summary>
         private static bool ChainReady => Chain != null && Chain.Available;
 
+        /// <summary>FARM as shown in the pills: "…" until the balance is known.</summary>
+        private static string FarmText => Nfts?.FarmYocto == null ? "…" : NftService.Farm(Nfts.FarmYocto);
+
+        /// <summary>
+        /// The FARM pill for page headers (PK.HeaderFarm): the clover, the wallet's FARM kept current while it's on
+        /// screen, its plus and the pill opening Get FARM. Null without a wallet (editor, no chain).
+        /// </summary>
+        private VisualElement? FarmPill(Pt p, float k)
+        {
+            if (!ChainReady) return null;
+            var (pill, text) = PK.Currency(null, p, false, FarmText, k, () => Open("getfarm"), "Icon_Clover");
+            PK.Tap(pill, p, () => Open("getfarm"));
+            Nfts?.RefreshIfStale();
+            pill.schedule.Execute(() => text.text = Loc.Of(FarmText)).Every(500);
+            return pill;
+        }
+
         // ------------------------------------------------------------------ links in and out (docs 15 §3.2)
 
         /// <summary>The page's URL when the game opened (or a link opened later); handled once signed in.</summary>

@@ -104,7 +104,7 @@ namespace Farmverse.Presentation.UI.Game
             // ---------------------------------------------------------------- currencies and settings
             var pills = PK.Abs(PK.Row(root), right: xR + P(92), top: P(22), height: P(50));   // fit to their numbers, left of the gear
             pills.pickingMode = PickingMode.Ignore;
-            Label HomePill(bool gem, Action plus)
+            Label HomePill(bool gem, Action plus, string? icon = null)
             {
                 var pill = PK.Row(pills);
                 pill.style.height = P(50);
@@ -113,14 +113,16 @@ namespace Farmverse.Presentation.UI.Game
                 pill.style.paddingLeft = p.U(4) + P(42) + P(14);   // clear of the plus button
                 pill.style.paddingRight = P(64);                    // clear of the hanging icon
                 Kit.Round(pill, p.U(10));
-                PK.Grad(pill, gem ? "homepillgem" : "homepillgold", true, gem
+                PK.Grad(pill, icon != null ? "homepillfarm" : gem ? "homepillgem" : "homepillgold", true, icon != null
+                    ? new[] { (0f, GameTheme.C("#06170d")), (1f, GameTheme.C("#0b2b16")) }
+                    : gem
                     ? new[] { (0f, GameTheme.C("#170a2c")), (1f, GameTheme.C("#221040")) }
                     : new[] { (0f, GameTheme.C("#170d06")), (1f, GameTheme.C("#2b160a")) });
                 var pl = PK.Img(pill, gem ? "ResourceBar_Btn_Single_Purple" : "ResourceBar_Btn_Single_Yellow", P(42));
                 PK.Abs(pl, left: p.U(4), top: (P(50) - P(42)) / 2f);
                 PK.Tap(pl, p, plus);
                 var v = HomeTS(pill, p, "0", 26, 3.5f);
-                var ico = PK.Img(pill, gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold", P(62));
+                var ico = PK.Img(pill, icon ?? (gem ? "ResourceBar_Icon_Gem" : "ResourceBar_Icon_Gold"), P(62));
                 PK.Abs(ico, right: -P(10), top: (P(50) - P(62)) / 2f);
                 return v;
             }
@@ -128,10 +130,20 @@ namespace Farmverse.Presentation.UI.Game
             var coins = HomePill(false, () => Open("shop", "coins"));
             var gems = HomePill(true, () => Open("shop", "gems"));
             gems.parent.style.marginLeft = P(22);
+            // FARM, the market's money (web build with a wallet): the pill opens Get FARM
+            Label? farm = null;
+            if (ChainReady)
+            {
+                farm = HomePill(false, () => Open("getfarm"), "Icon_Clover");
+                farm.parent.style.marginLeft = P(22);
+                PK.Tap(farm.parent, p, () => Open("getfarm"));
+                Nfts?.RefreshIfStale();
+            }
             c.Live(() =>
             {
                 coins.text = Loc.Of(PK.Num(Economy?.Coins ?? 0));
                 gems.text = Loc.Of(PK.Num(Wallet.Gems));
+                if (farm != null) farm.text = Loc.Of(FarmText);
             });
 
             var gear = PK.Centre(PK.Abs(PK.Box(root), right: 0, top: P(6), width: R + P(84), height: P(90)));

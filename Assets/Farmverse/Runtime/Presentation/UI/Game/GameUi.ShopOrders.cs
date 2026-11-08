@@ -238,12 +238,19 @@ namespace Farmverse.Presentation.UI.Game
             PK.Abs(info, right: p.P(12), top: p.P(12));
             PK.Tap(info, p, () => Say(key == "orders" ? "Fill " + of + " orders in a day to open the chest." : "Finish all of today's tasks to open the chest."));
             PK.T(side, p, title, 24, null, true, TextAnchor.MiddleCenter);
+            // on a short screen only the chest picture gives way: the rewards, the timer and the button keep their
+            // size (shrinking all of them evenly ran the reward amounts into the timer line)
             var chest = PK.Img(side, "ShopItem_SpecialChest_Purple", p.P(p.Phone ? 170 : 190));
             chest.style.marginTop = p.P(14);
+            chest.style.flexShrink = 1;
+            chest.style.minHeight = p.P(70);
+            Kit.Contain(chest, GameArt.Get("ShopItem_SpecialChest_Purple"));   // keeps its shape when it shrinks
             var (bar, _, _) = PK.Bar(side, p, 0, 34, of > 0 ? n * 100f / of : 0, n + " / " + of);
             bar.style.width = new Length(90, LengthUnit.Percent);
             bar.style.marginTop = p.P(14);
+            bar.style.flexShrink = 0;
             var rw = PK.Row(side);
+            rw.style.flexShrink = 0;
             rw.style.justifyContent = Justify.Center;
             rw.style.flexWrap = Wrap.Wrap;
             rw.style.marginTop = p.P(14);
@@ -264,6 +271,8 @@ namespace Farmverse.Presentation.UI.Game
 
             PK.Grow(side);
             var t = PK.Row(side);
+            t.style.flexShrink = 0;
+            t.style.marginTop = p.P(8);
             PK.Img(t, "Icon_PictoIcon_Timer", p.P(26)).style.marginRight = p.P(6);
             var tl = PK.N(t, p, "", 16, GameTheme.T("#9fd0ff"));
             tl.enableRichText = true;
@@ -281,6 +290,7 @@ namespace Farmverse.Presentation.UI.Game
                 ShopOpenChest(chestId);
             });
             btn.style.marginTop = p.P(14);
+            btn.style.flexShrink = 0;
         }
 
         // ------------------------------------------------------------------ goals
