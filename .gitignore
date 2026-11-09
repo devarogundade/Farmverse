@@ -52,6 +52,8 @@
 ExportedObj/
 .consulo/
 *.csproj
+# …but not the hand-written .NET hosts that CI builds (engine-free tests, the island engine)
+!tools/dotnet/**/*.csproj
 *.unityproj
 *.sln
 *.slnx

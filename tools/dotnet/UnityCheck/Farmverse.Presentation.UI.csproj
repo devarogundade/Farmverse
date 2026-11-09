@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Compile Include="$(AssetsRoot)Runtime/Presentation/UI/**/*.cs" />
+    <ProjectReference Include="Farmverse.Presentation.World.csproj" />
+  </ItemGroup>
+</Project>

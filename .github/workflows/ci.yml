@@ -23,6 +23,10 @@ jobs:
           npm run test --workspace contracts
           npm run contracts:check
       - name: Game rules and server — typecheck, test, bundle
+        # prisma.config.ts reads DATABASE_URL even just to generate the client; nothing connects
+        # (the database tests are test:db, not run here)
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
         run: |
           npm run typecheck --workspace backend/game
           npm run test --workspace backend/game

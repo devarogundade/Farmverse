@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Compile Include="$(AssetsRoot)Runtime/Bootstrap/**/*.cs" />
+    <ProjectReference Include="Farmverse.Presentation.UI.csproj" />
+    <ProjectReference Include="Farmverse.Presentation.World.csproj" />
+    <ProjectReference Include="Farmverse.Infrastructure.Web.csproj" />
+    <ProjectReference Include="Farmverse.Infrastructure.Unity.csproj" />
+  </ItemGroup>
+</Project>

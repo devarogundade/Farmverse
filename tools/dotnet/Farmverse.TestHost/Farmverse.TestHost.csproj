@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Runs the Unity EditMode tests of the engine-free assemblies under plain .NET.
+    The test sources are the same files Unity compiles; NUnitShim.cs provides the
+    small subset of NUnit 3 they use, so this host needs no NuGet access.
+    CI may instead reference the real NUnit + NUnit3TestAdapter and use `dotnet test`.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Farmverse.TestHost</RootNamespace>
+    <!-- test sources use NUnit-style naming; keep warnings as errors for real problems only -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="*.cs" />
+    <Compile Include="$(AssetsRoot)Tests/EditMode/**/*.cs" />
+    <ProjectReference Include="../Farmverse.Core/Farmverse.Core.csproj" />
+    <ProjectReference Include="../Farmverse.Domain/Farmverse.Domain.csproj" />
+    <ProjectReference Include="../Farmverse.Application/Farmverse.Application.csproj" />
+    <ProjectReference Include="../Farmverse.Contracts/Farmverse.Contracts.csproj" />
+  </ItemGroup>
+</Project>

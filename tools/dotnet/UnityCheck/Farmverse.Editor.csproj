@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Editor tooling: also needs the UnityEditor reference assemblies (-p:UnityEditorRefs=/path, or the Unity install). -->
+  <ItemGroup>
+    <Compile Include="$(AssetsRoot)Editor/**/*.cs" />
+    <ProjectReference Include="Farmverse.Bootstrap.csproj" />
+    <ProjectReference Include="Farmverse.Presentation.UI.csproj" />
+    <ProjectReference Include="Farmverse.Presentation.World.csproj" />
+    <ProjectReference Include="Farmverse.Infrastructure.Firebase.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UnityEditorRefs)' != ''">
+    <Reference Include="$(UnityEditorRefs)/*.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UnityEditorRefs)' == ''">
+    <Reference Include="$(UnityManaged)/UnityEditor*.dll" Private="false" />
+  </ItemGroup>
+</Project>
