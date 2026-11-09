@@ -1,0 +1,32 @@
+/* The social sign page (sign.html): the game's logo over one panel, sized for a popup window. */
+body { background: var(--deep) url('/ui/Home_LoadingBg.webp') center / cover no-repeat fixed; }
+body::before { content: ''; position: fixed; inset: 0; background: linear-gradient(rgba(6, 22, 40, 0.25), rgba(6, 22, 40, 0.75)); pointer-events: none; }
+
+.sp {
+  position: relative;
+  min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 24px 16px;
+}
+.sp-logo { width: min(240px, 64vw); height: auto; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35)); }
+.sp-card {
+  width: min(400px, 100%);
+  padding: 22px 22px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.sp-title { font-size: 28px; text-align: center; }
+.sp-note { margin: 0; text-align: center; color: var(--sky-3); font-size: 15px; line-height: 1.5; }
+.sp-email { color: #fff; word-break: break-all; }
+.sp-err { margin: 0; text-align: center; color: var(--pink); font-size: 14px; line-height: 1.5; }
+.sp-form { display: flex; flex-direction: column; gap: 10px; }
+.sp-code { text-align: center; font-size: 26px; letter-spacing: 0.4em; padding-left: calc(18px + 0.4em); }
+.sp-code::placeholder { letter-spacing: 0.4em; opacity: 0.5; }
+
+.sp-links { display: flex; justify-content: center; gap: 20px; }
+.sp-links button { color: var(--sky-2); font-size: 14px; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--sky-2) 40%, transparent); }
+.sp-links button:hover { color: #fff; }
+
+.sp-wait { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px 0 6px; text-align: center; }
+.sp-wait p { margin: 0; color: var(--sky-3); }
+.sp-spin { width: 44px; height: 44px; animation: sp-spin 1s linear infinite; }
+@keyframes sp-spin { to { transform: rotate(360deg); } }

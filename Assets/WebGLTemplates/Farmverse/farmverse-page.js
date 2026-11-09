@@ -12,11 +12,22 @@ const MARGIN_MS = 60_000;
 const connector = new NearConnector({ network: config.network, footerBranding: null, autoConnect: true });
 
 // social login (docs 15 §13.2): "Email or Google", a Privy wallet whose sign page lives on the market site
-if (config.socialLogin && config.marketplaceUrl) {
-  const site = config.marketplaceUrl.replace(/\/+$/, '');
+const PRIVY_WALLET_ID = 'farmverse-email';
+const signSite = config.socialLogin && config.marketplaceUrl ? config.marketplaceUrl.replace(/\/+$/, '') : null;
+// The way the player chose on the sign-in card (Google, or their email). The sign page opens in a popup and asks
+// us, so it goes straight there instead of asking again (the market does the same: signInHint.ts).
+const HINT_SOURCE = 'farmverse-signin';
+let signInHint = null;
+if (signSite) {
+  const site = signSite;
+  const signOrigin = new URL(site).origin;
+  window.addEventListener('message', (e) => {
+    if (e.origin !== signOrigin || e.data?.source !== HINT_SOURCE || e.data.type !== 'hint?' || !e.source) return;
+    e.source.postMessage({ source: HINT_SOURCE, type: 'hint', hint: signInHint }, e.origin);
+  });
   connector
     .registerWallet({
-      id: 'farmverse-email', name: 'Email or Google', icon: `${site}/ui/Icon_Clover.webp`,
+      id: PRIVY_WALLET_ID, name: 'Email or Google', icon: `${site}/ui/Icon_Clover.webp`,
       description: 'Sign in with your email. No wallet app needed.', website: site, version: '1.0.0',
       executor: 'https://raw.githubusercontent.com/beneviolabs/privy-near-connect/3d56b782669d242a1ea432921e291abc26b4ebc7/executor.js',
       type: 'sandbox', platform: { web: site },
@@ -285,56 +296,76 @@ function base64ToBytes(b64) {
 }
 
 /**
- * Shows the sign-in card and resolves once the player connected and signed. Connecting asks for the
- * signature straight away (an extension wallet shows it at once); only if that can't open without
- * another click (a web wallet's popup) does the card wait on its "Sign in" button. A wallet that is
- * already connected goes straight to signing.
+ * Shows the sign-in card and resolves once the player signed in. Google and email come first (our social wallet: a
+ * popup on the market site, no wallet app needed); a guest farm or any NEAR wallet are the other ways. Connecting
+ * asks for the signature straight away (an extension wallet shows it at once); only if that can't open without
+ * another click (a popup) does the card wait on its "Continue" button. A wallet remembered from last time goes
+ * straight to that button too.
  */
 function signInWithWallet() {
   return new Promise((resolve) => {
     const card = $('fv-signin');
-    const button = $('fv-signin-button');
     const text = $('fv-signin-text');
     const error = $('fv-signin-error');
+    const resume = $('fv-signin-button');
+    const socialBox = $('fv-social');
+    const google = $('fv-google');
+    const emailForm = $('fv-email-form');
+    const emailInput = $('fv-email');
+    const or = $('fv-or');
+    const guest = $('fv-guest-button');
+    const walletButton = $('fv-wallet-button');
+    const controls = [resume, google, emailInput, emailForm.querySelector('button'), guest, walletButton];
+    const social = !!signSite;
     let wallet = null;
     let busy = false;
-    card.hidden = false;
-    error.hidden = true;
-    button.textContent = 'Sign in';
-    button.disabled = false;
-    button.classList.add('fv-secondary');
-    text.textContent = 'Jump straight in as a guest, or sign in. Your farm is saved to your account.';
-    const small = card.querySelector('.fv-small');
-    if (small) small.textContent = config.socialLogin
-      ? 'Sign in with email or Google, or any NEAR wallet (HOT, Meteor, MyNearWallet, Intear…).'
-      : 'Sign in with any NEAR wallet (HOT, Meteor, MyNearWallet, Intear…).';
-    // guest play: one tap, no wallet app (the same browser comes back to the same farm)
-    let guest = $('fv-guest-button');
-    if (!guest) {
-      guest = document.createElement('button');
-      guest.id = 'fv-guest-button';
-      guest.type = 'button';
-      button.before(guest);
-    }
-    guest.textContent = localStorage.getItem(GUEST_KEY) ? 'Continue as guest' : 'Play as guest';
-    guest.disabled = false;
 
     const show = (message) => {
       error.textContent = message;
       error.hidden = !message;
     };
+    const lock = (on) => controls.forEach((c) => { c.disabled = on; });
+    const isSocial = () => wallet?.manifest?.id === PRIVY_WALLET_ID;
+    const friendly = (e) => {
+      const m = String(e?.message ?? e);
+      if (/blocked/i.test(m)) return 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.';
+      if (/closed|reject|cancel/i.test(m)) return 'Sign-in was closed before it finished. Try again.';
+      return m;
+    };
 
+    // the choices: Google and email first, then "or" a guest farm or a NEAR wallet
+    const choose = () => {
+      wallet = null;
+      text.textContent = social
+        ? 'Sign in to save your farm and trade on the market.'
+        : 'Sign in with a NEAR wallet to save your farm, or jump straight in as a guest.';
+      resume.hidden = true;
+      socialBox.hidden = !social;
+      or.hidden = !social;
+      walletButton.textContent = social ? 'NEAR wallet' : 'Sign in with a wallet';
+      walletButton.className = social ? 'fv-secondary' : 'fv-primary';
+      walletButton.onclick = () => run(null);
+    };
+
+    // connected, but the signature needs one more click (a popup), or a wallet remembered from last time
     const readyToSign = () => {
-      text.textContent = 'Sign in to Farmverse with your wallet: a free signature, no transaction.';
-      button.textContent = 'Sign in';
-      button.disabled = false;
+      text.textContent = 'Finish signing in: a free signature, no transaction.';
+      resume.hidden = false;
+      socialBox.hidden = true;
+      or.hidden = false;
+      walletButton.textContent = 'Other ways';
+      walletButton.className = 'fv-secondary';
+      walletButton.onclick = () => {
+        show('');
+        choose();
+      };
     };
 
     // signs the server's challenge and trades it for a session; the card goes when it worked
     const signIn = async () => {
-      text.textContent = wallet.guest ? 'Setting up your farm…' : 'Approve the sign-in in your wallet…';
-      button.disabled = true;
-      guest.disabled = true;
+      text.textContent = wallet.guest
+        ? 'Setting up your farm…'
+        : isSocial() ? 'Finish signing in in the window that opened…' : 'Approve the sign-in in your wallet…';
       const challenge = await post('/v1/auth/nonce');
       const signed = await wallet.signMessage({ message: challenge.message, recipient: challenge.recipient, nonce: base64ToBytes(challenge.nonce) });
       if (!signed?.signature) throw new Error('The wallet did not sign.');
@@ -349,43 +380,65 @@ function signInWithWallet() {
       resolve(keep(tokens));
     };
 
-    const run = async (connect) => {
+    // way: { method: 'google' } or { method: 'email', email } (the social wallet), null (the NEAR wallet list),
+    // or undefined (sign with the wallet already connected)
+    const run = async (way) => {
       if (busy) return;
       busy = true;
       show('');
-      button.disabled = true;
+      lock(true);
       try {
-        if (connect || !wallet) wallet = await connector.connect();
+        if (way !== undefined || !wallet) {
+          signInHint = way ?? null;
+          text.textContent = way ? 'Finish signing in in the window that opened…' : 'Pick your wallet…';
+          try {
+            wallet = await connector.connect(way ? { walletId: PRIVY_WALLET_ID } : undefined);
+          } finally {
+            signInHint = null;
+          }
+        }
         await signIn();
       } catch (e) {
         // connected but the signature didn't happen (declined, or the popup needs this click): ask again
-        if (wallet) readyToSign();
-        else button.disabled = false;
-        guest.disabled = false;
-        show(String(e?.message ?? e));
+        if (wallet && !wallet.guest) readyToSign();
+        else choose();
+        show(friendly(e));
       } finally {
         busy = false;
+        lock(false);
       }
     };
 
-    button.onclick = () => run(false);
+    resume.onclick = () => run(undefined);
+    google.onclick = () => run({ method: 'google' });
+    emailForm.onsubmit = (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (email) run({ method: 'email', email });
+    };
+    // guest play: one tap, no wallet app (the same browser comes back to the same farm)
+    guest.textContent = localStorage.getItem(GUEST_KEY) ? 'Continue as guest' : 'Play as guest';
     guest.onclick = async () => {
       if (busy) return;
       busy = true;
       show('');
+      lock(true);
       try {
         wallet = guestWallet(guestKey(true));
         await signIn();
       } catch (e) {
-        wallet = null;
-        button.disabled = false;
-        guest.disabled = false;
-        button.textContent = 'Sign in';
-        show(String(e?.message ?? e));
+        choose();
+        show(friendly(e));
       } finally {
         busy = false;
+        lock(false);
       }
     };
+
+    card.hidden = false;
+    show('');
+    lock(false);
+    choose();
 
     // a wallet remembered from last time (autoConnect): no need to pick it again
     connector.wallet().then((w) => {

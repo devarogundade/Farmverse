@@ -9,9 +9,15 @@ import type { NearConnector } from '@hot-labs/near-connect';
 export const PRIVY_EXECUTOR =
   'https://raw.githubusercontent.com/beneviolabs/privy-near-connect/3d56b782669d242a1ea432921e291abc26b4ebc7/executor.js';
 
+/** The Privy wallet's id in near-connect (kept: players' saved sessions point at it). */
+export const PRIVY_WALLET_ID = 'farmverse-email';
+
+/** Social login is on when the Privy app is set. */
+export const socialLogin = !!import.meta.env.VITE_PRIVY_APP_ID;
+
 export function privyWalletManifest(signSite: string, allowsOpen: string[]) {
   return {
-    id: 'farmverse-email',
+    id: PRIVY_WALLET_ID,
     name: 'Email or Google',
     icon: `${signSite}/ui/Icon_Clover.webp`,
     description: 'Sign in with your email. No wallet app needed.',

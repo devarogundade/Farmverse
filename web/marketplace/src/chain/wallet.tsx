@@ -1,13 +1,21 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { getConnector } from './near';
+import { PRIVY_WALLET_ID } from './privyWallet';
+import { offerSignInHint, type SignInHint } from './signInHint';
+
+/** How the player signs in: Google or their email (our social wallet), or a NEAR wallet from the list. */
+export type SignInWay = SignInHint | { method: 'wallet' };
 
 export interface WalletState {
   /** Signed-in NEAR account, or null. */
   accountId: string | null;
   /** False until a saved session has been checked (avoid flashing "Connect"). */
   ready: boolean;
-  /** Opens NEAR Connect's wallet picker; resolves with the account once one is connected. */
-  connect: () => Promise<string>;
+  /**
+   * Signs in the chosen way: Google or email open our sign page in a popup (it skips straight to that way), a NEAR
+   * wallet opens NEAR Connect's wallet list. Resolves with the account once one is connected.
+   */
+  connect: (way?: SignInWay) => Promise<string>;
   disconnect: () => Promise<void>;
 }
 
@@ -47,9 +55,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     () => ({
       accountId,
       ready,
-      connect: async () => {
+      connect: async (way = { method: 'wallet' }) => {
         const c = await getConnector();
-        const w = await c.connect(); // NEAR Connect's own wallet picker
+        let w;
+        if (way.method === 'wallet') w = await c.connect(); // NEAR Connect's own wallet list
+        else {
+          offerSignInHint(way, location.origin);
+          try {
+            w = await c.connect({ walletId: PRIVY_WALLET_ID });
+          } finally {
+            offerSignInHint(null, location.origin);
+          }
+        }
         const [acc] = await w.getAccounts();
         if (!acc) throw new Error('No account was connected.');
         setAccountId(acc.accountId);

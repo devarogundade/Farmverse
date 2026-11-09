@@ -4,6 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>{{{ PRODUCT_NAME }}}</title>
+  <!-- og:start (deployment/vercel.sh copies this block into builds made before it existed) -->
+  <meta name="description" content="Farmverse is a free farm game in your browser, built on NEAR. Plant, harvest and fill orders, turn crops, buildings and land into NFTs, and trade them for $FARM. Sign in with email, no download. #NEARHackathon #Web3Gaming">
+  <meta name="keywords" content="Farmverse, farm game, NEAR, NEAR Protocol, NEARHackathon, Web3Gaming, GameFi, NFT game, browser game, play to own">
+  <meta name="theme-color" content="#0a4888">
+  <link rel="canonical" href="https://play.farmverse.world/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Farmverse">
+  <meta property="og:url" content="https://play.farmverse.world/">
+  <meta property="og:title" content="Farmverse: grow it, own it, trade it on NEAR">
+  <meta property="og:description" content="A free farm game in your browser. Grow your island, turn what you build into NFTs and trade them for $FARM on NEAR. #NEARHackathon #Web3Gaming #NEAR">
+  <meta property="og:image" content="https://play.farmverse.world/og-image.jpg">
+  <meta property="og:image:secure_url" content="https://play.farmverse.world/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Farmverse logo over a farm island: Grow it. Own it. Trade it. A free farm game on NEAR.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@farmverse_world">
+  <meta name="twitter:title" content="Farmverse: grow it, own it, trade it on NEAR">
+  <meta name="twitter:description" content="A free farm game in your browser, built on @NEARProtocol. Play free, no download. #NEARHackathon #Web3Gaming">
+  <meta name="twitter:image" content="https://play.farmverse.world/og-image.jpg">
+  <meta name="twitter:image:alt" content="The Farmverse logo over a farm island: Grow it. Own it. Trade it. A free farm game on NEAR.">
+  <!-- og:end -->
   <link rel="stylesheet" href="farmverse-page.css">
   <link id="fv-icon" rel="icon" href="data:,">
   <script>
@@ -39,13 +62,25 @@
         </div>
       </div>
     </div>
+    <!-- sign-in: Google and email first (no wallet app needed), a guest or a NEAR wallet as the other ways -->
     <div id="fv-signin" hidden>
-      <div class="fv-card">
-        <div class="fv-logo">Farmverse</div>
-        <p id="fv-signin-text">Jump straight in as a guest, or sign in. Your farm is saved to your account.</p>
-        <button id="fv-signin-button" type="button">Sign in</button>
-        <p id="fv-signin-error" class="fv-error" hidden></p>
-        <p class="fv-small">New to NEAR? Any NEAR wallet works (HOT, Meteor, MyNearWallet, Intear…).</p>
+      <div class="fv-card fv-signin-card">
+        <img class="fv-signin-logo" alt="Farmverse" hidden>
+        <p id="fv-signin-text">Sign in to save your farm and trade on the market.</p>
+        <button id="fv-signin-button" type="button" class="fv-primary" hidden>Continue</button>
+        <div id="fv-social" hidden>
+          <button id="fv-google" type="button" class="fv-google"><svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Continue with Google</span></button>
+          <form id="fv-email-form" class="fv-email">
+            <input id="fv-email" type="email" required autocomplete="email" placeholder="Your email" aria-label="Your email">
+            <button type="submit" class="fv-primary">Continue with email</button>
+          </form>
+        </div>
+        <p id="fv-signin-error" class="fv-error" role="alert" hidden></p>
+        <div id="fv-or" class="fv-or" role="separator" hidden><span>or</span></div>
+        <div class="fv-alt">
+          <button id="fv-guest-button" type="button" class="fv-secondary">Play as guest</button>
+          <button id="fv-wallet-button" type="button" class="fv-secondary">NEAR wallet</button>
+        </div>
       </div>
     </div>
   </div>
@@ -59,9 +94,10 @@
       var site = (window.FARMVERSE_CONFIG.marketplaceUrl || '').replace(/\/+$/, '');
       if (site) {
         root.style.backgroundImage = 'linear-gradient(rgba(6, 22, 40, 0.1), rgba(6, 22, 40, 0.7)), url(' + site + '/ui/Home_LoadingBg.webp)';
-        var logo = root.querySelector('.fv-install-logo');
-        logo.onload = function () { logo.hidden = false; };
-        logo.src = site + '/ui/Home_Logo.webp';
+        document.querySelectorAll('.fv-install-logo, .fv-signin-logo').forEach(function (logo) {
+          logo.onload = function () { logo.hidden = false; };
+          logo.src = site + '/ui/Home_Logo.webp';
+        });
         $('fv-icon').href = site + '/ui/Icon_Clover.webp';
         if (window.FontFace) {
           [['FvTitle', 'LilitaOne'], ['FvBody', 'NunitoExtraBold']].forEach(function (f) {
