@@ -101,6 +101,10 @@
             "v": "<color=#ffd23a>Shops pay <b>"
         },
         {
+            "k": "<size={0}%>Every day</size>",
+            "v": "<size={0}%>Every day</size>"
+        },
+        {
             "k": "<size={0}%>One time only!</size> <color=#ff5a6e>",
             "v": "<size={0}%>One time only!</size> <color=#ff5a6e>"
         },
@@ -235,6 +239,10 @@
         {
             "k": "Achievements",
             "v": "Achievements"
+        },
+        {
+            "k": "Achievements, daily rewards, the Lucky Wheel and the Farm Pass",
+            "v": "Achievements, daily rewards, the Lucky Wheel and the Farm Pass"
         },
         {
             "k": "Activate",
@@ -1217,6 +1225,10 @@
             "v": "DAILY TASK CHEST"
         },
         {
+            "k": "DAILY X SHARE",
+            "v": "DAILY X SHARE"
+        },
+        {
             "k": "DAMAGED",
             "v": "DAMAGED"
         },
@@ -1367,6 +1379,14 @@
         {
             "k": "Dutch",
             "v": "Dutch"
+        },
+        {
+            "k": "EARN GEMS",
+            "v": "EARN GEMS"
+        },
+        {
+            "k": "Earn gems",
+            "v": "Earn gems"
         },
         {
             "k": "Earn pass XP from orders and daily tasks.",
@@ -3613,8 +3633,16 @@
             "v": "Output room"
         },
         {
+            "k": "PLAY",
+            "v": "PLAY"
+        },
+        {
             "k": "PLAYER ID",
             "v": "PLAYER ID"
+        },
+        {
+            "k": "PREMIUM FARM PASS",
+            "v": "PREMIUM FARM PASS"
         },
         {
             "k": "Packing shed",
@@ -3851,6 +3879,10 @@
         {
             "k": "Post Office",
             "v": "Post Office"
+        },
+        {
+            "k": "Post about Farmverse on X",
+            "v": "Post about Farmverse on X"
         },
         {
             "k": "Post office",
@@ -5583,6 +5615,10 @@
         {
             "k": "Weave {0} cloth",
             "v": "Weave {0} cloth"
+        },
+        {
+            "k": "Web version",
+            "v": "Web version"
         },
         {
             "k": "Weekly results are in",

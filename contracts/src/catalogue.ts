@@ -55,8 +55,11 @@ export const BoostDef = named(
   'What a boost does when used.',
 );
 
-/** The daily chests (Orders ▸ six orders done, Tasks ▸ every daily task done). */
-export const ChestId = named('ChestId', z.enum(['order', 'task']), 'A daily chest.');
+/** The daily chests (Orders ▸ six orders done, Tasks ▸ every daily task done, Share ▸ a post on X, no condition). */
+export const ChestId = named('ChestId', z.enum(['order', 'task', 'share']), 'A daily chest.');
+
+/** A post the daily X share opens (one picked at random); `{link}` becomes the player's invite link. */
+const SharePost = z.string().min(20).max(240).regex(/\{link\}/);
 
 /** What a chest, a gift or a pack holds. */
 export const Bundle = named(
@@ -261,6 +264,8 @@ export const CatalogueDoc = named(
     starterPack: StarterPack,
     referral: ReferralRules,
     profile: ProfileRules,
+    /** The daily X share's preset posts (Shop ▸ Offers), short enough for a free X account with the link in. */
+    sharePosts: z.array(SharePost).min(1).max(20),
   }),
   'The live tuning data (config/catalogue).',
 );
@@ -283,7 +288,7 @@ const offer = (gems: number, give: { coins?: number; boosts?: Partial<Record<Boo
 
 /** The catalogue as designed. Edit, bump `version`, then `npm run catalogue:publish` and `npm run gen`. */
 export const DEFAULT_CATALOGUE: CatalogueDoc = {
-  version: 14,
+  version: 15,
   publishedAt: 0,
   startingGems: 50,
   gemOffers: {
@@ -333,6 +338,7 @@ export const DEFAULT_CATALOGUE: CatalogueDoc = {
   chests: {
     order: bundle(500, 5, { fert: 1 }),
     task: bundle(300, 3, { rush: 1 }),
+    share: bundle(100, 5),
   },
   orderChestOrders: 6,
   achievements: {
@@ -364,12 +370,12 @@ export const DEFAULT_CATALOGUE: CatalogueDoc = {
   couponTypes: {
     b3tr: {
       name: 'B3TR', logoArt: 'VB_mark', logoGlyph: '', logoBg: '#ffffff', accentA: '#9be15d', accentB: '#2fbf71', ink: '#0b3a1a',
-      unit: 'B3TR', codePrefix: 'B3TR', redeemUrl: 'https://farmverse.app/redeem', redeemLabel: 'Open redeem page', expiryDays: 30, linkedOnly: true,
+      unit: 'B3TR', codePrefix: 'B3TR', redeemUrl: 'https://farmverse.world/redeem', redeemLabel: 'Open redeem page', expiryDays: 30, linkedOnly: true,
       steps: ['Tap <b>Open redeem page</b>.', 'Sign in with your <b>VeWorld</b> wallet.', 'Paste your code and tap <b>Redeem</b>.', 'B3TR arrives in your wallet.'],
     },
     usdt: {
       name: 'USDT', logoArt: '', logoGlyph: 'T', logoBg: '#26a17b', accentA: '#7fe3c4', accentB: '#26a17b', ink: '#073b2c',
-      unit: 'USDT', codePrefix: 'USDT', redeemUrl: 'https://farmverse.app/redeem', redeemLabel: 'Open redeem page', expiryDays: 14, linkedOnly: true,
+      unit: 'USDT', codePrefix: 'USDT', redeemUrl: 'https://farmverse.world/redeem', redeemLabel: 'Open redeem page', expiryDays: 14, linkedOnly: true,
       steps: ['Tap <b>Open redeem page</b>.', 'Enter your wallet address.', 'Paste your code and confirm.'],
     },
   },
@@ -437,6 +443,19 @@ export const DEFAULT_CATALOGUE: CatalogueDoc = {
       { minWorth: 1_000_000, title: 'Golden Barn' },
     ],
   },
+  // X counts any link as 23 characters and an emoji as 2; each post stays well under a free account's 280
+  sharePosts: [
+    'Just harvested my first crops in Farmverse 🌾 A cozy farm game on @NEARProtocol where what you grow is yours. Farm with me: {link} #NEARHackathon #Web3Gaming',
+    "Hooked on @farmverse_world 🚜 Plant, harvest and trade on @NEARProtocol, right in the browser. Join my farm: {link} #NEARHackathon",
+    'My Farmverse island keeps growing 🏝️ Free to play, no download, built on @NEARProtocol. Come play: {link} #NEARHackathon #Web3Gaming',
+    'Farming on-chain and loving it 🌱 In @farmverse_world my crops and buildings can become NFTs on @NEARProtocol. Try it: {link} #NEARHackathon',
+    'Daily check-in on my Farmverse farm ✅ Chill game, real economy on @NEARProtocol. Start your own farm: {link} #NEARHackathon #GameFi',
+    'Looking for farm neighbors 🐄 @farmverse_world is a free browser farm game built for the #NEARHackathon. Join me here: {link} #NEAR',
+    "Can't stop playing Farmverse 📦 Crops, orders and trades, all on @NEARProtocol. Your farm is waiting: {link} #NEARHackathon #Web3Gaming",
+    'Cozy game + real ownership = Farmverse 💚 Grow, build and trade $FARM on @NEARProtocol. Play free: {link} #NEARHackathon',
+    'Spinning the Lucky Wheel on my Farmverse island 🎡 Fun farm game on @NEARProtocol, sign in with email. Come play: {link} #NEARHackathon',
+    'Rooting for @farmverse_world in the #NEARHackathon 🏆 A browser farm game where your farm is really yours. Play with me: {link} #NEAR #Web3Gaming',
+  ],
 };
 
 /** The wallet doc's parse, for both sides. */

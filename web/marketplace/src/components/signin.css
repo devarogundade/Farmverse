@@ -1,0 +1,46 @@
+/* Sign-in choices (SignIn.tsx): Google first, then email, then "or" and the other ways. */
+.si { display: flex; flex-direction: column; gap: 12px; }
+.si-email { display: flex; flex-direction: column; gap: 10px; }
+.si-wide { width: 100%; }
+
+/* Google's button: white, its "G" at the left, drawn with the game's ink outline and lip. */
+.si-google {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; height: 52px; padding: 0 18px;
+  border: 2px solid var(--ink); border-radius: 999px;
+  background: #fff; color: #1f1f1f;
+  font: 800 17px/1 var(--font-body);
+  box-shadow: inset 0 -4px 0 rgba(23, 13, 6, 0.14), 0 3px 0 rgba(0, 0, 0, 0.35);
+  transition: filter 0.15s, transform 0.1s;
+}
+.si-google:hover:not(:disabled) { filter: brightness(0.96); }
+.si-google:active:not(:disabled) { transform: translateY(2px); box-shadow: inset 0 -2px 0 rgba(23, 13, 6, 0.14), 0 1px 0 rgba(0, 0, 0, 0.35); }
+.si-google:disabled, .si-alt:disabled { opacity: 0.6; cursor: not-allowed; }
+.si-google svg { flex: none; }
+
+.si-input {
+  width: 100%; height: 52px; padding: 0 18px;
+  border: 2px solid var(--line); border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28); color: #fff;
+  font: 800 17px/1 var(--font-body);
+  box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.25);
+}
+.si-input::placeholder { color: var(--muted); }
+.si-input:focus { outline: none; border-color: var(--gold); }
+.si-input:disabled { opacity: 0.6; }
+
+.si-or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 14px; margin: 2px 0; }
+.si-or::before, .si-or::after { content: ''; flex: 1; height: 2px; border-radius: 1px; background: var(--line); }
+
+/* The other way in: quiet, outlined. */
+.si-alt {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; height: 48px; padding: 0 18px;
+  border: 2px solid var(--line); border-radius: 999px;
+  background: transparent; color: var(--text);
+  font: 800 16px/1 var(--font-body);
+  transition: border-color 0.15s, background 0.15s;
+}
+.si-alt:hover:not(:disabled) { border-color: var(--sky-2); background: rgba(255, 255, 255, 0.04); }
+.si-alt img { width: 24px; height: 24px; object-fit: contain; }
+.si-foot { margin: 0; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.5; }

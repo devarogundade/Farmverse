@@ -600,6 +600,8 @@ namespace Farmverse.Presentation.UI.Game
                     tap = () => ShopBuy("deal_daily"),
                 });
             }
+            // the daily X share: a preset post with the invite link, paid once a UTC day (GameUi.ShareX)
+            offers.items.Add(ShopShareItem());
             // the Farm Pass's premium track: bought with FARM (a drop, docs 15 §5.3); the pass screen sells it
             if (Wallet.Shop?.Pass is not { PremiumActive: true })
             {
@@ -614,7 +616,7 @@ namespace Farmverse.Presentation.UI.Game
                     tap = () => Open("passbuy"),
                 });
             }
-            offers.dot = deal != null && !dealBought ? 1 : 0;
+            offers.dot = (deal != null && !dealBought ? 1 : 0) + (ShareClaimedToday ? 0 : 1);
             list.Add(offers);
 
             // the FARM shop: the studio's drops (passes, gem packs, land deeds), docs 15 §5

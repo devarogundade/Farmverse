@@ -199,6 +199,11 @@ web/**/dist/
 /[Aa]ssets/Farmverse/Content/UI/Game.meta
 /[Aa]ssets/Farmverse/Content/Audio/
 /[Aa]ssets/Farmverse/Content/Audio.meta
+# made from the UI kit's title art (Home_LoadingBg + Home_Logo): the splash screen and the play page's link preview
+/[Aa]ssets/Farmverse/Content/Splash/
+/[Aa]ssets/Farmverse/Content/Splash.meta
+/[Aa]ssets/WebGLTemplates/Farmverse/og-image.jpg
+/[Aa]ssets/WebGLTemplates/Farmverse/og-image.jpg.meta
 
 # Heavy art working files: review screenshots, backups, superseded tools
 /ArtSource/review/

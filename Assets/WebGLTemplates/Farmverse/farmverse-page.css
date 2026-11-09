@@ -56,3 +56,35 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
 .fv-rotate-phone { width: 46px; height: 78px; border: 5px solid #ffd23a; border-radius: 10px; box-sizing: border-box; animation: fv-turn 2.4s ease-in-out infinite; }
 @keyframes fv-turn { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
 @media (orientation: portrait) { #fv-rotate { display: flex; } }
+
+/* ---- sign-in: Google and email first, then "or" a guest farm or a NEAR wallet (navy like the install card) ---- */
+#fv-signin { background: rgba(6, 22, 40, 0.72); backdrop-filter: blur(3px); padding: 16px; box-sizing: border-box; overflow-y: auto; justify-content: safe center; }
+.fv-signin-card { width: min(400px, 100%); box-sizing: border-box; flex: none; padding: 20px 22px 22px; border-radius: 22px; background: rgba(8, 28, 52, 0.94); border: 3px solid rgba(255, 255, 255, 0.12); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.08); font-family: FvBody, system-ui, sans-serif; }
+.fv-signin-logo { width: min(220px, 64%); align-self: center; margin: -4px 0 0; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35)); }
+#fv-signin-text { color: #cfe6ff; font-size: 15px; }
+#fv-social, .fv-email { display: flex; flex-direction: column; gap: 10px; }
+#fv-social[hidden], #fv-or[hidden], #fv-signin-button[hidden] { display: none; }
+.fv-signin-card button { height: 50px; padding: 0 18px; border-radius: 999px; font: 800 16px/1 FvBody, system-ui, sans-serif; transition: filter 0.15s, transform 0.1s; }
+.fv-signin-card button:active:not(:disabled) { transform: translateY(2px); }
+.fv-signin-card button.fv-primary { background: linear-gradient(#ffe36a, #f5b31c); color: #4a2a00; box-shadow: inset 0 -4px 0 rgba(150, 80, 0, 0.35), 0 3px 0 rgba(0, 0, 0, 0.35); }
+.fv-signin-card button.fv-primary:hover:not(:disabled) { filter: brightness(1.06); }
+.fv-signin-card .fv-google { display: flex; align-items: center; justify-content: center; gap: 12px; background: #fff; color: #1f1f1f; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.12), 0 3px 0 rgba(0, 0, 0, 0.35); }
+.fv-signin-card .fv-google:hover:not(:disabled) { filter: brightness(0.96); }
+.fv-google svg { flex: none; }
+.fv-email input { height: 50px; box-sizing: border-box; padding: 0 18px; border-radius: 999px; border: 2px solid rgba(255, 255, 255, 0.16); background: rgba(0, 0, 0, 0.35); color: #fff; font: 800 16px FvBody, system-ui, sans-serif; text-align: left; box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.25); }
+.fv-email input::placeholder { color: rgba(207, 230, 255, 0.55); }
+.fv-email input:focus { outline: none; border-color: #ffd23a; }
+.fv-or { display: flex; align-items: center; gap: 12px; color: rgba(207, 230, 255, 0.6); font-size: 13px; }
+.fv-or::before, .fv-or::after { content: ""; flex: 1; height: 2px; border-radius: 1px; background: rgba(255, 255, 255, 0.12); }
+.fv-alt { display: flex; gap: 10px; }
+.fv-signin-card .fv-alt button { flex: 1 1 0; min-width: 0; height: 46px; font-size: 15px; }
+.fv-signin-card button.fv-secondary { background: transparent; color: #fff8e7; border: 2px solid rgba(255, 255, 255, 0.22); }
+.fv-signin-card button.fv-secondary:hover:not(:disabled) { border-color: rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.04); }
+/* a phone on its side: no logo, tighter controls, so the whole card fits */
+@media (max-height: 520px) {
+  .fv-signin-logo { display: none; }
+  .fv-signin-card { padding: 14px 18px 16px; gap: 9px; }
+  .fv-signin-card button, .fv-email input { height: 42px; }
+  .fv-signin-card .fv-alt button { height: 40px; }
+  #fv-social, .fv-email { gap: 8px; }
+}

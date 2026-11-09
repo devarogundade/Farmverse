@@ -1,4 +1,4 @@
-import { GoalsDoc } from '@farmverse/contracts';
+import { GoalsDoc, type ChestId } from '@farmverse/contracts';
 import { AppError, corrupt, legacyDoc } from '../core/errors';
 import { MS_PER_DAY } from '../domain';
 import { paths } from '../infra/paths';
@@ -73,7 +73,9 @@ export function islandProgress(islandDoc: Record<string, unknown> | undefined): 
 export const dayNumber = (nowMs: number): number => Math.floor(nowMs / MS_PER_DAY);
 
 /** Is today's chest earned on the island? Throws CHEST_LOCKED with how far along it is. */
-export function checkChest(progress: IslandProgress | undefined, chest: 'order' | 'task', ordersNeeded: number, nowMs: number): void {
+export function checkChest(progress: IslandProgress | undefined, chest: ChestId, ordersNeeded: number, nowMs: number): void {
+  // the daily X share: nothing to check (the post can't be seen from here); once a UTC day like the others
+  if (chest === 'share') return;
   const today = progress !== undefined && progress.day === dayNumber(nowMs);
   if (chest === 'order') {
     const have = today ? progress!.today('orders') : 0;

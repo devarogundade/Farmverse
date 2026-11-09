@@ -61,6 +61,12 @@ game() {
   cp -r "$src" "$out"
   # the page's own script and styles from the template, so page fixes ship without a Unity rebuild
   cp "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.js" "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.css" "$out/"
+  # the link preview (og/twitter tags + og-image.jpg) the same way: the template's og block replaces the build's
+  local tpl="$ROOT/Assets/WebGLTemplates/Farmverse"
+  cp "$tpl/og-image.jpg" "$out/"
+  sed -n '/<!-- og:start/,/<!-- og:end -->/p' "$tpl/index.html" >"$STAGE/og-block.html"
+  sed -i '/<!-- og:start/,/<!-- og:end -->/d' "$out/index.html"
+  sed -i "/<\/title>/r $STAGE/og-block.html" "$out/index.html"
   # Vercel takes files up to 100 MB: a bigger data file goes up in parts the page joins (a smaller one as it is)
   node "$ROOT/deployment/webgl-split.mjs" "$out"
   # the install screen shows MB downloaded of the whole download

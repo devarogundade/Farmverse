@@ -4,12 +4,14 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { useMarket } from '../actions/useMarket';
 import { useBalance, useFeeRate, useMarkNotesRead, useNotes, useOwed, useToken } from '../api/queries';
 import type { Drop, Offer, Rental, Token } from '../api/types';
-import { useWallet } from '../chain/wallet';
+import { socialLogin } from '../chain/privyWallet';
+import { useWallet, type SignInWay } from '../chain/wallet';
 import { config, gameLink } from '../config';
 import { href } from '../router';
 import { isAccount } from '../lib/account';
 import { Dialog, Done, WalletWait, toast, useRun } from './Dialog';
 import { Select } from './Select';
+import { SignInChoices, signInError } from './SignIn';
 import { AccountAvatar, FarmIcon, TYPE_ICON, fmt, frameOf, timeAgo } from './ui';
 
 export type Flow =
@@ -18,13 +20,15 @@ export type Flow =
   | { kind: 'rent' | 'rentManage'; rental: Rental }
   | { kind: 'drop'; drop: Drop }
   | { kind: 'wallet' }
-  | { kind: 'notes' };
+  | { kind: 'notes' }
+  /** Sign in (social first), then carry on with `next`. */
+  | { kind: 'signin'; next?: Flow };
 
 const FlowContext = createContext<(f: Flow) => void>(() => {});
 /** Open a marketplace flow (buy, list, offer…) from anywhere. Asks to connect a wallet first if needed. */
 export const useFlow = () => useContext(FlowContext);
 
-const needsAccount = (f: Flow) => f.kind !== 'wallet' && f.kind !== 'notes';
+const needsAccount = (f: Flow) => f.kind !== 'wallet' && f.kind !== 'notes' && f.kind !== 'signin';
 /** Signed in as the owner of the item they were about to buy or bid on: nothing to do. */
 const ownItem = (f: Flow, account: string) => (f.kind === 'buy' || f.kind === 'offer') && f.token.owner_id === account;
 
@@ -41,25 +45,29 @@ export function FlowHost({ children }: { children: ReactNode }) {
 
   const open = useCallback(
     (f: Flow) => {
-      if ((needsAccount(f) || f.kind === 'wallet') && !wallet.accountId) {
-        // NEAR Connect shows its own wallet picker; then carry on with what they were doing.
-        wallet.connect().then(
-          (account) => needsAccount(f) && continueWith(f, account),
-          () => toast('Wallet not connected', 'Icon_ImageIcon_Info'),
-        );
-        return;
-      }
-      setFlow(f);
+      // signed out: the sign-in dialog first, then carry on with what they were doing
+      if ((needsAccount(f) || f.kind === 'wallet') && !wallet.accountId) setFlow({ kind: 'signin', next: needsAccount(f) ? f : undefined });
+      else setFlow(f);
     },
-    [wallet, continueWith],
+    [wallet.accountId],
   );
 
   const close = () => setFlow(null);
+  const signedIn = useCallback(
+    (next: Flow | undefined, account: string) => {
+      if (next) continueWith(next, account);
+      else {
+        setFlow(null);
+        toast('Signed in', 'Icon_PictoIcon_User');
+      }
+    },
+    [continueWith],
+  );
 
   return (
     <FlowContext.Provider value={open}>
       {children}
-      {flow && <FlowDialog key={flowKey(flow)} flow={flow} onClose={close} />}
+      {flow && <FlowDialog key={flowKey(flow)} flow={flow} onClose={close} onSignedIn={signedIn} />}
     </FlowContext.Provider>
   );
 }
@@ -67,10 +75,12 @@ export function FlowHost({ children }: { children: ReactNode }) {
 const flowKey = (f: Flow) =>
   f.kind + ('token' in f ? f.token.token_id : '') + ('offer' in f ? f.offer.id : '') + ('rental' in f ? f.rental.token.token_id : '') + ('drop' in f ? f.drop.id : '');
 
-function FlowDialog({ flow, onClose }: { flow: Flow; onClose: () => void }) {
+function FlowDialog({ flow, onClose, onSignedIn }: { flow: Flow; onClose: () => void; onSignedIn: SignedIn }) {
   switch (flow.kind) {
     case 'wallet':
       return <WalletFlow onClose={onClose} />;
+    case 'signin':
+      return <SignInFlow next={flow.next} onClose={onClose} onSignedIn={onSignedIn} />;
     case 'notes':
       return <NotesFlow onClose={onClose} />;
     case 'accept':
@@ -561,25 +571,8 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
   const { data: balance } = useBalance();
   const { data: owed } = useOwed();
   const { status, error, run } = useRun();
-  if (!wallet.accountId) {
-    return (
-      <Dialog open onClose={onClose} title="Sign in" icon="Icon_PictoIcon_User">
-        {status === 'busy' ? (
-          <WalletWait text="Approve the sign-in in your wallet…" />
-        ) : (
-          <>
-            <p className="dlg-note">Sign in to buy and sell: with email or Google, or a NEAR wallet. Use the same account you play with.</p>
-            <Err error={error} />
-            <Actions>
-              <button className="fv-btn green" onClick={() => run(async () => void (await wallet.connect()))}>
-                Sign in
-              </button>
-            </Actions>
-          </>
-        )}
-      </Dialog>
-    );
-  }
+  // signed out while it was open: sign in here, and the wallet shows once that worked
+  if (!wallet.accountId) return <SignInFlow onClose={onClose} onSignedIn={() => {}} />;
   const account = wallet.accountId;
   return (
     <Dialog open onClose={onClose} title="Your wallet" icon="ResourceBar_Icon_Gold">
@@ -627,6 +620,50 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
           Sign out
         </button>
       </Actions>
+    </Dialog>
+  );
+}
+
+type SignedIn = (next: Flow | undefined, account: string) => void;
+
+/** Sign in: Google or email first (no wallet app needed), a NEAR wallet as the other way. */
+function SignInFlow({ next, onClose, onSignedIn }: { next?: Flow; onClose: () => void; onSignedIn: SignedIn }) {
+  const wallet = useWallet();
+  const [busy, setBusy] = useState<SignInWay['method'] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const go = (way: SignInWay) => {
+    setError(null);
+    setBusy(way.method);
+    wallet.connect(way).then(
+      (account) => onSignedIn(next, account),
+      (e) => {
+        setBusy(null);
+        setError(signInError(e));
+      },
+    );
+  };
+  const walletButton = (
+    <button type="button" className={socialLogin ? 'si-alt' : 'fv-btn green si-wide'} onClick={() => go({ method: 'wallet' })}>
+      Connect a NEAR wallet
+    </button>
+  );
+  return (
+    <Dialog open onClose={onClose} title="Sign in" icon="Icon_PictoIcon_User">
+      {busy ? (
+        <WalletWait text={busy === 'wallet' ? 'Approve the sign-in in your wallet…' : 'Finish signing in in the window that opened…'} />
+      ) : (
+        <>
+          <p className="dlg-note">{next ? 'Sign in to keep going. ' : ''}Use the same account you play with.</p>
+          {socialLogin ? (
+            <SignInChoices onGoogle={() => go({ method: 'google' })} onEmail={(email) => go({ method: 'email', email })}>
+              {walletButton}
+            </SignInChoices>
+          ) : (
+            walletButton
+          )}
+          <Err error={error} />
+        </>
+      )}
     </Dialog>
   );
 }

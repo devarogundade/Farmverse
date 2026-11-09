@@ -21,6 +21,7 @@ namespace Farmverse.Editor
         {
             var roots = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path)
                 .Concat(AssetDatabase.GetAllAssetPaths().Where(p => p.StartsWith("Assets/") && p.Contains("/Resources/") && !AssetDatabase.IsValidFolder(p)))
+                .Append(FarmversePlayerSettings.SplashArt)   // the splash picture ships too: compressed like the other full-screen art
                 .ToArray();
             var used = AssetDatabase.GetDependencies(roots, true).Where(p => p.StartsWith("Assets/")).Distinct().ToList();
 
@@ -43,8 +44,9 @@ namespace Farmverse.Editor
                 AssetDatabase.StopAssetEditing();
             }
 
-            // the rest of the download: no Unity splash (its logo is 2.7 MB), no unused mesh channels, smaller code
-            PlayerSettings.SplashScreen.show = false;
+            // the rest of the download: our splash without Unity's logo (the logo alone is 2.7 MB), no unused mesh
+            // channels, smaller code
+            FarmversePlayerSettings.Apply();
             PlayerSettings.stripUnusedMeshComponents = true;
             PlayerSettings.SetIl2CppCodeGeneration(UnityEditor.Build.NamedBuildTarget.WebGL, UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize);
             AssetDatabase.SaveAssets();

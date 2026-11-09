@@ -48,9 +48,11 @@ namespace Farmverse.Contracts
 
         public ProfileRules Profile { get; set; } = new ProfileRules();
 
+        public List<string> SharePosts { get; set; } = new List<string>();
+
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(19);
+            var map = new Dictionary<string, object>(20);
             map["version"] = Version;
             map["publishedAt"] = PublishedAt;
             map["startingGems"] = StartingGems;
@@ -70,6 +72,7 @@ namespace Farmverse.Contracts
             map["starterPack"] = StarterPack.ToWire();
             map["referral"] = Referral.ToWire();
             map["profile"] = Profile.ToWire();
+            map["sharePosts"] = Wire.ListToWire(SharePosts, item => (object)item);
             return map;
         }
 
@@ -97,6 +100,7 @@ namespace Farmverse.Contracts
                 StarterPack = Wire.Required(map, "starterPack", "CatalogueDoc.starterPack", (v, path) => StarterPack.FromWire(v)),
                 Referral = Wire.Required(map, "referral", "CatalogueDoc.referral", (v, path) => ReferralRules.FromWire(v)),
                 Profile = Wire.Required(map, "profile", "CatalogueDoc.profile", (v, path) => ProfileRules.FromWire(v)),
+                SharePosts = Wire.Required(map, "sharePosts", "CatalogueDoc.sharePosts", (v, path) => Wire.AsList(v, path, Wire.AsString)),
             };
         }
     }

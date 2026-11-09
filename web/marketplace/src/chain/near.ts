@@ -5,6 +5,7 @@
 import type { NearConnector } from '@hot-labs/near-connect';
 import type { JsonRpcProvider } from 'near-api-js';
 import { config } from '../config';
+import { registerPrivyWallet, socialLogin } from './privyWallet';
 
 let connector: Promise<NearConnector> | null = null;
 let rpc: Promise<JsonRpcProvider> | null = null;
@@ -18,7 +19,7 @@ export function getConnector(): Promise<NearConnector> {
       autoConnect: true,
     });
     // social login: "Email or Google" next to them, when the Privy app is set (plan 15 §13.2)
-    if (import.meta.env.VITE_PRIVY_APP_ID) await (await import('./privyWallet')).registerPrivyWallet(c, location.origin);
+    if (socialLogin) await registerPrivyWallet(c, location.origin);
     return c;
   });
   return connector;
