@@ -16,19 +16,25 @@ Built for **NEAR HACKATHON**, track **`games` — Games With Real Economies**. R
 | **Game Server** | https://server.farmverse.world (`/v1/config`, `/healthz`) |
 | **What changed during the hackathon** | [`pre-hackathon...near-hackathon`](https://github.com/devarogundade/Farmverse/compare/pre-hackathon...near-hackathon) |
 
+## Achievements
+
+- **Partnership with [Cleanmate DAO](https://cleanmatedao.com)**, opening Farmverse to their community of over
+  **2,700 users**. Cleanmate sponsors the B3TR coupon rewards in Farmverse.
+
 ---
 
 ## Contents
 
-1. [For judges: try it in 10 minutes](#for-judges-try-it-in-10-minutes)
-2. [The story](#the-story)
-3. [The game loop](#the-game-loop)
-4. [The economy: what lives on NEAR](#the-economy-what-lives-on-near)
-5. [How it fits the Games track](#how-it-fits-the-games-track)
-6. [Architecture](#architecture)
-7. [Run it yourself](#run-it-yourself)
-8. [What was built during the hackathon](#what-was-built-during-the-hackathon)
-9. [Next steps](#next-steps)
+1. [Achievements](#achievements)
+2. [For judges: try it in 10 minutes](#for-judges-try-it-in-10-minutes)
+3. [The story](#the-story)
+4. [The game loop](#the-game-loop)
+5. [The economy: what lives on NEAR](#the-economy-what-lives-on-near)
+6. [How it fits the Games track](#how-it-fits-the-games-track)
+7. [Architecture](#architecture)
+8. [Run it yourself](#run-it-yourself)
+9. [What was built during the hackathon](#what-was-built-during-the-hackathon)
+10. [Next steps](#next-steps)
 
 ---
 
