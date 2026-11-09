@@ -13,6 +13,7 @@ Built for **NEAR HACKATHON**, track **`games` — Games With Real Economies**. R
 | **Market** | https://marketplace.farmverse.world |
 | **Website** | https://farmverse.world |
 | **API** | https://api.farmverse.world (`/v1/config`, `/healthz`) |
+| **Game Server** | https://server.farmverse.world (`/v1/config`, `/healthz`) |
 | **What changed during the hackathon** | [`pre-hackathon...near-hackathon`](https://github.com/devarogundade/Farmverse/compare/pre-hackathon...near-hackathon) |
 
 ---
