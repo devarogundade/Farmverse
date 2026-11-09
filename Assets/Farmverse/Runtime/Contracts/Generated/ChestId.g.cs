@@ -14,6 +14,7 @@ namespace Farmverse.Contracts
         Unknown = 0,
         Order = 1,
         Task = 2,
+        Share = 3,
     }
 
     /// <summary>Wire strings for <see cref="ChestId"/>.</summary>
@@ -25,6 +26,7 @@ namespace Farmverse.Contracts
             {
                 case ChestId.Order: return "order";
                 case ChestId.Task: return "task";
+                case ChestId.Share: return "share";
                 default: throw new WireFormatException("ChestId", "cannot send an unknown value");
             }
         }
@@ -35,6 +37,7 @@ namespace Farmverse.Contracts
             {
                 case "order": return ChestId.Order;
                 case "task": return ChestId.Task;
+                case "share": return ChestId.Share;
                 default: return ChestId.Unknown;
             }
         }

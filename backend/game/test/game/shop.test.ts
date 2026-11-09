@@ -66,6 +66,22 @@ describe('shop', () => {
     expect(gems(w)).toBe(start + 2 * chest.gems + DEFAULT_CATALOGUE.chests['task']!.gems);
   });
 
+  it('gives the daily X share once a UTC day with nothing to unlock: 100 coins to the game, 5 gems to the wallet', async () => {
+    const w = await player();   // no island at all: the share chest checks nothing
+    const start = gems(w);
+    const share = DEFAULT_CATALOGUE.chests['share']!;
+    expect(share).toEqual({ coins: 100, gems: 5, boosts: {} });
+    expect(await claimChest(w.env, FARMER, 'share', 'k_share_0001')).toEqual({ ...share, fresh: true });
+    expect(gems(w)).toBe(start + 5);
+    expect(inv(w)).toBeUndefined();   // no boosts, so the inventory isn't touched
+    expect((await claimChest(w.env, FARMER, 'share', 'k_share_0001')).fresh).toBe(false);   // a retry pays nothing more
+    expect(await code(claimChest(w.env, FARMER, 'share', 'k_share_0002'))).toBe('CHEST_CLAIMED');
+    expect(gems(w)).toBe(start + 5);
+    w.clock.advance(DAY);
+    expect((await claimChest(w.env, FARMER, 'share', 'k_share_0003')).fresh).toBe(true);
+    expect(gems(w)).toBe(start + 10);
+  });
+
   it('uses a boost: one fewer, running for its minutes, stacking on a running one', async () => {
     const w = await player();
     expect(await code(useBoost(w.env, FARMER, 'fert', 'k_use_00001'))).toBe('BOOST_NONE');
