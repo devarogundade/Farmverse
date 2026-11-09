@@ -3,6 +3,7 @@
  * the first paint doesn't wait for wallet manifests.
  */
 import type { NearConnector } from '@hot-labs/near-connect';
+import { liftWalletPopups } from '@farmverse/shared/walletLayer';
 import type { JsonRpcProvider } from 'near-api-js';
 import { config } from '../config';
 import { registerPrivyWallet, socialLogin } from './privyWallet';
@@ -12,6 +13,8 @@ let rpc: Promise<JsonRpcProvider> | null = null;
 
 export function getConnector(): Promise<NearConnector> {
   connector ??= import('@hot-labs/near-connect').then(async ({ NearConnector }) => {
+    // the wallet list opens above our <dialog> popups, not under them
+    liftWalletPopups();
     const c = new NearConnector({
       network: config.network,
       // MyNearWallet, Meteor, HOT, Intear, … from the NEAR Connect manifest.

@@ -2,6 +2,7 @@ import type { NearConnector } from '@hot-labs/near-connect';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { admin, ApiError, hasStoredSession, onSessionLost, pub, refresh, setSession, signOut as endSession, type Tokens } from './api/http';
+import { liftWalletPopups } from '@farmverse/shared/walletLayer';
 import { config } from './config';
 
 type Status = 'checking' | 'signed-out' | 'signed-in';
@@ -26,7 +27,11 @@ export function useSession(): Session {
 
 let connector: Promise<NearConnector> | null = null;
 const getConnector = () =>
-  (connector ??= import('@hot-labs/near-connect').then(({ NearConnector }) => new NearConnector({ network: config.network, footerBranding: null })));
+  (connector ??= import('@hot-labs/near-connect').then(({ NearConnector }) => {
+    // the wallet list opens above our <dialog> popups, not under them
+    liftWalletPopups();
+    return new NearConnector({ network: config.network, footerBranding: null });
+  }));
 
 const fromBase64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 

@@ -8,6 +8,7 @@
     "./nft/*": "./src/nft/*.ts",
     "./three/*": "./src/three/*.tsx",
     "./theme.css": "./src/theme.css",
+    "./walletLayer": "./src/walletLayer.ts",
     "./brand": "./src/brand.tsx",
     "./gameTheme": "./src/gameTheme.ts",
     "./stageshow": "./src/stageshow/kit/index.ts",
