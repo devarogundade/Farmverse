@@ -382,8 +382,33 @@ namespace Farmverse.Presentation.UI.Game
             }
         }
 
-        /// <summary>The coupon icon: the pack's gold ticket with a stroked "%" (kit.js couponIcon).</summary>
+        /// <summary>
+        /// The coupon icon: the first two coupon types' coin logos (B3TR in front, USDT behind), overlapping.
+        /// Falls back to the pack's gold ticket with a stroked "%" when the catalogue has no coupon types.
+        /// </summary>
         private static VisualElement HomeCouponIcon(VisualElement parent, Pt p, float w)
+        {
+            var types = CpCouponStore.Types;
+            if (types.Count == 0) return HomeTicketIcon(parent, p, w);
+
+            var d = types.Count == 1 ? w * .7f : w * .64f;   // coin size; two coins overlap by ~30%
+            var e = PK.Box(parent);
+            PK.Size(e, w, d * 1.12f);
+            if (types.Count == 1)
+            {
+                PK.Abs(CpLogo(e, p, types[0], d, 3), left: (w - d) / 2f, top: d * .06f);
+                return e;
+            }
+
+            var front = types.Find(t => t.id == "b3tr") ?? types[0];
+            var back = types.Find(t => t.id == "usdt" && t != front) ?? types.Find(t => t != front)!;
+            PK.Abs(CpLogo(e, p, back, d, 3), right: 0, top: 0);         // added first, so it sits behind
+            PK.Abs(CpLogo(e, p, front, d, 3), left: 0, top: d * .12f);
+            return e;
+        }
+
+        /// <summary>The pack's gold ticket with a stroked "%" (kit.js couponIcon).</summary>
+        private static VisualElement HomeTicketIcon(VisualElement parent, Pt p, float w)
         {
             var h = w * 242f / 399f;
             var e = PK.Centre(PK.Box(parent));
