@@ -5,9 +5,11 @@
  *   node scripts/render.mjs                         → out/farmverse-trailer.mp4 (with audio if found)
  *   node scripts/render.mjs --stills 4,52.5,95      → out/stills/*.png at those seconds
  *   node scripts/render.mjs --from 48 --to 66       → just that part (out/part-48-66.mp4)
+ *   node scripts/render.mjs --remux                 → redo only the sound on the last full render
  *
  * Options: --url http://localhost:5179  --workers 3  --out <file>  --chrome <path to chrome.exe>
- * Audio: media/audio/voiceover.(wav|mp3|m4a) at full level, media/audio/music.(mp3|wav|m4a) under it.
+ * Sound: the game's effects (src/sfx.ts, from Assets/Farmverse/Content/Audio), media/audio/voiceover.(wav|mp3|m4a)
+ * at full level and media/audio/music.(mp3|wav|m4a) under it.
  */
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
@@ -18,6 +20,8 @@ import { chromium } from 'playwright-core';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'out');
+/** The game's own audio (git-ignored, paid pack): read in place, never copied. */
+const GAME_AUDIO = join(ROOT, '..', '..', 'Assets', 'Farmverse', 'Content', 'Audio');
 
 const arg = (name, def) => {
   const i = process.argv.indexOf(`--${name}`);
@@ -46,6 +50,15 @@ function launch() {
     headless: true,
     args: ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--use-angle=d3d11', '--autoplay-policy=no-user-gesture-required', '--hide-scrollbars', '--mute-audio'],
   });
+}
+
+/** Whether a recording has a sound track. */
+async function hasAudio(file) {
+  const p = spawn(ffmpeg, ['-hide_banner', '-i', file], { stdio: ['ignore', 'ignore', 'pipe'] });
+  let err = '';
+  p.stderr.on('data', (d) => (err += d));
+  await new Promise((r) => p.on('close', r));
+  return /Stream #.*Audio:/.test(err);
 }
 
 function run(args, stdin = false) {
@@ -128,35 +141,93 @@ async function film() {
 
   const list = join(parts, 'list.txt');
   writeFileSync(list, files.filter(Boolean).map((f) => `file '${f.replace(/\\/g, '/')}'`).join('\n'));
+  // Keep the silent picture, so the sound can be redone later without re-rendering (--remux).
+  const video = join(OUT, whole ? 'video.mp4' : `video-${from}-${to}.mp4`);
+  await run(['-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', video]).done;
+  rmSync(parts, { recursive: true, force: true });
+  await mux(video, info, from, to, out);
+}
+
+/**
+ * Lays the sound under the picture: the game's sound effects at their cues, the voiceover at full
+ * level and music under it, if those are in media/audio. A limiter keeps the sum from clipping.
+ */
+async function mux(video, info, from, to, out) {
+  const { audio, sfx, clips = [] } = info;
+  const len = to - from;
   const voice = audio.voice && join(ROOT, audio.voice.replace(/^\//, ''));
   const music = audio.music && join(ROOT, audio.music.replace(/^\//, ''));
-  const args = ['-f', 'concat', '-safe', '0', '-i', list];
-  if (voice) args.push('-ss', String(from), '-i', voice);
-  if (music) args.push('-ss', String(from), '-i', music);
-  const len = to - from;
-  if (voice || music) {
-    const chains = [];
-    const mix = [];
-    let i = 1;
-    if (voice) {
-      chains.push(`[${i++}:a]volume=1.0[v]`);
-      mix.push('[v]');
-    }
-    if (music) {
-      chains.push(`[${i++}:a]volume=${voice ? 0.2 : 0.7},afade=t=out:st=${Math.max(0, len - 3)}:d=3[m]`);
-      mix.push('[m]');
-    }
-    chains.push(`${mix.join('')}amix=inputs=${mix.length}:duration=longest:normalize=0[a]`);
+  const args = ['-i', video];
+  const chains = [];
+  const bus = [];
+  let i = 1;
+
+  const cues = sfx.filter((c) => c.t >= from && c.t < to && existsSync(join(GAME_AUDIO, c.file)));
+  const missing = sfx.filter((c) => !existsSync(join(GAME_AUDIO, c.file)));
+  if (missing.length) console.warn(`Missing sound files: ${[...new Set(missing.map((c) => c.file))].join(', ')}`);
+  const sfxBus = [];
+  for (const c of cues) {
+    if (c.loop || c.dur) args.push('-stream_loop', '-1');
+    args.push('-i', join(GAME_AUDIO, c.file));
+    const dur = c.dur ?? 30;
+    const ms = Math.round((c.t - from) * 1000);
+    const f = [`atrim=0:${dur}`, 'asetpts=PTS-STARTPTS', 'aformat=sample_rates=48000:channel_layouts=stereo'];
+    if (c.fadeIn) f.push(`afade=t=in:st=0:d=${c.fadeIn}`);
+    if (c.dur && c.fadeOut) f.push(`afade=t=out:st=${Math.max(0, c.dur - c.fadeOut)}:d=${c.fadeOut}`);
+    f.push(`volume=${c.vol ?? 0.6}`, `adelay=${ms}:all=1`);
+    chains.push(`[${i}:a]${f.join(',')}[s${i}]`);
+    sfxBus.push(`[s${i}]`);
+    i++;
+  }
+  // The gameplay clips keep their own game sound, in their slots (skipped if a recording has none).
+  const clipBus = [];
+  for (const c of clips) {
+    const file = join(ROOT, c.file);
+    if (c.t + c.dur <= from || c.t >= to || !(await hasAudio(file))) continue;
+    args.push('-ss', String(c.start), '-t', String(c.dur), '-i', file);
+    const ms = Math.max(0, Math.round((c.t - from) * 1000));
+    chains.push(`[${i}:a]asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo,afade=t=in:st=0:d=0.3,afade=t=out:st=${Math.max(0, c.dur - 0.5)}:d=0.5,volume=${voice ? 0.55 : 0.9},adelay=${ms}:all=1[c${i}]`);
+    clipBus.push(`[c${i}]`);
+    i++;
+  }
+  sfxBus.push(...clipBus);
+  if (sfxBus.length) {
+    chains.push(`${sfxBus.join('')}amix=inputs=${sfxBus.length}:duration=longest:normalize=0,volume=${voice ? 0.75 : 1}[sfx]`);
+    bus.push('[sfx]');
+  }
+  if (voice) {
+    args.push('-ss', String(from), '-i', voice);
+    chains.push(`[${i++}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.0[v]`);
+    bus.push('[v]');
+  }
+  if (music) {
+    args.push('-ss', String(from), '-i', music);
+    chains.push(`[${i++}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=${voice ? 0.2 : 0.6},afade=t=out:st=${Math.max(0, len - 3)}:d=3[m]`);
+    bus.push('[m]');
+  }
+  if (bus.length) {
+    chains.push(`${bus.join('')}amix=inputs=${bus.length}:duration=longest:normalize=0,alimiter=limit=0.95,apad[a]`);
     args.push('-filter_complex', chains.join(';'), '-map', '0:v', '-map', '[a]', '-c:a', 'aac', '-b:a', '192k');
   }
   args.push('-c:v', 'copy', '-t', String(len), '-movflags', '+faststart', out);
   await run(args).done;
-  rmSync(parts, { recursive: true, force: true });
-  console.log(`Done: ${out}${voice || music ? '' : ' (no audio found in media/audio)'}`);
+  const parts = [cues.length && `${cues.length} sound effects`, clipBus.length && `game sound from ${clipBus.length} clips`, voice && 'voiceover', music && 'music'].filter(Boolean);
+  console.log(`Done: ${out} (${parts.length ? parts.join(', ') : 'no sound'})`);
+}
+
+/** Redoes only the sound on the last full render's picture (after adding a voiceover or music). */
+async function remux() {
+  const video = join(OUT, 'video.mp4');
+  if (!existsSync(video)) throw new Error('No out/video.mp4 yet: render the whole trailer once first.');
+  const browser = await launch();
+  const { page, info } = await openPage(browser);
+  await page.close();
+  await browser.close();
+  await mux(video, info, 0, info.total, resolve(arg('out', join(OUT, 'farmverse-trailer.mp4'))));
 }
 
 if (!CHROME) {
   console.error('Chrome not found: pass --chrome <path> or set CHROME_PATH.');
   process.exit(1);
 }
-await (STILLS ? stills(STILLS.split(',').map(Number)) : film());
+await (STILLS ? stills(STILLS.split(',').map(Number)) : process.argv.includes('--remux') ? remux() : film());

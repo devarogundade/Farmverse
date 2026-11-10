@@ -309,6 +309,10 @@
             "v": "Also {0}: {1}/{2}"
         },
         {
+            "k": "An NFT of your goods. Redeem it to put them in your farmhouse, or sell it on the market.",
+            "v": "An NFT of your goods. Redeem it to put them in your farmhouse, or sell it on the market."
+        },
+        {
             "k": "An animal pen: people nearby settle in faster",
             "v": "An animal pen: people nearby settle in faster"
         },
@@ -339,6 +343,10 @@
         {
             "k": "Anything damaged?",
             "v": "Anything damaged?"
+        },
+        {
+            "k": "Approve the redeem in your wallet",
+            "v": "Approve the redeem in your wallet"
         },
         {
             "k": "Are we ready for raiders?",
@@ -463,6 +471,10 @@
         {
             "k": "Bakery",
             "v": "Bakery"
+        },
+        {
+            "k": "Bakery factory",
+            "v": "Bakery factory"
         },
         {
             "k": "Bakery shop",
@@ -791,6 +803,10 @@
         {
             "k": "Buy a field in the shop and walk into it to plant",
             "v": "Buy a field in the shop and walk into it to plant"
+        },
+        {
+            "k": "Buy more on the market",
+            "v": "Buy more on the market"
         },
         {
             "k": "Bye",
@@ -1761,6 +1777,10 @@
             "v": "Fields: {0}/{1}. One more at island level {2}"
         },
         {
+            "k": "Fill",
+            "v": "Fill"
+        },
+        {
             "k": "Fill ",
             "v": "Fill "
         },
@@ -2111,6 +2131,10 @@
         {
             "k": "Grown in fields. The windmill turns it into flour.",
             "v": "Grown in fields. The windmill turns it into flour."
+        },
+        {
+            "k": "Grown in fields. The windmill turns it into flour.\n<color=#ffd23a>Shops pay <b>{0}</b> coins each.</color>",
+            "v": "Grown in fields. The windmill turns it into flour.\n<color=#ffd23a>Shops pay <b>{0}</b> coins each.</color>"
         },
         {
             "k": "Grown on your island.",
@@ -2925,6 +2949,10 @@
             "v": "Make {0} planks"
         },
         {
+            "k": "Makes croissant · {0}% speed",
+            "v": "Makes croissant · {0}% speed"
+        },
+        {
             "k": "Makes feed · {0}% speed",
             "v": "Makes feed · {0}% speed"
         },
@@ -3027,6 +3055,10 @@
         {
             "k": "Mine",
             "v": "Mine"
+        },
+        {
+            "k": "Mint as NFT",
+            "v": "Mint as NFT"
         },
         {
             "k": "Missing a day pauses your streak — it never resets.",
@@ -3133,6 +3165,14 @@
             "v": "NEW!"
         },
         {
+            "k": "NFT",
+            "v": "NFT"
+        },
+        {
+            "k": "NFTs",
+            "v": "NFTs"
+        },
+        {
             "k": "Name changed!",
             "v": "Name changed!"
         },
@@ -3171,6 +3211,14 @@
         {
             "k": "Needs cabbage",
             "v": "Needs cabbage"
+        },
+        {
+            "k": "Needs egg",
+            "v": "Needs egg"
+        },
+        {
+            "k": "Needs flour",
+            "v": "Needs flour"
         },
         {
             "k": "Needs maize",
@@ -3333,6 +3381,10 @@
             "v": "No Ads — thank you!"
         },
         {
+            "k": "No NFTs yet: mint goods here, or buy on the market.",
+            "v": "No NFTs yet: mint goods here, or buy on the market."
+        },
+        {
             "k": "No boosts yet: get them in the Shop.",
             "v": "No boosts yet: get them in the Shop."
         },
@@ -3471,6 +3523,10 @@
         {
             "k": "Nothing to collect.",
             "v": "Nothing to collect."
+        },
+        {
+            "k": "Nothing to do here right now.",
+            "v": "Nothing to do here right now."
         },
         {
             "k": "Nothing to do right now. More fields or animals would keep me busy.",
@@ -4137,6 +4193,14 @@
             "v": "Ready ×{0} · workers off"
         },
         {
+            "k": "Redeem",
+            "v": "Redeem"
+        },
+        {
+            "k": "Redeeming…",
+            "v": "Redeeming…"
+        },
+        {
             "k": "Referral reward!",
             "v": "Referral reward!"
         },
@@ -4379,6 +4443,10 @@
         {
             "k": "Sell goods at a market stall",
             "v": "Sell goods at a market stall"
+        },
+        {
+            "k": "Sell on market",
+            "v": "Sell on market"
         },
         {
             "k": "Sell surplus",
@@ -4825,6 +4893,10 @@
             "v": "Tap to skip"
         },
         {
+            "k": "Tap to use here, or drag onto fields and buildings",
+            "v": "Tap to use here, or drag onto fields and buildings"
+        },
+        {
             "k": "Textile mill",
             "v": "Textile mill"
         },
@@ -4843,6 +4915,10 @@
         {
             "k": "That's all {0} spins for today.\nCome back tomorrow!",
             "v": "That's all {0} spins for today.\nCome back tomorrow!"
+        },
+        {
+            "k": "The Clerk is stealing from the farmhouse!",
+            "v": "The Clerk is stealing from the farmhouse!"
         },
         {
             "k": "The background music clip (Content/Audio/Music), looped under everything.",
@@ -4987,6 +5063,10 @@
         {
             "k": "The post office order for {0} beans ran out",
             "v": "The post office order for {0} beans ran out"
+        },
+        {
+            "k": "The post office order for {0} cabbage ran out",
+            "v": "The post office order for {0} cabbage ran out"
         },
         {
             "k": "The post office order for {0} egg ran out",
@@ -5681,6 +5761,14 @@
             "v": "Wheat in, flour out"
         },
         {
+            "k": "Wheat ×{0}",
+            "v": "Wheat ×{0}"
+        },
+        {
+            "k": "Wheat ×{0} is in your farmhouse",
+            "v": "Wheat ×{0} is in your farmhouse"
+        },
+        {
             "k": "Wheel",
             "v": "Wheel"
         },
@@ -5799,6 +5887,10 @@
         {
             "k": "Workers loaded a train crate",
             "v": "Workers loaded a train crate"
+        },
+        {
+            "k": "Workers loaded a truck crate",
+            "v": "Workers loaded a truck crate"
         },
         {
             "k": "Workers loaded {0} train crates",
@@ -6065,8 +6157,16 @@
             "v": "Zombies from the south-east · coming in {0}s"
         },
         {
+            "k": "Zombies from the south-west · coming in {0}s",
+            "v": "Zombies from the south-west · coming in {0}s"
+        },
+        {
             "k": "Zombies sighted to the north-east — the Builder leads them!",
             "v": "Zombies sighted to the north-east — the Builder leads them!"
+        },
+        {
+            "k": "Zombies sighted to the south — the Clerk leads them!",
+            "v": "Zombies sighted to the south — the Clerk leads them!"
         },
         {
             "k": "Zombies sighted to the south!",
@@ -6075,6 +6175,10 @@
         {
             "k": "Zombies sighted to the south-east!",
             "v": "Zombies sighted to the south-east!"
+        },
+        {
+            "k": "Zombies sighted to the south-west — the Clerk leads them!",
+            "v": "Zombies sighted to the south-west — the Clerk leads them!"
         },
         {
             "k": "Zombies sighted to the south-west!",

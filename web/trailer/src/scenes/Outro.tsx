@@ -6,13 +6,14 @@ import { nearLogo } from '../media';
 import { Chip, Ground, Title } from '../ui';
 
 const GOALS = [
-  { text: 'Merchants with wallets', at: 0.6 },
+  { text: 'Merchants with wallets and NEAR AI voices', at: 0.6 },
   { text: 'Markets owned by players', at: 2.0 },
   { text: 'An economy that evolves on its own', at: 3.5 },
   { text: 'Players who never notice the chain', at: 5.6 },
 ];
 
 const STACK = [
+  { icon: 'Icon_Megaphone', text: 'Merchant voices by NEAR AI, verified in a TEE' },
   { icon: 'Icon_Clover', text: 'FARM token on NEAR' },
   { icon: 'check', text: 'Gasless mints and redeems' },
   { icon: 'Icon_PictoIcon_User', text: 'Email and Google sign-in' },

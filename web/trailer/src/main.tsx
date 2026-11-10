@@ -6,7 +6,8 @@ import { StrictMode, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { RENDER, clock, transport, useNow } from './clock';
-import { audioFound, probeMedia, seekVideos } from './media';
+import { CLIPS, audioFound, hasClip, probeMedia, seekVideos, type ClipId } from './media';
+import { resolveCues } from './sfx';
 import { Trailer } from './Trailer';
 import { FPS, HEIGHT, SCENES, TOTAL, WIDTH } from './timeline';
 
@@ -33,6 +34,15 @@ async function seek(t: number) {
   await raf();
 }
 
+/** Recorded clips and where they sit, for mixing their own game sound into the render. */
+function clipSlots() {
+  return (Object.keys(CLIPS) as ClipId[]).filter(hasClip).map((id) => {
+    const c = CLIPS[id];
+    const scene = SCENES.find((s) => s.id === c.scene)!;
+    return { id, file: `media/clips/${c.file}`, start: c.start, t: scene.start + c.from, dur: c.until - c.from };
+  });
+}
+
 /** The renderer's handle (scripts/render.mjs). */
 async function ready() {
   await document.fonts.ready;
@@ -42,12 +52,34 @@ async function ready() {
   await modelsLoaded();
   await sleep(500);
   await seek(0);
-  return { fps: FPS, total: TOTAL, width: WIDTH, height: HEIGHT, audio: audioFound };
+  return { fps: FPS, total: TOTAL, width: WIDTH, height: HEIGHT, audio: audioFound, sfx: resolveCues(), clips: clipSlots() };
 }
 
 declare global {
   interface Window {
     __trailer?: { ready: typeof ready; seek: typeof seek };
+  }
+}
+
+/** Preview: one sound effect, cut and faded the way the render will be. */
+function playCue(c: ReturnType<typeof resolveCues>[number]) {
+  const a = new Audio(`/game-audio/${c.file}`);
+  const vol = c.vol ?? 0.6;
+  a.volume = c.fadeIn ? 0 : vol;
+  a.loop = Boolean(c.loop || c.dur);
+  void a.play().catch(() => {});
+  const t0 = performance.now();
+  if (c.fadeIn || c.fadeOut || c.dur) {
+    const step = () => {
+      const s = (performance.now() - t0) / 1000;
+      let k = 1;
+      if (c.fadeIn) k = Math.min(k, s / c.fadeIn);
+      if (c.dur && c.fadeOut) k = Math.min(k, (c.dur - s) / c.fadeOut);
+      a.volume = Math.max(0, Math.min(1, vol * k));
+      if (c.dur && s >= c.dur) return a.pause();
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
 }
 
@@ -88,9 +120,12 @@ function Player() {
     }
     let last = performance.now();
     let id = 0;
+    const cues = resolveCues();
     const tick = (ms: number) => {
-      const t = Math.min(TOTAL, clock.get() + (ms - last) / 1000);
+      const from = clock.get();
+      const t = Math.min(TOTAL, from + (ms - last) / 1000);
       last = ms;
+      for (const c of cues) if (c.t > from && c.t <= t) playCue(c);
       clock.set(t);
       advance(t);
       if (t >= TOTAL) setPlaying(false);

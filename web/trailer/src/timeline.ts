@@ -28,14 +28,14 @@ export const SCENES: Scene[] = [
   { id: 'mint', label: 'Mint', start: 48, C: Mint },
   { id: 'market', label: 'The market', start: 66, C: Market },
   { id: 'town', label: 'Market Town', start: 82, C: Town },
-  { id: 'hands', label: 'Farmhands', start: 104, C: Hands },
-  { id: 'redeem', label: 'Redeem', start: 120, C: Redeem },
-  { id: 'near', label: 'Built on NEAR', start: 132, C: Near },
-  { id: 'community', label: 'Community', start: 146, C: Community },
-  { id: 'end', label: 'End card', start: 153, C: End },
+  { id: 'hands', label: 'Farmhands', start: 108, C: Hands },
+  { id: 'redeem', label: 'Redeem', start: 124, C: Redeem },
+  { id: 'near', label: 'Built on NEAR', start: 136, C: Near },
+  { id: 'community', label: 'Community', start: 150, C: Community },
+  { id: 'end', label: 'End card', start: 157, C: End },
 ];
 
-export const TOTAL = 165;
+export const TOTAL = 169;
 
 export const sceneEnd = (i: number) => (i + 1 < SCENES.length ? SCENES[i + 1].start + DISSOLVE : TOTAL);
 export const sceneDur = (i: number) => (i + 1 < SCENES.length ? SCENES[i + 1].start : TOTAL) - SCENES[i].start;

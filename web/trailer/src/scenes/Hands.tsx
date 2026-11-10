@@ -151,7 +151,7 @@ export function Redeem() {
           </Chip>
         </div>
       </div>
-      <Clip id="clip5" from={4.2} until={12.5}>
+      <Clip id="clip5">
         <div className="sc-cap">
           <Title at={4.8} size={80}>
             It lands on your island, ready to use

@@ -23,6 +23,23 @@ If a voiceover or music file is in `media/audio`, the preview plays it in sync.
 
 Clips and audio are git-ignored.
 
+## Sound effects
+
+The game's own sounds (`Assets/Farmverse/Content/Audio`, a paid pack, git-ignored) are read in place and never
+copied. Each cue in [src/sfx.ts](src/sfx.ts) sits on a beat of its scene, so it moves with the scene. The
+preview plays them live; the render mixes them under the voiceover (at 75 %) and music, with a limiter.
+There are no effects over the gameplay clips: each clip plays its own recorded game sound in its slot
+(slots are in `CLIPS` in [src/media.ts](src/media.ts)).
+
+New or changed clips change the picture, so they need a full render; a new voiceover or music needs only
+`--remux`.
+
+After adding a voiceover or music, redo only the sound, without rendering the picture again:
+
+```bash
+node scripts/render.mjs --remux
+```
+
 ## Render
 
 With the dev server running:
