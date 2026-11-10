@@ -59,6 +59,7 @@ export interface ChainRuntime {
     readonly allow: (accountId: string) => Promise<boolean>;
     /** Market deposits (yoctoNEAR) the relayer pays per account per day. */
     readonly depositBudget?: bigint;
+    readonly depositBudgetAll?: bigint;
   };
   /** Testnet only: who pays faucet claims and how much. */
   readonly faucet?: { readonly sender: FaucetSender; readonly farmUnits: bigint; readonly nearYocto: bigint; readonly dailyCap: number };
@@ -219,6 +220,7 @@ export function callDefinitions(rt: Runtime): ReadonlyMap<string, AnyDefinition>
           ...(c.marketContract ? { marketContract: c.marketContract } : {}),
           ...(c.farmContract ? { farmContract: c.farmContract } : {}),
           ...(c.relay.depositBudget !== undefined ? { depositBudget: c.relay.depositBudget } : {}),
+          ...(c.relay.depositBudgetAll !== undefined ? { depositBudgetAll: c.relay.depositBudgetAll } : {}),
         };
         return relay(deps, await walletOf(rt, uid), data.delegate, log);
       },

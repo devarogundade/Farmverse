@@ -189,6 +189,7 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
                     relayer,
                     allow: (accountId: string) => redisRateLimiter(redis).hit(`relay:${accountId}`, 30, 60),
                     depositBudget: BigInt(Math.round(config.RELAY_DEPOSIT_NEAR_DAY * 1000)) * 10n ** 21n,
+                    depositBudgetAll: BigInt(Math.round(config.RELAY_DEPOSIT_NEAR_DAY_ALL * 1000)) * 10n ** 21n,
                   },
                 }
               : {}),

@@ -183,6 +183,21 @@ describe('sponsored market calls', () => {
     expect(await code(relay(tomorrow, 'alice.testnet', call(MARKET, 'storage_deposit', {}, 20n * MILLI), memoryLogger()))).toBe('ok');
   });
 
+  it('caps the deposits of all accounts together per day, booking neither budget when one is full', async () => {
+    const { deps } = setup(30n * MILLI);
+    const capped = { ...deps, depositBudgetAll: 50n * MILLI };
+    const as = (who: string, milli: bigint) =>
+      code(relay(capped, who, call(MARKET, 'storage_deposit', {}, milli * MILLI, undefined, { senderId: who }), memoryLogger()));
+    expect(await as('a.testnet', 20n)).toBe('ok');
+    expect(await as('b.testnet', 20n)).toBe('ok');
+    expect(await as('c.testnet', 20n)).toBe('RATE_LIMITED'); // 60 > 50 overall
+    expect(await as('c.testnet', 10n)).toBe('ok'); // exactly 50
+    expect(await as('d.testnet', 1n)).toBe('RATE_LIMITED');
+    // the refused call booked nothing against c's own budget: 10 used, 20 left
+    const tomorrow = { ...capped, env: { ...capped.env, clock: new FixedClock(1_800_000_000_000 + 86_400_000) } };
+    expect(await code(relay(tomorrow, 'd.testnet', call(MARKET, 'storage_deposit', {}, 20n * MILLI, undefined, { senderId: 'd.testnet' }), memoryLogger()))).toBe('ok');
+  });
+
   it('market calls are off without the market and FARM contracts or without a budget', async () => {
     const { r } = fakeRelayer();
     const itemsOnly = { env: env(), relayer: r, itemsContract: ITEMS, allow: async () => true };

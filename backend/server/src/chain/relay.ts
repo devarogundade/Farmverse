@@ -104,6 +104,11 @@ export interface RelayDeps {
   readonly farmContract?: string;
   /** Deposits (yoctoNEAR) the relayer pays for one account per UTC day; 0 or unset = none. */
   readonly depositBudget?: bigint;
+  /**
+   * Deposits the relayer pays for all accounts together per UTC day; unset = no overall cap. Throwaway accounts
+   * are free to make, so this is what bounds what the relayer can lose in a day (storage can be withdrawn).
+   */
+  readonly depositBudgetAll?: bigint;
   /** Per-account rate limit: true when allowed. */
   readonly allow: (accountId: string) => Promise<boolean>;
 }
@@ -160,15 +165,23 @@ function argsOf(w: DelegateWire): Record<string, unknown> {
 
 const DAY_MS = 86_400_000;
 
-/** Books `yocto` against the account's deposit budget for today (UTC); false when it would go over. */
-async function bookDeposit(env: Env, accountId: string, yocto: bigint, budget: bigint): Promise<boolean> {
+/**
+ * Books `yocto` against today's (UTC) deposit budgets: the account's own and, when set, everyone's together. Both or
+ * neither, in one transaction; false when either would go over.
+ */
+async function bookDeposit(env: Env, accountId: string, yocto: bigint, budget: bigint, budgetAll?: bigint): Promise<boolean> {
   const day = Math.floor(env.clock.nowMs() / DAY_MS);
-  const mark = `ops/relaydeposit_${createHash('sha256').update(accountId).digest('hex').slice(0, 40)}_${day}`;
+  const mine = `ops/relaydeposit_${createHash('sha256').update(accountId).digest('hex').slice(0, 40)}_${day}`;
+  const all = `ops/relaydeposit_all_${day}`;
+  const spentIn = (doc: { exists: boolean; data?: unknown }) =>
+    doc.exists ? BigInt(String((doc.data as { spent?: unknown } | undefined)?.spent ?? '0')) : 0n;
   return env.store.runTransaction(async (tx) => {
-    const doc = await tx.get(mark);
-    const spent = doc.exists ? BigInt(String((doc.data as { spent?: unknown } | undefined)?.spent ?? '0')) : 0n;
+    const spent = spentIn(await tx.get(mine));
     if (spent + yocto > budget) return false;
-    tx.set(mark, { accountId, day, spent: (spent + yocto).toString() });
+    const spentAll = budgetAll === undefined ? 0n : spentIn(await tx.get(all));
+    if (budgetAll !== undefined && spentAll + yocto > budgetAll) return false;
+    tx.set(mine, { accountId, day, spent: (spent + yocto).toString() });
+    if (budgetAll !== undefined) tx.set(all, { day, spent: (spentAll + yocto).toString() });
     return true;
   });
 }
@@ -191,7 +204,7 @@ export async function relay(deps: RelayDeps, accountId: string, w: DelegateWire,
   const signed = signedDelegateOf(w);
   if (!(await deps.allow(accountId))) fail('RATE_LIMITED');
   // 1 yoctoNEAR (a FARM payment) doesn't count; storage and approvals do, even when the call then fails
-  if (deposit > 1n && !(await bookDeposit(deps.env, accountId, deposit, deps.depositBudget ?? 0n))) fail('RATE_LIMITED');
+  if (deposit > 1n && !(await bookDeposit(deps.env, accountId, deposit, deps.depositBudget ?? 0n, deps.depositBudgetAll))) fail('RATE_LIMITED');
   try {
     const { txHash, logs } = await deps.relayer.relay(signed);
     log.info('relayed', { accountId, receiverId: w.receiverId, method: w.method, txHash });
