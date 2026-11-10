@@ -230,6 +230,12 @@ levels, raids, the island). That state is the tag **`pre-hackathon`** ("Baseline
 HACKATHON"). Everything after it is hackathon work:
 [compare `pre-hackathon...near-hackathon`](https://github.com/devarogundade/Farmverse/compare/pre-hackathon...near-hackathon).
 
+**Why the baseline is dated 4 Nov.** The mobile game had no git history: it lived as files on disk. This repository
+was created on 4 Nov with `git init`, and its first commit is that project as it stood, tagged `pre-hackathon`. The
+web + NEAR plan ([Docs/architecture/13-near-web3-plan.md](Docs/architecture/13-near-web3-plan.md)) was the next commit, 25 seconds later.
+You can check that the baseline holds no hackathon work: it has no `chain/`, `web/` or `backend/server/`, no NEAR or
+wallet code, and its backend is still Firebase.
+
 Built in the window:
 
 - the **web version** (Unity WebGL, the install screen, the size work that took it from 119 MB to 52 MB);
