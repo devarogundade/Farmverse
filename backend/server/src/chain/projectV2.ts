@@ -3,7 +3,7 @@
  * rentals on the market. `project` calls this first; it returns null for events it doesn't own.
  */
 import type { Prisma } from '../generated/prisma/client';
-import { formatFarm } from './items';
+import { formatFarm, shortAccount } from './items';
 import type { MarketMessage } from './project';
 import type { ChainEvent, Watched } from './parse';
 
@@ -101,7 +101,7 @@ export async function projectV2(tx: Tx, e: ChainEvent, w: Watched): Promise<Mark
         SELECT owner_id, title FROM chain.tokens WHERE contract_id = ${nft} AND token_id = ${tokenId} AND burned_at IS NULL`;
       const o = owners[0];
       if (o && o.owner_id !== buyer) {
-        out.push({ type: 'note', to: o.owner_id, text: `${buyer} offered ${formatFarm(amount)} FARM for your ${o.title}`, icon: 'ResourceBar_Icon_Gold', href: tokenHref(tokenId) });
+        out.push({ type: 'note', to: o.owner_id, text: `${shortAccount(buyer)} offered ${formatFarm(amount)} FARM for your ${o.title}`, icon: 'ResourceBar_Icon_Gold', href: tokenHref(tokenId) });
       }
       out.push({ type: 'offer', token_id: tokenId });
     } else if (itemId) {
@@ -139,7 +139,7 @@ export async function projectV2(tx: Tx, e: ChainEvent, w: Watched): Promise<Mark
         await activity(tx, e, nft, tokenId, 'bought', buyer, seller, price);
         const title = await titleOf(tx, nft, tokenId);
         out.push({ type: 'sale', token_id: tokenId });
-        out.push({ type: 'note', to: buyer, text: `${seller} accepted your offer: ${title} is yours`, icon: 'Icon_Gift', href: tokenHref(tokenId) });
+        out.push({ type: 'note', to: buyer, text: `${shortAccount(seller)} accepted your offer: ${title} is yours`, icon: 'Icon_Gift', href: tokenHref(tokenId) });
       }
     }
     const tokenId = rows[0]?.token_id;
@@ -177,7 +177,7 @@ export async function projectV2(tx: Tx, e: ChainEvent, w: Watched): Promise<Mark
     const lender = rows[0]?.lender_id;
     if (lender) {
       const title = await titleOf(tx, nft, tokenId);
-      out.push({ type: 'note', to: lender, text: `${renter} hired ${title} for ${uint(d['days']) ?? '?'} days (${formatFarm(paid)} FARM)`, icon: 'ResourceBar_Icon_Gold', href: tokenHref(tokenId) });
+      out.push({ type: 'note', to: lender, text: `${shortAccount(renter)} hired ${title} for ${uint(d['days']) ?? '?'} days (${formatFarm(paid)} FARM)`, icon: 'ResourceBar_Icon_Gold', href: tokenHref(tokenId) });
     }
     out.push({ type: 'rental', token_id: tokenId });
   } else if (e.event === 'rent_withdraw') {

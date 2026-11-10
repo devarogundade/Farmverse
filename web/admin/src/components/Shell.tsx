@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { THEMES, sprite, useGameTheme } from '@farmverse/shared/gameTheme';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { href, type Route } from '../router';
@@ -67,12 +68,12 @@ function AccountMenu() {
     <div className="account" ref={box}>
       <button className="account-btn" aria-expanded={open} onClick={() => setOpen((o) => !o)} title={accountId}>
         <Avatar seed={accountId} size={32} />
-        <span className="account-name">{accountId}</span>
+        <span className="account-name">{shortAccount(accountId)}</span>
       </button>
       {open && (
         <div className="account-pop fv-panel" role="dialog" aria-label="Account">
           <p className="muted">Signed in as</p>
-          <b>{accountId}</b>
+          <b title={accountId}>{shortAccount(accountId)}</b>
           <button className="fv-btn gray sm" onClick={() => void signOut()}>
             Sign out
           </button>

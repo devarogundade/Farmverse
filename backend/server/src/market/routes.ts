@@ -78,6 +78,12 @@ export function marketRoutes(o: MarketOptions) {
       return o.reader.tokens(ids);
     });
 
+    // How far the indexer has read: the market and the game poll this after a transaction.
+    app.get('/head', async (_req, reply) => {
+      reply.header('cache-control', 'no-store');
+      return o.reader.head();
+    });
+
     app.get<{ Params: { id: string } }>('/tokens/:id', async (req, reply) => {
       const id = TokenId.safeParse(req.params.id);
       if (!id.success) return fail(reply, 404, 'not_found', 'That item doesn’t exist.');

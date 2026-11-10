@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { sprite } from '@farmverse/shared/gameTheme';
 import { useEffect, useState } from 'react';
 import { usePlayers } from '../api/admin';
@@ -79,8 +80,8 @@ export function Players({ q, status, sort, page }: { q: string; status: string; 
                         <span className="who-name">{p.name ?? 'No island yet'}</span>
                         {p.bannedAt && <Pill tone="pink">Banned</Pill>}
                       </b>
-                      <small className="muted">
-                        {p.accountId}
+                      <small className="muted" title={p.accountId}>
+                        {shortAccount(p.accountId)}
                         {p.shortId && ` · #${p.shortId}`}
                       </small>
                     </span>

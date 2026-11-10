@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { sprite } from '@farmverse/shared/gameTheme';
 import { CHARACTER_CLIPS, OUTFIT_SLOTS, SLOT_LABEL, TYPE_LABEL, displayNo, flatArt, isGolden, modelLabel, partLabel, traitLabel } from '@farmverse/shared/nft/metadata';
 import { NftStage } from '@farmverse/shared/three/NftStage';
@@ -318,7 +319,7 @@ function TokenView({ token, floor, related, sell }: { token: Token; floor?: numb
               <dl className="traits">
                 <div>
                   <dt>Owner</dt>
-                  <dd>{mine ? 'You' : token.owner_id}</dd>
+                  <dd title={token.owner_id}>{mine ? 'You' : shortAccount(token.owner_id)}</dd>
                 </div>
                 <div>
                   <dt>Kind</dt>
@@ -345,7 +346,7 @@ function TokenView({ token, floor, related, sell }: { token: Token; floor?: numb
                 ))}
                 <div>
                   <dt>From the island of</dt>
-                  <dd>{m.minted_from}</dd>
+                  <dd title={m.minted_from}>{shortAccount(m.minted_from)}</dd>
                 </div>
               </dl>
             </Tabs.Content>
@@ -381,7 +382,9 @@ function Who({ account, sub, label }: { account: string; sub?: string; label?: s
         <AccountAvatar account={account} />
       </span>
       <span className="who-text">
-        <span className="who-name">{label ?? account}</span>
+        <span className="who-name" title={account}>
+          {label ?? shortAccount(account)}
+        </span>
         {/* Phones: the time moves under the name. */}
         {sub && <small className="ago-sub">{sub}</small>}
       </span>
@@ -425,7 +428,7 @@ function OffersList(props: { offers: Offer[]; mine: boolean; me: string | null; 
             </span>
             <span className="who-text">
               <span className="who-name">
-                {o.from === me ? 'Your offer' : o.from}
+                {o.from === me ? 'Your offer' : <span title={o.from}>{shortAccount(o.from)}</span>}
                 {o.token_id.startsWith('#') && o.item_id && <small className="ends"> · for any {o.min_quantity ? `${fmt(o.min_quantity)}+ ` : ''}{traitLabel(o.item_id)}</small>}
               </span>
               <small className="ends">ends in {daysLeft(o.expires_at)}d</small>

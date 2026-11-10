@@ -3,8 +3,9 @@
  * the queries they affect. Dialogs call these and show pending / done / error states.
  *
  * The read API follows the chain through the indexer, so a change shows up there a few seconds
- * after the wallet confirms. The live socket refreshes pages when it lands; the delayed refreshes
- * here cover a page whose socket is down.
+ * after the wallet confirms. Each action waits for the indexer to pass the transaction (with a few
+ * confirmations, chain/settle.ts) before it refreshes and the dialog says done; the later refresh
+ * covers an indexer that took longer than the wait.
  */
 import { useQueryClient } from '@tanstack/react-query';
 import { keys } from '../api/queries';
@@ -31,33 +32,40 @@ function friendly(e: unknown): Error {
   return e instanceof Error ? e : new Error(msg);
 }
 
-/** Seconds after a confirmed transaction when the indexer has usually caught up. */
-const SETTLE_MS = [3_000, 8_000];
+/** The indexer wait (chain/settle.ts), loaded with the contract layer. */
+const settle = () => import('../chain/settle').then((s) => s.waitForIndexer());
+/** One more refresh this long after the wait, in case the indexer was slower than it. */
+const LATE_MS = 10_000;
 
 export function useMarket() {
   const qc = useQueryClient();
   const { accountId } = useWallet();
 
-  const refresh = (tokenId?: string) => {
-    qc.invalidateQueries({ queryKey: keys.market });
-    qc.invalidateQueries({ queryKey: keys.balance(accountId) });
-    qc.invalidateQueries({ queryKey: keys.owed(accountId) });
-    qc.invalidateQueries({ queryKey: keys.notes(accountId) });
-    if (tokenId) qc.invalidateQueries({ queryKey: keys.offers(tokenId) });
-    qc.invalidateQueries({ queryKey: keys.drops });
-    qc.invalidateQueries({ queryKey: keys.rentals });
-    qc.invalidateQueries({ queryKey: keys.myRentals(accountId) });
-    qc.invalidateQueries({ queryKey: keys.offersBy(accountId) });
-  };
+  /** Invalidates what a change can touch; resolves when the queries on screen have refetched. */
+  const refresh = (tokenId?: string) =>
+    Promise.allSettled(
+      [
+        keys.market,
+        keys.balance(accountId),
+        keys.owed(accountId),
+        keys.notes(accountId),
+        ...(tokenId ? [keys.offers(tokenId)] : []),
+        keys.drops,
+        keys.rentals,
+        keys.myRentals(accountId),
+        keys.offersBy(accountId),
+      ].map((queryKey) => qc.invalidateQueries({ queryKey })),
+    );
   const run = async (tokenId: string | undefined, fn: () => Promise<unknown>) => {
     try {
       await fn();
-      for (const ms of SETTLE_MS) setTimeout(() => refresh(tokenId), ms);
     } catch (e) {
+      refresh(tokenId); // a failed call can still have changed something (a refund, a storage deposit)
       throw friendly(e);
-    } finally {
-      refresh(tokenId);
     }
+    const caughtUp = await settle();
+    await refresh(tokenId);
+    if (!caughtUp) setTimeout(() => refresh(tokenId), LATE_MS);
   };
   const me = () => {
     if (!accountId) throw new Error('Sign in first.');
@@ -105,7 +113,8 @@ export function useMarket() {
       try {
         const { claimFaucet } = await import('../api/game');
         const got = await claimFaucet(who);
-        for (const ms of [0, ...SETTLE_MS]) setTimeout(() => qc.invalidateQueries({ queryKey: keys.balance(accountId) }), ms);
+        // the balance is read over RPC, not from the indexer: a couple of re-reads catch the transfer
+        for (const ms of [0, 3_000, 8_000]) setTimeout(() => qc.invalidateQueries({ queryKey: keys.balance(accountId) }), ms);
         return got;
       } catch (e) {
         const g = e as { code?: string; params?: Record<string, unknown> };

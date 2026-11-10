@@ -1,4 +1,4 @@
-import { farmNumber, formatFarm, NFT_TYPES, type NftType } from '../chain/items';
+import { farmNumber, formatFarm, NFT_TYPES, shortAccount, type NftType } from '../chain/items';
 import { Prisma, type PrismaClient } from '../generated/prisma/client';
 import { levelFor } from '../../../game/src/game/crew';
 
@@ -216,6 +216,16 @@ export class MarketReader {
     };
   }
 
+  /**
+   * The last block the indexer fully applied (null before its first run). Clients that just sent a
+   * transaction wait for this to pass the transaction's block before reading again. The newest
+   * cursor is the running one; an old cursor from an earlier contract set stays behind.
+   */
+  async head(): Promise<{ block_height: number | null }> {
+    const rows = await this.prisma.$queryRaw<{ h: string }[]>`SELECT block_height::text AS h FROM chain.cursors ORDER BY updated_at DESC LIMIT 1`;
+    return { block_height: rows[0] ? Number(rows[0].h) : null };
+  }
+
   /** Chain happenings addressed to an account: its items sold, items sent to it. */
   async notes(account: string, readUpToMs: number): Promise<NoteWire[]> {
     const rows = await this.prisma.$queryRaw<
@@ -228,15 +238,16 @@ export class MarketReader {
     return rows.map((r) => {
       const title = r.title ?? r.token_id;
       const at = Number(r.at);
+      const who = shortAccount(r.account_id);
       return {
         id: r.id,
         icon: r.kind === 'sent' ? 'Icon_Gift' : 'ResourceBar_Icon_Gold',
         text:
           r.kind === 'bought'
-            ? `${r.account_id} bought your ${title} for ${formatFarm(r.price ?? '0')} FARM`
+            ? `${who} bought your ${title} for ${formatFarm(r.price ?? '0')} FARM`
             : r.kind === 'rented'
-              ? `${r.account_id} hired ${title} for ${formatFarm(r.price ?? '0')} FARM`
-              : `${r.account_id} sent you ${title}`,
+              ? `${who} hired ${title} for ${formatFarm(r.price ?? '0')} FARM`
+              : `${who} sent you ${title}`,
         href: `#/token/${encodeURIComponent(r.token_id)}`,
         at,
         read: at <= readUpToMs,

@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { useState } from 'react';
 import { useAudit } from '../api/admin';
 import { Select } from '../components/Select';
@@ -55,7 +56,9 @@ export function Activity({ targetType }: { targetType: string }) {
                   </span>
                   <span className="who-text">
                     <b>{actionName(e.action)}</b>
-                    <small className="muted">{e.actor}</small>
+                    <small className="muted" title={e.actor}>
+                      {shortAccount(e.actor)}
+                    </small>
                   </span>
                 </span>
                 <span className="activity-what">

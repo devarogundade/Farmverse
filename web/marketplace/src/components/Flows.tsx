@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { sprite } from '@farmverse/shared/gameTheme';
 import { displayNo, flatArt, modelLabel } from '@farmverse/shared/nft/metadata';
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
@@ -11,7 +12,7 @@ import { href } from '../router';
 import { isAccount } from '../lib/account';
 import { Dialog, Done, WalletWait, toast, useRun } from './Dialog';
 import { Select } from './Select';
-import { SignInChoices, signInError } from './SignIn';
+import { EmailCodeStep, SignInChoices, signInError } from './SignIn';
 import { AccountAvatar, FarmIcon, TYPE_ICON, fmt, frameOf, timeAgo } from './ui';
 
 export type Flow =
@@ -247,7 +248,7 @@ function OfferFlow({ token, onClose }: { token: Token; onClose: () => void }) {
       ) : status === 'done' ? (
         <Done title={`${fmt(n)} FARM for ${token.title}`}>
           <p>
-            We’ll let you know if {token.owner_id} accepts. It expires in {days} day{days > 1 ? 's' : ''}.
+            We’ll let you know if <span title={token.owner_id}>{shortAccount(token.owner_id)}</span> accepts. It expires in {days} day{days > 1 ? 's' : ''}.
           </p>
           <Actions>
             <button className="fv-btn green" onClick={onClose}>
@@ -534,7 +535,7 @@ function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' |
         body={
           <Rows
             rows={[
-              ['Offer from', o.from],
+              ['Offer from', <span title={o.from}>{shortAccount(o.from)}</span>],
               ['Offer', <Farm n={o.amount} />],
               [feeLabel(rate), <span className="minus">−{fee == null ? '…' : fmt(fee)} FARM</span>],
               ['You get', <Farm n={fee == null ? undefined : o.amount - fee} />, 'total'],
@@ -544,7 +545,7 @@ function OfferDecision({ kind, offer: o, token: t, onClose }: { kind: 'accept' |
         confirm={`Sell for ${fmt(o.amount)}`}
         tone="green"
         doneTitle="Sold!"
-        doneBody={<p>{t.title} now belongs to {o.from}. Your FARM is in your wallet.</p>}
+        doneBody={<p>{t.title} now belongs to <span title={o.from}>{shortAccount(o.from)}</span>. Your FARM is in your wallet.</p>}
         action={() => market.acceptOffer(o, t)}
         onClose={onClose}
       />
@@ -578,7 +579,9 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
     <Dialog open onClose={onClose} title="Your wallet" icon="ResourceBar_Icon_Gold">
       <div className="wallet-me">
         <AccountAvatar account={account} size={56} />
-        <b className="fv-title">{account}</b>
+        <b className="fv-title" title={account}>
+          {shortAccount(account)}
+        </b>
       </div>
       <div className="wallet-bal fv-row">
         <FarmIcon size={34} />
@@ -626,36 +629,64 @@ function WalletFlow({ onClose }: { onClose: () => void }) {
 
 type SignedIn = (next: Flow | undefined, account: string) => void;
 
-/** Sign in: Google or email first (no wallet app needed), a NEAR wallet as the other way. */
+/**
+ * Sign in: Google or email first (no wallet app needed), a NEAR wallet as the other way. Google and email sign in on
+ * this page: Google is a trip there and back, email is a code we send.
+ */
 function SignInFlow({ next, onClose, onSignedIn }: { next?: Flow; onClose: () => void; onSignedIn: SignedIn }) {
   const wallet = useWallet();
-  const [busy, setBusy] = useState<SignInWay['method'] | null>(null);
+  const [busy, setBusy] = useState<SignInWay['method'] | 'code' | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const fail = (e: unknown) => {
+    setBusy(null);
+    setError(signInError(e));
+  };
   const go = (way: SignInWay) => {
     setError(null);
     setBusy(way.method);
-    wallet.connect(way).then(
-      (account) => onSignedIn(next, account),
-      (e) => {
-        setBusy(null);
-        setError(signInError(e));
-      },
-    );
+    wallet.connect(way).then((account) => onSignedIn(next, account), fail);
+  };
+  const sendCode = (to: string) => {
+    setError(null);
+    setBusy('code');
+    wallet.sendEmailCode(to).then(() => {
+      setEmail(to);
+      setBusy(null);
+    }, () => {
+      setBusy(null);
+      setError("That email didn't work. Check it and try again.");
+    });
   };
   const walletButton = (
     <button type="button" className={socialLogin ? 'si-alt' : 'fv-btn green si-wide'} onClick={() => go({ method: 'wallet' })}>
       Connect a NEAR wallet
     </button>
   );
+  const waiting =
+    busy === 'wallet' ? 'Approve the sign-in in your wallet…' : busy === 'google' ? 'Opening Google…' : busy === 'code' ? 'Sending your code…' : busy ? 'Signing you in…' : null;
   return (
     <Dialog open onClose={onClose} title="Sign in" icon="Icon_PictoIcon_User">
-      {busy ? (
-        <WalletWait text={busy === 'wallet' ? 'Approve the sign-in in your wallet…' : 'Finish signing in in the window that opened…'} />
+      {waiting ? (
+        <WalletWait text={waiting} />
+      ) : email ? (
+        <>
+          <EmailCodeStep
+            email={email}
+            onCode={(code) => go({ method: 'email', email, code })}
+            onResend={() => sendCode(email)}
+            onBack={() => {
+              setError(null);
+              setEmail(null);
+            }}
+          />
+          <Err error={error} />
+        </>
       ) : (
         <>
           <p className="dlg-note">{next ? 'Sign in to keep going. ' : ''}Use the same account you play with.</p>
           {socialLogin ? (
-            <SignInChoices onGoogle={() => go({ method: 'google' })} onEmail={(email) => go({ method: 'email', email })}>
+            <SignInChoices onGoogle={() => go({ method: 'google' })} onEmail={sendCode}>
               {walletButton}
             </SignInChoices>
           ) : (
@@ -904,7 +935,7 @@ function RentManageFlow({ rental: r, onClose }: { rental: Rental; onClose: () =>
           <Rows
             rows={[
               ['A day', <Farm n={r.price_per_day} />],
-              ['Hired by', busy ? `${r.renter_id} · ${Math.ceil((r.rented_until - Date.now()) / 86_400_000)}d left` : 'Nobody right now'],
+              ['Hired by', busy ? `${shortAccount(r.renter_id)} · ${Math.ceil((r.rented_until - Date.now()) / 86_400_000)}d left` : 'Nobody right now'],
               ['Earned', <Farm n={r.earned} />, 'total'],
             ]}
           />

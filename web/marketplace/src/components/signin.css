@@ -44,3 +44,12 @@
 .si-alt:hover:not(:disabled) { border-color: var(--sky-2); background: rgba(255, 255, 255, 0.04); }
 .si-alt img { width: 24px; height: 24px; object-fit: contain; }
 .si-foot { margin: 0; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* The emailed code (the email way's second step): big digits, then "send a new code" and "another email". */
+.si-code { text-align: center; font-size: 26px; letter-spacing: 0.4em; padding-left: calc(18px + 0.4em); }
+.si-code::placeholder { letter-spacing: 0.4em; opacity: 0.5; }
+.si-sent { margin: 0; text-align: center; color: var(--sky-3); font-size: 15px; line-height: 1.5; }
+.si-sent b { color: #fff; word-break: break-all; }
+.si-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 20px; }
+.si-links button { color: var(--sky-2); font-size: 14px; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--sky-2) 40%, transparent); }
+.si-links button:hover:not(:disabled) { color: #fff; }

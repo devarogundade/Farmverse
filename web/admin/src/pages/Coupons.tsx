@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { sprite } from '@farmverse/shared/gameTheme';
 import { useEffect, useMemo, useState } from 'react';
 import { useCodes, useCoupons, useRedeemCode, useSaveCoupons, type CodeRow, type CouponTask, type CouponType, type CouponsConfig } from '../api/admin';
@@ -112,8 +113,8 @@ function Codes({ q, status, typeId, page }: { q: string; status: string; typeId:
                     {fmt(c.amount)} {c.unit}
                   </span>
                   <span data-label="Player">
-                    <a className="link" href={href.player(c.uid)}>
-                      {c.accountId ?? 'unknown'}
+                    <a className="link" href={href.player(c.uid)} title={c.accountId ?? undefined}>
+                      {c.accountId ? shortAccount(c.accountId) : 'unknown'}
                     </a>
                   </span>
                   <span data-label="Given" className="muted" title={dateTime(c.issuedAt)}>
@@ -160,7 +161,7 @@ function Codes({ q, status, typeId, page }: { q: string; status: string; typeId:
             </div>
             <div>
               <dt>Player</dt>
-              <dd>{picked.accountId}</dd>
+              <dd title={picked.accountId ?? undefined}>{shortAccount(picked.accountId)}</dd>
             </div>
             <div>
               <dt>Expires</dt>

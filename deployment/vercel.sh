@@ -61,6 +61,8 @@ game() {
   cp -r "$src" "$out"
   # the page's own script and styles from the template, so page fixes ship without a Unity rebuild
   cp "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.js" "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.css" "$out/"
+  # the Email or Google wallet the page loads (signs in the page, no popup): privy-near.js, built from web/marketplace
+  (cd "$ROOT/web/marketplace" && npx vite build --config vite.game.config.ts --outDir "$out" --logLevel warn)
   # the link preview (og/twitter tags + og-image.jpg) the same way: the template's og block replaces the build's
   local tpl="$ROOT/Assets/WebGLTemplates/Farmverse"
   cp "$tpl/og-image.jpg" "$out/"
