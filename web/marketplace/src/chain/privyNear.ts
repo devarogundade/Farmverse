@@ -16,6 +16,7 @@
 import Privy, { LocalStorage, rawSign } from '@privy-io/js-sdk-core';
 import { Account, JsonRpcProvider, PublicKey, Signer, actions } from 'near-api-js';
 import { signMessage as signNep413 } from 'near-api-js/nep413';
+import { signDelegates } from './delegate';
 
 /** The wallet's id in NEAR Connect (kept from the popup wallet: players' saved sessions point at it). */
 export const PRIVY_NEAR_ID = 'farmverse-email';
@@ -48,6 +49,7 @@ export function createPrivyNear(o: PrivyNearOptions) {
   let iframe: Promise<void> | null = null;
   let nearWallet: NearWallet | null = null;
   const accounts = new Map<Network, Account>();
+  const lastNonce = new Map<string, bigint>();
 
   const init = () => (ready ??= privy.initialize());
 
@@ -158,6 +160,7 @@ export function createPrivyNear(o: PrivyNearOptions) {
         signInWithFunctionCallKey: true,
         signAndSendTransaction: true,
         signAndSendTransactions: true,
+        signDelegateActions: true,
         mainnet: true,
         testnet: true,
       },
@@ -206,8 +209,12 @@ export function createPrivyNear(o: PrivyNearOptions) {
         transactions: p.transactions.map((t) => ({ receiverId: t.receiverId, actions: t.actions.map(toNearAction) as never })),
       });
     },
-    async signDelegateActions(): Promise<never> {
-      throw new Error('Not supported by this wallet.');
+    /** Signs calls for our relay to send (it pays the gas): NEAR Connect's shape, base64 borsh SignedDelegates. */
+    async signDelegateActions(p: { network?: Network; delegateActions: Tx[] }) {
+      const a = await account(p.network);
+      const signer = a.getSigner();
+      if (!signer) throw new Error('Choose Google or your email on the sign-in screen first.');
+      return { signedDelegateActions: await signDelegates(a, signer, p.delegateActions, toNearAction, lastNonce) };
     },
   };
 

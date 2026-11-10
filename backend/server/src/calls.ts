@@ -54,7 +54,12 @@ export interface ChainRuntime {
   /** Market Town merchants' agent loop (plan 15 §13.1). */
   readonly merchantTick?: () => Promise<number>;
   /** Sponsored calls: the relayer and the per-account limit (plan 15 §14). */
-  readonly relay?: { readonly relayer: Relayer; readonly allow: (accountId: string) => Promise<boolean> };
+  readonly relay?: {
+    readonly relayer: Relayer;
+    readonly allow: (accountId: string) => Promise<boolean>;
+    /** Market deposits (yoctoNEAR) the relayer pays per account per day. */
+    readonly depositBudget?: bigint;
+  };
   /** Testnet only: who pays faucet claims and how much. */
   readonly faucet?: { readonly sender: FaucetSender; readonly farmUnits: bigint; readonly nearYocto: bigint; readonly dailyCap: number };
 }
@@ -204,8 +209,18 @@ export function callDefinitions(rt: Runtime): ReadonlyMap<string, AnyDefinition>
       auth: 'required',
       handler: async ({ uid, data, log }) => {
         const c = rt.chain;
-        if (!c?.relay) fail('UNSUPPORTED');
-        return relay({ env: envOf(rt, log), relayer: c.relay.relayer, itemsContract: c.itemsContract, allow: c.relay.allow }, await walletOf(rt, uid), data.delegate, log);
+        // no relayer here: a plain refusal, so pages send the call themselves (UNSUPPORTED is client-only)
+        if (!c?.relay) fail('PERMISSION_DENIED');
+        const deps = {
+          env: envOf(rt, log),
+          relayer: c.relay.relayer,
+          itemsContract: c.itemsContract,
+          allow: c.relay.allow,
+          ...(c.marketContract ? { marketContract: c.marketContract } : {}),
+          ...(c.farmContract ? { farmContract: c.farmContract } : {}),
+          ...(c.relay.depositBudget !== undefined ? { depositBudget: c.relay.depositBudget } : {}),
+        };
+        return relay(deps, await walletOf(rt, uid), data.delegate, log);
       },
     }),
     def({
