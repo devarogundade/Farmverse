@@ -1,5 +1,5 @@
 import { sprite } from '@farmverse/shared/gameTheme';
-import { Check, ShieldCheck, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { clamp, ease, keys, pop, ramp, rise } from '../anim';
 import { useT } from '../clock';
 import { Farm, Ground, Title, rollValue } from '../ui';
@@ -20,17 +20,9 @@ const hi = 7.8;
 const pt = (i: number) => [(i / (PRICE.length - 1)) * W, H - ((PRICE[i] - lo) / (hi - lo)) * H] as const;
 const LINE = PRICE.map((_, i) => `${i ? 'L' : 'M'}${pt(i)[0].toFixed(1)},${pt(i)[1].toFixed(1)}`).join(' ');
 
-// The formula sets the price; NEAR AI Cloud writes it up in Bea's own voice (backend/server/src/chain/merchantVoice.ts).
-const WHY = "Wheat's running low and you keep buying it, so I'm paying more. My ovens can't wait till morning!";
+const WHY = 'Low on stock and it sells: paying more';
 
-// What the server checks on every note before the market shows "Verified by NEAR AI".
-const CHECKS = [
-  { at: 17.4, text: 'Written in a secure enclave (TEE) on NEAR AI Cloud' },
-  { at: 18.2, text: 'Signed over this exact question and answer' },
-  { at: 19.0, text: "Key in NEAR AI's attestation · GPU attested" },
-];
-
-/** 1:22 — Market Town: four merchants with their own wallets; Bea's wheat price moves, and NEAR AI says why in her voice. */
+/** 1:22 — Market Town: four merchants with their own wallets; Bea's wheat price moves, and says why. */
 export function Town() {
   const t = useT();
   const focus = ramp(t, 6.0, 0.9, 'inOut');
@@ -38,22 +30,21 @@ export function Town() {
   const sales = t > 11.0 ? 3 : t > 9.8 ? 2 : t > 8.6 ? 1 : 0;
   const price = rollValue(t, 11.6, 5.0, 7.4, 1.8);
   const draw = ease.inOut(clamp((t - 7.4) / 6.2));
-  const typed = Math.round(clamp((t - 14.2) / 2.6) * WHY.length);
-  const proof = ramp(t, 16.6, 0.6);
+  const typed = Math.round(clamp((t - 14.2) / 1.6) * WHY.length);
   const [ex, ey] = pt(Math.round(draw * (PRICE.length - 1)));
   return (
     <div className="sc sc-town">
       <Ground image="Home_LoadingBg" dim={0.9} />
       <div className="sc-head-l">
-        <Title at={0.3} size={76} out={20.2} gold={['Town']}>
+        <Title at={0.3} size={76} out={15.2} gold={['Town']}>
           Market Town
         </Title>
-        <p className="tr-line" style={{ ...rise(t, 1.0, 0.6, 16), opacity: rise(t, 1.0, 0.6, 16).opacity * (1 - ramp(t, 20.2, 0.35)) }}>
+        <p className="tr-line" style={{ ...rise(t, 1.0, 0.6, 16), opacity: rise(t, 1.0, 0.6, 16).opacity * (1 - ramp(t, 15.2, 0.35)) }}>
           Four merchants, each with their own NEAR wallet
         </p>
-        {t > 20.3 && (
-          <Title at={20.5} size={76} style={{ position: 'absolute', top: 0 }} gold={['NEAR', 'AI']}>
-            Prices move on their own. NEAR AI says why.
+        {t > 15.3 && (
+          <Title at={15.5} size={76} style={{ position: 'absolute', top: 0 }} gold={['why']}>
+            Prices move on their own, and say why
           </Title>
         )}
       </div>
@@ -136,24 +127,7 @@ export function Town() {
             <span className="why__bubble">
               {WHY.slice(0, typed)}
               <i className="why__caret" style={{ opacity: typed < WHY.length ? 1 : 0 }} />
-              <span className="why__by" style={{ opacity: ramp(t, 16.2, 0.4) }}>
-                Bea's words, written by NEAR AI
-              </span>
             </span>
-          </div>
-          <div className="proof" style={{ opacity: proof, transform: `translateY(${(1 - proof) * 24}px)` }}>
-            <header className="proof__head">
-              <ShieldCheck size={34} strokeWidth={2.6} />
-              <b className="fv-title">Verified by NEAR AI</b>
-            </header>
-            {CHECKS.map((c) => (
-              <div key={c.text} className="proof__row" style={rise(t, c.at, 0.4, 10)}>
-                <span className="proof__tick" style={pop(t, c.at + 0.15, 0.4, 0.4)}>
-                  <Check size={18} strokeWidth={4} />
-                </span>
-                {c.text}
-              </div>
-            ))}
           </div>
         </div>
       </div>

@@ -4,16 +4,12 @@ import { RENDER, transport } from './clock';
  * Your recordings and audio, served from web/trailer/media. A clip that isn't there yet shows a
  * labelled placeholder in its slot, so the trailer can be reviewed and rendered at any time.
  */
-/**
- * Each clip's slot: its scene, and when it is on screen in seconds from the scene's start. `start` is
- * where to begin inside your recording. The clip's own game sound plays in its slot.
- */
 export const CLIPS = {
-  clip1: { scene: 'grow', from: 0, until: 7, file: 'clip1.mp4', start: 0, title: 'Crops', what: 'Harvest two or three fields of ripe wheat, then replant one.' },
-  clip2: { scene: 'grow', from: 7, until: 14.5, file: 'clip2.mp4', start: 0, title: 'Animals and a factory', what: 'Collect eggs and milk, then start or collect a bakery job.' },
-  clip3: { scene: 'island', from: 0, until: 7, file: 'clip3.mp4', start: 0, title: 'Zombie night', what: 'A night raid: zombies walk in, your defenders fight them off.' },
-  clip4: { scene: 'island', from: 7, until: 14.5, file: 'clip4.mp4', start: 0, title: 'The island grows', what: 'A slow zoom out across a big island: valley, lake, sea, town.' },
-  clip5: { scene: 'redeem', from: 4.2, until: 12.5, file: 'clip5.mp4', start: 0, title: 'Redeem in the game', what: 'Storage → NFTs → the wheat NFT → Redeem. Hold on the goods arriving.' },
+  clip1: { file: 'clip1.mp4', start: 0, title: 'Crops', what: 'Harvest two or three fields of ripe wheat, then replant one.' },
+  clip2: { file: 'clip2.mp4', start: 0, title: 'Animals and a factory', what: 'Collect eggs and milk, then start or collect a bakery job.' },
+  clip3: { file: 'clip3.mp4', start: 0, title: 'Zombie night', what: 'A night raid: zombies walk in, your defenders fight them off.' },
+  clip4: { file: 'clip4.mp4', start: 0, title: 'The island grows', what: 'A slow zoom out across a big island: valley, lake, sea, town.' },
+  clip5: { file: 'clip5.mp4', start: 0, title: 'Redeem in the game', what: 'Storage → NFTs → the wheat NFT → Redeem. Hold on the goods arriving.' },
 } as const;
 export type ClipId = keyof typeof CLIPS;
 

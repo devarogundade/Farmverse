@@ -3,7 +3,7 @@ import { sprite } from '@farmverse/shared/gameTheme';
 import { Check, Lock } from 'lucide-react';
 import { useLayoutEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { clamp, ease, keys, lerp, money, ramp, rise } from './anim';
-import { RENDER, useScene, useT } from './clock';
+import { useScene, useT } from './clock';
 import { CLIPS, hasClip, syncVideo, type ClipId } from './media';
 
 /** A game title whose words rise in one after another. */
@@ -155,12 +155,11 @@ export function Ground({ image, dim = 0.86, children }: { image?: string; dim?: 
  * A full-bleed gameplay recording. Until the file is in media/clips it shows a labelled slot,
  * so the cut can be reviewed with the recordings still to come.
  */
-export function Clip({ id, children }: { id: ClipId; children?: ReactNode }) {
+export function Clip({ id, from, until, children }: { id: ClipId; from: number; until: number; children?: ReactNode }) {
   const t = useT();
   const { live } = useScene();
   const ref = useRef<HTMLVideoElement>(null);
   const clip = CLIPS[id];
-  const { from, until } = clip;
   const on = live && t >= from - 0.4 && t < until + 0.4;
   const local = Math.max(0, t - from);
   useLayoutEffect(() => {
@@ -172,7 +171,7 @@ export function Clip({ id, children }: { id: ClipId; children?: ReactNode }) {
   return (
     <div className="tr-clip" style={{ opacity: fade }}>
       {hasClip(id) ? (
-        <video ref={ref} className="tr-clip__video" src={`/media/clips/${clip.file}`} muted={RENDER} playsInline preload="auto" style={{ transform: `scale(${zoom})` }} />
+        <video ref={ref} className="tr-clip__video" src={`/media/clips/${clip.file}`} muted playsInline preload="auto" style={{ transform: `scale(${zoom})` }} />
       ) : (
         <div className="tr-slot">
           <img className="tr-slot__bg" src={sprite(id === 'clip3' ? 'Home_LoadingBg' : 'Home_Bg')} alt="" style={{ transform: `scale(${zoom + 0.06})` }} />

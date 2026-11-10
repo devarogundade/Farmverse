@@ -30,8 +30,8 @@ export function Open() {
 export function Grow() {
   return (
     <div className="sc">
-      <Clip id="clip1" />
-      <Clip id="clip2" />
+      <Clip id="clip1" from={0} until={7} />
+      <Clip id="clip2" from={7} until={14.5} />
       <div className="sc-cap">
         <Title at={0.6} size={92} gold={['Build.']}>
           Grow. Raise. Build.
@@ -47,14 +47,14 @@ export function Island() {
   const t = useT();
   return (
     <div className="sc">
-      <Clip id="clip3" />
-      <Clip id="clip4" />
+      <Clip id="clip3" from={0} until={7} />
+      <Clip id="clip4" from={7} until={14.5} />
       <div className="sc-cap">
         <Title at={0.5} size={84} out={6.6}>
           Hold the island at night
         </Title>
         {t > 6.8 && (
-          <Title at={7.2} size={84} gold={['100']} style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <Title at={7.2} size={84} gold={['100']} style={{ position: 'absolute', bottom: 0 }}>
             100 levels. 3 chapters.
           </Title>
         )}
