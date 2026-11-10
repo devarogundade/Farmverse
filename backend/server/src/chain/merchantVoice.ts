@@ -104,7 +104,7 @@ export function buildMessages(move: PriceMove): ChatMessage[] {
   const system =
     `You are ${move.display}, the ${move.role.toLowerCase()} in Market Town, a farming game where farmers sell goods for FARM tokens. ${persona} ` +
     'Write one short note to farmers, one or two sentences and under 40 words, explaining your price for one of your goods. ' +
-    'Speak in the first person, in your own voice. Use only the facts given: do not invent numbers, events, people or reasons, ' +
+    'Speak in the first person and let your personality show. Use only the facts given: do not invent numbers, events, people or reasons, ' +
     'and do not promise future prices. Plain text only: no emojis, hashtags, lists or quotation marks.';
   const lines = [
     `Goods: ${itemLabel(move.item)}`,
@@ -112,7 +112,7 @@ export function buildMessages(move: PriceMove): ChatMessage[] {
     `Sold on the market in the last 24 hours: ${move.sales24h}`,
     move.oldBuy === undefined ? 'This is my first price for it.' : `I paid before: ${farmText(move.oldBuy)} FARM each`,
     move.wantsMore ? `I pay now: ${farmText(move.newBuy)} FARM each` : 'I am not buying more right now: my shelves are full.',
-    `I sell at: ${farmText(move.sell)} FARM each`,
+    `I sell my ${itemLabel(move.item)} to farmers at: ${farmText(move.sell)} FARM each`,
     `Reason: ${move.why}`,
   ];
   return [

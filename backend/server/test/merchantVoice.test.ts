@@ -39,7 +39,7 @@ describe('merchant voice prompt', () => {
         'Sold on the market in the last 24 hours: 4',
         'I paid before: 0.05 FARM each',
         'I pay now: 0.071 FARM each',
-        'I sell at: 0.0888 FARM each',
+        'I sell my wheat to farmers at: 0.0888 FARM each',
         'Reason: Low on stock and it sells: paying more',
       ].join('\n'),
     );
