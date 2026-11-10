@@ -121,7 +121,8 @@ node -e '
   // (no PRIVY_VERIFICATION_KEY: a multi-line PEM; unset, the server checks tokens with the app published keys)
   for (const k of ["PRIVY_APP_ID", "PRIVY_APP_SECRET", "FAUCET_ACCOUNT", "FAUCET_PRIVATE_KEY",
     "FAUCET_FARM", "FAUCET_NEAR", "FAUCET_DAILY_CAP", "RELAYER_ACCOUNT", "RELAYER_PRIVATE_KEY", "WELCOME_NEAR",
-    "WELCOME_BELOW_NEAR", "MERCHANTS", "FARM_PER_NEAR", "INTENTS_LIVE", "ONECLICK_API_KEY"]) if (local[k]) out[k] = local[k];
+    "WELCOME_BELOW_NEAR", "MERCHANTS", "FARM_PER_NEAR", "INTENTS_LIVE", "ONECLICK_API_KEY",
+    "NEAR_AI_API_KEY", "NEAR_AI_MODEL", "NEAR_AI_TIMEOUT_SECONDS"]) if (local[k]) out[k] = local[k];
   if (!out.FAUCET_NEAR) out.FAUCET_NEAR = "0.2";
   // rpc.testnet.near.org answers 429 to cloud addresses after a few calls (sign-in checks keys through it)
   if ((chain.NEAR_NETWORK || "testnet") === "testnet") out.NEAR_RPC_URL = process.env.NEAR_RPC_URL || "https://test.rpc.fastnear.com";

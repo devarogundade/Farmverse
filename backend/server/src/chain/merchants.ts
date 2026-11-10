@@ -9,6 +9,7 @@ import { Account, JsonRpcProvider, type KeyPairString, teraToGas } from 'near-ap
 import type { Logger } from '../../../game/src/core/logger';
 import type { Store } from '../../../game/src/infra/store';
 import type { PrismaClient } from '../generated/prisma/client';
+import { needsNote, type MerchantVoice, type Voice } from './merchantVoice';
 
 /** One FARM is worth this many island coins when a merchant prices goods (0.01 FARM a coin). */
 export const COINS_PER_FARM = 100;
@@ -95,6 +96,15 @@ export interface MerchantDeps {
   readonly itemsContract: string;
   readonly wallets: ReadonlyMap<string, MerchantWallet>;
   readonly nowMs: () => number;
+  /** NEAR AI Cloud writes each price move up in the merchant's voice; unset (no key): the fixed reason labels. */
+  readonly voice?: MerchantVoice;
+  /** Notes asked for per tick across all merchants (credits are limited). Default 12. */
+  readonly maxNotesPerTick?: number;
+}
+
+/** One tick's budget of model calls; a failed call stops the rest of the tick (the service is likely down). */
+interface NoteBudget {
+  left: number;
 }
 
 interface Held {
@@ -107,11 +117,12 @@ interface Held {
 /** `merchant-tick`: every merchant looks at its stock and the market, then updates its offers and listings. */
 export async function merchantTick(deps: MerchantDeps, log: Logger): Promise<number> {
   let acted = 0;
+  const budget: NoteBudget = { left: deps.maxNotesPerTick ?? 12 };
   for (const m of MERCHANTS) {
     const wallet = deps.wallets.get(m.name);
     if (!wallet) continue;
     try {
-      acted += await tickOne(deps, m, wallet, log);
+      acted += await tickOne(deps, m, wallet, log, budget);
     } catch (e) {
       log.warn('merchant tick failed', { merchant: m.name, error: String(e) });
     }
@@ -119,8 +130,15 @@ export async function merchantTick(deps: MerchantDeps, log: Logger): Promise<num
   return acted;
 }
 
-async function tickOne(deps: MerchantDeps, m: MerchantDef, w: MerchantWallet, log: Logger): Promise<number> {
+interface MerchantLog {
+  goods?: { item: string; note?: Voice }[];
+  history?: Record<string, { at: number; buy: string }[]>;
+}
+
+async function tickOne(deps: MerchantDeps, m: MerchantDef, w: MerchantWallet, log: Logger, budget: NoteBudget): Promise<number> {
   const now = deps.nowMs();
+  const path = `merchants/${m.name}`;
+  const before = (await deps.store.read(path)).data as MerchantLog | undefined;
   const items = m.goods.map((g) => g.item);
   const held = await deps.prisma.$queryRaw<Held[]>`
     SELECT t.token_id, t.item_id, t.quantity::text, l.price::text AS listed_price
@@ -168,12 +186,26 @@ async function tickOne(deps: MerchantDeps, m: MerchantDef, w: MerchantWallet, lo
         acted++;
       }
     }
-    report.push({ item: g.item, lot: g.lot, stock, sales24h: s.sales24h, buyPerUnit: q.buyPerUnit.toString(), sellPerUnit: q.sellPerUnit.toString(), why: q.why, wantsMore: !full });
+    // the merchant's note on the move (words only: the price above is already set), kept until price or reason change
+    let note = before?.goods?.find((x) => x.item === g.item)?.note;
+    if (note && needsNote(note, q.buyPerUnit, q.why)) note = undefined;
+    if (!note && deps.voice && budget.left > 0) {
+      budget.left--;
+      const last = before?.history?.[g.item]?.at(-1)?.buy;
+      const fresh = await deps.voice.note({
+        merchant: m.name, display: m.display, role: m.role, item: g.item, stock, target: g.target, sales24h: s.sales24h,
+        ...(last ? { oldBuy: BigInt(last) } : {}), newBuy: q.buyPerUnit, sell: q.sellPerUnit, why: q.why, wantsMore: !full,
+      });
+      if (fresh) note = fresh;
+      else budget.left = 0;
+    }
+    report.push({
+      item: g.item, lot: g.lot, stock, sales24h: s.sales24h, buyPerUnit: q.buyPerUnit.toString(), sellPerUnit: q.sellPerUnit.toString(), why: q.why, wantsMore: !full,
+      ...(note ? { note } : {}),
+    });
   }
 
   // the merchant's log: what it saw and set, with a price history for the Merchants page
-  const path = `merchants/${m.name}`;
-  const before = (await deps.store.read(path)).data as { history?: Record<string, { at: number; buy: string }[]> } | undefined;
   const history: Record<string, { at: number; buy: string }[]> = { ...(before?.history ?? {}) };
   for (const r of report) {
     const item = r['item'] as string;

@@ -89,6 +89,16 @@ const Schema = z.object({
   X2EARN_SIGNER_KEY: optional(z.string().regex(/^(0x)?[0-9a-fA-F]{64}$/, 'X2EARN_SIGNER_KEY must be a 32-byte hex private key')),
   /** A transaction's page on the VeChain explorer, without its hash. */
   VECHAIN_EXPLORER_TX_URL: z.string().url().default('https://explore-testnet.vechain.org/transactions/'),
+  /**
+   * NEAR AI Cloud (cloud.near.ai; credits from nearbuilders.org): each merchant explains its price moves in its own
+   * voice, written in a TEE and signed. Unset: the merchants show the formula's fixed reason labels.
+   */
+  NEAR_AI_API_KEY: optional(z.string().min(8)),
+  /** A private (TEE-hosted) model on NEAR AI Cloud. */
+  NEAR_AI_MODEL: z.string().min(3).default('Qwen/Qwen3.6-35B-A3B-FP8'),
+  NEAR_AI_BASE_URL: z.string().url().default('https://cloud-api.near.ai'),
+  /** Seconds a merchant waits for its note before it falls back to the fixed label. */
+  NEAR_AI_TIMEOUT_SECONDS: z.coerce.number().min(1).max(120).default(20),
   /** Market Town merchants (plan 15 §13.1): JSON [{"name":"bea","account":"bea.x.testnet","key":"ed25519:…"}] (chain/scripts/merchants.sh). */
   MERCHANTS: optional(
     z.string().transform((s, ctx) => {
