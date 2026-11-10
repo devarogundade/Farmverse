@@ -3,7 +3,7 @@ name: ci
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, near-hackathon, hackathon-fixes]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -29,6 +29,82 @@ jobs:
           npm run typecheck --workspace backend/server
           npm run test --workspace backend/server
           npm run build --workspace backend/server
+
+  server-db:
+    # backend/server `npm run test:db`: the Prisma store, sign-in → calls → live push, BullMQ jobs,
+    # the chain indexer and mint → redeem end to end against real Postgres, Redis and the C# island
+    # engine. Test-only values: the database is a throwaway service container.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: farmverse
+          POSTGRES_PASSWORD: farmverse-ci
+          POSTGRES_DB: farmverse
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U farmverse" --health-interval 5s --health-timeout 5s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://farmverse:farmverse-ci@localhost:5432/farmverse
+      REDIS_URL: redis://localhost:6379
+      ISLAND_ENGINE_URL: http://localhost:8080
+      FARMVERSE_ENV: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: 8.0.x }
+      - run: npm ci
+      - name: Island engine — build and start
+        run: |
+          dotnet build tools/dotnet/Farmverse.IslandEngine -c Release
+          PORT=8080 nohup dotnet tools/dotnet/Farmverse.IslandEngine/bin/Release/net8.0/Farmverse.IslandEngine.dll > "$RUNNER_TEMP/island-engine.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8080/healthz > /dev/null; then echo "engine up after ${i}s"; exit 0; fi
+            sleep 1
+          done
+          echo "island engine did not answer /healthz"; cat "$RUNNER_TEMP/island-engine.log"; exit 1
+      - name: Database schema
+        working-directory: backend/server
+        run: |
+          npx prisma generate --no-hints
+          npx prisma migrate deploy
+      - name: Server DB tests
+        run: npm --prefix backend/server run test:db
+      - name: Island engine log
+        if: failure()
+        run: cat "$RUNNER_TEMP/island-engine.log" || true
+
+  chain:
+    # chain/: unit tests of the three contracts, the wasm build (cargo-near), then the
+    # near-workspaces sandbox tests that deploy res/*.wasm to a local neard.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: chain
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.96.0
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: chain }
+      - uses: taiki-e/install-action@v2
+        with: { tool: cargo-near@0.23.0 }
+      - name: Contract unit tests
+        run: cargo test --locked
+      - name: Build wasm
+        run: bash scripts/build.sh
+      - name: Sandbox tests
+        run: cargo test --locked -p farmverse-chain-tests
 
   engine-free-csharp:
     # Contracts, Core, Domain, Application and Presentation (presenters, world model)

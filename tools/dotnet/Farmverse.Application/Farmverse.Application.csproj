@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Farmverse.Application</RootNamespace>
+    <AssemblyName>Farmverse.Application</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(AssetsRoot)Runtime/Application/**/*.cs" />
+    <ProjectReference Include="../Farmverse.Domain/Farmverse.Domain.csproj" />
+    <ProjectReference Include="../Farmverse.Core/Farmverse.Core.csproj" />
+    <ProjectReference Include="../Farmverse.Contracts/Farmverse.Contracts.csproj" />
+  </ItemGroup>
+</Project>
