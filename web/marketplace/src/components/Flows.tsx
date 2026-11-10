@@ -216,7 +216,16 @@ function BuyFlow({ token, onClose }: { token: Token; onClose: () => void }) {
         <>
           <ItemLine token={token} />
           <Rows rows={[['Price', <Farm n={price} />], ['Your FARM', <Farm n={balance} />], ['After buying', <Farm n={balance == null ? undefined : Math.max(0, balance - price)} />, 'total']]} />
-          {short > 0 ? <p className="dlg-err">You need {fmt(short)} more FARM to buy this.</p> : <p className="dlg-note">Purchases are final.</p>}
+          {short > 0 ? (
+            <p className="dlg-err">
+              You need {fmt(short)} more FARM to buy this.{' '}
+              <a href="#/buy-farm" onClick={onClose}>
+                Get FARM with any token
+              </a>
+            </p>
+          ) : (
+            <p className="dlg-note">Purchases are final.</p>
+          )}
           <Err error={error} />
           <Actions>
             <button className="fv-btn gray" onClick={onClose}>
