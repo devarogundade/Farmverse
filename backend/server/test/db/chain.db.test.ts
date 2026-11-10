@@ -30,6 +30,7 @@ const BLOCKS: Record<number, NearBlock | null> = {
     mint('g-trac', 'ann.testnet', tractor, 'Red Tractor'),
     mint('g-trac2', 'ann.testnet', tractor, 'Red Tractor'),
     mint('s-pack', 'ann.testnet', { kind: 'pack', item_id: 'gems_100', quantity: 1 }, '100 Gems', 'studio'),
+    mint('s-boost', 'ann.testnet', { kind: 'boost', item_id: 'speed_boost', quantity: 1 }, 'Speed boost', 'studio'),
   ]),
   11: block(11, [list('g-wheat', 'ann.testnet', farm(12.5)), list('g-trac', 'ann.testnet', farm(40)), list('s-w1', 'bob.testnet', farm(30))]),
   12: block(12, [list('g-wheat', 'ann.testnet', farm(10)), list('g-trac2', 'ann.testnet', farm(55))]),
@@ -132,7 +133,10 @@ describe('chain indexer → marketplace API', () => {
 
   it('lists what an account holds, listed or not, without burned or unrenderable tokens', async () => {
     const ann = await get('/owners/ann.testnet/tokens');
-    expect(ann.body.items.map((t: any) => t.token_id).sort()).toEqual(['g-trac2', 'g-wheat']);
+    expect(ann.body.items.map((t: any) => t.token_id).sort()).toEqual(['g-trac2', 'g-wheat', 's-pack']);
+    // The game's NFT tab (?all=1) shows boosts too.
+    const all = await get('/owners/ann.testnet/tokens?all=1');
+    expect(all.body.items.map((t: any) => t.token_id).sort()).toEqual(['g-trac2', 'g-wheat', 's-boost', 's-pack']);
     const dee = await get('/owners/dee.testnet/tokens');
     expect(dee.body.items).toHaveLength(1);
     expect(dee.body.items[0]).toMatchObject({
@@ -158,7 +162,8 @@ describe('chain indexer → marketplace API', () => {
     expect(trac.body.floor).toBe(farm(55));
 
     expect((await get('/tokens/g-trac')).status).toBe(404); // redeemed
-    expect((await get('/tokens/s-pack')).status).toBe(404); // no renderer
+    expect((await get('/tokens/s-pack')).body.token.metadata).toMatchObject({ type: 'pack' }); // flat art
+    expect((await get('/tokens/s-boost')).status).toBe(404); // no renderer
     expect((await get('/tokens?ids=g-wheat,s-w1,g-trac,nope')).body.map((t: any) => t.token_id).sort()).toEqual(['g-wheat', 's-w1']);
   });
 
@@ -186,10 +191,9 @@ describe('chain indexer → marketplace API', () => {
     await expect(indexer.apply([], 12, 13)).rejects.toThrow(/moved underneath/);
   });
 
-  it('says offers are not open yet', async () => {
+  it('reads offers; making one is a wallet transaction, not a server route', async () => {
     expect((await get('/tokens/g-wheat/offers')).body).toEqual([]);
     const res = await app.inject({ method: 'POST', url: '/v1/market/tokens/g-wheat/offers', payload: { amount: '1', days: 3 } });
-    expect(res.statusCode).toBe(501);
-    expect(res.json().message).toMatch(/Offers/);
+    expect(res.statusCode).toBe(404);
   });
 });
