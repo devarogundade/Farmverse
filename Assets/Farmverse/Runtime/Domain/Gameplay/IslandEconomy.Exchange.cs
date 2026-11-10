@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Farmverse.Domain.Gameplay
@@ -14,6 +15,20 @@ namespace Farmverse.Domain.Gameplay
         public int StoredInFarmhouses(string item) =>
             _departments.Values.Where(d => d.Levels.Kind == DepartmentKind.Farmhouse && d.Stock.TryGetValue(item, out _))
                 .Sum(d => d.Stock[item]);
+
+        /// <summary>Everything the farmhouses hold between them, by good (what a mint can take).</summary>
+        public SortedDictionary<string, int> FarmhouseStock()
+        {
+            var all = new SortedDictionary<string, int>(StringComparer.Ordinal);
+            foreach (var d in _departments.Values.Where(d => d.Levels.Kind == DepartmentKind.Farmhouse))
+                foreach (var kv in d.Stock)
+                    if (kv.Value > 0) all[kv.Key] = (all.TryGetValue(kv.Key, out var n) ? n : 0) + kv.Value;
+            return all;
+        }
+
+        /// <summary>How much the working farmhouses can hold between them.</summary>
+        public int FarmhouseCapacity =>
+            _departments.Values.Where(d => d.Levels.Kind == DepartmentKind.Farmhouse && Working(d.Uid)).Sum(d => d.StorageCapacity);
 
         /// <summary>Takes exactly <paramref name="n"/> from the farmhouses (fullest first), or nothing.</summary>
         public bool TakeFromFarmhouses(string item, int n)

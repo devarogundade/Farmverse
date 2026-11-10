@@ -16,6 +16,8 @@ namespace Farmverse.IslandEngine
     ///   GET  /v1/version       rules version
     ///   POST /v1/advance       { state, now } -> { state, report, nextWake }
     ///   POST /v1/raid          { state, now, salt } -> { state, raid, summary }   (the day's raid, player away)
+    ///   POST /v1/exchange      { state, now, ops } -> { state, nextWake, summary, done }   (mint takes, redeem gives)
+    ///   POST /v1/earned        { before, after, seconds } -> { gain, stock, room }   (what may be minted, shadow mode)
     /// </summary>
     public static class Program
     {
@@ -43,6 +45,7 @@ namespace Farmverse.IslandEngine
             app.MapPost("/v1/advance", (AdvanceRequest req) => Engine.Advance(req));
             app.MapPost("/v1/raid", (RaidRequest req) => Engine.Raid(req));
             app.MapPost("/v1/exchange", (ExchangeRequest req) => Engine.Exchange(req));
+            app.MapPost("/v1/earned", (EarnedRequest req) => Engine.Earned(req));
             app.Run();
         }
     }
@@ -106,6 +109,21 @@ namespace Farmverse.IslandEngine
             }
         }
 
+        /// <summary>How much of each good grew between two saves, capped at what the earlier island could make.</summary>
+        public static IResult Earned(EarnedRequest req)
+        {
+            if (req.before == null || req.after == null) return Results.BadRequest(new ErrorResponse { error = "before and after needed" });
+            if (double.IsNaN(req.seconds) || req.seconds < 0) return Results.BadRequest(new ErrorResponse { error = "seconds must be >= 0" });
+            try
+            {
+                return Results.Ok(IslandEarned.Compare(req.before, req.after, req.seconds));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.Json(new ErrorResponse { error = ex.Message }, statusCode: StatusCodes.Status409Conflict);
+            }
+        }
+
         public static IResult Raid(RaidRequest req)
         {
             if (req.state == null) return Results.BadRequest(new ErrorResponse { error = "state missing" });
@@ -149,6 +167,16 @@ namespace Farmverse.IslandEngine
     {
         public string error = "";
         public string code = "";
+    }
+
+    public sealed class EarnedRequest
+    {
+        /// <summary>The island as the server last held it.</summary>
+        public IslandState? before;
+        /// <summary>The island now (the device's upload, run to now).</summary>
+        public IslandState? after;
+        /// <summary>Seconds between the two.</summary>
+        public double seconds;
     }
 
     public sealed class RaidRequest

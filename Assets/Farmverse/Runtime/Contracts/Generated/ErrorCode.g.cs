@@ -55,14 +55,15 @@ namespace Farmverse.Contracts
         MintLimit = 41,
         MintTooSoon = 42,
         MintNotEnough = 43,
-        MintBuildingBusy = 44,
-        MintNotAllowed = 45,
-        RedeemNotFound = 46,
-        MintLotTooSmall = 47,
-        MintNoCoins = 48,
-        DeedAllOpen = 49,
-        FaucetWait = 50,
-        FaucetClosed = 51,
+        MintUnearned = 44,
+        MintBuildingBusy = 45,
+        MintNotAllowed = 46,
+        RedeemNotFound = 47,
+        MintLotTooSmall = 48,
+        MintNoCoins = 49,
+        DeedAllOpen = 50,
+        FaucetWait = 51,
+        FaucetClosed = 52,
     }
 
     /// <summary>Wire strings for <see cref="ErrorCode"/>.</summary>
@@ -115,6 +116,7 @@ namespace Farmverse.Contracts
                 case ErrorCode.MintLimit: return "MINT_LIMIT";
                 case ErrorCode.MintTooSoon: return "MINT_TOO_SOON";
                 case ErrorCode.MintNotEnough: return "MINT_NOT_ENOUGH";
+                case ErrorCode.MintUnearned: return "MINT_UNEARNED";
                 case ErrorCode.MintBuildingBusy: return "MINT_BUILDING_BUSY";
                 case ErrorCode.MintNotAllowed: return "MINT_NOT_ALLOWED";
                 case ErrorCode.RedeemNotFound: return "REDEEM_NOT_FOUND";
@@ -174,6 +176,7 @@ namespace Farmverse.Contracts
                 case "MINT_LIMIT": return ErrorCode.MintLimit;
                 case "MINT_TOO_SOON": return ErrorCode.MintTooSoon;
                 case "MINT_NOT_ENOUGH": return ErrorCode.MintNotEnough;
+                case "MINT_UNEARNED": return ErrorCode.MintUnearned;
                 case "MINT_BUILDING_BUSY": return ErrorCode.MintBuildingBusy;
                 case "MINT_NOT_ALLOWED": return ErrorCode.MintNotAllowed;
                 case "REDEEM_NOT_FOUND": return ErrorCode.RedeemNotFound;

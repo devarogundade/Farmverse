@@ -78,6 +78,8 @@ export const ERROR_CATALOGUE = {
   MINT_TOO_SOON: ['hours'],
   /** Not enough of the goods in store (or boosts held). */
   MINT_NOT_ENOUGH: ['have'],
+  /** More than the server saw the island make (or gave it): `earned` of the good may be minted now. */
+  MINT_UNEARNED: ['earned'],
   /** The building can't be picked up: `reason` is not_empty, busy, core_building, under_construction, ruined. */
   MINT_BUILDING_BUSY: ['reason'],
   /** That item can't be minted. */

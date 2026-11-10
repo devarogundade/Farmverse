@@ -99,9 +99,12 @@ function refusalToError(e: EngineRefusal): AppError {
   return new AppError('MINT_NOT_ALLOWED', {}, { cause: e });
 }
 
-function islandDocFrom(before: IslandDoc, state: IslandSave, nextWake: number, summary: IslandDoc['summary'], nowMs: number): IslandDoc {
+function islandDocFrom(before: IslandDoc, state: IslandSave, nextWake: number, summary: IslandDoc['summary'], nowMs: number, earned: IslandDoc['earned']): IslandDoc {
+  const doc: IslandDoc = { ...before };
+  if (earned) doc.earned = earned;
+  else delete doc.earned;
   return {
-    ...before,
+    ...doc,
     rev: before.rev + 1,
     rulesVersion: state.rulesVersion,
     simAtMs: Math.round(state.simAt * 1000),
@@ -145,7 +148,7 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
     let props = '{}';
     let value: number;
     let refund: MintDoc['refund'];
-    let next: { state: IslandSave; nextWake: number; summary: IslandDoc['summary'] } | undefined;
+    let next: { state: IslandSave; nextWake: number; summary: IslandDoc['summary']; earned: IslandDoc['earned'] } | undefined;
     let boostsAfter: Record<string, number> | undefined;
     let fee = 0;
 
@@ -189,6 +192,9 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
       fee = ex.done.find((d) => d.op === 'fee')?.n ?? 0;
       const giveFeeBack: ExchangeOp[] = fee > 0 ? [{ op: 'credit', n: fee }] : [];
       if (req.kind === 'good') {
+        // shadow mode: only goods the server saw the island make (or gave it) leave for the chain
+        const earned = island.earned?.[done.item] ?? 0;
+        if (done.n > earned) fail('MINT_UNEARNED', { earned });
         kind = 'good';
         itemId = done.item;
         quantity = done.n;
@@ -203,7 +209,13 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
         value = done.price;
         refund = { ops: [{ op: 'hold', id: done.id, level: done.level, price: done.price }, ...giveFeeBack] };
       }
-      next = { state: ex.state, nextWake: ex.nextWake, summary: ex.summary };
+      const earned = { ...(island.earned ?? {}) };
+      if (kind === 'good') {
+        const left = (earned[itemId] ?? 0) - quantity;
+        if (left > 0) earned[itemId] = left;
+        else delete earned[itemId];
+      }
+      next = { state: ex.state, nextWake: ex.nextWake, summary: ex.summary, earned };
     }
 
     const today = utcDay(nowMs);
@@ -221,7 +233,7 @@ export async function mint(deps: MintDeps, uid: string, accountId: string, req: 
     };
     const signature = deps.signer.sign(voucher);
     const record: MintDoc = { tokenId, status: 'issued', voucher, signer: deps.signer.publicKey, signature, refund, value, fee, createdAt: nowMs, updatedAt: nowMs };
-    const newIsland = next ? islandDocFrom(island, next.state, next.nextWake, next.summary, nowMs) : undefined;
+    const newIsland = next ? islandDocFrom(island, next.state, next.nextWake, next.summary, nowMs, next.earned) : undefined;
 
     const outcome = await env.store.runTransaction(async (tx) => {
       const now = await tx.get(paths.island(uid));
