@@ -726,6 +726,15 @@
 .merchant-goods th, .merchant-goods td { text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
 .merchant-goods th { font-size: 0.85em; opacity: 0.75; }
 .merchant-goods .spark { width: 110px; height: 26px; color: var(--fv-yellow, #ffd23a); }
+.merchant-why { max-width: 360px; }
+.merchant-why q { display: block; font-style: italic; }
+.merchant-why > small { display: block; margin-top: 2px; }
+.merchant-proof { margin-top: 4px; font-size: 0.85em; }
+.merchant-proof summary { cursor: pointer; color: var(--fv-green, #6fdc6f); list-style: none; }
+.merchant-proof summary::before { content: '✓ '; }
+.merchant-proof[open] { background: rgba(0, 0, 0, 0.25); border-radius: 8px; padding: 8px 10px; }
+.merchant-proof ul { margin: 4px 0; padding-left: 18px; }
+.merchant-proof p { margin: 4px 0; overflow-wrap: anywhere; }
 @media (max-width: 720px) {
   .merchant-goods th:nth-child(5), .merchant-goods td:nth-child(5), .merchant-goods th:nth-child(6), .merchant-goods td:nth-child(6) { display: none; }
 }

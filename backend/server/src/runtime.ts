@@ -21,6 +21,7 @@ import { nearFaucetSender } from './chain/faucet';
 import { nearRelayer, welcome } from './chain/relay';
 import { reconcile } from './chain/reconcile';
 import { merchantTick, nearMerchantWallet } from './chain/merchants';
+import { nearAiVoice } from './chain/merchantVoice';
 import { settleIntents } from './chain/intents';
 import { unclaimedRedeems } from './chain/unclaimed';
 import { crewOf } from './chain/crew';
@@ -103,6 +104,14 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
       : {}),
   });
 
+  // one per process, so its attestation check is reused across ticks
+  const merchantVoice = config.NEAR_AI_API_KEY
+    ? nearAiVoice(
+        { apiKey: config.NEAR_AI_API_KEY, model: config.NEAR_AI_MODEL, baseUrl: config.NEAR_AI_BASE_URL, timeoutMs: config.NEAR_AI_TIMEOUT_SECONDS * 1000 },
+        log.with({ job: 'merchant-voice' }),
+      )
+    : undefined;
+
   const rt: Runtime = {
     store,
     clock: systemClock,
@@ -166,6 +175,7 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
                           ]),
                         ),
                         nowMs: () => Date.now(),
+                        ...(merchantVoice ? { voice: merchantVoice } : {}),
                       },
                       log.with({ job: 'merchant-tick' }),
                     ),

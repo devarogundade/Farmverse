@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { sprite } from '@farmverse/shared/gameTheme';
 import tetherMark from '@farmverse/shared/stageshow/brands/tether.svg';
 import { useState, type FormEvent } from 'react';
@@ -35,7 +36,6 @@ const MESSAGES: Record<string, string> = {
 };
 
 const normalise = (code: string) => code.replace(/\s+/g, '').toUpperCase();
-const short = (wallet: string) => `${wallet.slice(0, 6)}…${wallet.slice(-4)}`;
 const fmt = (n: number) => n.toLocaleString('en-US', { maximumFractionDigits: 6 });
 
 export function Redeem() {
@@ -106,7 +106,7 @@ export function Redeem() {
               {fmt(state.paid.amount)} {state.paid.unit}
             </p>
             <p>
-              {state.paid.confirmed ? 'Sent' : 'On its way'} to {short(state.wallet)}.
+              {state.paid.confirmed ? 'Sent' : 'On its way'} to {shortAccount(state.wallet)}.
               {!state.paid.confirmed && ' It can take a minute to show in your wallet.'}
             </p>
             {state.paid.txUrl && (

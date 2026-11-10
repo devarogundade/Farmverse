@@ -22,6 +22,12 @@ const prisma = testPrisma();
 const log = memoryLogger();
 const ACCOUNT = 'farmer.testnet';
 const UID = uidFor(ACCOUNT);
+/** A second farm for the earned-stock checks, and a third that brings goods in its first upload. */
+const GROWER = 'grower.testnet';
+const UID2 = uidFor(GROWER);
+const RESTORED = 'restored.testnet';
+const UID3 = uidFor(RESTORED);
+const accounts = new Map([[UID, ACCOUNT], [UID2, GROWER], [UID3, RESTORED]]);
 const T0 = Date.UTC(2027, 0, 10, 12, 0, 0);
 const meta = { clientVersion: '1.0.0', platform: 'webgl', locale: 'en' };
 
@@ -51,19 +57,20 @@ const rt: Runtime = {
     itemsContract: 'items.farmverse.testnet',
     limits: { dailyValueCap: 1_000, minAccountHours: 0 },
     scheduleExpiry: async (_uid, tokenId, atMs) => void expiries.push({ tokenId, atMs }),
-    accountOf: async (uid) => (uid === UID ? ACCOUNT : null),
+    accountOf: async (uid) => accounts.get(uid) ?? null,
   },
 };
 const calls = callDefinitions(rt);
 const deps: CallableDeps = { clock, log, minClientVersion: () => '0.0.0', exposeIssues: true };
 
-async function call(name: string, data: object) {
-  const out = await runCallable(calls.get(name)!, { meta, ...data }, { uid: UID, isAdmin: false, requestId: 't' }, deps);
+async function call(name: string, data: object, uid = UID) {
+  const out = await runCallable(calls.get(name)!, { meta, ...data }, { uid, isAdmin: false, requestId: 't' }, deps);
   return out as { ok: boolean; data?: Record<string, unknown>; error?: { code: string; params: Record<string, string> } };
 }
 
 type Economy = { coins?: number; departments?: { uid: number; stock: { item: string; n: number }[] }[] };
-const island = async () => (await store.read(paths.island(UID))).data as { state: string; audit?: unknown; rev: number };
+type IslandRow = { state: string; audit?: unknown; rev: number; earned?: Record<string, number> };
+const island = async (uid = UID) => (await store.read(paths.island(uid))).data as IslandRow;
 const wheatIn = (state: string) =>
   ((JSON.parse(state) as { economy?: Economy }).economy?.departments ?? []).flatMap((d) => d.stock).filter((s) => s.item === 'wheat').reduce((a, s) => a + s.n, 0);
 const heldIn = (state: string) => (JSON.parse(state) as { held?: { id: string; level: number }[] }).held ?? [];
@@ -108,6 +115,8 @@ describe('grants', () => {
     expect(wheatIn(synced.data!['state'] as string)).toBe(300);
     const again = await call('island-sync', {});
     expect(again.data?.['serverChanged']).toBeUndefined();
+    // the server gave them, so they may be minted
+    expect((await island()).earned).toMatchObject({ wheat: 300 });
   });
 });
 
@@ -126,6 +135,7 @@ describe('chain-mint', () => {
     expect(verify(null, voucherBytes(voucher), key, Buffer.from(d['signature'] as string, 'base64'))).toBe(true);
     expect(wheatIn(d['state'] as string)).toBe(200);
     expect(wheatIn((await island()).state)).toBe(200);
+    expect((await island()).earned?.['wheat']).toBe(200);
     expect(expiries.at(-1)).toEqual({ tokenId: firstToken, atMs: voucher.expires_at_ms + EXPIRY_GRACE_MS });
   });
 
@@ -224,6 +234,67 @@ describe('chain-redeem', () => {
   it('refuses a transaction that is not this wallet’s redeem', async () => {
     const out = await call('chain-redeem', { txHash: '9AuQS7RymNrG5yfz7mHh7HMbt5sM7gHmZfT8QfHYz1Lb' });
     expect(out.error?.code).toBe('REDEEM_NOT_FOUND');
+  });
+});
+
+/** The upload with the farmhouse (uid 1) holding `n` wheat. */
+function withWheat(state: string, n: number): string {
+  const s = JSON.parse(state) as { economy: Economy };
+  const house = s.economy.departments!.find((d) => d.uid === 1)!;
+  house.stock = [...house.stock.filter((c) => c.item !== 'wheat'), { item: 'wheat', n }];
+  return JSON.stringify(s);
+}
+
+describe('earned stock (shadow mode)', () => {
+  beforeAll(async () => {
+    expect((await call('player-create', { displayName: 'growfarm', avatarId: 'avatar_default' }, UID2)).ok).toBe(true);
+    const save = {
+      rulesVersion: 2,
+      simAt: nowMs / 1000,
+      seed: 7,
+      buildings: [
+        { id: 'farmhouse', uid: 1, x: 150, z: 150, w: 4, d: 4 },
+        { id: 'field', uid: 2, x: 156, z: 150, w: 3, d: 3 },
+        { id: 'field', uid: 3, x: 160, z: 150, w: 3, d: 3 },
+      ],
+      held: [],
+    };
+    expect((await call('island-sync', { adopt: JSON.stringify(save) }, UID2)).ok).toBe(true);
+  });
+
+  it('goods grown between two saves can be minted', async () => {
+    nowMs += 30 * 60_000;
+    const up = await call('island-sync', { adopt: withWheat((await island(UID2)).state, 100), mirror: true }, UID2);
+    expect(up.ok).toBe(true);
+    expect((await island(UID2)).earned).toEqual({ wheat: 100 });
+    const out = await call('chain-mint', { kind: 'good', item: 'wheat', quantity: 100, key: 'grown-wheat-1' }, UID2);
+    expect(out.ok).toBe(true);
+    expect((await island(UID2)).earned).toEqual({});
+  });
+
+  it('a save that jumps mints only what its fields could have grown in the time', async () => {
+    nowMs += 60_000;
+    // 140 wheat a minute after the last save: two fields grow 6 wheat a minute each, plus a harvest each
+    // in hand, ×2 head-room = 48. The worth jump is small enough that the upload itself isn't flagged.
+    expect((await call('island-sync', { adopt: withWheat((await island(UID2)).state, 140), mirror: true }, UID2)).ok).toBe(true);
+    const row = await island(UID2);
+    expect(row.audit).toBeUndefined();
+    expect(row.earned).toEqual({ wheat: 48 });
+    const refused = await call('chain-mint', { kind: 'good', item: 'wheat', quantity: 140, key: 'jump-wheat-1' }, UID2);
+    expect(refused.error).toEqual({ code: 'MINT_UNEARNED', params: { earned: '48' } });
+    expect(wheatIn((await island(UID2)).state)).toBe(140);
+    const ok = await call('chain-mint', { kind: 'good', item: 'wheat', quantity: 40, key: 'jump-wheat-2' }, UID2);
+    expect(ok.ok).toBe(true);
+    expect((await island(UID2)).earned).toEqual({ wheat: 8 });
+  });
+
+  it('goods already in a first upload never mint', async () => {
+    expect((await call('player-create', { displayName: 'restfarm', avatarId: 'avatar_default' }, UID3)).ok).toBe(true);
+    // another farm's island, 100 wheat in store, uploaded as this player's first
+    expect((await call('island-sync', { adopt: (await island(UID2)).state }, UID3)).ok).toBe(true);
+    expect(wheatIn((await island(UID3)).state)).toBe(100);
+    const out = await call('chain-mint', { kind: 'good', item: 'wheat', quantity: 100, key: 'restored-wheat-1' }, UID3);
+    expect(out.error).toEqual({ code: 'MINT_UNEARNED', params: { earned: '0' } });
   });
 });
 

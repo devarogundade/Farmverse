@@ -1,3 +1,4 @@
+import { shortAccount } from '@farmverse/shared/account';
 import { sprite } from '@farmverse/shared/gameTheme';
 import { useState, type ReactNode } from 'react';
 import { useGrant, useMe, usePlayer, usePlayerAction, type AuditEntry, type GrantInput } from '../api/admin';
@@ -43,7 +44,7 @@ export function AuditList({ entries }: { entries: AuditEntry[] }) {
           {e.action === 'player.grant' && <span> · {grantSummary(e.details)}</span>}
           <p>“{e.reason}”</p>
           <small className="muted">
-            {e.actor} · {dateTime(e.at)}
+            <span title={e.actor}>{shortAccount(e.actor)}</span> · {dateTime(e.at)}
           </small>
         </li>
       ))}
@@ -79,8 +80,8 @@ export function PlayerPage({ uid }: { uid: string }) {
           <h1 className="fv-title">
             {p.name ?? 'No island yet'} {p.bannedAt && <Pill tone="pink">Banned</Pill>}
           </h1>
-          <p className="muted">
-            {p.accountId}
+          <p className="muted" title={p.accountId}>
+            {shortAccount(p.accountId)}
             {p.shortId && ` · Player #${p.shortId}`}
           </p>
           {p.bannedAt && (
@@ -193,11 +194,11 @@ export function PlayerPage({ uid }: { uid: string }) {
         </Card>
       </div>
 
-      <GiftDialog open={open === 'gift'} onClose={() => setOpen(null)} uid={uid} name={p.name ?? p.accountId} />
+      <GiftDialog open={open === 'gift'} onClose={() => setOpen(null)} uid={uid} name={p.name ?? shortAccount(p.accountId)} />
       <ReasonDialog
         open={open === 'ban'}
         onClose={() => setOpen(null)}
-        title={`Ban ${p.name ?? p.accountId}?`}
+        title={`Ban ${p.name ?? shortAccount(p.accountId)}?`}
         icon="Icon_ImageIcon_Lock01_s"
         confirm="Ban"
         tone="purple"
@@ -209,7 +210,7 @@ export function PlayerPage({ uid }: { uid: string }) {
       <ReasonDialog
         open={open === 'unban'}
         onClose={() => setOpen(null)}
-        title={`Unban ${p.name ?? p.accountId}?`}
+        title={`Unban ${p.name ?? shortAccount(p.accountId)}?`}
         confirm="Unban"
         done="Player unbanned"
         onConfirm={(reason) => action.mutateAsync({ action: 'unban', reason })}

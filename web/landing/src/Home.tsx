@@ -156,7 +156,8 @@ export function Home() {
           <h2 className="fv-title section-title left">FARM, the coin of the islands</h2>
           <p>
             FARM is what farmers use to buy and sell on the market and to pick up gem packs. There is a fixed amount of FARM —
-            no more will ever be made — so the only way to get it is from another player.
+            no more will ever be made. You get it by selling what you make to other players or to the merchants in
+            Market Town, or by paying with another token.
           </p>
           <a className="more-link" href="#/farm">
             Read the FARM disclosure →

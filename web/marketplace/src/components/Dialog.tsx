@@ -1,6 +1,8 @@
 import { sprite } from '@farmverse/shared/gameTheme';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { Toaster, toast as sonner } from 'sonner';
+import { useSettling } from '../chain/settle';
+import { useWallet } from '../chain/wallet';
 import { PortalContainer } from './Select';
 
 /**
@@ -54,12 +56,16 @@ export function Dialog({ open, onClose, title, icon, children }: { open: boolean
   );
 }
 
-/** "Confirm in your wallet" while an action is pending. */
-export function WalletWait({ text = 'Confirm in your wallet…' }: { text?: string }) {
+/** "Confirm in your wallet" while an action is pending ("Working on it…" for Google and email: nothing to confirm). */
+export function WalletWait({ text }: { text?: string }) {
+  // after the wallet: the change is on chain, the market is catching up (chain/settle.ts)
+  const settling = useSettling();
+  const { social } = useWallet();
+  text ??= social ? 'Working on it…' : 'Confirm in your wallet…';
   return (
     <div className="dlg-wait" role="status" aria-live="polite">
       <img className="spin" src={sprite('Loading_Rotate')} alt="" />
-      <p>{text}</p>
+      <p>{settling ? (social ? 'Done. Updating the market…' : 'Done in your wallet. Updating the market…') : text}</p>
     </div>
   );
 }

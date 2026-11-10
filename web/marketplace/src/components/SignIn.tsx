@@ -73,10 +73,67 @@ export function SignInChoices({
   );
 }
 
+/** The email way's second step: the code we emailed, with "send a new code" and "use another email". */
+export function EmailCodeStep({
+  email,
+  busy = false,
+  onCode,
+  onResend,
+  onBack,
+}: {
+  email: string;
+  busy?: boolean;
+  onCode: (code: string) => void;
+  onResend: () => void;
+  onBack: () => void;
+}) {
+  const [code, setCode] = useState('');
+  return (
+    <div className="si">
+      <p className="si-sent">
+        We sent a code to <b>{email}</b>.
+      </p>
+      <form
+        className="si-email"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (code.length === 6) onCode(code);
+        }}
+      >
+        <input
+          className="si-input si-code"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={6}
+          required
+          autoFocus
+          placeholder="000000"
+          aria-label="The code from the email"
+          value={code}
+          disabled={busy}
+          onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+        />
+        <button type="submit" className="fv-btn green si-wide" disabled={busy || code.length !== 6}>
+          Sign in
+        </button>
+      </form>
+      <div className="si-links">
+        <button type="button" disabled={busy} onClick={onResend}>
+          Send a new code
+        </button>
+        <button type="button" disabled={busy} onClick={onBack}>
+          Use another email
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /** Sign-in errors in plain words (wallets and popups throw technical ones). */
 export function signInError(e: unknown): string {
   const m = String((e as Error)?.message ?? e);
   if (/blocked/i.test(m)) return 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.';
   if (/closed|reject|cancel/i.test(m)) return 'Sign-in was closed before it finished. Try again.';
+  if (/code|otp|passwordless/i.test(m)) return "That code didn't work. Check the email and try again.";
   return "Sign-in didn't finish. Try again.";
 }

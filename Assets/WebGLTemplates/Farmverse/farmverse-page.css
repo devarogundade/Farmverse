@@ -56,6 +56,9 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
 .fv-rotate-phone { width: 46px; height: 78px; border: 5px solid #ffd23a; border-radius: 10px; box-sizing: border-box; animation: fv-turn 2.4s ease-in-out infinite; }
 @keyframes fv-turn { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
 @media (orientation: portrait) { #fv-rotate { display: flex; } }
+#fv-rotate[hidden] { display: none; }
+#fv-rotate-skip { margin-top: 22px; padding: 10px 22px; border: 2px solid rgba(255, 248, 231, 0.35); border-radius: 999px; background: transparent; color: #fff8e7; font: 800 15px FvBody, system-ui, sans-serif; cursor: pointer; }
+#fv-rotate-skip:active { background: rgba(255, 255, 255, 0.08); }
 
 /* ---- sign-in: Google and email first, then "or" a guest farm or a NEAR wallet (navy like the install card) ---- */
 #fv-signin { background: rgba(6, 22, 40, 0.72); backdrop-filter: blur(3px); padding: 16px; box-sizing: border-box; overflow-y: auto; justify-content: safe center; }
@@ -63,7 +66,7 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
 .fv-signin-logo { width: min(220px, 64%); align-self: center; margin: -4px 0 0; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35)); }
 #fv-signin-text { color: #cfe6ff; font-size: 15px; }
 #fv-social, .fv-email { display: flex; flex-direction: column; gap: 10px; }
-#fv-social[hidden], #fv-or[hidden], #fv-signin-button[hidden] { display: none; }
+#fv-social[hidden], #fv-or[hidden], #fv-signin-button[hidden], #fv-google[hidden], #fv-other-email[hidden] { display: none; }
 .fv-signin-card button { height: 50px; padding: 0 18px; border-radius: 999px; font: 800 16px/1 FvBody, system-ui, sans-serif; transition: filter 0.15s, transform 0.1s; }
 .fv-signin-card button:active:not(:disabled) { transform: translateY(2px); }
 .fv-signin-card button.fv-primary { background: linear-gradient(#ffe36a, #f5b31c); color: #4a2a00; box-shadow: inset 0 -4px 0 rgba(150, 80, 0, 0.35), 0 3px 0 rgba(0, 0, 0, 0.35); }
@@ -88,3 +91,6 @@ html, body { margin: 0; height: 100%; background: #1f3a2b; font-family: system-u
   .fv-signin-card .fv-alt button { height: 40px; }
   #fv-social, .fv-email { gap: 8px; }
 }
+/* the emailed code (Email sign-in's second step): big digits, centred */
+.fv-email input[inputmode="numeric"] { text-align: center; font-size: 24px; letter-spacing: 0.4em; padding-left: calc(18px + 0.4em); }
+#fv-other-email { align-self: center; text-decoration: underline; text-underline-offset: 3px; }

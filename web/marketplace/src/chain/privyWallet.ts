@@ -1,50 +1,10 @@
 /**
- * Social login (plan 15 §13.2): a Privy wallet in near-connect, next to the usual ones. Players sign in with an
- * emailed code; the wallet signs in a popup on our own sign page (sign.html). Registered only when the Privy app
- * is set (VITE_PRIVY_APP_ID); the game page builds the same manifest (farmverse-page.js).
+ * Social login (plan 15 §13.2): "Email or Google", a Privy NEAR wallet next to the usual ones. It signs in the page
+ * itself (privyNear.ts), so this stays light: the main bundle only needs to know whether it's on.
  */
-import type { NearConnector } from '@hot-labs/near-connect';
 
-/** The privy-near-connect executor, pinned to a commit (near-connect runs it without an integrity check). */
-export const PRIVY_EXECUTOR =
-  'https://raw.githubusercontent.com/beneviolabs/privy-near-connect/3d56b782669d242a1ea432921e291abc26b4ebc7/executor.js';
-
-/** The Privy wallet's id in near-connect (kept: players' saved sessions point at it). */
+/** The wallet's id in NEAR Connect (kept: players' saved sessions point at it). Same as privyNear's PRIVY_NEAR_ID. */
 export const PRIVY_WALLET_ID = 'farmverse-email';
 
 /** Social login is on when the Privy app is set. */
 export const socialLogin = !!import.meta.env.VITE_PRIVY_APP_ID;
-
-export function privyWalletManifest(signSite: string, allowsOpen: string[]) {
-  return {
-    id: PRIVY_WALLET_ID,
-    name: 'Email or Google',
-    icon: `${signSite}/ui/Icon_Clover.webp`,
-    description: 'Sign in with your email. No wallet app needed.',
-    website: signSite,
-    version: '1.0.0',
-    executor: PRIVY_EXECUTOR,
-    type: 'sandbox',
-    platform: { web: signSite },
-    features: {
-      signMessage: true,
-      signInWithoutAddKey: true,
-      signInAndSignMessage: true,
-      signInWithFunctionCallKey: true,
-      signAndSendTransaction: true,
-      signAndSendTransactions: true,
-      mainnet: true,
-      testnet: true,
-    },
-    permissions: { isPrivyConnect: true, storage: true, allowsOpen },
-    metadata: { signPageURL: `${signSite}/sign.html`, debug: false },
-  };
-}
-
-export async function registerPrivyWallet(connector: NearConnector, signSite: string): Promise<void> {
-  try {
-    await connector.registerWallet(privyWalletManifest(signSite, [signSite]) as never);
-  } catch {
-    // the usual wallets still work
-  }
-}

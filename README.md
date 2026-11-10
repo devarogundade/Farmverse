@@ -34,7 +34,8 @@ Built for **NEAR HACKATHON**, track **`games` — Games With Real Economies**. R
 7. [Architecture](#architecture)
 8. [Run it yourself](#run-it-yourself)
 9. [What was built during the hackathon](#what-was-built-during-the-hackathon)
-10. [Next steps](#next-steps)
+10. [Known limits](#known-limits)
+11. [Next steps](#next-steps)
 
 ---
 
@@ -53,7 +54,7 @@ Desktop browser recommended. Every step says what to do and what you should see.
 | 7 | Open **marketplace.farmverse.world** | Listings rendered in 3D (goods, buildings, 40 Genesis Farmhands in their outfits). Prices in FARM. |
 | 8 | Market → **Town** | **Market Town**: four merchant NPCs (Bea, Ruth, Tomas, Ivy) with their own NEAR accounts, what they hold, what they pay, and **why** each price moved ("Low on stock and it sells: paying more"). |
 | 9 | Market → **Hire** → **Hire a Farmhand** | Rent a worker NFT by the day. While hired it walks and works on your island in its outfit; its owner collects the FARM it earns. |
-| 10 | Open **marketplace.farmverse.world/#/buy-farm** (*Get FARM with any token*, also linked from the buy flow) | A live NEAR Intents (1Click) quote: pay USDC/ETH/SOL/BTC from any chain, receive FARM. On testnet this is a quote only (Intents has no testnet); orders go live on mainnet. |
+| 10 | Open **marketplace.farmverse.world/#/buy-farm** (*Get FARM with any token*, also linked from the buy dialog when you're short of FARM) | A live NEAR Intents (1Click) quote: pay USDC/ETH/SOL/BTC from any chain, receive FARM. On testnet this is a quote only (Intents has no testnet); orders go live on mainnet. |
 
 > **Minting waits on new farms.** To stop bots minting from throwaway farms, a farm must be a few hours old before
 > it can mint (admin setting "Hours before a new farm can mint"). For the judging window it is set to **0**, so a new
@@ -119,13 +120,13 @@ flowchart LR
 
 | Piece | How it works | Where |
 |---|---|---|
-| **FARM** | Fixed supply of 1,000,000,000 minted once to a treasury; no mint function, no owner. Testers get 100 FARM a day from a faucet. | [chain/contracts/farm_token](chain/contracts/farm_token/src/lib.rs) |
+| **FARM** | Fixed supply of 1,000,000,000 minted once to a treasury; the contract has no mint function and no owner role. On testnet its account still holds the deploy key (see [Known limits](#known-limits)). Testers get 100 FARM a day from a faucet. | [chain/contracts/farm_token](chain/contracts/farm_token/src/lib.rs) |
 | **Mint** | The game server checks the island really holds the goods, takes them out, and signs a voucher. The player's session key submits `mint_with_voucher`; our relayer pays the gas (NEP-366 meta-transaction). Daily mint allowance and a coin fee act as a sink. | [backend/server/src/mint](backend/server/src/mint/mint.ts), [items contract](chain/contracts/items/src/lib.rs) |
 | **Redeem** | Burns the NFT and credits the goods, building, pass or deed to the holder's island. One use only. | same |
 | **Market** | Listings, **offers** on a token or on "any wheat, 100 or more", and **rentals** of Farmhands (escrowed; the worker's earnings wait in its own balance). 5 % fee to the treasury, studio royalty on resales. | [chain/contracts/market](chain/contracts/market/src/lib.rs) |
 | **Merchant NPCs** | Each merchant is its own NEAR account with its own FARM. Every 10 minutes the agent reads its stock and the last 24 h of sales, sets prices, keeps standing offers and lists what it holds. Pricing: `base × √(target/stock) × (1 + 10 % per recent sale, max +50 %)`, kept within 0.5–2× base, sells at +25 %. | the rules are one function, [`quote()` in merchants.ts](backend/server/src/chain/merchants.ts) |
 | **Farmhands** | 500 Genesis workers, generated from a seed (rarity, outfit, specialty, traits). They work on whichever island holds or rents them and keep their level when traded. 40 are minted and listed now. | [chain/scripts/farmhands.mjs](chain/scripts/farmhands.mjs), [crew rules](Assets/Farmverse/Runtime/Domain/Gameplay/IslandEconomy.Crew.cs) |
-| **Scarcity** | Studio drops with on-chain caps (Farm Pass, gem packs, 1,000 Genesis land deeds that open a wild plot), golden crops (a 1 % harvest, worth 25×), burns on redeem. | [drops.rs](chain/contracts/items/src/drops.rs) |
+| **Scarcity** | Studio drops with on-chain caps (Farm Pass 2,000, Builder's Pass 1,000, 1,000 Genesis land deeds that open a wild plot; gem packs and the Starter Pack are open editions), golden crops (a 1 % harvest, worth 25×), burns on redeem. | [drops.rs](chain/contracts/items/src/drops.rs) |
 | **Indexer** | Follows only the watched contracts' transactions (FastNEAR transactions API) into Postgres, which the market reads. | [backend/server/src/chain](backend/server/src/chain/txsource.ts) |
 
 The whole plan, with every decision and its reason: [Docs/architecture/15-game-market-economy-plan.md](Docs/architecture/15-game-market-economy-plan.md)
@@ -245,6 +246,25 @@ API, neardata), Fastify, Prisma, BullMQ, React, Vite, three.js / react-three-fib
 paid assets and are **not in the repository**; the deployed game and sites include them.
 
 **AI tools:** much of the code was written with AI coding agents (Claude Code), directed and reviewed by the team.
+
+---
+
+## Known limits
+
+What a careful reader should know about the build as it stands, so nothing here reads stronger than the code.
+
+- **The island is trusted to the browser.** The game uploads its own save and the server keeps it after a growth
+  check ([islands.ts](backend/game/src/game/islands.ts)). Mints are checked against that copy by the island engine,
+  with a daily mint allowance, a coin fee and a minimum lot, but a forged save could still mint up to the allowance.
+  Making islands server-authoritative is the first item in Next steps.
+- **Testnet keys.** Each contract account still holds the full-access key it was deployed with, so the code can be
+  upgraded, and the owner of items and market is one key, not a multisig. FARM's code has no mint and no owner
+  role; the key is what remains. The server's voucher signer, relayer and merchant keys are environment variables.
+- **Gasless covers mint and redeem.** Market actions (buy, list, offer, rent) pay their own gas and small storage
+  deposits, and a guest farm's key lives in the game page, so the marketplace can't sign in as a guest yet.
+- **Supply.** Caps are per drop. Gem packs and the Starter Pack are open editions, and the studio minter can mint
+  outside a drop.
+- **NEAR Intents** gives real quotes; orders and settlement switch on with mainnet.
 
 ---
 

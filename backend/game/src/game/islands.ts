@@ -2,7 +2,7 @@ import type { IslandAwayReport } from '@farmverse/contracts';
 import { awardCrewXp, withCrewSave, type Farmhand } from './crew';
 import { AppError, fail } from '../core/errors';
 import { paths } from '../infra/paths';
-import { EngineRefusal, type EngineReport, type ExchangeOp, type IslandEngine, type IslandSave, type IslandSummary } from '../infra/islandEngine';
+import { EngineRefusal, type EngineEarned, type EngineReport, type ExchangeOp, type IslandEngine, type IslandSave, type IslandSummary } from '../infra/islandEngine';
 import { postToBoard } from './leaderboard';
 import type { Env } from './services';
 
@@ -31,6 +31,12 @@ export interface IslandDoc {
   deviceSave?: string;
   /** Set (and kept) when an upload looked implausible: minting stays locked until reviewed. */
   audit?: IslandAudit;
+  /**
+   * What a mint may take, by good: goods the server saw the island make between two of its copies (each
+   * no more than the earlier island's buildings could make in the time) and goods it gave (redeems,
+   * refunds). Absent on an island first uploaded with goods already in store: those never mint.
+   */
+  earned?: Record<string, number>;
   updatedAt: number;
 }
 
@@ -73,6 +79,34 @@ export function auditUpload(fromWorth: number | undefined, toWorth: number, elap
   }
   const allowedWorth = Math.round(fromWorth + AUDIT_BASE_PER_HOUR * hours + fromWorth * AUDIT_SHARE_PER_DAY * (hours / 24));
   return toWorth > allowedWorth ? { flaggedAtMs: nowMs, reason: 'worth_jump', fromWorth, toWorth, allowedWorth, hours } : undefined;
+}
+
+/**
+ * The mintable goods after a run (pure): the old balance, no more than is in store now; then what grew,
+ * good by good in name order, while the earlier island's farmhouses had room for it. An honest island's
+ * store never holds more than its farmhouses, so growth past that is a forged save's.
+ */
+export function nextEarned(prev: Readonly<Record<string, number>> | undefined, seen: EngineEarned): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const [item, n] of Object.entries(prev ?? {})) {
+    const keep = Math.min(n, seen.stock[item] ?? 0);
+    if (keep > 0) out[item] = keep;
+  }
+  let room = Math.max(0, seen.room - Object.values(out).reduce((a, n) => a + n, 0));
+  for (const item of Object.keys(seen.gain).sort()) {
+    const add = Math.min(Math.floor(seen.gain[item] ?? 0), room, (seen.stock[item] ?? 0) - (out[item] ?? 0));
+    if (add <= 0) continue;
+    out[item] = (out[item] ?? 0) + add;
+    room -= add;
+  }
+  return out;
+}
+
+/** Goods the server gave the island (redeems, refunds) are mintable in full (pure). */
+export function plusGiven(earned: Readonly<Record<string, number>> | undefined, ops: readonly ExchangeOp[]): Record<string, number> {
+  const out: Record<string, number> = { ...(earned ?? {}) };
+  for (const op of ops) if (op.op === 'give' && op.n > 0) out[op.item] = (out[op.item] ?? 0) + op.n;
+  return out;
 }
 
 interface PendingReport {
@@ -254,6 +288,19 @@ async function advanceStored(
       if (audit) env.log.warn('island upload flagged', { uid, ...audit });
     }
 
+    // What may be minted: what grew since the server's last copy, within what that island could make.
+    // Every run is compared (a device upload or the server's own), so the rule is the same either way.
+    let earned = before?.earned;
+    if (before && deps.engine.earned) {
+      try {
+        const seen = await deps.engine.earned(JSON.parse(before.state) as IslandSave, out.state, Math.max(0, at - before.updatedAt) / 1000);
+        earned = nextEarned(before.earned, seen);
+      } catch (e) {
+        // the balance stays as it was (a mint still needs the goods in store)
+        env.log.warn('island growth not compared', { uid, error: String(e) });
+      }
+    }
+
     // What the server owes the island (redeems, refunds): only while the player is here to load it.
     let applied: string[] = [];
     if (applyGrants && deps.engine.exchange) {
@@ -264,6 +311,7 @@ async function advanceStored(
           const ex = await deps.engine.exchange(out.state, at / 1000, items.flatMap((g) => g.ops));
           out = { ...out, state: ex.state, nextWake: ex.nextWake, summary: ex.summary };
           applied = items.map((g) => g.id);
+          earned = plusGiven(earned, items.flatMap((g) => g.ops));
         } catch (e) {
           // e.g. no farmhouse to store goods in: they stay owed until the island can take them
           env.log.warn('grants not applied', { uid, error: String(e) });
@@ -279,6 +327,7 @@ async function advanceStored(
       nextWakeMs: Math.round(out.nextWake * 1000),
       ...(out.summary ? { summary: out.summary } : {}),
       ...(audit ? { audit } : {}),
+      ...(earned ? { earned } : {}),
       ...(mirror && device !== undefined ? { deviceSave: device } : before?.deviceSave ? { deviceSave: before.deviceSave } : {}),
       ...finish(before, out.report, at),
       updatedAt: at,

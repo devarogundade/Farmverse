@@ -52,6 +52,7 @@
 ExportedObj/
 .consulo/
 *.csproj
+!tools/dotnet/Farmverse.*/*.csproj
 *.unityproj
 *.sln
 *.slnx
@@ -209,3 +210,6 @@ web/**/dist/
 /ArtSource/review/
 /ArtSource/UI/painted_control_icons_backup/
 /ArtSource/tools/_superseded/
+
+# Unity Burst output written at the project root by WebGL builds
+/Data/

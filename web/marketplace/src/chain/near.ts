@@ -6,13 +6,35 @@ import type { NearConnector } from '@hot-labs/near-connect';
 import { liftWalletPopups } from '@farmverse/shared/walletLayer';
 import type { JsonRpcProvider } from 'near-api-js';
 import { config } from '../config';
-import { registerPrivyWallet, socialLogin } from './privyWallet';
+import type { PrivyNear } from './privyNear';
+import { socialLogin } from './privyWallet';
 
 let connector: Promise<NearConnector> | null = null;
 let rpc: Promise<JsonRpcProvider> | null = null;
+let privyNear: Promise<PrivyNear | null> | null = null;
+
+/**
+ * The "Email or Google" wallet (Privy, signing in this page: no popup), or null when the Privy app isn't set. Loaded
+ * on first use, like the connector.
+ */
+export function getPrivyNear(): Promise<PrivyNear | null> {
+  privyNear ??=
+    socialLogin && config.gameApiUrl
+      ? import('./privyNear').then(({ createPrivyNear }) => {
+          return createPrivyNear({
+            appId: import.meta.env.VITE_PRIVY_APP_ID ?? '',
+            clientId: import.meta.env.VITE_PRIVY_CLIENT_ID ?? '',
+            gameApiUrl: config.gameApiUrl!,
+            rpcUrls: { [config.network]: config.rpcUrl },
+            icon: `${location.origin}/ui/Icon_Clover.webp`,
+          });
+        })
+      : Promise.resolve(null);
+  return privyNear;
+}
 
 export function getConnector(): Promise<NearConnector> {
-  connector ??= import('@hot-labs/near-connect').then(async ({ NearConnector }) => {
+  connector ??= Promise.all([import('@hot-labs/near-connect'), getPrivyNear()]).then(([{ NearConnector }, privy]) => {
     // the wallet list opens above our <dialog> popups, not under them
     liftWalletPopups();
     const c = new NearConnector({
@@ -21,8 +43,8 @@ export function getConnector(): Promise<NearConnector> {
       footerBranding: null,
       autoConnect: true,
     });
-    // social login: "Email or Google" next to them, when the Privy app is set (plan 15 §13.2)
-    if (socialLogin) await registerPrivyWallet(c, location.origin);
+    // social login: "Email or Google" next to them (plan 15 §13.2), handed over before a saved session is looked up
+    privy?.inject();
     return c;
   });
   return connector;

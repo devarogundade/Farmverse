@@ -1,5 +1,5 @@
 import type { Prisma } from '../generated/prisma/client';
-import { fallbackTitle, formatFarm, nftTypeOf, parseProps } from './items';
+import { fallbackTitle, formatFarm, nftTypeOf, parseProps, shortAccount } from './items';
 import type { ChainEvent, Watched } from './parse';
 import { projectV2 } from './projectV2';
 
@@ -115,7 +115,7 @@ export async function project(tx: Tx, e: ChainEvent, w: Watched): Promise<Market
         if (!byMarket && to !== w.market) {
           await activity(tx, many(i, ids.length), e, e.contractId, tokenId, 'sent', from, to);
           const title = await titleOf(tx, e.contractId, tokenId);
-          out.push({ type: 'note', to, text: `${from} sent you ${title}`, icon: 'Icon_Gift', href: tokenHref(tokenId) });
+          out.push({ type: 'note', to, text: `${shortAccount(from)} sent you ${title}`, icon: 'Icon_Gift', href: tokenHref(tokenId) });
         }
       }
     } else if (e.event === 'nft_burn') {
@@ -171,7 +171,7 @@ export async function project(tx: Tx, e: ChainEvent, w: Watched): Promise<Market
       await activity(tx, e.id, e, nft, tokenId, 'bought', buyer, seller, price);
       const title = await titleOf(tx, nft, tokenId);
       out.push({ type: 'sale', token_id: tokenId });
-      out.push({ type: 'note', to: seller, text: `${buyer} bought your ${title} for ${formatFarm(price)} FARM`, icon: 'ResourceBar_Icon_Gold', href: tokenHref(tokenId) });
+      out.push({ type: 'note', to: seller, text: `${shortAccount(buyer)} bought your ${title} for ${formatFarm(price)} FARM`, icon: 'ResourceBar_Icon_Gold', href: tokenHref(tokenId) });
     }
   }
   return out;

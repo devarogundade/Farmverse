@@ -46,7 +46,7 @@ One item type per token: `kind` (`good | boost | building | land | tool | pack |
 | `create_drop(drop)`, `update_drop(id, update)` | `minter_id` (update: or owner) | fixed-price editions paid in FARM; cap only goes down |
 | `ft_on_transfer` (FARM only) | buyer via `farm.ft_transfer_call(items, price, {"drop":id,"use":false})` | mints edition `d-<drop>-<n>`; `"use": true` mints and redeems at once |
 | `set_drop_payment(farm_id, treasury_id)`, `sweep_farm(amount)` | owner / anyone | takings go to the treasury |
-| `redeem(token_id)` | token owner | 1 yocto; burns, refunds storage, emits `item_redeem`; workers can't be redeemed |
+| `redeem(token_id)` | token owner | 0 or 1 yocto (0 lets the game's session key redeem); burns, refunds storage, emits `item_redeem`; workers can't be redeemed |
 | `nft_payout`, `nft_transfer_payout` | anyone / approved market | NEP-199; royalties capped at 10 % in code |
 | `add_signer`, `remove_signer`, `set_minter`, `set_royalties`, `set_paused`, `set_base_uri`, `propose_owner` / `accept_owner` | owner (multisig) | 1 yocto (full-access key only) |
 | `get_item`, `is_burned`, `get_config`, `voucher_message`, `get_drop`, `get_drops`, `drop_bought` | views | |

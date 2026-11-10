@@ -1,8 +1,10 @@
 import 'dotenv/config';
-import { defineConfig, env } from 'prisma/config';
+import { defineConfig } from 'prisma/config';
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   migrations: { path: 'prisma/migrations' },
-  datasource: { url: env('DATABASE_URL') },
+  // Optional so `prisma generate` (typecheck, build) works on a fresh clone with no .env;
+  // migrate and the server still need DATABASE_URL.
+  datasource: { url: process.env['DATABASE_URL'] },
 });

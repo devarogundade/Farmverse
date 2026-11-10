@@ -5,6 +5,24 @@ import { EmptyState, ErrorState, SkeletonGrid } from '../components/states';
 import { fmt } from '../components/ui';
 import { href } from '../router';
 
+/** What the server checked about NEAR AI's signature on a note (backend/server/src/chain/merchantVoice.ts). */
+interface VoiceProof {
+  chatId: string;
+  kind: 'provider_tee' | 'gateway';
+  signingAddress: string;
+  signature: string;
+  text: string;
+  checks: { hashes: boolean; signer: boolean; attested: boolean; gpu: boolean };
+  verified: boolean;
+  checkedAt: number;
+}
+/** The merchant's own words on its price, written by a model on NEAR AI Cloud; the formula set the price. */
+interface Voice {
+  text: string;
+  model: string;
+  at: number;
+  proof?: VoiceProof;
+}
 /** A merchant's last look at the market, as the server's merchant-tick writes it (plan 15 §13.1). */
 interface MerchantGood {
   item: string;
@@ -15,6 +33,7 @@ interface MerchantGood {
   sellPerUnit: string;
   why: string;
   wantsMore: boolean;
+  note?: Voice;
 }
 interface Merchant {
   name: string;
@@ -34,6 +53,40 @@ const label = (item: string) => {
   const base = (golden ? item.slice(7) : item).replace(/_/g, ' ');
   return (golden ? 'Golden ' : '') + base.charAt(0).toUpperCase() + base.slice(1);
 };
+
+const short = (s: string) => (s.length > 14 ? `${s.slice(0, 8)}…${s.slice(-4)}` : s);
+
+/** The merchant's note, with what was checked about NEAR AI's signature on it (only what was checked). */
+function Why({ g }: { g: MerchantGood }) {
+  if (!g.note) return <span className="muted">{g.why}</span>;
+  const p = g.note.proof;
+  return (
+    <div className="merchant-why">
+      <q>{g.note.text}</q>
+      <small className="muted"> {g.why}</small>
+      {p?.verified ? (
+        <details className="merchant-proof">
+          <summary>Verified by NEAR AI</summary>
+          <p>
+            Written by {g.note.model} on NEAR AI Cloud and signed inside its {p.kind === 'gateway' ? 'gateway TEE' : 'TEE'}. Our
+            server checked:
+          </p>
+          <ul>
+            <li>the signature covers this exact request and answer</li>
+            <li>it was made by key {short(p.signingAddress)}</li>
+            <li>that key is in NEAR AI's attestation report, fetched with a fresh nonce</li>
+            {p.kind === 'provider_tee' ? <li>NVIDIA's attestation service passed the GPU for that key</li> : null}
+          </ul>
+          <p className="muted">
+            Not checked here: the Intel TDX quote. Chat id {p.chatId}, checked {new Date(p.checkedAt).toLocaleString()}.
+          </p>
+        </details>
+      ) : (
+        <small className="muted">Written by NEAR AI, signature not checked</small>
+      )}
+    </div>
+  );
+}
 
 /** A tiny line of what the merchant paid over its last ticks. */
 function Spark({ points }: { points: { at: number; buy: string }[] }) {
@@ -82,7 +135,9 @@ function MerchantCard({ m }: { m: Merchant }) {
               <td>{fmt(g.stock)}</td>
               <td>{g.wantsMore ? fmt(farm(g.buyPerUnit)) : '—'}</td>
               <td>{fmt(farm(g.sellPerUnit))}</td>
-              <td className="muted">{g.why}</td>
+              <td>
+                <Why g={g} />
+              </td>
               <td>
                 <Spark points={m.history?.[g.item] ?? []} />
               </td>

@@ -58,3 +58,6 @@ export function parseProps(props: unknown): Record<string, unknown> {
     return {};
   }
 }
+
+/** A long wallet name (an implicit account, a 0x address) as its first and last four characters, as the market and game show it. */
+export const shortAccount = (a: string) => (a.length > 24 ? `${a.slice(0, 4)}…${a.slice(-4)}` : a);

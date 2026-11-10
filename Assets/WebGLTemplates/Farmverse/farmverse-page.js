@@ -11,32 +11,27 @@ const MARGIN_MS = 60_000;
 
 const connector = new NearConnector({ network: config.network, footerBranding: null, autoConnect: true });
 
-// social login (docs 15 §13.2): "Email or Google", a Privy wallet whose sign page lives on the market site
+// social login (docs 15 §13.2): "Email or Google", a Privy NEAR wallet that signs in this page itself, with no popup
+// (privy-near.js, built from web/marketplace by deployment/vercel.sh). No file (a local build) = no social login.
 const PRIVY_WALLET_ID = 'farmverse-email';
-const signSite = config.socialLogin && config.marketplaceUrl ? config.marketplaceUrl.replace(/\/+$/, '') : null;
-// The way the player chose on the sign-in card (Google, or their email). The sign page opens in a popup and asks
-// us, so it goes straight there instead of asking again (the market does the same: signInHint.ts).
-const HINT_SOURCE = 'farmverse-signin';
-let signInHint = null;
-if (signSite) {
-  const site = signSite;
-  const signOrigin = new URL(site).origin;
-  window.addEventListener('message', (e) => {
-    if (e.origin !== signOrigin || e.data?.source !== HINT_SOURCE || e.data.type !== 'hint?' || !e.source) return;
-    e.source.postMessage({ source: HINT_SOURCE, type: 'hint', hint: signInHint }, e.origin);
-  });
-  connector
-    .registerWallet({
-      id: PRIVY_WALLET_ID, name: 'Email or Google', icon: `${site}/ui/Icon_Clover.webp`,
-      description: 'Sign in with your email. No wallet app needed.', website: site, version: '1.0.0',
-      executor: 'https://raw.githubusercontent.com/beneviolabs/privy-near-connect/3d56b782669d242a1ea432921e291abc26b4ebc7/executor.js',
-      type: 'sandbox', platform: { web: site },
-      features: { signMessage: true, signInWithoutAddKey: true, signInAndSignMessage: true, signInWithFunctionCallKey: true, signAndSendTransaction: true, signAndSendTransactions: true, mainnet: true, testnet: true },
-      permissions: { isPrivyConnect: true, storage: true, allowsOpen: [site] },
-      metadata: { signPageURL: `${site}/sign.html`, debug: false },
-    })
-    .catch(() => {});
-}
+const privyReady = config.socialLogin
+  ? import('./privy-near.js')
+      .then((m) => {
+        const site = (config.marketplaceUrl || config.siteUrl || location.origin).replace(/\/+$/, '');
+        const privy = m.setup({ gameApiUrl: api, network: config.network, rpcUrl: RPC, icon: `${site}/ui/Icon_Clover.webp` });
+        privy?.inject(); // NEAR Connect lists it next to the other wallets, under the id saved sessions point at
+        return privy;
+      })
+      .catch((e) => {
+        console.warn('[farmverse] Email or Google sign-in is off:', e?.message ?? e);
+        return null;
+      })
+  : Promise.resolve(null);
+// back from Google: the sign-in card finishes signing in by itself
+const googleBack = privyReady.then((p) => (p ? p.finishGoogle() : false)).catch((e) => {
+  console.warn('[farmverse] Google sign-in did not finish:', e?.message ?? e);
+  return false;
+});
 
 let session = null; // { accessToken, accessExpiresAt, uid, accountId }
 
@@ -45,20 +40,32 @@ let session = null; // { accessToken, accessExpiresAt, uid, accountId }
 (function landscapeOnly() {
   const touch = matchMedia('(pointer: coarse)').matches;
   if (!touch) return;
+  const SKIP = 'fv_rotate_skip';
   const turn = document.createElement('div');
   turn.id = 'fv-rotate';
-  turn.innerHTML = '<div class="fv-rotate-phone"></div><p class="fv-rotate-title">Turn your phone sideways</p><p>Farmverse plays in landscape.</p>';
+  turn.innerHTML =
+    '<div class="fv-rotate-phone"></div><p class="fv-rotate-title">Turn your phone sideways</p><p>Farmverse plays in landscape.</p>' +
+    '<button type="button" id="fv-rotate-skip">Continue anyway</button>';
   if (config.marketplaceUrl) {
     const site = config.marketplaceUrl.replace(/\/+$/, '');
     turn.style.backgroundImage = `linear-gradient(rgba(6, 22, 40, 0.55), rgba(6, 22, 40, 0.85)), url(${site}/ui/Home_LoadingBg.webp)`;
   }
+  // "Continue anyway": play upright for this visit (the screen stays away until the tab is closed)
+  turn.hidden = sessionStorage.getItem(SKIP) === '1';
   document.getElementById('fv-root').append(turn);
-  const lock = () => {
+  const skip = turn.querySelector('#fv-rotate-skip');
+  skip.addEventListener('click', () => {
+    sessionStorage.setItem(SKIP, '1');
+    turn.hidden = true;
+  });
+  const lock = (e) => {
+    if (skip.contains(e.target) || turn.hidden) return; // they chose upright: don't turn the screen for them
+    window.removeEventListener('pointerup', lock);
     const el = document.documentElement;
     const full = el.requestFullscreen ? el.requestFullscreen({ navigationUI: 'hide' }) : Promise.reject();
     full.then(() => screen.orientation?.lock?.('landscape')).catch(() => {}); // iOS: no lock, the turn screen covers it
   };
-  window.addEventListener('pointerup', lock, { once: true });
+  window.addEventListener('pointerup', lock);
 })();
 
 // ---- sponsored calls (docs 15 §14): a session key signs mints and redeems, our relayer pays the gas ----
@@ -194,6 +201,9 @@ function guestWallet(key) {
   };
 }
 
+/** A long wallet name (a guest's implicit account) as its first and last four characters, as the market shows it. */
+const shortAccount = (a) => (a.length > 24 ? `${a.slice(0, 4)}…${a.slice(-4)}` : a);
+
 /** Shows the guest's key with a copy button, to keep the farm on another device or in a wallet app. */
 function guestBackup() {
   const key = guestKey(false);
@@ -213,7 +223,8 @@ function guestBackup() {
   box.textContent = key.toString();
   const account = document.createElement('p');
   account.className = 'fv-small';
-  account.textContent = `Account: ${guestAccountOf(key)}`;
+  account.textContent = `Account: ${shortAccount(guestAccountOf(key))}`;
+  account.title = guestAccountOf(key);
   const copy = document.createElement('button');
   copy.type = 'button';
   copy.textContent = 'Copy key';
@@ -226,6 +237,35 @@ function guestBackup() {
   card.append(title, text, box, account, copy, close);
   layer.append(card);
   document.getElementById('fv-root').append(layer);
+}
+
+// ---- after a transaction: wait for the indexer, so the game's next reads (/v1/market) show the change ----
+// When a call returns, all its receipts have run, so the chain's newest block is at or after them. The indexer
+// follows final blocks and says how far it got at /v1/market/head; once that passes the newest block plus a few
+// confirmations, the market API has the change. A server that can't say gets a plain pause instead.
+const CONFIRMATIONS = 2; // blocks, about a second each
+const INDEX_TIMEOUT_MS = 20_000; // then the game reads anyway; its later refreshes catch a slow indexer
+const INDEX_FALLBACK_MS = 4_000;
+const INDEX_POLL_MS = 800;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function waitForIndexer() {
+  const tip = await rpc('block', { finality: 'optimistic' }).catch(() => null);
+  if (!tip?.header?.height) return sleep(INDEX_FALLBACK_MS);
+  const target = Number(tip.header.height) + CONFIRMATIONS;
+  const until = Date.now() + INDEX_TIMEOUT_MS;
+  while (Date.now() < until) {
+    let head;
+    try {
+      const res = await fetch(api + '/v1/market/head', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      head = (await res.json())?.block_height;
+    } catch {
+      return sleep(INDEX_FALLBACK_MS); // an older server without /head, or it's unreachable
+    }
+    if (head != null && head >= target) return;
+    await sleep(INDEX_POLL_MS);
+  }
 }
 
 /** Signs the call with the session key and has the game server relay it (no popup, no gas). */
@@ -296,11 +336,11 @@ function base64ToBytes(b64) {
 }
 
 /**
- * Shows the sign-in card and resolves once the player signed in. Google and email come first (our social wallet: a
- * popup on the market site, no wallet app needed); a guest farm or any NEAR wallet are the other ways. Connecting
- * asks for the signature straight away (an extension wallet shows it at once); only if that can't open without
- * another click (a popup) does the card wait on its "Continue" button. A wallet remembered from last time goes
- * straight to that button too.
+ * Shows the sign-in card and resolves once the player signed in. Google and email come first (our social wallet,
+ * signing in this page: Google is a trip there and back, email is a code we send); a guest farm or any NEAR wallet
+ * are the other ways. Connecting a NEAR wallet asks for the signature straight away (an extension wallet shows it at
+ * once); only if that can't open without another click (a popup) does the card wait on its "Continue" button. A
+ * wallet remembered from last time goes straight to that button too, or signs in by itself for Google and email.
  */
 function signInWithWallet() {
   return new Promise((resolve) => {
@@ -312,13 +352,26 @@ function signInWithWallet() {
     const google = $('fv-google');
     const emailForm = $('fv-email-form');
     const emailInput = $('fv-email');
+    const emailButton = emailForm.querySelector('button');
     const or = $('fv-or');
     const guest = $('fv-guest-button');
     const walletButton = $('fv-wallet-button');
-    const controls = [resume, google, emailInput, emailForm.querySelector('button'), guest, walletButton];
-    const social = !!signSite;
+    // the email way's second step: "use another email" under the code
+    let otherEmail = $('fv-other-email');
+    if (!otherEmail) {
+      otherEmail = document.createElement('button');
+      otherEmail.id = 'fv-other-email';
+      otherEmail.type = 'button';
+      otherEmail.className = 'fv-plain';
+      otherEmail.textContent = 'Use another email';
+      emailForm.append(otherEmail);
+    }
+    const controls = [resume, google, emailInput, emailButton, otherEmail, guest, walletButton];
+    let privy = null;
+    let social = false;
     let wallet = null;
     let busy = false;
+    let codeFor = null; // the email we sent a code to
 
     const show = (message) => {
       error.textContent = message;
@@ -330,12 +383,33 @@ function signInWithWallet() {
       const m = String(e?.message ?? e);
       if (/blocked/i.test(m)) return 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.';
       if (/closed|reject|cancel/i.test(m)) return 'Sign-in was closed before it finished. Try again.';
+      if (/code|otp|passwordless/i.test(m)) return "That code didn't work. Check the email and try again.";
       return m;
+    };
+
+    // the email box: asks for an email, or for the code we sent to it
+    const emailStep = (to) => {
+      codeFor = to;
+      emailInput.value = '';
+      emailInput.type = to ? 'text' : 'email';
+      emailInput.inputMode = to ? 'numeric' : 'email';
+      emailInput.autocomplete = to ? 'one-time-code' : 'email';
+      emailInput.maxLength = to ? 6 : 254;
+      emailInput.placeholder = to ? '000000' : 'Your email';
+      emailInput.setAttribute('aria-label', to ? 'The code from the email' : 'Your email');
+      emailButton.textContent = to ? 'Sign in' : 'Continue with email';
+      google.hidden = !!to;
+      otherEmail.hidden = !to;
+      if (to) {
+        text.textContent = `We sent a code to ${to}.`;
+        emailInput.focus();
+      }
     };
 
     // the choices: Google and email first, then "or" a guest farm or a NEAR wallet
     const choose = () => {
       wallet = null;
+      emailStep(null);
       text.textContent = social
         ? 'Sign in to save your farm and trade on the market.'
         : 'Sign in with a NEAR wallet to save your farm, or jump straight in as a guest.';
@@ -363,9 +437,7 @@ function signInWithWallet() {
 
     // signs the server's challenge and trades it for a session; the card goes when it worked
     const signIn = async () => {
-      text.textContent = wallet.guest
-        ? 'Setting up your farm…'
-        : isSocial() ? 'Finish signing in in the window that opened…' : 'Approve the sign-in in your wallet…';
+      text.textContent = wallet.guest ? 'Setting up your farm…' : isSocial() ? 'Signing you in…' : 'Approve the sign-in in your wallet…';
       const challenge = await post('/v1/auth/nonce');
       const signed = await wallet.signMessage({ message: challenge.message, recipient: challenge.recipient, nonce: base64ToBytes(challenge.nonce) });
       if (!signed?.signature) throw new Error('The wallet did not sign.');
@@ -380,28 +452,16 @@ function signInWithWallet() {
       resolve(keep(tokens));
     };
 
-    // way: { method: 'google' } or { method: 'email', email } (the social wallet), null (the NEAR wallet list),
-    // or undefined (sign with the wallet already connected)
-    const run = async (way) => {
+    // one step at a time: the controls lock while it runs, and an error comes back to the right screen
+    const step = async (work, onError) => {
       if (busy) return;
       busy = true;
       show('');
       lock(true);
       try {
-        if (way !== undefined || !wallet) {
-          signInHint = way ?? null;
-          text.textContent = way ? 'Finish signing in in the window that opened…' : 'Pick your wallet…';
-          try {
-            wallet = await connector.connect(way ? { walletId: PRIVY_WALLET_ID } : undefined);
-          } finally {
-            signInHint = null;
-          }
-        }
-        await signIn();
+        await work();
       } catch (e) {
-        // connected but the signature didn't happen (declined, or the popup needs this click): ask again
-        if (wallet && !wallet.guest) readyToSign();
-        else choose();
+        onError();
         show(friendly(e));
       } finally {
         busy = false;
@@ -409,43 +469,90 @@ function signInWithWallet() {
       }
     };
 
+    // way: null (the NEAR wallet list) or undefined (sign with the wallet already connected)
+    const run = (way) =>
+      step(async () => {
+        if (way !== undefined || !wallet) {
+          text.textContent = 'Pick your wallet…';
+          wallet = await connector.connect();
+        }
+        await signIn();
+      }, () => {
+        // connected but the signature didn't happen (declined, or the popup needs this click): ask again
+        if (wallet && !wallet.guest && !isSocial()) readyToSign();
+        else choose();
+      });
+
+    // Google or email done (Privy signed in on this page): connect the social wallet and sign in, no window
+    const runSocial = () =>
+      step(async () => {
+        text.textContent = 'Signing you in…';
+        wallet = await connector.connect({ walletId: PRIVY_WALLET_ID });
+        await signIn();
+      }, choose);
+
     resume.onclick = () => run(undefined);
-    google.onclick = () => run({ method: 'google' });
+    google.onclick = () =>
+      step(async () => {
+        text.textContent = 'Opening Google…';
+        await privy.startGoogle(); // leaves the page; back here, googleBack finishes it
+        await new Promise(() => {});
+      }, choose);
     emailForm.onsubmit = (e) => {
       e.preventDefault();
-      const email = emailInput.value.trim();
-      if (email) run({ method: 'email', email });
+      const value = emailInput.value.trim();
+      if (!value || !privy) return;
+      if (!codeFor) {
+        const to = value;
+        step(async () => {
+          text.textContent = 'Sending your code…';
+          await privy.sendEmailCode(to);
+          emailStep(to);
+        }, () => emailStep(null));
+        return;
+      }
+      const to = codeFor;
+      step(async () => {
+        text.textContent = 'Signing you in…';
+        await privy.loginWithEmailCode(to, value);
+        wallet = await connector.connect({ walletId: PRIVY_WALLET_ID });
+        await signIn();
+      }, () => {
+        wallet = null;
+        emailStep(to); // the code was wrong: ask for it again
+      });
+    };
+    otherEmail.onclick = () => {
+      show('');
+      choose();
     };
     // guest play: one tap, no wallet app (the same browser comes back to the same farm)
     guest.textContent = localStorage.getItem(GUEST_KEY) ? 'Continue as guest' : 'Play as guest';
-    guest.onclick = async () => {
-      if (busy) return;
-      busy = true;
-      show('');
-      lock(true);
-      try {
+    guest.onclick = () =>
+      step(async () => {
         wallet = guestWallet(guestKey(true));
         await signIn();
-      } catch (e) {
-        choose();
-        show(friendly(e));
-      } finally {
-        busy = false;
-        lock(false);
-      }
-    };
+      }, choose);
 
     card.hidden = false;
     show('');
     lock(false);
     choose();
 
-    // a wallet remembered from last time (autoConnect): no need to pick it again
-    connector.wallet().then((w) => {
+    privyReady.then(async (p) => {
+      privy = p;
+      social = !!p;
+      if (!busy && !wallet) choose();
+      // back from Google: finish signing in without another click
+      if (p && (await googleBack)) return runSocial();
+      // a wallet remembered from last time (autoConnect): no need to pick it again. Google and email sign in at
+      // once (nothing to approve); another wallet waits on "Continue" (its signature may open a popup).
+      const w = await connector.wallet().catch(() => null);
       if (!w || wallet || busy) return;
+      if (w.manifest?.id === PRIVY_WALLET_ID) return runSocial();
       wallet = w;
       readyToSign();
-    }, () => {});
+    });
   });
 }
 
@@ -520,26 +627,37 @@ window.farmversePage = {
     try { await connector.disconnect(); } catch { /* not connected */ }
   },
 
-  /** Signs and sends one function call; resolves with its transaction hash once it succeeded. */
-  async callContract({ contractId, method, args, deposit, gasTgas }) {
-    const wallet = isGuest() ? guestWallet(guestKey(false)) : await connector.wallet();
-    // mints and redeems are sponsored when the server relays them (no NEAR needed, no popup after the first)
-    if (!sponsorOff && SPONSORED.includes(method) && session?.accountId) {
-      try {
-        return await sponsoredCall(wallet, session.accountId, contractId, method, args, gasTgas);
-      } catch (e) {
-        console.warn(`[farmverse] sponsored ${method} failed:`, e?.message ?? e);
-        if (!e?.fallback) throw e; // the call itself failed
-      }
-    }
-    const outcome = await wallet.signAndSendTransaction({
-      receiverId: contractId,
-      actions: [{ type: 'FunctionCall', params: { methodName: method, args: args ?? {}, gas: String(BigInt(gasTgas ?? 100) * 10n ** 12n), deposit: String(deposit ?? '0') } }],
-    });
-    const failed = [outcome?.status, ...(outcome?.receipts_outcome ?? []).map((r) => r?.outcome?.status)].find((s) => s && typeof s === 'object' && 'Failure' in s);
-    if (failed) throw new Error(JSON.stringify(failed.Failure).match(/"ExecutionError":"([^"]+)"/)?.[1] ?? 'The transaction failed.');
-    const txHash = outcome?.transaction?.hash ?? outcome?.transaction_outcome?.id;
-    if (!txHash) throw new Error('The wallet did not return a transaction.');
-    return { txHash };
+  /**
+   * Signs and sends one function call; resolves with its transaction hash once it succeeded and the indexer has
+   * read it (so the game's refreshes right after see the change).
+   */
+  async callContract(request) {
+    const result = await sendCall(request);
+    await waitForIndexer();
+    return result;
   },
 };
+
+/** Signs and sends one function call; resolves with its transaction hash once it succeeded. */
+async function sendCall({ contractId, method, args, deposit, gasTgas }) {
+  if (!isGuest()) await privyReady; // the Email or Google wallet is in NEAR Connect's list before it's looked up
+  const wallet = isGuest() ? guestWallet(guestKey(false)) : await connector.wallet();
+  // mints and redeems are sponsored when the server relays them (no NEAR needed, no popup after the first)
+  if (!sponsorOff && SPONSORED.includes(method) && session?.accountId) {
+    try {
+      return await sponsoredCall(wallet, session.accountId, contractId, method, args, gasTgas);
+    } catch (e) {
+      console.warn(`[farmverse] sponsored ${method} failed:`, e?.message ?? e);
+      if (!e?.fallback) throw e; // the call itself failed
+    }
+  }
+  const outcome = await wallet.signAndSendTransaction({
+    receiverId: contractId,
+    actions: [{ type: 'FunctionCall', params: { methodName: method, args: args ?? {}, gas: String(BigInt(gasTgas ?? 100) * 10n ** 12n), deposit: String(deposit ?? '0') } }],
+  });
+  const failed = [outcome?.status, ...(outcome?.receipts_outcome ?? []).map((r) => r?.outcome?.status)].find((s) => s && typeof s === 'object' && 'Failure' in s);
+  if (failed) throw new Error(JSON.stringify(failed.Failure).match(/"ExecutionError":"([^"]+)"/)?.[1] ?? 'The transaction failed.');
+  const txHash = outcome?.transaction?.hash ?? outcome?.transaction_outcome?.id;
+  if (!txHash) throw new Error('The wallet did not return a transaction.');
+  return { txHash };
+}

@@ -182,12 +182,16 @@ namespace Farmverse.Presentation.UI.Game
 
         private readonly System.Collections.Generic.Dictionary<string, (float at, Farmverse.Application.Ports.ItemOffer? best)> _offers = new();
 
-        /// <summary>"Bea" for bea.farmverse.testnet (the Market Town cast), else the account.</summary>
+        /// <summary>"Bea" for bea.farmverse.testnet (the Market Town cast), else the account, shortened when long.</summary>
         private static string BuyerName(string account)
         {
             var first = account.Split('.')[0];
-            return first is "bea" or "ruth" or "tomas" or "ivy" ? char.ToUpperInvariant(first[0]) + first.Substring(1) : account;
+            return first is "bea" or "ruth" or "tomas" or "ivy" ? char.ToUpperInvariant(first[0]) + first.Substring(1) : ShortAccount(account);
         }
+
+        /// <summary>A long wallet name (an implicit account, a 0x address) as "1ef6…f1b0", as the market shows it.</summary>
+        internal static string ShortAccount(string account) =>
+            account.Length > 24 ? account.Substring(0, 4) + "…" + account.Substring(account.Length - 4) : account;
 
         /// <summary>The best standing offer for a good the player holds enough of: "Sell to Bea".</summary>
         private void MerchantOffer(VisualElement side, Pt p, float width, string item, int held)
@@ -509,6 +513,10 @@ namespace Farmverse.Presentation.UI.Game
                 case ErrorCode.MintLimit: return $"Today's mint limit is reached ({P("left")} coins of value left today).";
                 case ErrorCode.MintTooSoon: return MintTooSoonText(MintMinHours);
                 case ErrorCode.MintNotEnough: return $"Not enough in the farmhouse yet (the server sees {P("have")}). Try again in a moment.";
+                case ErrorCode.MintUnearned:
+                    return P("earned") is "" or "0"
+                        ? "Only goods grown since your farm was last saved can be minted. Keep farming and try again."
+                        : $"You can mint {P("earned")} of these now: goods grown since your farm was last saved. Keep farming for more.";
                 case ErrorCode.MintBuildingBusy:
                     return P("reason") switch
                     {

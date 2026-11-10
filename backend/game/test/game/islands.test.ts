@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fold, MAX_MIRROR_AWAY_MS, parseAdopted, sync, wake, WAKE_HORIZON_MS, type IslandDeps, type IslandDoc } from '../../src/game/islands';
-import { EngineRefusal, type EngineAdvance, type IslandEngine, type IslandSave } from '../../src/infra/islandEngine';
+import { fold, MAX_MIRROR_AWAY_MS, nextEarned, parseAdopted, plusGiven, sync, wake, WAKE_HORIZON_MS, type IslandDeps, type IslandDoc } from '../../src/game/islands';
+import { EngineRefusal, type EngineAdvance, type EngineEarned, type EngineExchange, type ExchangeOp, type IslandEngine, type IslandSave } from '../../src/infra/islandEngine';
 import { paths } from '../../src/infra/paths';
 import { FARMER, HOUR, MINUTE, World } from './world';
 
@@ -198,5 +198,95 @@ describe('island sync', () => {
     w.clock.advance(HOUR);
     await sync(deps, FARMER);
     expect(seen.at(-1)).toBe(true);
+  });
+});
+
+/** The fake engine plus the growth check: wood may grow by 10 a minute, the store holds 1,000. */
+class EarningEngine extends FakeEngine {
+  failEarned = false;
+  async earned(before: IslandSave, after: IslandSave, seconds: number): Promise<EngineEarned> {
+    if (this.failEarned) throw new Error('engine down');
+    const was = Number(before['wood'] ?? 0);
+    const now = Number(after['wood'] ?? 0);
+    const eggs = Number(after['eggs'] ?? 0);
+    const gain: Record<string, number> = {};
+    if (now > was) gain['wood'] = Math.min(now - was, Math.ceil(10 * (seconds / 60)));
+    return { gain, stock: { wood: now, ...(eggs ? { egg: eggs } : {}) }, room: 1_000 };
+  }
+  async exchange(state: IslandSave, now: number, ops: readonly ExchangeOp[]): Promise<EngineExchange> {
+    const eggs = ops.reduce((a, o) => a + (o.op === 'give' && o.item === 'egg' ? o.n : 0), Number(state['eggs'] ?? 0));
+    return { state: { ...state, simAt: now, eggs }, nextWake: now + 600, summary: { netWorth: 0, level: 1, xp: 0 }, done: [] };
+  }
+}
+
+describe('mintable goods (shadow mode)', () => {
+  const seen = (gain: Record<string, number>, stock: Record<string, number>, room = 1_000): EngineEarned => ({ gain, stock, room });
+
+  it('adds growth the engine vouched for, and never more than is in store', () => {
+    expect(nextEarned(undefined, seen({ wheat: 40 }, { wheat: 40 }))).toEqual({ wheat: 40 });
+    expect(nextEarned({ wheat: 40 }, seen({ wheat: 10 }, { wheat: 50 }))).toEqual({ wheat: 50 });
+    // sold 30 since: only what is left can still be minted
+    expect(nextEarned({ wheat: 50 }, seen({}, { wheat: 20 }))).toEqual({ wheat: 20 });
+    expect(nextEarned({ wheat: 50 }, seen({}, {}))).toEqual({});
+  });
+
+  it('counts growth only while the earlier island had room for it', () => {
+    // a level-1 farmhouse holds 150: 100 already mintable leaves room for 50 more, taken in name order
+    expect(nextEarned({ wheat: 100 }, seen({ egg: 30, milk: 30 }, { wheat: 100, egg: 30, milk: 30 }, 150))).toEqual({ wheat: 100, egg: 30, milk: 20 });
+    expect(nextEarned({ wheat: 200 }, seen({ egg: 30 }, { wheat: 200, egg: 30 }, 150))).toEqual({ wheat: 200 });
+  });
+
+  it("counts the server's own gifts in full", () => {
+    const ops: ExchangeOp[] = [{ op: 'give', item: 'wheat', n: 300 }, { op: 'credit', n: 9 }, { op: 'hold', id: 'barn', level: 1, price: 0 }];
+    expect(plusGiven({ wheat: 5 }, ops)).toEqual({ wheat: 305 });
+  });
+
+  function earning() {
+    const w = new World();
+    const engine = new EarningEngine();
+    const deps: IslandDeps = { env: w.env, engine, wakes: { schedule: async () => undefined } };
+    const doc = () => w.store.get(paths.island(FARMER)) as unknown as IslandDoc;
+    const upload = (wood: number) => JSON.stringify({ rulesVersion: 1, simAt: w.clock.nowMs() / 1000, buildings: [], wood, economy: { now: w.clock.nowMs() / 1000 } });
+    return { w, engine, deps, doc, upload };
+  }
+
+  it("a first upload's goods never mint; goods grown after it do", async () => {
+    const { w, deps, doc, upload } = earning();
+    await sync(deps, FARMER, upload(500), true);
+    expect(doc().earned).toBeUndefined();
+    w.clock.advance(10 * MINUTE);
+    await sync(deps, FARMER, upload(550), true);
+    expect(doc().earned).toEqual({ wood: 50 });
+  });
+
+  it('a save that jumps earns only what the island could have made in the time', async () => {
+    const { w, deps, doc, upload } = earning();
+    await sync(deps, FARMER, upload(0), true);
+    w.clock.advance(MINUTE);
+    await sync(deps, FARMER, upload(5_000), true);
+    expect(doc().earned).toEqual({ wood: 10 });
+    expect(doc().audit).toBeUndefined();
+  });
+
+  it('goods the server gives (redeems, refunds) are mintable as they land', async () => {
+    const { w, deps, doc, upload } = earning();
+    await sync(deps, FARMER, upload(0), true);
+    w.patch(paths.grants(FARMER), { items: [{ id: 'refund_x', ops: [{ op: 'give', item: 'egg', n: 7 }], at: w.clock.nowMs() }], updatedAt: w.clock.nowMs() });
+    w.clock.advance(MINUTE);
+    const res = await sync(deps, FARMER);
+    expect(res.serverChanged).toBe(true);
+    // the server's own minute of work counts too (one wood)
+    expect(doc().earned).toEqual({ egg: 7, wood: 1 });
+  });
+
+  it("keeps the balance when the engine can't compare (a mint still needs the goods in store)", async () => {
+    const { w, engine, deps, doc, upload } = earning();
+    await sync(deps, FARMER, upload(0), true);
+    w.clock.advance(10 * MINUTE);
+    await sync(deps, FARMER, upload(40), true);
+    engine.failEarned = true;
+    w.clock.advance(10 * MINUTE);
+    await sync(deps, FARMER, upload(90), true);
+    expect(doc().earned).toEqual({ wood: 40 });
   });
 });
