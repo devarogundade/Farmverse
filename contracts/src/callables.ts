@@ -691,10 +691,17 @@ export const RelayDelegate = named(
 export const ChainRelayRequest = named(
   'ChainRelayRequest',
   z.object({ meta: RequestMeta, delegate: RelayDelegate }),
-  'Send a sponsored mint or redeem: the relayer pays the gas.',
+  'Send a sponsored call (a mint or redeem; a market purchase, approval or storage deposit): the relayer pays the gas.',
 );
 
-export const ChainRelayResponse = named('ChainRelayResponse', z.object({ txHash: z.string() }));
+export const ChainRelayResponse = named(
+  'ChainRelayResponse',
+  z.object({
+    txHash: z.string(),
+    /** The call's event logs (EVENT_JSON:…), so a page can tell a sale from a refund. */
+    logs: z.array(z.string().max(16_384)).max(200).optional(),
+  }),
+);
 
 function callable<Req extends z.ZodType, Res extends z.ZodType>(
   name: string,

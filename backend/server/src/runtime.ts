@@ -184,7 +184,13 @@ export function buildServices(config: Config, log: Logger = cloudLogger): Servic
             crewOf: crewOf(prisma, store, config.NEAR_ITEMS_CONTRACT),
             reconcile: () => reconcile(prisma, store, config.NEAR_ITEMS_CONTRACT, Date.now(), log.with({ job: 'chain-reconcile' })),
             ...(relayer
-              ? { relay: { relayer, allow: (accountId: string) => redisRateLimiter(redis).hit(`relay:${accountId}`, 30, 60) } }
+              ? {
+                  relay: {
+                    relayer,
+                    allow: (accountId: string) => redisRateLimiter(redis).hit(`relay:${accountId}`, 30, 60),
+                    depositBudget: BigInt(Math.round(config.RELAY_DEPOSIT_NEAR_DAY * 1000)) * 10n ** 21n,
+                  },
+                }
               : {}),
             ...(config.NEAR_NETWORK === 'testnet' && config.FAUCET_ACCOUNT && config.FAUCET_PRIVATE_KEY
               ? {

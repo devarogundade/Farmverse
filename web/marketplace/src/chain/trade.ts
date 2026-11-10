@@ -5,25 +5,20 @@
  */
 import { config } from '../config';
 import { nearToYocto, ONE_YOCTO, TGAS, toYocto } from '../lib/amount';
-import { check, farmRegistration } from './market';
-import { getConnector, view } from './near';
+import { approvalDeposit, check, farmRegistration } from './market';
+import { view } from './near';
+import { send as sendCall, sendAll } from './sponsor';
 
 const { items, market, farm } = config.contracts;
 
 /** Each open listing, offer or rental reserves this much of the account's market storage deposit. */
 const STORAGE_PER_SLOT = BigInt(nearToYocto('0.01'));
-/** Approval storage on the items contract (accepting an offer approves the market). */
-const APPROVAL_DEPOSIT = nearToYocto('0.002');
 const DAY_MS = 86_400_000;
 
 const call = (methodName: string, args: object, deposit = ONE_YOCTO, gas = TGAS(100)) => ({
   type: 'FunctionCall' as const,
   params: { methodName, args, gas, deposit },
 });
-
-async function wallet() {
-  return (await getConnector()).wallet();
-}
 
 const emitted = (logs: string[], event: string) => logs.some((l) => l.startsWith('EVENT_JSON:') && l.includes(`"event":"${event}"`));
 
@@ -68,7 +63,7 @@ export async function buyDrop(dropId: string, expectedPriceYocto: string, use = 
   if (d.ends_at_ms != null && Date.now() >= d.ends_at_ms) throw new Error('This sale has ended.');
   if (d.price !== expectedPriceYocto) throw new Error('The price just changed. Please check it and try again.');
   const logs = check(
-    await (await wallet()).signAndSendTransaction({
+    await sendCall({
       receiverId: farm,
       actions: [call('ft_transfer_call', { receiver_id: items, amount: d.price, msg: JSON.stringify({ drop: dropId, use }) }, ONE_YOCTO, TGAS(300))],
     }),
@@ -88,13 +83,13 @@ export async function makeOffer(accountId: string, tokenId: string, amount: numb
     receiverId: farm,
     actions: [call('ft_transfer_call', { receiver_id: market, amount: toYocto(amount), msg: JSON.stringify(msg) }, ONE_YOCTO, TGAS(100))],
   });
-  const logs = check(await (await wallet()).signAndSendTransactions({ transactions }));
+  const logs = check(await sendAll(transactions));
   if (!emitted(logs, 'offer_make')) throw new Error('The offer didn’t go through. Your FARM was returned.');
 }
 
 /** Withdraws your offer; its FARM comes back. */
 export async function cancelOffer(offerId: string) {
-  check(await (await wallet()).signAndSendTransaction({ receiverId: market, actions: [call('offer_cancel', { offer_id: Number(offerId) }, ONE_YOCTO, TGAS(60))] }));
+  check(await sendCall({ receiverId: market, actions: [call('offer_cancel', { offer_id: Number(offerId) }, ONE_YOCTO, TGAS(60))] }));
 }
 
 /** Sells a token to an offer: approves the market for it with the offer's id. */
@@ -104,9 +99,9 @@ export async function acceptOffer(accountId: string, tokenId: string, offerId: s
   if (register) transactions.push(register);
   transactions.push({
     receiverId: items,
-    actions: [call('nft_approve', { token_id: tokenId, account_id: market, msg: JSON.stringify({ accept_offer: Number(offerId) }) }, APPROVAL_DEPOSIT, TGAS(300))],
+    actions: [call('nft_approve', { token_id: tokenId, account_id: market, msg: JSON.stringify({ accept_offer: Number(offerId) }) }, await approvalDeposit(tokenId), TGAS(300))],
   });
-  const logs = check(await (await wallet()).signAndSendTransactions({ transactions }));
+  const logs = check(await sendAll(transactions));
   if (emitted(logs, 'offer_accept_failed') || !emitted(logs, 'offer_accept')) throw new Error('That offer isn’t open any more.');
 }
 
@@ -124,7 +119,7 @@ export async function rentOut(accountId: string, tokenId: string, pricePerDay: n
     receiverId: items,
     actions: [call('nft_transfer_call', { receiver_id: market, token_id: tokenId, msg: JSON.stringify(msg) }, ONE_YOCTO, TGAS(300))],
   });
-  const logs = check(await (await wallet()).signAndSendTransactions({ transactions }));
+  const logs = check(await sendAll(transactions));
   if (!emitted(logs, 'rent_list')) throw new Error('Only workers can be rented out. It’s back in your wallet.');
 }
 
@@ -133,7 +128,7 @@ export async function rent(tokenId: string, pricePerDayYocto: string, days: numb
   const amount = (BigInt(pricePerDayYocto) * BigInt(days)).toString();
   const msg = { rent: { nft_contract_id: items, token_id: tokenId, days } };
   const logs = check(
-    await (await wallet()).signAndSendTransaction({
+    await sendCall({
       receiverId: farm,
       actions: [call('ft_transfer_call', { receiver_id: market, amount, msg: JSON.stringify(msg) }, ONE_YOCTO, TGAS(100))],
     }),
@@ -143,10 +138,10 @@ export async function rent(tokenId: string, pricePerDayYocto: string, days: numb
 
 /** Sends what the worker earned to its owner. */
 export async function rentWithdraw(tokenId: string) {
-  check(await (await wallet()).signAndSendTransaction({ receiverId: market, actions: [call('rent_withdraw', { nft_contract_id: items, token_id: tokenId }, ONE_YOCTO, TGAS(100))] }));
+  check(await sendCall({ receiverId: market, actions: [call('rent_withdraw', { nft_contract_id: items, token_id: tokenId }, ONE_YOCTO, TGAS(100))] }));
 }
 
 /** Takes the worker back (only when nobody is renting it right now). */
 export async function rentEnd(tokenId: string) {
-  check(await (await wallet()).signAndSendTransaction({ receiverId: market, actions: [call('rent_end', { nft_contract_id: items, token_id: tokenId }, ONE_YOCTO, TGAS(150))] }));
+  check(await sendCall({ receiverId: market, actions: [call('rent_end', { nft_contract_id: items, token_id: tokenId }, ONE_YOCTO, TGAS(150))] }));
 }

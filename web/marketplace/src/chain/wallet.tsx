@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { getConnector, getPrivyNear } from './near';
-import { PRIVY_WALLET_ID } from './privyWallet';
+import { getConnector, getGuestBridge, getPrivyNear } from './near';
+import { GUEST_WALLET_ID, IN_PAGE_WALLETS, PRIVY_WALLET_ID } from './privyWallet';
 
 /**
  * How the player signs in: Google (a trip to Google and back), an emailed code (sent first with `sendEmailCode`),
@@ -13,7 +13,7 @@ export interface WalletState {
   accountId: string | null;
   /** False until a saved session has been checked (avoid flashing "Connect"). */
   ready: boolean;
-  /** Signed in with Google or email: actions sign on this page, with nothing to approve in a wallet. */
+  /** Signed in with Google or email, or as the game's guest farm: actions sign on this page, nothing to approve. */
   social: boolean;
   /** Emails the player a sign-in code (the email way's first step). */
   sendEmailCode: (email: string) => Promise<void>;
@@ -46,7 +46,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       c.on('wallet:signIn', (e) => {
         if (!live) return;
         setAccountId(e.accounts[0]?.accountId ?? null);
-        setSocial(e.wallet.manifest.id === PRIVY_WALLET_ID);
+        setSocial(IN_PAGE_WALLETS.has(e.wallet.manifest.id));
       });
       c.on('wallet:signOut', () => live && setAccountId(null));
       try {
@@ -58,10 +58,23 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           if (live) setAccountId(acc?.accountId ?? null);
           return;
         }
-        const { wallet, accounts } = await c.getConnectedWallet();
-        if (live) {
-          setAccountId(accounts[0]?.accountId ?? null);
-          setSocial(wallet.manifest.id === PRIVY_WALLET_ID);
+        const saved = await c.getConnectedWallet().catch(() => null);
+        if (saved) {
+          if (live) {
+            setAccountId(saved.accounts[0]?.accountId ?? null);
+            setSocial(IN_PAGE_WALLETS.has(saved.wallet.manifest.id));
+          }
+          return;
+        }
+        // came from the game as a guest ("Sell on market"): signed in as that farm already
+        const guest = await getGuestBridge();
+        if (guest?.signInOnArrival) {
+          const w = await c.connect({ walletId: GUEST_WALLET_ID });
+          const [acc] = await w.getAccounts();
+          if (live) {
+            setAccountId(acc?.accountId ?? null);
+            setSocial(true);
+          }
         }
       } catch {
         // no saved session
@@ -101,7 +114,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         const [acc] = await w.getAccounts();
         if (!acc) throw new Error('No account was connected.');
         setAccountId(acc.accountId);
-        setSocial(w.manifest.id === PRIVY_WALLET_ID);
+        setSocial(IN_PAGE_WALLETS.has(w.manifest.id));
         return acc.accountId;
       },
       disconnect: async () => {

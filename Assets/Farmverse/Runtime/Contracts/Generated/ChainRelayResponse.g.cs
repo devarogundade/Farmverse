@@ -11,10 +11,13 @@ namespace Farmverse.Contracts
     {
         public string TxHash { get; set; } = string.Empty;
 
+        public List<string>? Logs { get; set; }
+
         public Dictionary<string, object> ToWire()
         {
-            var map = new Dictionary<string, object>(1);
+            var map = new Dictionary<string, object>(2);
             map["txHash"] = TxHash;
+            if (Logs != null) map["logs"] = Wire.ListToWire(Logs, item => (object)item);
             return map;
         }
 
@@ -24,6 +27,7 @@ namespace Farmverse.Contracts
             return new ChainRelayResponse
             {
                 TxHash = Wire.Required(map, "txHash", "ChainRelayResponse.txHash", Wire.AsString),
+                Logs = Wire.OptionalRef(map, "logs", "ChainRelayResponse.logs", (v, path) => Wire.AsList(v, path, Wire.AsString)),
             };
         }
     }

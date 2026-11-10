@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Farmverse.Contracts
 {
-    /// <summary>Send a sponsored mint or redeem: the relayer pays the gas.</summary>
+    /// <summary>Send a sponsored call (a mint or redeem; a market purchase, approval or storage deposit): the relayer pays the gas.</summary>
     public sealed partial class ChainRelayRequest : IWireObject
     {
         public RequestMeta Meta { get; set; } = new RequestMeta();

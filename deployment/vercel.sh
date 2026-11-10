@@ -61,6 +61,11 @@ game() {
   cp -r "$src" "$out"
   # the page's own script and styles from the template, so page fixes ship without a Unity rebuild
   cp "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.js" "$ROOT/Assets/WebGLTemplates/Farmverse/farmverse-page.css" "$out/"
+  # the guest farm's signer the market frames ("Your farm" there): the key stays on this site
+  cp "$ROOT/Assets/WebGLTemplates/Farmverse/key-bridge.html" "$ROOT/Assets/WebGLTemplates/Farmverse/key-bridge.js" "$out/"
+  sed -i -e "s#apiBaseUrl: \"[^\"]*\"#apiBaseUrl: \"$API\"#" \
+    -e "s#network: \"[^\"]*\"#network: \"$(get NEAR_NETWORK)\"#" \
+    -e "s#marketplaceUrl: \"[^\"]*\"#marketplaceUrl: \"$MARKET_URL\"#" "$out/key-bridge.html"
   # the Email or Google wallet the page loads (signs in the page, no popup): privy-near.js, built from web/marketplace
   (cd "$ROOT/web/marketplace" && npx vite build --config vite.game.config.ts --outDir "$out" --logLevel warn)
   # the link preview (og/twitter tags + og-image.jpg) the same way: the template's og block replaces the build's
@@ -80,9 +85,13 @@ game() {
     -e "s#socialLogin: \"[^\"]*\"#socialLogin: \"$SOCIAL_LOGIN\"#" "$out/index.html"
   # Unity's Brotli files need their encoding header (the loader can't decompress them itself); their names are
   # content hashes (FarmverseWebBuild), so they can be cached for good
-  cat >"$out/vercel.json" <<'JSON'
+  # key-bridge.html may only be framed by the market
+  cat >"$out/vercel.json" <<JSON
 {
   "headers": [
+    { "source": "/key-bridge.html", "headers": [{ "key": "Content-Security-Policy", "value": "frame-ancestors $MARKET_URL" }] },
+JSON
+  cat >>"$out/vercel.json" <<'JSON'
     { "source": "/Build/(.*)\\.br", "headers": [{ "key": "Content-Encoding", "value": "br" }, { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
     { "source": "/Build/(.*)\\.js\\.br", "headers": [{ "key": "Content-Type", "value": "application/javascript" }] },
     { "source": "/Build/(.*)\\.wasm\\.br", "headers": [{ "key": "Content-Type", "value": "application/wasm" }] },

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <title>Farmverse</title>
+  <!--
+    The guest farm's signer for the marketplace. The market embeds this page, hidden; a guest's key stays in this
+    site's storage and signs here (key-bridge.js). deployment/vercel.sh fills these settings in, like index.html's.
+  -->
+  <script>
+    window.FARMVERSE_BRIDGE = {
+      apiBaseUrl: "http://localhost:8787",
+      network: "testnet",
+      marketplaceUrl: "https://marketplace.farmverse.world",
+    };
+  </script>
+  <script type="module" src="key-bridge.js"></script>
+</head>
+<body></body>
+</html>

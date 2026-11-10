@@ -1,11 +1,12 @@
 /**
  * Contract calls for the marketplace, matching chain/contracts (items, market, farm_token) and
- * docs 14 §3. Change calls go through the connected wallet and are checked for failure; reads go
- * over RPC.
+ * docs 14 §3. Change calls go through the connected wallet (or, for Email or Google and guest farms, through the
+ * game server's relay, which pays the gas: chain/sponsor.ts) and are checked for failure; reads go over RPC.
  */
 import { config } from '../config';
 import { fromYocto, nearToYocto, ONE_YOCTO, TGAS, toYocto } from '../lib/amount';
-import { getConnector, view } from './near';
+import { view } from './near';
+import { send as sendCall, sendAll } from './sponsor';
 
 const { items, market, farm } = config.contracts;
 
@@ -27,18 +28,23 @@ export interface MarketConfig {
 
 /** What one listing reserves from the seller's market storage deposit (STORAGE_PER_LISTING = 0.01 NEAR). */
 const STORAGE_PER_LISTING = nearToYocto('0.01');
-/** Approval storage on the items contract (NEP-178 nft_approve is payable). */
-const APPROVAL_DEPOSIT = nearToYocto('0.002');
+/**
+ * The deposit for approving the market on a token (NEP-178 nft_approve is payable): exactly the storage the items
+ * contract keeps (the market's name plus 12 bytes, at 10^19 yoctoNEAR a byte), or 1 yoctoNEAR when the market is
+ * approved already. Not a round 0.002 NEAR: the contract would send the rest back, and that refund eats into the
+ * fixed 10 TGas nft_approve keeps for itself before calling the market, enough that a seller with a long (implicit)
+ * account name, a guest farm or an Email or Google account, runs out of gas.
+ */
+export async function approvalDeposit(tokenId: string): Promise<string> {
+  const token = await view<{ approved_account_ids?: Record<string, number> } | null>(items, 'nft_token', { token_id: tokenId });
+  if (token?.approved_account_ids && market in token.approved_account_ids) return ONE_YOCTO;
+  return (BigInt(market.length + 12) * 10n ** 19n).toString();
+}
 
 const call = (methodName: string, args: object, deposit = ONE_YOCTO, gas = TGAS(100)) => ({
   type: 'FunctionCall' as const,
   params: { methodName, args, gas, deposit },
 });
-
-async function wallet() {
-  const c = await getConnector();
-  return c.wallet();
-}
 
 /* ---------- outcomes ---------- */
 
@@ -123,9 +129,9 @@ export async function list(accountId: string, tokenId: string, price: number) {
   }
   transactions.push({
     receiverId: items,
-    actions: [call('nft_approve', { token_id: tokenId, account_id: market, msg: JSON.stringify({ price: toYocto(price) }) }, APPROVAL_DEPOSIT, TGAS(100))],
+    actions: [call('nft_approve', { token_id: tokenId, account_id: market, msg: JSON.stringify({ price: toYocto(price) }) }, await approvalDeposit(tokenId), TGAS(100))],
   });
-  check(await (await wallet()).signAndSendTransactions({ transactions }));
+  check(await sendAll(transactions));
 }
 
 /** Collects FARM the market holds for the caller, registering it with FARM first if needed. */
@@ -135,12 +141,12 @@ export async function collectOwed(accountId: string) {
   if (register) transactions.push(register);
   // withdraw_owed takes no deposit (it isn't payable).
   transactions.push({ receiverId: market, actions: [call('withdraw_owed', {}, '0', TGAS(60))] });
-  check(await (await wallet()).signAndSendTransactions({ transactions }));
+  check(await sendAll(transactions));
 }
 
 export async function updatePrice(tokenId: string, price: number) {
   check(
-    await (await wallet()).signAndSendTransaction({
+    await sendCall({
       receiverId: market,
       actions: [call('update_price', { nft_contract_id: items, token_id: tokenId, price: toYocto(price) })],
     }),
@@ -148,7 +154,7 @@ export async function updatePrice(tokenId: string, price: number) {
 }
 
 export async function delist(tokenId: string) {
-  check(await (await wallet()).signAndSendTransaction({ receiverId: market, actions: [call('delist', { nft_contract_id: items, token_id: tokenId })] }));
+  check(await sendCall({ receiverId: market, actions: [call('delist', { nft_contract_id: items, token_id: tokenId })] }));
 }
 
 /** Buy: re-check the listing first so a stale price never reaches the wallet, then pay with FARM. */
@@ -157,7 +163,7 @@ export async function buy(tokenId: string, expectedPrice: number) {
   if (!listing) throw new Error('This item is no longer for sale.');
   if (Math.abs(fromYocto(listing.price) - expectedPrice) > 1e-9) throw new Error(`The price changed to ${fromYocto(listing.price)} FARM. Please check and try again.`);
   const logs = check(
-    await (await wallet()).signAndSendTransaction({
+    await sendCall({
       receiverId: farm,
       actions: [call('ft_transfer_call', { receiver_id: market, amount: listing.price, msg: JSON.stringify({ nft_contract_id: items, token_id: tokenId }) }, ONE_YOCTO, TGAS(300))],
     }),
@@ -168,7 +174,7 @@ export async function buy(tokenId: string, expectedPrice: number) {
 
 /** Use in game: burns the item and returns the transaction hash the game credits it by. Not for workers. */
 export async function redeem(tokenId: string): Promise<string> {
-  const outcome = await (await wallet()).signAndSendTransaction({ receiverId: items, actions: [call('redeem', { token_id: tokenId })] });
+  const outcome = await sendCall({ receiverId: items, actions: [call('redeem', { token_id: tokenId }, '0')] });
   check(outcome);
   const o = outcome as { transaction?: { hash?: string }; transaction_outcome?: { id?: string } };
   const hash = o.transaction?.hash ?? o.transaction_outcome?.id;
@@ -177,5 +183,5 @@ export async function redeem(tokenId: string): Promise<string> {
 }
 
 export async function send(tokenId: string, receiverId: string) {
-  check(await (await wallet()).signAndSendTransaction({ receiverId: items, actions: [call('nft_transfer', { receiver_id: receiverId, token_id: tokenId })] }));
+  check(await sendCall({ receiverId: items, actions: [call('nft_transfer', { receiver_id: receiverId, token_id: tokenId })] }));
 }
