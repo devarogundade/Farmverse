@@ -1,0 +1,4 @@
+media/clips/*
+media/audio/*
+!media/**/.gitkeep
+out/
