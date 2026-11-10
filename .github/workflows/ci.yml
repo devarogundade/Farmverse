@@ -97,8 +97,17 @@ jobs:
           targets: wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: chain }
-      - uses: taiki-e/install-action@v2
-        with: { tool: cargo-near@0.23.0 }
+      - name: Install cargo-near (prebuilt release, checksum verified)
+        env: { CARGO_NEAR: 0.23.0 }
+        run: |
+          base=https://github.com/near/cargo-near/releases/download/cargo-near-v$CARGO_NEAR
+          file=cargo-near-x86_64-unknown-linux-gnu.tar.gz
+          cd "$RUNNER_TEMP"
+          curl -fsSLO "$base/$file" && curl -fsSLO "$base/$file.sha256"
+          sha256sum -c "$file.sha256"
+          mkdir cargo-near && tar -xzf "$file" -C cargo-near
+          install -m 755 "$(find cargo-near -type f -name cargo-near | head -1)" "$HOME/.cargo/bin/cargo-near"
+          cargo near --version
       - name: Contract unit tests
         run: cargo test --locked
       - name: Build wasm
