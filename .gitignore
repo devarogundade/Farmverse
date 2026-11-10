@@ -52,6 +52,7 @@
 ExportedObj/
 .consulo/
 *.csproj
+!tools/dotnet/Farmverse.*/*.csproj
 *.unityproj
 *.sln
 *.slnx
