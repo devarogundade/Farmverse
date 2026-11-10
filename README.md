@@ -300,3 +300,10 @@ What a careful reader should know about the build as it stands, so nothing here 
   and redeems.
 - **Mainnet:** a contract audit, a multisig owner, server keys in a KMS, then live *Get FARM with any token*
   orders through NEAR Intents.
+
+---
+
+## License
+
+The code is [MIT](LICENSE). The fonts in `web/shared/public/fonts` (Lilita One, Nunito) keep their own SIL Open Font
+License. The paid art, UI kit and music are not in this repository and are not covered.
