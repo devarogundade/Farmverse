@@ -35,7 +35,7 @@ export class GameError extends Error {
   }
 }
 
-async function post<T>(path: string, body: unknown, token?: string): Promise<T> {
+async function post<T>(path: string, body: unknown, token?: string, timeoutMs = 20_000): Promise<T> {
   if (!config.gameApiUrl) throw new GameError('The game server is offline.', 'no_api');
   let res: Response;
   try {
@@ -43,7 +43,7 @@ async function post<T>(path: string, body: unknown, token?: string): Promise<T> 
       method: 'POST',
       headers: { 'content-type': 'application/json', ...(token ? { authorization: `Bearer ${token}` } : {}) },
       body: JSON.stringify(body ?? {}),
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch {
     throw new GameError('Can’t reach the game server. Check your connection and try again.', 'network');
@@ -143,6 +143,31 @@ export async function retryPendingRedeems(accountId: string): Promise<number> {
     }
   }
   return done;
+}
+
+/* ---------- sponsored calls (plan 15 §14) ---------- */
+
+export interface Relayed {
+  txHash: string;
+  /** The call's event logs. */
+  logs: string[];
+}
+
+/**
+ * Has the game server send a call the player's key signed (a delegate action), paying its gas. Waits for the call
+ * to finish on chain (a minute at most). Throws GameError: PERMISSION_DENIED / RATE_LIMITED / INVALID_ARGUMENT
+ * when it was refused (nothing was sent), CONFLICT with the contract's words in `params.reason` when it ran and
+ * failed, anything else when it can't tell.
+ */
+export async function relayDelegate(accountId: string, delegate: object): Promise<Relayed> {
+  const session = await gameSession(accountId);
+  const res = await post<{ data: { txHash: string; logs?: string[] } }>(
+    '/v1/call/chain-relay',
+    { meta: { clientVersion: CLIENT_VERSION, platform: 'webgl' }, delegate },
+    session.accessToken,
+    60_000,
+  );
+  return { txHash: res.data.txHash, logs: res.data.logs ?? [] };
 }
 
 /* ---------- testnet faucet (plan 15 §6.6) ---------- */

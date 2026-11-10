@@ -63,6 +63,8 @@ const Schema = z.object({
   /** NEAR a new account gets once at sign-in when it holds less than WELCOME_BELOW_NEAR (0 = off). */
   WELCOME_NEAR: z.coerce.number().min(0).max(1).default(0.05),
   WELCOME_BELOW_NEAR: z.coerce.number().min(0).max(1).default(0.02),
+  /** NEAR of storage and approval deposits the relayer pays per account per UTC day for market calls (0 = none). */
+  RELAY_DEPOSIT_NEAR_DAY: z.coerce.number().min(0).max(1).default(0.1),
   /** Social login (plan 15 §13.2): the Privy app; unset = no Privy wallet. */
   PRIVY_APP_ID: optional(z.string().min(5)),
   PRIVY_APP_SECRET: optional(z.string().min(10)),
