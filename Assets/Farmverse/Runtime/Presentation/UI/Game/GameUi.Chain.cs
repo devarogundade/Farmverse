@@ -513,6 +513,10 @@ namespace Farmverse.Presentation.UI.Game
                 case ErrorCode.MintLimit: return $"Today's mint limit is reached ({P("left")} coins of value left today).";
                 case ErrorCode.MintTooSoon: return MintTooSoonText(MintMinHours);
                 case ErrorCode.MintNotEnough: return $"Not enough in the farmhouse yet (the server sees {P("have")}). Try again in a moment.";
+                case ErrorCode.MintUnearned:
+                    return P("earned") is "" or "0"
+                        ? "Only goods grown since your farm was last saved can be minted. Keep farming and try again."
+                        : $"You can mint {P("earned")} of these now: goods grown since your farm was last saved. Keep farming for more.";
                 case ErrorCode.MintBuildingBusy:
                     return P("reason") switch
                     {

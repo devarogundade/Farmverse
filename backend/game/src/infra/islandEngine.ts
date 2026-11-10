@@ -102,6 +102,16 @@ export interface EngineExchange {
   readonly done: readonly ExchangeDone[];
 }
 
+/** How much of each good grew between two saves, capped at what the earlier island could make (the engine's IslandEarned.Comparison). */
+export interface EngineEarned {
+  /** Goods that grew, each no more than the earlier island's buildings could make in the span. */
+  readonly gain: Readonly<Record<string, number>>;
+  /** The later island's farmhouse stock. */
+  readonly stock: Readonly<Record<string, number>>;
+  /** How much the earlier island's working farmhouses hold. */
+  readonly room: number;
+}
+
 export interface IslandEngine {
   /** Run the island from its simAt to `nowSeconds`. Throws EngineRefusal when the engine says no. */
   advance(state: IslandSave, nowSeconds: number): Promise<EngineAdvance>;
@@ -110,6 +120,8 @@ export interface IslandEngine {
    * (not enough goods, building busy …) throws EngineRefusal with status 422 and a `code`.
    */
   exchange?(state: IslandSave, nowSeconds: number, ops: readonly ExchangeOp[]): Promise<EngineExchange>;
+  /** Compare two saves of one island `seconds` apart: what grew, within what the earlier one could make. */
+  earned?(before: IslandSave, after: IslandSave, seconds: number): Promise<EngineEarned>;
   /** Run it to `nowSeconds`, then the day's raid (`salt`: the day number). */
   raid?(state: IslandSave, nowSeconds: number, salt: number): Promise<EngineRaidRun>;
 }
@@ -167,5 +179,6 @@ export function httpEngine(baseUrl: string, options: { fetch?: Fetch; token?: ()
     advance: (state, nowSeconds) => post<EngineAdvance>('/v1/advance', { state, now: nowSeconds }),
     raid: (state, nowSeconds, salt) => post<EngineRaidRun>('/v1/raid', { state, now: nowSeconds, salt }),
     exchange: (state, nowSeconds, ops) => post<EngineExchange>('/v1/exchange', { state, now: nowSeconds, ops }),
+    earned: (before, after, seconds) => post<EngineEarned>('/v1/earned', { before, after, seconds }),
   };
 }

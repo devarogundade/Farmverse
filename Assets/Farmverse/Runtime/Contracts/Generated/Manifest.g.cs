@@ -102,6 +102,7 @@ namespace Farmverse.Contracts
                 [ErrorCode.MintLimit] = new[] { "limit", "left" },
                 [ErrorCode.MintTooSoon] = new[] { "hours" },
                 [ErrorCode.MintNotEnough] = new[] { "have" },
+                [ErrorCode.MintUnearned] = new[] { "earned" },
                 [ErrorCode.MintBuildingBusy] = new[] { "reason" },
                 [ErrorCode.MintNotAllowed] = Array.Empty<string>(),
                 [ErrorCode.RedeemNotFound] = Array.Empty<string>(),
