@@ -9,6 +9,7 @@ Built for **NEAR HACKATHON**, track **`games` — Games With Real Economies**. R
 
 | | |
 |---|---|
+| **Video** | https://youtu.be/h634e96a_DE (trailer) |
 | **Play** | https://play.farmverse.world |
 | **Market** | https://marketplace.farmverse.world |
 | **Website** | https://farmverse.world |
