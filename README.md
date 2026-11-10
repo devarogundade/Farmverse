@@ -47,12 +47,12 @@ Desktop browser recommended. Every step says what to do and what you should see.
 |---|---|---|
 | 1 | Open **play.farmverse.world** | An install screen (Download → Unpack → Start, with MB left). The first visit downloads ~55 MB; later visits open from the browser cache in seconds. |
 | 2 | Tap **Play as guest** | You're on your own island in a few seconds: no wallet app, no sign-up. The page makes a NEAR account for you (its key stays in this browser; Settings → **Save your farm** shows it). Prefer an account? **Sign in** → **Email or Google**, or any NEAR testnet wallet (Meteor, HOT, MyNearWallet, Intear). |
-| 3 | Play for a minute: plant **wheat** on a field, wait ~60 s, harvest | Wheat in the farmhouse. Crops, animals and factories all work like this: start, wait, collect. |
+| 3 | Play for two minutes: build two **fields** (20 coins each), plant **wheat**, wait ~60 s, harvest, then walk into the farmhouse to unload | 12 wheat in the farmhouse (6 a field). Crops, animals and factories all work like this: start, wait, collect. |
 | 4 | Tap the **FARM** pill (top bar) → **Get 100 test FARM** | 100 test FARM arrives in your wallet (once a day). New accounts also got a little test NEAR at sign-in. |
-| 5 | **Storage** → pick a good (e.g. wheat, 10 or more) → **Mint as NFT** | The steps tick off. The first time, approve one restricted key in your wallet; after that, mints and redeems need **no popup and no gas** (our relayer pays). |
-| 6 | **Storage → NFTs** tab | Your new NFT with an **NFT** tag. **Sell on market** opens it on the marketplace; **Redeem** puts the goods back in your farmhouse. |
-| 7 | Open **marketplace.farmverse.world** | Listings rendered in 3D (goods, buildings, 40 Genesis Farmhands in their outfits). Prices in FARM. |
-| 8 | Market → **Town** | **Market Town**: four merchant NPCs (Bea, Ruth, Tomas, Ivy) with their own NEAR accounts, what they hold, what they pay, and **why** each price moved ("Low on stock and it sells: paying more"). |
+| 5 | **Storage** → wheat → 10 → **Mint as NFT** | The steps tick off. Only goods your farm was seen making can be minted, so the wheat you just grew mints and anything you started with doesn't. The first time, approve one restricted key in your wallet; after that, mints and redeems need **no popup and no gas** (our relayer pays). |
+| 6 | **Storage → NFTs** tab | Your new NFT with an **NFT** tag. **Sell on market** opens it on the marketplace, already signed in as **Your farm** (a guest too); **Redeem** puts the goods back in your farmhouse. |
+| 7 | Open **marketplace.farmverse.world** and buy or list something | Listings rendered in 3D (goods, buildings, 40 Genesis Farmhands in their outfits). Prices in FARM. Signed in as **Your farm** or with Email or Google, buying, listing and delisting cost **no NEAR**: our relayer pays the gas and the small storage deposits. |
+| 8 | Market → **Town** | **Market Town**: four merchant NPCs (Bea, Ruth, Tomas, Ivy) with their own NEAR accounts, what they hold, what they pay, and each merchant's own note on **why** the price moved, written by a private model on **NEAR AI Cloud** and marked *Verified by NEAR AI* when its signature checks out. The formula sets the price; the model only explains it. |
 | 9 | Market → **Hire** → **Hire a Farmhand** | Rent a worker NFT by the day. While hired it walks and works on your island in its outfit; its owner collects the FARM it earns. |
 | 10 | Open **marketplace.farmverse.world/#/buy-farm** (*Get FARM with any token*, also linked from the buy dialog when you're short of FARM) | A live NEAR Intents (1Click) quote: pay USDC/ETH/SOL/BTC from any chain, receive FARM. On testnet this is a quote only (Intents has no testnet); orders go live on mainnet. |
 
@@ -121,12 +121,13 @@ flowchart LR
 | Piece | How it works | Where |
 |---|---|---|
 | **FARM** | Fixed supply of 1,000,000,000 minted once to a treasury; the contract has no mint function and no owner role. On testnet its account still holds the deploy key (see [Known limits](#known-limits)). Testers get 100 FARM a day from a faucet. | [chain/contracts/farm_token](chain/contracts/farm_token/src/lib.rs) |
-| **Mint** | The game server checks the island really holds the goods, takes them out, and signs a voucher. The player's session key submits `mint_with_voucher`; our relayer pays the gas (NEP-366 meta-transaction). Daily mint allowance and a coin fee act as a sink. | [backend/server/src/mint](backend/server/src/mint/mint.ts), [items contract](chain/contracts/items/src/lib.rs) |
+| **Mint** | The game server checks the island holds the goods **and that it was seen making them** (no more than its fields, animals and machines could make in that time, by the game's own C# rules), takes them out, and signs a voucher. The player's session key submits `mint_with_voucher`; our relayer pays the gas (NEP-366 meta-transaction). Daily mint allowance and a coin fee act as a sink. | [backend/server/src/mint](backend/server/src/mint/mint.ts), [items contract](chain/contracts/items/src/lib.rs) |
 | **Redeem** | Burns the NFT and credits the goods, building, pass or deed to the holder's island. One use only. | same |
 | **Market** | Listings, **offers** on a token or on "any wheat, 100 or more", and **rentals** of Farmhands (escrowed; the worker's earnings wait in its own balance). 5 % fee to the treasury, studio royalty on resales. | [chain/contracts/market](chain/contracts/market/src/lib.rs) |
-| **Merchant NPCs** | Each merchant is its own NEAR account with its own FARM. Every 10 minutes the agent reads its stock and the last 24 h of sales, sets prices, keeps standing offers and lists what it holds. Pricing: `base × √(target/stock) × (1 + 10 % per recent sale, max +50 %)`, kept within 0.5–2× base, sells at +25 %. | the rules are one function, [`quote()` in merchants.ts](backend/server/src/chain/merchants.ts) |
+| **Merchant NPCs** | Each merchant is its own NEAR account with its own FARM. Every 10 minutes the agent reads its stock and the last 24 h of sales, sets prices, keeps standing offers and lists what it holds. Pricing: `base × √(target/stock) × (1 + 10 % per recent sale, max +50 %)`, kept within 0.5–2× base, sells at +25 %. When a price moves, the merchant explains it in its own voice through NEAR AI Cloud (TEE inference); the answer's signature and the node's GPU attestation are checked before the page calls it verified. | [`quote()` in merchants.ts](backend/server/src/chain/merchants.ts), [merchantVoice.ts](backend/server/src/chain/merchantVoice.ts) |
 | **Farmhands** | 500 Genesis workers, generated from a seed (rarity, outfit, specialty, traits). They work on whichever island holds or rents them and keep their level when traded. 40 are minted and listed now. | [chain/scripts/farmhands.mjs](chain/scripts/farmhands.mjs), [crew rules](Assets/Farmverse/Runtime/Domain/Gameplay/IslandEconomy.Crew.cs) |
 | **Scarcity** | Studio drops with on-chain caps (Farm Pass 2,000, Builder's Pass 1,000, 1,000 Genesis land deeds that open a wild plot; gem packs and the Starter Pack are open editions), golden crops (a 1 % harvest, worth 25×), burns on redeem. | [drops.rs](chain/contracts/items/src/drops.rs) |
+| **Sponsored calls** | Players sign NEP-366 delegate actions; the relayer sends them and pays gas and deposits. It accepts only our contracts and a short list of calls (mint, redeem, pay with FARM, approve the market, list, delist, rent out, storage), each with a deposit cap, per-account limits and an overall daily deposit cap. | [relay.ts](backend/server/src/chain/relay.ts) |
 | **Indexer** | Follows only the watched contracts' transactions (FastNEAR transactions API) into Postgres, which the market reads. | [backend/server/src/chain](backend/server/src/chain/txsource.ts) |
 
 The whole plan, with every decision and its reason: [Docs/architecture/15-game-market-economy-plan.md](Docs/architecture/15-game-market-economy-plan.md)
@@ -141,10 +142,10 @@ the game loop, not the token — bonus if players never notice the chain."*
 
 | Track idea | Farmverse | Status |
 |---|---|---|
-| NPCs with wallets | Bea, Ruth, Tomas and Ivy: own accounts, own FARM, an agent loop that prices from stock and demand and explains each price on the Market Town page. Farmhands earn FARM into their own balance while rented. | Live |
+| NPCs with wallets | Bea, Ruth, Tomas and Ivy: own accounts, own FARM, an agent loop that prices from stock and demand, and a NEAR AI Cloud model that explains each move in the merchant's own voice (verified, private inference). Farmhands earn FARM into their own balance while rented. | Live |
 | Player-owned markets | Listings, offers (per token and per item), rentals, merchant offers, studio drops with on-chain caps. | Live |
 | Economy that evolves without a patch | Merchant prices move with stock and sales; scarcity from capped drops, fixed Genesis sets, burns on redeem, golden crops; a coin fee and daily cap on minting. | Live |
-| Players never notice the chain | The words players see are "Mint", "Redeem" and "FARM". **Play as guest** (a NEAR account made in the browser, one tap) or Email or Google sign-in (Privy NEAR wallet). Mints and redeems are gasless after one approval (session key + NEP-366 relayer); new accounts get a little NEAR. | Live |
+| Players never notice the chain | The words players see are "Mint", "Redeem" and "FARM". **Play as guest** (a NEAR account made in the browser, one tap) or Email or Google sign-in (Privy NEAR wallet). Mints and redeems are gasless after one approval (session key + NEP-366 relayer). On the market a guest farm signs in as **Your farm** (its key never leaves the game's page), and guests and Email or Google players buy and list without NEAR. | Live |
 | Social login | "Email or Google" wallet in the game and the market (Privy, created through our server). | Live |
 | NEAR Intents | *Get FARM with any token* via 1Click: real quotes now; orders need mainnet (Intents has no testnet). | Quotes only on testnet |
 | NEP-245 multi-token | Goods are NEP-171 tokens that carry a quantity ("Wheat ×250"). A NEP-245 contract would make stacks fungible and splittable. | Not done (next step) |
@@ -208,6 +209,9 @@ cargo test -p farmverse-chain-tests                             # sandbox tests 
 dotnet build tools/dotnet/Farmverse.TestHost -c Release         # headless C# game-rule tests
 ```
 
+[CI](.github/workflows/ci.yml) runs all of these on every push, plus the server's database tests against Postgres,
+Redis and the running C# island engine (`npm --prefix backend/server run test:db`).
+
 - **Contracts on your own testnet account:** `MASTER=you.testnet bash chain/scripts/deploy-testnet.sh`, then
   `chain/scripts/upgrade-testnet.sh`, `drops.sh`, `merchants.sh` and `node chain/scripts/farmhands.mjs`.
 - **Server:** start Postgres and Redis and copy `backend/server/.env.example` to `.env`, as in
@@ -236,10 +240,15 @@ Built in the window:
 - the **marketplace**, **admin** and **landing** sites, 3D models for every mintable item;
 - **merchant NPC agents**, **Farmhands** (generation, crew rules, rentals), golden crops, land deeds, the Farm Pass
   for FARM;
-- **social login** (Privy NEAR wallet), **NEAR Intents** quotes, the **indexer**.
+- **social login** (Privy NEAR wallet), **NEAR Intents** quotes, the **indexer**;
+- **guest farms on the market** (a key bridge on the game's origin signs for the market; the key never leaves it)
+  and **sponsored market calls**;
+- **merchant notes from NEAR AI Cloud**, verified before they're marked so;
+- **earned-stock mint checks** (shared C# rules) and **CI** that runs the unit, database/engine and NEAR sandbox
+  tests.
 
 **Libraries and services:** near-sdk-rs and near-contract-standards, near-api-js, @hot-labs/near-connect, Privy
-(`@privy-io/js-sdk-core`, `@peerfolio/privy-near-connect`), NEAR Intents 1Click API, FastNEAR (RPC, transactions
+(`@privy-io/js-sdk-core`, `@peerfolio/privy-near-connect`), NEAR Intents 1Click API, NEAR AI Cloud, FastNEAR (RPC, transactions
 API, neardata), Fastify, Prisma, BullMQ, React, Vite, three.js / react-three-fiber, Unity 6, Blender.
 
 **Art and audio:** 3D models from ithappy asset packs, a purchased mobile game UI kit and licensed music. These are
@@ -253,18 +262,24 @@ paid assets and are **not in the repository**; the deployed game and sites inclu
 
 What a careful reader should know about the build as it stands, so nothing here reads stronger than the code.
 
-- **The island is trusted to the browser.** The game uploads its own save and the server keeps it after a growth
-  check ([islands.ts](backend/game/src/game/islands.ts)). Mints are checked against that copy by the island engine,
-  with a daily mint allowance, a coin fee and a minimum lot, but a forged save could still mint up to the allowance.
-  Making islands server-authoritative is the first item in Next steps.
+- **The island is still trusted to the browser.** The game uploads its own save and the server keeps it after a
+  growth check ([islands.ts](backend/game/src/game/islands.ts)). A mint can only take goods the server saw appear
+  between two of its copies, capped by what the earlier island's fields, animals and machines could make in that
+  time ([IslandEarned.cs](Assets/Farmverse/Runtime/Domain/Gameplay/IslandEarned.cs)); goods in a first upload never
+  mint. A forger who builds a farm in the save and keeps uploading can still mint what those buildings could
+  honestly make, within the daily allowance. Buildings and land aren't covered by this check. Making islands
+  server-authoritative is the first item in Next steps.
 - **Testnet keys.** Each contract account still holds the full-access key it was deployed with, so the code can be
   upgraded, and the owner of items and market is one key, not a multisig. FARM's code has no mint and no owner
   role; the key is what remains. The server's voucher signer, relayer and merchant keys are environment variables.
-- **Gasless covers mint and redeem.** Market actions (buy, list, offer, rent) pay their own gas and small storage
-  deposits, and a guest farm's key lives in the game page, so the marketplace can't sign in as a guest yet.
+- **Gasless needs an in-page wallet.** Guests (**Your farm**) and Email or Google players get sponsored market
+  calls; extension and redirect wallets (Meteor, HOT, MyNearWallet, Intear) sign and pay as usual. The relayer pays
+  deposits too, so it caps them per call, per account per day and for everyone per day.
 - **Supply.** Caps are per drop. Gem packs and the Starter Pack are open editions, and the studio minter can mint
   outside a drop.
 - **NEAR Intents** gives real quotes; orders and settlement switch on with mainnet.
+- **NEAR AI verification** checks each merchant note's signature, that the signing key is in NEAR AI's attestation
+  report, and NVIDIA's GPU attestation. The Intel TDX quote isn't checked yet, and the page says so.
 
 ---
 
